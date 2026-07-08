@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { IssueData, SECTION_LABELS } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { generatePDF } from '@/lib/pdf'
+import { Logo } from './Logo'
 
 interface FanzineViewerProps {
   issue: IssueData
@@ -99,19 +100,20 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   return (
     <div>
       {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 no-print bg-black/80 backdrop-blur-sm border-b border-gray-800">
-        <div className="flex items-center gap-3 px-4 h-10">
-          <span className="text-xs text-gray-500 uppercase tracking-widest shrink-0">
-            N.{issue.number}
-          </span>
+      <div className="fixed top-0 left-0 right-0 z-50 no-print bg-black/90 backdrop-blur-sm border-b border-red-900/30">
+        <div className="flex items-center gap-3 px-3 h-11">
+          <Logo compact />
           <div className="flex-1 h-px bg-gray-800 relative">
             <div
               className="absolute left-0 top-0 h-full bg-red-500 transition-all duration-200"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs text-gray-400 truncate max-w-[200px]">
+          <span className="text-xs text-gray-400 truncate max-w-[180px] uppercase tracking-wider">
             {currentSection ? SECTION_LABELS[currentSection.type] || currentSection.title : ''}
+          </span>
+          <span className="text-[10px] text-gray-600 uppercase tracking-widest shrink-0 border border-gray-800 px-1.5 py-0.5">
+            N.{issue.number}
           </span>
         </div>
       </div>

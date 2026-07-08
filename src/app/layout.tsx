@@ -8,12 +8,13 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Xerrac! — Revista d\'aclariment cultural',
   description: 'Revista d\'aclariment cultural',
+  icons: { icon: '/favicon.svg' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ca">
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         <Providers>
           {children}
         </Providers>

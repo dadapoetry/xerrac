@@ -8,6 +8,25 @@
   --xerrac-red: #dc2626;
   --xerrac-yellow: #eab308;
   --xerrac-gray: #a3a3a3;
+  --xerrac-red-dim: rgba(220, 38, 38, 0.15);
+  --xerrac-red-glow: rgba(220, 38, 38, 0.08);
+}
+
+@layer utilities {
+  .saw-text {
+    @apply font-black tracking-tight uppercase;
+  }
+  .saw-glow {
+    box-shadow: 0 0 30px rgba(220, 38, 38, 0.15);
+  }
+  .saw-border {
+    border: 2px solid var(--xerrac-red);
+    box-shadow: 6px 6px 0px 0px rgba(220, 38, 38, 0.4);
+  }
+  .saw-border-sm {
+    border: 1px solid var(--xerrac-red);
+    box-shadow: 3px 3px 0px 0px rgba(220, 38, 38, 0.3);
+  }
 }
 
 * {

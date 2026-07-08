@@ -316,6 +316,39 @@ async function collageGrid(doc: jsPDF, collages: any[], y: number, accent: [numb
   return y
 }
 
+function drawSawTooth(doc: jsPDF, y: number, width: number, height: number, teeth: number): void {
+  doc.setFillColor(220, 38, 38)
+  const tw = width / teeth
+  for (let i = 0; i < teeth; i++) {
+    const x = i * tw
+    doc.triangle(x, y, x + tw / 2, y - height, x + tw, y, 'F')
+  }
+}
+
+function drawSawBlade(doc: jsPDF, cx: number, cy: number, r: number): void {
+  // Draw a saw blade using triangles (teeth) around a circle
+  const teeth = 12
+  const outerR = r
+  const innerR = r * 0.65
+  doc.setFillColor(220, 38, 38)
+  for (let i = 0; i < teeth; i++) {
+    const a = (i / teeth) * Math.PI * 2 - Math.PI / 2
+    const a2 = ((i + 0.5) / teeth) * Math.PI * 2 - Math.PI / 2
+    const x1 = cx + Math.cos(a) * outerR
+    const y1 = cy + Math.sin(a) * outerR
+    const x2 = cx + Math.cos(a2) * innerR
+    const y2 = cy + Math.sin(a2) * innerR
+    const a3 = ((i + 1) / teeth) * Math.PI * 2 - Math.PI / 2
+    const x3 = cx + Math.cos(a3) * outerR
+    const y3 = cy + Math.sin(a3) * outerR
+    doc.triangle(x1, y1, x2, y2, x3, y3, 'F')
+  }
+  doc.setFillColor(10, 10, 10)
+  doc.circle(cx, cy, r * 0.22, 'F')
+  doc.setFillColor(220, 38, 38)
+  doc.circle(cx, cy, r * 0.1, 'F')
+}
+
 export async function generatePDF(issueData: PrintIssueData) {
   const doc = new jsPDF('p', 'mm', 'a4')
 
@@ -327,47 +360,58 @@ export async function generatePDF(issueData: PrintIssueData) {
     if (hasBg) await addBg(doc, portada.backgroundImage!)
     else { doc.setFillColor(5, 5, 5); doc.rect(0, 0, PW, PH, 'F') }
 
-    // XERRAC! big title
+    // Double border frame (brand style)
+    doc.setDrawColor(255, 255, 255)
+    doc.setLineWidth(0.6)
+    doc.rect(16, 25, PW - 32, PH - 50)
+
+    doc.setDrawColor(220, 38, 38)
+    doc.setLineWidth(0.12)
+    doc.rect(20, 29, PW - 40, PH - 58)
+
+    // Top saw-tooth bar
+    drawSawTooth(doc, 50, PW - 40, 6, 40)
+
+    // Saw blade icon
+    drawSawBlade(doc, CX, 90, 14)
+
+    // XERRAC! title - "XERRAC" in white, "!" in red
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(56)
+    doc.setFontSize(50)
     doc.setTextColor(255, 255, 255)
-    doc.text('XERRAC!', CX, 108, { align: 'center' })
+    doc.text('XERRAC', CX - 12, 118, { align: 'center' })
+    doc.setTextColor(220, 38, 38)
+    doc.text('!', CX + 58, 118, { align: 'center' })
 
     // Subtitle
     if (c.subtitle) {
       doc.setFont('helvetica', 'normal')
-      doc.setFontSize(12)
-      doc.setTextColor(200, 200, 200)
-      doc.text(c.subtitle.toUpperCase(), CX, 128, { align: 'center' })
+      doc.setFontSize(11)
+      doc.setTextColor(180, 180, 180)
+      doc.text(c.subtitle.toUpperCase(), CX, 140, { align: 'center' })
     }
 
     // Red divider
     doc.setDrawColor(220, 38, 38)
-    doc.setLineWidth(0.6)
-    doc.line(CX - 40, 138, CX + 40, 138)
+    doc.setLineWidth(0.5)
+    doc.line(CX - 35, 150, CX + 35, 150)
 
     // Topic
     if (c.topic) {
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(10)
-      doc.setTextColor(160, 160, 160)
-      doc.text(c.topic, CX, 155, { align: 'center' })
+      doc.setTextColor(150, 150, 150)
+      doc.text(c.topic, CX, 168, { align: 'center' })
     }
 
     // Issue number
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(9)
     doc.setTextColor(100, 100, 100)
-    doc.text(`NÚMERO ${issueData.number}`, CX, PH - 40, { align: 'center' })
+    doc.text(`NÚMERO ${issueData.number}`, CX, PH - 42, { align: 'center' })
 
-    // Border box
-    doc.setDrawColor(255, 255, 255)
-    doc.setLineWidth(0.6)
-    doc.rect(16, 30, PW - 32, PH - 60)
-
-    doc.setDrawColor(220, 38, 38)
-    doc.setLineWidth(0.15)
-    doc.rect(20, 34, PW - 40, PH - 68)
+    // Bottom saw-tooth bar
+    drawSawTooth(doc, PH - 48, PW - 40, 6, 40)
   }
 
   // ═══════════════ SECTIONS ═══════════════
