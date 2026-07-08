@@ -15,7 +15,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [generatingPdf, setGeneratingPdf] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
+    let raf: number
+    const check = () => {
       const els = document.querySelectorAll('[data-section-index]')
       let active = 0
       els.forEach((el) => {
@@ -24,12 +25,20 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           active = parseInt(el.getAttribute('data-section-index') || '0')
         }
       })
-      setCurrentSection(active)
+      setCurrentSection(prev => prev !== active ? active : prev)
+      raf = requestAnimationFrame(check)
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
+    raf = requestAnimationFrame(check)
+    return () => cancelAnimationFrame(raf)
   }, [])
+
+  const scrollToSection = (index: number) => {
+    const el = document.querySelector(
+      `[data-section-index="${index}"]`
+    ) as HTMLElement | null
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const handlePdf = async () => {
     setGeneratingPdf(true)
@@ -50,17 +59,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       window.print()
     } finally {
       setGeneratingPdf(false)
-    }
-  }
-
-  const scrollToSection = (index: number) => {
-    if (index < 0 || index >= sortedSections.length) return
-    setCurrentSection(index)
-    const el = document.querySelector(
-      `[data-section-index="${index}"]`
-    ) as HTMLElement | null
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 
