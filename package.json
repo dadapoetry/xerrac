@@ -8,7 +8,7 @@
     "start": "next start",
     "db:migrate": "tsx prisma/migrate.ts",
     "db:seed": "tsx prisma/seed.ts",
-    "db:setup": "tsx prisma/migrate.ts && tsx prisma/seed.ts",
+    "db:setup": "tsx prisma/migrate.ts && tsx prisma/seed.ts"
 
   },
   "dependencies": {
