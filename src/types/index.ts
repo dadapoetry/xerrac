@@ -56,7 +56,7 @@ export interface EditorialContent {
   body: string
 }
 
-export interface ExpansioCriticaContent {
+export interface AclarimentCulturalContent {
   body: string
 }
 
@@ -89,7 +89,7 @@ export interface LuditaContent {
 export type SectionContent =
   | PortadaContent
   | EditorialContent
-  | ExpansioCriticaContent
+  | AclarimentCulturalContent
   | FaduCatalaContent
   | PaginesGroquesContent
   | CalaixSastreContent
@@ -119,7 +119,7 @@ export interface IssueData {
 export const SECTION_LABELS: Record<string, string> = {
   portada: 'Portada',
   editorial: 'Editorial',
-  expansio_critica: 'Expansió Crítica',
+  aclariment_cultural: 'Aclariment cultural',
   fadu_catala: 'Fadu Català',
   pagines_grogues: 'Pàgines Groguess',
   calaix_sastre: 'Calaix de Sastre',
@@ -131,7 +131,7 @@ export const SECTION_LABELS: Record<string, string> = {
 export const SECTION_TYPES = [
   'portada',
   'editorial',
-  'expansio_critica',
+  'aclariment_cultural',
   'fadu_catala',
   'pagines_grogues',
   'calaix_sastre',

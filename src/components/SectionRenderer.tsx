@@ -3,7 +3,7 @@
 import { SectionData } from '@/types'
 import { PortadaSection } from './sections/PortadaSection'
 import { EditorialSection } from './sections/EditorialSection'
-import { ExpansioCriticaSection } from './sections/ExpansioCriticaSection'
+import { AclarimentCulturalSection } from './sections/AclarimentCulturalSection'
 import { FaduCatalaSection } from './sections/FaduCatalaSection'
 import { PaginesGroquesSection } from './sections/PaginesGroquesSection'
 import { CalaixSastreSection } from './sections/CalaixSastreSection'
@@ -14,7 +14,7 @@ import { LuditaSection } from './sections/LuditaSection'
 const sectionMap: Record<string, React.FC<{ section: SectionData }>> = {
   portada: PortadaSection,
   editorial: EditorialSection,
-  expansio_critica: ExpansioCriticaSection,
+  aclariment_cultural: AclarimentCulturalSection,
   fadu_catala: FaduCatalaSection,
   pagines_grogues: PaginesGroquesSection,
   calaix_sastre: CalaixSastreSection,

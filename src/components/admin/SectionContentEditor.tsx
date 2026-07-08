@@ -69,7 +69,7 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
       )
 
     case 'editorial':
-    case 'expansio_critica':
+    case 'aclariment_cultural':
     case 'visita':
       return (
         <div className="space-y-4">

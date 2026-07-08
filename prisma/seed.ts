@@ -66,8 +66,8 @@ async function main() {
       backgroundImage: '',
     },
     {
-      id: uuid(), issueId, type: 'expansio_critica', order: 2,
-      title: 'Expansió Crítica',
+      id: uuid(), issueId, type: 'aclariment_cultural', order: 2,
+      title: 'Aclariment cultural',
       content: JSON.stringify({
         body: '<p>Secció dedicada a l\'aclariment cultural. Aquí desfem malentesos, desmuntem llocs comuns i intentem veure què hi ha darrere les paraules que fem servir cada dia.</p><p>En aquest número: <em>El concepte de "cultura popular" a l\'era de la reproducció digital</em>. Què vol dir avui "popular"? Què vol dir "cultura"? I per què hauríem de seguir fent-nos aquestes preguntes?</p>',
       }),

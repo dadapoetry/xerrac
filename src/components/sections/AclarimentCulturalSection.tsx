@@ -1,9 +1,9 @@
 'use client'
 
-import { SectionData, ExpansioCriticaContent } from '@/types'
+import { SectionData, AclarimentCulturalContent } from '@/types'
 
-export function ExpansioCriticaSection({ section }: { section: SectionData }) {
-  const content = section.content as unknown as ExpansioCriticaContent
+export function AclarimentCulturalSection({ section }: { section: SectionData }) {
+  const content = section.content as unknown as AclarimentCulturalContent
 
   return (
     <div className="max-w-3xl w-full mx-auto py-12">
