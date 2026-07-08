@@ -9,7 +9,7 @@
     "db:migrate": "tsx prisma/migrate.ts",
     "db:seed": "tsx prisma/seed.ts",
     "db:setup": "tsx prisma/migrate.ts && tsx prisma/seed.ts",
-    "postinstall": "echo 'Run: npm run db:migrate && npm run db:seed'"
+
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
