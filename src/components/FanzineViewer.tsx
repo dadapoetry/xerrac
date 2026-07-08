@@ -12,38 +12,39 @@ interface FanzineViewerProps {
 export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [currentSection, setCurrentSection] = useState(0)
   const [generatingPdf, setGeneratingPdf] = useState(false)
-  const observerRef = useRef<IntersectionObserver | null>(null)
+  const ticking = useRef(false)
 
   const sortedSections = [...issue.sections].sort((a, b) => a.order - b.order)
 
   useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        let maxRatio = 0
-        let maxIdx = -1
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const idx = (entry.target as HTMLElement).dataset.sectionIndex
-            if (idx !== undefined) {
-              const n = parseInt(idx)
-              if (entry.intersectionRatio > maxRatio) {
-                maxRatio = entry.intersectionRatio
-                maxIdx = n
-              }
-            }
+    const handleScroll = () => {
+      if (ticking.current) return
+      ticking.current = true
+      requestAnimationFrame(() => {
+        const vh = window.innerHeight
+        const vCenter = window.scrollY + vh / 2
+        const els = document.querySelectorAll('[data-section-index]')
+        let bestIdx = 0
+        let bestDist = Infinity
+        els.forEach((el) => {
+          const idx = (el as HTMLElement).dataset.sectionIndex
+          if (idx === undefined) return
+          const rect = el.getBoundingClientRect()
+          const elCenter = rect.top + rect.height / 2
+          const dist = Math.abs(elCenter - vh / 2)
+          if (dist < bestDist) {
+            bestDist = dist
+            bestIdx = parseInt(idx)
           }
-        }
-        if (maxIdx >= 0) setCurrentSection(maxIdx)
-      },
-      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], rootMargin: '0px 0px -50px 0px' }
-    )
-
-    const els = document.querySelectorAll('[data-section-index]')
-    els.forEach((el) => observerRef.current?.observe(el))
-
-    return () => {
-      observerRef.current?.disconnect()
+        })
+        setCurrentSection(bestIdx)
+        ticking.current = false
+      })
     }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [sortedSections])
 
   const goToSection = useCallback((index: number) => {
@@ -56,10 +57,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [sortedSections])
-
-  const handlePrint = useCallback(() => {
-    window.print()
-  }, [])
 
   const handlePdf = useCallback(async () => {
     setGeneratingPdf(true)
