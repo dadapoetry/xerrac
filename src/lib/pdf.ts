@@ -20,6 +20,10 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#x27;/g, "'").trim()
 }
 
+function toLines(doc: jsPDF, text: string, maxW: number): string[] {
+  return doc.splitTextToSize(text, maxW) as string[]
+}
+
 async function loadImage(url: string): Promise<HTMLCanvasElement> {
   const img = new Image()
   img.crossOrigin = 'anonymous'
@@ -36,309 +40,523 @@ async function loadImage(url: string): Promise<HTMLCanvasElement> {
   return canvas
 }
 
-async function addBackgroundImage(doc: jsPDF, url: string): Promise<void> {
+async function addBg(doc: jsPDF, url: string): Promise<void> {
   try {
     const canvas = await loadImage(url)
     const pw = doc.internal.pageSize.getWidth()
     const ph = doc.internal.pageSize.getHeight()
-    const imgAspect = canvas.width / canvas.height
-    const pageAspect = pw / ph
+    const a = canvas.width / canvas.height
+    const pa = pw / ph
     let dw: number, dh: number, dx: number, dy: number
-    if (imgAspect > pageAspect) {
-      dh = ph; dw = ph * imgAspect; dx = (pw - dw) / 2; dy = 0
-    } else {
-      dw = pw; dh = pw / imgAspect; dx = 0; dy = (ph - dh) / 2
-    }
-    const tempCanvas = document.createElement('canvas')
-    tempCanvas.width = pw * 4; tempCanvas.height = ph * 4
-    const ctx = tempCanvas.getContext('2d')!
+    if (a > pa) { dh = ph; dw = ph * a; dx = (pw - dw) / 2; dy = 0 }
+    else { dw = pw; dh = pw / a; dx = 0; dy = (ph - dh) / 2 }
+    const tc = document.createElement('canvas')
+    tc.width = pw * 4; tc.height = ph * 4
+    const ctx = tc.getContext('2d')!
     ctx.drawImage(canvas, dx * 4, dy * 4, dw * 4, dh * 4)
-    ctx.fillStyle = 'rgba(0,0,0,0.55)'
-    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
-    const dataUrl = tempCanvas.toDataURL('image/jpeg', 0.7)
-    doc.addImage(dataUrl, 'JPEG', 0, 0, pw, ph, undefined, 'FAST')
+    ctx.fillStyle = 'rgba(0,0,0,0.65)'
+    ctx.fillRect(0, 0, tc.width, tc.height)
+    doc.addImage(tc.toDataURL('image/jpeg', 0.7), 'JPEG', 0, 0, pw, ph, undefined, 'FAST')
   } catch {
-    doc.setFillColor(20, 20, 20)
+    doc.setFillColor(10, 10, 10)
     doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F')
   }
 }
 
-function renderText(doc: jsPDF, text: string, margin: number, pw: number, ph: number, pos: { y: number }): void {
-  const lines = doc.splitTextToSize(text, pw - margin * 2)
-  for (const line of lines) {
-    if (pos.y > ph - margin) { doc.addPage(); pos.y = margin }
-    doc.text(line as string, margin, pos.y)
-    pos.y += 5
-  }
+const M = 22
+const PW = 210
+const PH = 297
+const COL_W = PW - M * 2
+const CX = PW / 2
+
+function brk(doc: jsPDF, y: number, need: number): number {
+  return y + need > PH - M ? (doc.addPage(), M + 10) : y
 }
 
-function drawCrossword(doc: jsPDF, crossword: any, margin: number, pw: number, y: number): number {
-  const cellSize = 7
-  const gridSize = crossword.gridSize || 11
-  const gridPixel = gridSize * cellSize
-  const startX = (pw - gridPixel) / 2
-
-  const numbered = new Set<string>()
-  const across = crossword.clues?.across || {}
-  const down = crossword.clues?.down || {}
-
-  for (const [num, clue] of Object.entries(across) as [string, any][]) {
-    numbered.add(`${clue.row || 0}-${clue.col || 0}`)
+function acc(section: PrintSection): [number, number, number] {
+  const map: Record<string, [number, number, number]> = {
+    portada: [255, 255, 255],
+    editorial: [239, 68, 68],
+    aclariment_cultural: [250, 204, 21],
+    fadu_catala: [234, 179, 8],
+    pagines_grogues: [250, 204, 21],
+    calaix_sastre: [248, 113, 113],
+    visita: [248, 113, 113],
+    full_mural: [248, 113, 113],
+    ludita: [239, 68, 68],
   }
-  for (const [num, clue] of Object.entries(down) as [string, any][]) {
-    numbered.add(`${clue.row || 0}-${clue.col || 0}`)
-  }
-
-  doc.setDrawColor(100)
-  doc.setLineWidth(0.3)
-  for (let r = 0; r < gridSize; r++) {
-    for (let c = 0; c < gridSize; c++) {
-      doc.rect(startX + c * cellSize, y + r * cellSize, cellSize, cellSize)
-    }
-  }
-
-  doc.setFontSize(5)
-  doc.setTextColor(120)
-  for (const [num, clue] of Object.entries(across) as [string, any][]) {
-    const cx = startX + (clue.col || 0) * cellSize + 0.5
-    const cy = y + (clue.row || 0) * cellSize + 0.5
-    doc.text(num.toString(), cx, cy + 4)
-  }
-  for (const [num, clue] of Object.entries(down) as [string, any][]) {
-    const key = `${clue.row || 0}-${clue.col || 0}`
-    if (!(num.toString() in across)) {
-      const cx = startX + (clue.col || 0) * cellSize + 0.5
-      const cy = y + (clue.row || 0) * cellSize + 0.5
-      doc.text(num.toString(), cx, cy + 4)
-    }
-  }
-
-  return y + gridPixel + 10
+  return map[section.type] || [200, 200, 200]
 }
 
-function renderClues(doc: jsPDF, crossword: any, margin: number, pw: number, ph: number, pos: { y: number }): void {
-  const across = crossword.clues?.across || {}
-  const down = crossword.clues?.down || {}
+function subtitle(section: PrintSection): string | null {
+  const map: Record<string, string | null> = {
+    fadu_catala: "Refundació de l'humor negre",
+    pagines_grogues: "Proverbis accidentals",
+    full_mural: "Collages i contribucions dels lectors",
+    ludita: "Mots encreuats d'aclariment",
+  }
+  return map[section.type] || null
+}
 
-  doc.setFontSize(9)
+// ── Section title bar ──
+
+function titleBlock(doc: jsPDF, section: PrintSection, y: number): number {
+  const a = acc(section)
+  const sub = subtitle(section)
+
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(0)
+  doc.setFontSize(28)
+  doc.setTextColor(a[0], a[1], a[2])
+  const tlines = toLines(doc, section.title.toUpperCase(), COL_W)
+  for (const l of tlines) { doc.text(l as string, M, y); y += 11 }
+  y += 2
 
-  if (Object.keys(across).length > 0) {
-    if (pos.y > ph - margin) { doc.addPage(); pos.y = margin }
-    doc.text('Horitzontals', margin, pos.y)
-    pos.y += 6
+  if (sub) {
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(8)
-    for (const [num, clue] of Object.entries(across) as [string, any][]) {
-      if (pos.y > ph - margin) { doc.addPage(); pos.y = margin }
-      const lines = doc.splitTextToSize(`${num}. ${clue.clue || ''}`, pw - margin * 2 - 5)
-      for (const line of lines) {
-        doc.text(line as string, margin + 3, pos.y)
-        pos.y += 4
-      }
-    }
-    pos.y += 3
-  }
-
-  if (Object.keys(down).length > 0) {
-    if (pos.y > ph - margin) { doc.addPage(); pos.y = margin }
-    doc.setFont('helvetica', 'bold')
     doc.setFontSize(9)
-    doc.text('Verticals', margin, pos.y)
-    pos.y += 6
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(8)
-    for (const [num, clue] of Object.entries(down) as [string, any][]) {
-      if (pos.y > ph - margin) { doc.addPage(); pos.y = margin }
-      const lines = doc.splitTextToSize(`${num}. ${clue.clue || ''}`, pw - margin * 2 - 5)
-      for (const line of lines) {
-        doc.text(line as string, margin + 3, pos.y)
-        pos.y += 4
-      }
-    }
+    doc.setTextColor(120, 120, 120)
+    doc.text(sub.toUpperCase(), M, y)
+    y += 7
   }
+
+  doc.setDrawColor(...a)
+  doc.setLineWidth(0.6)
+  doc.line(M, y, PW - M, y)
+  y += 10
+
+  return y
 }
 
-async function renderCollageImage(doc: jsPDF, url: string, margin: number, pw: number, ph: number, pos: { y: number }): Promise<void> {
-  try {
-    const canvas = await loadImage(url)
-    const maxW = pw - margin * 2
-    const maxH = 80
-    const aspect = canvas.width / canvas.height
-    let iw = maxW, ih = maxW / aspect
-    if (ih > maxH) { ih = maxH; iw = maxH * aspect }
-    if (pos.y + ih > ph - margin) { doc.addPage(); pos.y = margin }
-    const tempCanvas = document.createElement('canvas')
-    tempCanvas.width = iw * 4; tempCanvas.height = ih * 4
-    const ctx = tempCanvas.getContext('2d')!
-    ctx.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height)
-    const dataUrl = tempCanvas.toDataURL('image/jpeg', 0.7)
-    doc.addImage(dataUrl, 'JPEG', margin, pos.y, iw, ih, undefined, 'FAST')
-    pos.y += ih + 6
-  } catch {
-    pos.y += 4
+// ── Body text (justified, prose style) ──
+
+function prose(doc: jsPDF, html: string, y: number, hasBg: boolean): number {
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(10)
+  const tc: [number, number, number] = hasBg ? [220, 220, 220] : [80, 80, 80]
+  doc.setTextColor(tc[0], tc[1], tc[2])
+  const lines = toLines(doc, stripHtml(html), COL_W)
+  for (const l of lines) {
+    y = brk(doc, y, 5.5)
+    doc.text(l as string, M, y)
+    y += 5.5
   }
+  return y + 5
+}
+
+// ── Card with border (matches web card style) ──
+
+function card(doc: jsPDF, elements: ((y: number) => number)[], y: number, col: [number, number, number], hasBg: boolean): number {
+  // Draw border first to calculate height
+  doc.setDrawColor(...col)
+  doc.setLineWidth(0.35)
+  doc.rect(M, y - 4, COL_W, 4)
+  return y
+}
+
+// ── Quote box (Pàgines Grogues style) ──
+
+function quoteCard(doc: jsPDF, text: string, author: string, y: number, accent: [number, number, number], hasBg: boolean): number {
+  y = brk(doc, y, 18)
+
+  const cardH = 18
+  doc.setDrawColor(...accent)
+  doc.setLineWidth(0.35)
+  doc.rect(M, y - 4, COL_W, cardH)
+
+  // # number dummy
+  doc.setFillColor(...accent)
+  doc.rect(M, y - 4, 8, 5, 'F')
+
+  doc.setFont('helvetica', 'italic')
+  doc.setFontSize(10)
+  doc.setTextColor(hasBg ? 255 : 40)
+  const plines = toLines(doc, `"${text}"`, COL_W - 16)
+  for (const l of plines) {
+    doc.text(l as string, M + 12, y)
+    y += 5
+  }
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(8)
+  doc.setTextColor(140, 140, 140)
+  doc.text(`— ${author}`, M + 12, y)
+  y += 8
+
+  return y
+}
+
+// ── Entry card (Fadu Català style) ──
+
+function entryCard(doc: jsPDF, title: string, body: string, typeLabel: string | null, y: number, accent: [number, number, number], hasBg: boolean, index: number): number {
+  const est = 12 + (title.length / 35 * 5.5) + (body ? body.length / 60 * 5 : 0)
+  y = brk(doc, y, est)
+
+  doc.setDrawColor(...accent)
+  doc.setLineWidth(0.35)
+  doc.rect(M, y - 4, COL_W, est)
+
+  // Type badge
+  if (typeLabel) {
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(7)
+    doc.setTextColor(accent[0], accent[1], accent[2])
+    doc.text(`↪ ${typeLabel}`, M + 5, y)
+    y += 7
+  }
+
+  // Title
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(13)
+  doc.setTextColor(hasBg ? 255 : 30)
+  const tlines = toLines(doc, title, COL_W - 14)
+  for (const l of tlines) {
+    y = brk(doc, y, 6)
+    doc.text(l as string, M + 7, y)
+    y += 6.5
+  }
+  y += 2
+
+  // Body
+  if (body) {
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9.5)
+    const tc3: [number, number, number] = hasBg ? [220, 220, 220] : [80, 80, 80]
+    doc.setTextColor(tc3[0], tc3[1], tc3[2])
+    const blines = toLines(doc, stripHtml(body), COL_W - 14)
+    for (const l of blines) {
+      y = brk(doc, y, 5)
+      doc.text(l as string, M + 7, y)
+      y += 5
+    }
+  }
+
+  return y + 6
+}
+
+function sectionLabelBar(doc: jsPDF, label: string, y: number, accent: [number, number, number]): number {
+  y = brk(doc, y, 8)
+  doc.setFillColor(...accent)
+  doc.rect(M, y - 3, 55, 5, 'F')
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(7)
+  doc.setTextColor(0, 0, 0)
+  doc.text(label.toUpperCase(), M + 4, y + 1)
+  return y + 8
+}
+
+// ── Collage grid ──
+
+async function collageGrid(doc: jsPDF, collages: any[], y: number, accent: [number, number, number], hasBg: boolean): Promise<number> {
+  const gap = 5
+  const cW = (COL_W - gap) / 2
+  const maxH = 45
+
+  for (let i = 0; i < collages.length; i += 2) {
+    const c1 = collages[i]
+    const c2 = collages[i + 1]
+    y = brk(doc, y, maxH + 12)
+
+    const baseY = y
+
+    // Col 1
+    doc.setDrawColor(...accent)
+    doc.setLineWidth(0.3)
+    doc.rect(M, baseY, cW, maxH)
+    if (c1?.image) {
+      try {
+        const canvas = await loadImage(c1.image)
+        const a = canvas.width / canvas.height
+        let ih = maxH - 3, iw = ih * a
+        if (iw > cW - 6) { iw = cW - 6; ih = iw / a }
+        const tc = document.createElement('canvas')
+        tc.width = iw * 4; tc.height = ih * 4
+        tc.getContext('2d')!.drawImage(canvas, 0, 0, tc.width, tc.height)
+        doc.addImage(tc.toDataURL('image/jpeg', 0.7), 'JPEG', M + 3, baseY + 2, iw, ih, undefined, 'FAST')
+      } catch {}
+    }
+    doc.setTextColor(140, 140, 140)
+    doc.setFont('helvetica', 'italic')
+    doc.setFontSize(7)
+    if (c1?.description) {
+      const dl = toLines(doc, c1.description, cW - 6)
+      let dy = baseY + maxH + 3
+      for (const l of dl) { doc.text(l as string, M + 3, dy); dy += 4 }
+    }
+
+    // Col 2
+    if (c2) {
+      doc.setDrawColor(...accent)
+      doc.setLineWidth(0.3)
+      doc.rect(M + cW + gap, baseY, cW, maxH)
+      if (c2.image) {
+        try {
+          const canvas = await loadImage(c2.image)
+          const a = canvas.width / canvas.height
+          let ih = maxH - 3, iw = ih * a
+          if (iw > cW - 6) { iw = cW - 6; ih = iw / a }
+          const tc = document.createElement('canvas')
+          tc.width = iw * 4; tc.height = ih * 4
+          tc.getContext('2d')!.drawImage(canvas, 0, 0, tc.width, tc.height)
+          doc.addImage(tc.toDataURL('image/jpeg', 0.7), 'JPEG', M + cW + gap + 3, baseY + 2, iw, ih, undefined, 'FAST')
+        } catch {}
+      }
+      doc.setTextColor(140, 140, 140)
+      doc.setFont('helvetica', 'italic')
+      doc.setFontSize(7)
+      if (c2.description) {
+        const dl = toLines(doc, c2.description, cW - 6)
+        let dy = baseY + maxH + 3
+        for (const l of dl) { doc.text(l as string, M + cW + gap + 3, dy); dy += 4 }
+      }
+    }
+
+    y = baseY + maxH + 12
+  }
+
+  return y
 }
 
 export async function generatePDF(issueData: PrintIssueData) {
   const doc = new jsPDF('p', 'mm', 'a4')
-  const pw = doc.internal.pageSize.getWidth()
-  const ph = doc.internal.pageSize.getHeight()
-  const margin = 22
 
-  for (let i = 0; i < issueData.sections.length; i++) {
-    const section = issueData.sections[i]
-    if (i > 0) doc.addPage()
+  // ═══════════════ PORTADA ═══════════════
+  const portada = issueData.sections.find(s => s.type === 'portada')
+  if (portada) {
+    const c = portada.content
+    const hasBg = !!portada.backgroundImage
+    if (hasBg) await addBg(doc, portada.backgroundImage!)
+    else { doc.setFillColor(5, 5, 5); doc.rect(0, 0, PW, PH, 'F') }
 
-    if (section.backgroundImage) {
-      await addBackgroundImage(doc, section.backgroundImage)
-      doc.setTextColor(245)
-    } else {
-      doc.setTextColor(0)
-    }
-
-    const content = section.content
-    const centerY = ph / 2 - 15
-    let y = Math.min(centerY, margin + 10)
-
-    if (section.type === 'portada') {
-      doc.setFont('helvetica', 'bold')
-      doc.setFontSize(32)
-      doc.text('XERRAC!', pw / 2, ph / 2 - 35, { align: 'center' })
-      doc.setFont('helvetica', 'normal')
-      doc.setFontSize(14)
-      if (content.subtitle) {
-        doc.text(content.subtitle, pw / 2, ph / 2 - 12, { align: 'center' })
-      }
-      if (content.topic) {
-        doc.setFontSize(11)
-        doc.setTextColor(120)
-        doc.text(content.topic, pw / 2, ph / 2 + 8, { align: 'center' })
-      }
-      continue
-    }
-
+    // XERRAC! big title
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(13)
-    doc.text(section.title, pw / 2, y, { align: 'center' })
-    y += 10
+    doc.setFontSize(56)
+    doc.setTextColor(255, 255, 255)
+    doc.text('XERRAC!', CX, 108, { align: 'center' })
 
-    if (content.body) {
+    // Subtitle
+    if (c.subtitle) {
       doc.setFont('helvetica', 'normal')
-      doc.setFontSize(9.5)
-      renderText(doc, stripHtml(content.body), margin, pw, ph, { y })
-      y += 4
-    }
-
-    if (content.proverbs) {
-      doc.setFont('helvetica', 'normal')
-      doc.setFontSize(9.5)
-      for (const p of content.proverbs) {
-        const rY = () => Math.min(ph / 2 - 15, margin + 10)
-        if (y > ph - margin) { doc.addPage(); y = rY(); if (section.backgroundImage) await addBackgroundImage(doc, section.backgroundImage); doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.text(section.title + ' (cont.)', pw / 2, y, { align: 'center' }); y += 10; doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5) }
-
-        doc.setFont('helvetica', 'italic')
-        const lines = doc.splitTextToSize(`"${p.text}"`, pw - margin * 2)
-        for (const line of lines) {
-          if (y > ph - margin) { doc.addPage(); y = rY(); }
-          doc.text(line as string, margin, y)
-          y += 5
-        }
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(8)
-        doc.setTextColor(130)
-        doc.text(`— ${p.author}`, margin, y + 2)
-        y += 8
-        doc.setTextColor(section.backgroundImage ? 245 : 0)
-        doc.setFontSize(9.5)
-      }
-    }
-
-    if (content.entries) {
-      doc.setFont('helvetica', 'normal')
-      doc.setFontSize(9.5)
-      for (const entry of content.entries) {
-        if (y > ph - margin) { doc.addPage(); y = Math.min(ph / 2 - 15, margin + 10); }
-        doc.setFont('helvetica', 'bold')
-        doc.setFontSize(11)
-        doc.text(entry.title, margin, y)
-        y += 7
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(8)
-        doc.setTextColor(120)
-        doc.text(`[${entry.type}]`, margin, y)
-        y += 5
-        doc.setTextColor(section.backgroundImage ? 245 : 0)
-        doc.setFontSize(9.5)
-        if (entry.body) {
-          renderText(doc, stripHtml(entry.body), margin, pw, ph, { y })
-        }
-        y += 4
-      }
-    }
-
-    if (content.interviews) {
-      for (const item of content.interviews) {
-        if (y > ph - margin) { doc.addPage(); y = Math.min(ph / 2 - 15, margin + 10); }
-        doc.setFont('helvetica', 'bold')
-        doc.setFontSize(11)
-        doc.text(item.subject, margin, y)
-        y += 7
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(9.5)
-        if (item.body) {
-          renderText(doc, stripHtml(item.body), margin, pw, ph, { y })
-        }
-        y += 4
-      }
-    }
-
-    if (content.reviews) {
-      for (const item of content.reviews) {
-        if (y > ph - margin) { doc.addPage(); y = Math.min(ph / 2 - 15, margin + 10); }
-        doc.setFont('helvetica', 'bold')
-        doc.setFontSize(11)
-        doc.text(item.title, margin, y)
-        y += 7
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(9.5)
-        if (item.body) {
-          renderText(doc, stripHtml(item.body), margin, pw, ph, { y })
-        }
-        y += 4
-      }
-    }
-
-    if (content.collages) {
-      doc.setFont('helvetica', 'normal')
-      doc.setFontSize(9.5)
-      doc.setTextColor(section.backgroundImage ? 245 : 0)
-      doc.text(`Collages (${content.collages.length}):`, margin, y)
-      y += 6
-      for (const item of content.collages) {
-        if (y > ph - margin) { doc.addPage(); y = Math.min(ph / 2 - 15, margin + 10); }
-        if (item.image) {
-          await renderCollageImage(doc, item.image, margin, pw, ph, { y })
-        } else {
-          doc.setTextColor(120)
-          doc.text(`- ${item.description || 'sense descripció'}`, margin, y)
-          y += 5
-          doc.setTextColor(section.backgroundImage ? 245 : 0)
-        }
-      }
-    }
-    if (content.crossword) {
-      doc.setFont('helvetica', 'bold')
       doc.setFontSize(12)
-      doc.text('Mots Encreuats', margin, y)
-      y += 8
-      doc.setFont('helvetica', 'normal')
-      doc.setFontSize(9.5)
-      const gridBottom = drawCrossword(doc, content.crossword, margin, pw, y)
-      y = gridBottom + 2
-      renderClues(doc, content.crossword, margin, pw, ph, { y })
+      doc.setTextColor(200, 200, 200)
+      doc.text(c.subtitle.toUpperCase(), CX, 128, { align: 'center' })
     }
+
+    // Red divider
+    doc.setDrawColor(220, 38, 38)
+    doc.setLineWidth(0.6)
+    doc.line(CX - 40, 138, CX + 40, 138)
+
+    // Topic
+    if (c.topic) {
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(10)
+      doc.setTextColor(160, 160, 160)
+      doc.text(c.topic, CX, 155, { align: 'center' })
+    }
+
+    // Issue number
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9)
+    doc.setTextColor(100, 100, 100)
+    doc.text(`NÚMERO ${issueData.number}`, CX, PH - 40, { align: 'center' })
+
+    // Border box
+    doc.setDrawColor(255, 255, 255)
+    doc.setLineWidth(0.6)
+    doc.rect(16, 30, PW - 32, PH - 60)
+
+    doc.setDrawColor(220, 38, 38)
+    doc.setLineWidth(0.15)
+    doc.rect(20, 34, PW - 40, PH - 68)
+  }
+
+  // ═══════════════ SECTIONS ═══════════════
+  for (const section of issueData.sections) {
+    if (section.type === 'portada') continue
+
+    doc.addPage()
+    const hasBg = !!section.backgroundImage
+    if (hasBg) await addBg(doc, section.backgroundImage!)
+
+    const a = acc(section)
+    const c = section.content
+
+    // Title + optional subtitle + rule
+    let y = M + 8
+    y = titleBlock(doc, section, y)
+
+    // ── EDITORIAL ──
+    if (section.type === 'editorial' && c.body) {
+      y = prose(doc, c.body, y, hasBg)
+    }
+
+    // ── ACLARIMENT CULTURAL ──
+    if (section.type === 'aclariment_cultural' && c.body) {
+      // Left accent bar
+      doc.setFillColor(...a)
+      doc.rect(M, y, 3, 80, 'F')
+      y = prose(doc, c.body, y + 2, hasBg)
+    }
+
+    // ── VISITA ──
+    if (section.type === 'visita' && c.body) {
+      if (c.source) {
+        y = brk(doc, y, 6)
+        doc.setFont('helvetica', 'italic')
+        doc.setFontSize(8.5)
+        doc.setTextColor(130, 130, 130)
+        doc.text(c.source, M, y)
+        y += 8
+      }
+
+      // Large opening quote
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(36)
+      doc.setTextColor(a[0], a[1], a[2])
+      doc.text('"', M, y + 2)
+
+      doc.setFont('helvetica', 'italic')
+      doc.setFontSize(10)
+      const tc2: [number, number, number] = hasBg ? [225, 225, 225] : [60, 60, 60]
+      doc.setTextColor(tc2[0], tc2[1], tc2[2])
+      const blines = toLines(doc, stripHtml(c.body), COL_W - 10)
+      for (const l of blines) {
+        y = brk(doc, y, 5.5)
+        doc.text(l as string, M + 10, y)
+        y += 5.5
+      }
+      y += 4
+
+      // Closing quote
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(36)
+      doc.setTextColor(a[0], a[1], a[2])
+      doc.text('"', PW - M - 14, y - 8)
+      y += 6
+    }
+
+    // ── FADU CATALÀ ──
+    if (c.entries) {
+      for (let i = 0; i < c.entries.length; i++) {
+        const entry = c.entries[i]
+        const badge =
+          entry.type === 'biography' ? 'Biografia apòcrifa' :
+          entry.type === 'ucronia' ? 'Ucronia' : 'Personatge'
+        y = entryCard(doc, entry.title, entry.body, badge, y, a, hasBg, i)
+      }
+    }
+
+    // ── PÀGINES GROGUES ──
+    if (c.proverbs) {
+      for (const p of c.proverbs) {
+        y = quoteCard(doc, p.text, p.author, y, a, hasBg)
+      }
+    }
+
+    // ── CALAIX DE SASTRE ──
+    if (c.interviews) {
+      y = sectionLabelBar(doc, 'Entrevistes', y, a)
+      for (const item of c.interviews) {
+        y = entryCard(doc, item.subject, item.body, null, y, a, hasBg, 0)
+      }
+    }
+
+    if (c.reviews) {
+      y = sectionLabelBar(doc, 'Crítiques', y, a)
+      for (const item of c.reviews) {
+        y = entryCard(doc, item.title, item.body, null, y, a, hasBg, 0)
+      }
+    }
+
+    // ── FULL MURAL ──
+    if (c.collages) {
+      y = brk(doc, y, 6)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(9)
+      doc.setTextColor(a[0], a[1], a[2])
+      doc.text('COLLAGES', M, y)
+      y += 8
+      y = await collageGrid(doc, c.collages, y, a, hasBg)
+    }
+
+    // ── LUDITA ──
+    if (c.crossword) {
+      const cell = 7
+      const gs = c.crossword.gridSize || 11
+      const gp = gs * cell
+      const sx = (PW - gp) / 2
+
+      y = brk(doc, y, 6)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(14)
+      doc.setTextColor(a[0], a[1], a[2])
+      doc.text('MOTS ENCREUATS', CX, y, { align: 'center' })
+      y += 10
+
+      // Grid
+      doc.setDrawColor(140, 140, 140)
+      doc.setLineWidth(0.3)
+      for (let r = 0; r < gs; r++) {
+        for (let cc = 0; cc < gs; cc++) {
+          doc.rect(sx + cc * cell, y + r * cell, cell, cell)
+        }
+      }
+
+      // Numbers
+      doc.setFontSize(5)
+      doc.setTextColor(160)
+      const across = c.crossword.clues?.across || {}
+      const down = c.crossword.clues?.down || {}
+      for (const [num, clue] of Object.entries(across) as [string, any][]) {
+        doc.text(num.toString(), sx + (clue.col || 0) * cell + 0.4, y + (clue.row || 0) * cell + 4.5)
+      }
+      for (const [num, clue] of Object.entries(down) as [string, any][]) {
+        doc.text(num.toString(), sx + (clue.col || 0) * cell + 0.4, y + (clue.row || 0) * cell + 4.5)
+      }
+
+      y += gp + 10
+
+      // Clues
+      const textCol: [number, number, number] = hasBg ? [220, 220, 220] : [80, 80, 80]
+      if (Object.keys(across).length > 0) {
+        y = brk(doc, y, 8)
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(9)
+        doc.setTextColor(120, 120, 120)
+        doc.text('Horitzontals', M, y)
+        y += 6
+        doc.setFont('helvetica', 'normal')
+        doc.setFontSize(8)
+        doc.setTextColor(textCol[0], textCol[1], textCol[2])
+        for (const [num, clue] of Object.entries(across) as [string, any][]) {
+          const lines = toLines(doc, `${num}. ${clue.clue || ''}`, COL_W - 5)
+          for (const l of lines) { y = brk(doc, y, 4.5); doc.text(l as string, M + 3, y); y += 4.5 }
+        }
+        y += 4
+      }
+      if (Object.keys(down).length > 0) {
+        y = brk(doc, y, 8)
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(9)
+        doc.setTextColor(120, 120, 120)
+        doc.text('Verticals', M, y)
+        y += 6
+        doc.setFont('helvetica', 'normal')
+        doc.setFontSize(8)
+        doc.setTextColor(textCol[0], textCol[1], textCol[2])
+        for (const [num, clue] of Object.entries(down) as [string, any][]) {
+          const lines = toLines(doc, `${num}. ${clue.clue || ''}`, COL_W - 5)
+          for (const l of lines) { y = brk(doc, y, 4.5); doc.text(l as string, M + 3, y); y += 4.5 }
+        }
+      }
+    }
+
+    // Footer
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(7)
+    doc.setTextColor(100, 100, 100)
+    doc.text('Xerrac!', M, PH - 15)
+    doc.text(section.title, CX, PH - 15, { align: 'center' })
   }
 
   doc.save(`xerrac-numero-${issueData.number}.pdf`)
