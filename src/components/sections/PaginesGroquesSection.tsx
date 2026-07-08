@@ -12,17 +12,17 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
       <div className="space-y-8">
         {content.proverbs?.map((proverb: Proverb, i: number) => (
           <div key={i} className="group">
-            <span className="text-[10px] text-gray-700 font-mono block mb-2">
+            <span className="text-[10px] text-gray-500 font-mono block mb-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
               #{String(i + 1).padStart(2, '0')}
             </span>
-            <blockquote className="text-lg md:text-xl text-gray-300 italic leading-relaxed mb-2">
+            <blockquote className="text-lg md:text-xl text-gray-200 italic leading-relaxed mb-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
               &ldquo;{proverb.text}&rdquo;
             </blockquote>
-            <p className="text-sm text-gray-600 text-right">
+            <p className="text-sm text-gray-400 text-right drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
               — {proverb.author}
             </p>
             {i < content.proverbs.length - 1 && (
-              <div className="mt-6 h-px bg-gray-900" />
+              <div className="mt-6 h-px bg-gray-800" />
             )}
           </div>
         ))}

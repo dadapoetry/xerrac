@@ -22,7 +22,7 @@ export default async function AdminDashboard() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="p-6 border border-gray-800 radical-border">
           <p className="text-3xl font-bold text-white">{issues.length}</p>
           <p className="text-sm text-gray-500 mt-1">Números totals</p>
@@ -39,6 +39,17 @@ export default async function AdminDashboard() {
           </p>
           <p className="text-sm text-gray-500 mt-1">Seccions totals</p>
         </div>
+        <Link
+          href="/admin/config"
+          className="p-6 border border-gray-800 radical-border hover:border-red-900/40 transition-colors group"
+        >
+          <p className="text-xs text-gray-600 uppercase tracking-wider mb-1 group-hover:text-red-400 transition-colors">
+            Configuració
+          </p>
+          <p className="text-sm text-gray-400">
+            Footer, ISSN, xarxes
+          </p>
+        </Link>
       </div>
 
       <div className="border border-gray-800">

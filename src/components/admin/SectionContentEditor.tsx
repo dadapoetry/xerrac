@@ -309,39 +309,7 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
       )
 
     case 'ludita':
-      return (
-        <div className="space-y-4">
-          <p className="text-xs text-gray-500">Configuració del crucigrama</p>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Mida de la graella</label>
-            <input
-              type="number"
-              value={data.crossword?.gridSize || 11}
-              onChange={(e) => {
-                const newData = { ...data, crossword: { ...(data.crossword || {}), gridSize: parseInt(e.target.value) || 11, clues: { across: {}, down: {} } } }
-                onChange(JSON.stringify(newData))
-              }}
-              className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
-              min="5"
-              max="20"
-            />
-          </div>
-          <p className="text-xs text-gray-600">
-            Per editar el crucigrama completament, utilitza l&apos;editor de codi JSON o contacta amb el desenvolupador.
-          </p>
-          <textarea
-            value={JSON.stringify(data, null, 2)}
-            onChange={(e) => {
-              try {
-                JSON.parse(e.target.value)
-                onChange(e.target.value)
-              } catch { }
-            }}
-            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm font-mono"
-            rows={15}
-          />
-        </div>
-      )
+      return <CrosswordEditor data={data} onChange={onChange} />
 
     default:
       return (
@@ -353,4 +321,125 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
         />
       )
   }
+}
+
+function CrosswordEditor({ data, onChange }: { data: any; onChange: (json: string) => void }) {
+  const crossword = data.crossword || { gridSize: 11, clues: { across: {}, down: {} } }
+
+  const setCw = (cw: any) => {
+    onChange(JSON.stringify({ ...data, crossword: cw }))
+  }
+
+  const addClue = (dir: 'across' | 'down') => {
+    const clues = { ...crossword.clues }
+    const dirClues = { ...(clues[dir] || {}) }
+    const keys = Object.keys(dirClues).map(Number).filter(n => !isNaN(n))
+    const next = keys.length > 0 ? Math.max(...keys) + 1 : 1
+    dirClues[String(next)] = { clue: '', answer: '', row: 0, col: 0 }
+    setCw({ ...crossword, clues: { ...clues, [dir]: dirClues } })
+  }
+
+  const removeClue = (dir: 'across' | 'down', num: string) => {
+    const clues = { ...crossword.clues }
+    const dirClues = { ...(clues[dir] || {}) }
+    delete dirClues[num]
+    setCw({ ...crossword, clues: { ...clues, [dir]: dirClues } })
+  }
+
+  const updateClue = (dir: 'across' | 'down', num: string, field: string, value: any) => {
+    const clues = { ...crossword.clues }
+    const dirClues = { ...(clues[dir] || {}) }
+    dirClues[num] = { ...(dirClues[num] || {}), [field]: value }
+    setCw({ ...crossword, clues: { ...clues, [dir]: dirClues } })
+  }
+
+  const renderClues = (dir: 'across' | 'down', label: string) => {
+    const entries = Object.entries(crossword.clues?.[dir] || {})
+    return (
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h4 className="text-xs uppercase text-gray-500">{label}</h4>
+          <button
+            type="button"
+            onClick={() => addClue(dir)}
+            className="text-xs text-red-400 hover:text-red-300 transition-colors"
+          >
+            + Afegir
+          </button>
+        </div>
+        {entries.length === 0 ? (
+          <p className="text-xs text-gray-600 italic">Cap pista</p>
+        ) : (
+          entries.map(([num, clue]: [string, any]) => (
+            <div key={num} className="p-3 border border-gray-700 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">Pista #{num}</span>
+                <button
+                  type="button"
+                  onClick={() => removeClue(dir, num)}
+                  className="text-xs text-red-500 hover:text-red-400"
+                >
+                  Eliminar
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="text"
+                  value={clue.clue || ''}
+                  onChange={(e) => updateClue(dir, num, 'clue', e.target.value)}
+                  placeholder="Pista (ex: Moviment que rebutja les màquines (5))"
+                  className="col-span-2 bg-black border border-gray-700 px-3 py-1.5 text-white text-xs"
+                />
+                <input
+                  type="text"
+                  value={clue.answer || ''}
+                  onChange={(e) => updateClue(dir, num, 'answer', e.target.value.toUpperCase())}
+                  placeholder="Resposta"
+                  className="bg-black border border-gray-700 px-3 py-1.5 text-white text-xs uppercase"
+                />
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={clue.row ?? 0}
+                    onChange={(e) => updateClue(dir, num, 'row', parseInt(e.target.value) || 0)}
+                    placeholder="Fila"
+                    className="w-full bg-black border border-gray-700 px-3 py-1.5 text-white text-xs"
+                    min="0"
+                  />
+                  <input
+                    type="number"
+                    value={clue.col ?? 0}
+                    onChange={(e) => updateClue(dir, num, 'col', parseInt(e.target.value) || 0)}
+                    placeholder="Col"
+                    className="w-full bg-black border border-gray-700 px-3 py-1.5 text-white text-xs"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      <p className="text-xs text-gray-500">Configuració del crucigrama</p>
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Mida de la graella</label>
+        <input
+          type="number"
+          value={crossword.gridSize || 11}
+          onChange={(e) => setCw({ ...crossword, gridSize: parseInt(e.target.value) || 11 })}
+          className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+          min="5"
+          max="20"
+        />
+      </div>
+
+      {renderClues('across', 'Horitzontals')}
+      {renderClues('down', 'Verticals')}
+    </div>
+  )
 }

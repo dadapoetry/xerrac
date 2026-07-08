@@ -36,7 +36,7 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
               className="absolute inset-0 z-0 bg-cover bg-center bg-fixed"
               style={{ backgroundImage: `url("${section.backgroundImage}")` }}
             />
-            <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
+            <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
           </>
         )}
         <div className="relative z-[3] w-full">

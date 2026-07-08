@@ -8,23 +8,23 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
 
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
-      <SectionHeader number={index + 1} title={section.title} />
+      <SectionHeader number={index + 1} title={section.title} subtitle="Turisme teòric"  />
 
       {content.source && (
-        <p className="text-xs text-gray-600 mb-6 italic tracking-wider">
+        <p className="text-xs text-gray-400 mb-6 italic tracking-wider drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
           {content.source}
         </p>
       )}
 
       <div>
-        <span className="text-5xl text-red-500/20 font-serif leading-none block -mb-4">&ldquo;</span>
+        <span className="text-5xl text-red-500/20 font-serif leading-none block -mb-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">&ldquo;</span>
         <div className="pl-8 pr-4">
           <div
-            className="text-gray-400 leading-relaxed text-[15px] md:text-base italic"
+            className="text-gray-300 leading-relaxed text-[15px] md:text-base italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
             dangerouslySetInnerHTML={{ __html: content.body }}
           />
         </div>
-        <span className="text-5xl text-red-500/20 font-serif leading-none block text-right -mt-4">&rdquo;</span>
+        <span className="text-5xl text-red-500/20 font-serif leading-none block text-right -mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">&rdquo;</span>
       </div>
     </div>
   )

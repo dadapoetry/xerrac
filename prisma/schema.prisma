@@ -40,3 +40,8 @@ model Section {
   updatedAt       DateTime @updatedAt
   issue           Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
 }
+
+model Settings {
+  key   String @id
+  value String @default("")
+}

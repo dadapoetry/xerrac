@@ -12,7 +12,7 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {content.collages?.map((collage: CollageEntry, i: number) => (
           <div key={i} className="group">
-            <div className="aspect-[4/3] bg-gray-900 flex items-center justify-center relative overflow-hidden mb-3">
+            <div className="aspect-[4/3] bg-gray-800 flex items-center justify-center relative overflow-hidden mb-3">
               {collage.image ? (
                 <img
                   src={collage.image}
@@ -20,10 +20,10 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               ) : (
-                <p className="text-gray-700 text-xs">Imatge no disponible</p>
+                <p className="text-gray-500 text-xs">Imatge no disponible</p>
               )}
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-xs text-gray-300 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
               {collage.description}
             </p>
           </div>

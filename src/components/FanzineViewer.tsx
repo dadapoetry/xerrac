@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { IssueData, SECTION_LABELS } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
-import { generatePDF } from '@/lib/pdf'
+
 import { Logo } from './Logo'
 
 interface FanzineViewerProps {
@@ -33,7 +33,7 @@ function scrollToSectionEl(index: number) {
 export function FanzineViewer({ issue }: FanzineViewerProps) {
   const sortedSections = [...issue.sections].sort((a, b) => a.order - b.order)
   const [activeSection, setActiveSection] = useState(0)
-  const [generatingPdf, setGeneratingPdf] = useState(false)
+
 
   useEffect(() => {
     let raf: number
@@ -70,28 +70,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     if (cur > 0) scrollToSectionEl(cur - 1)
   }, [])
 
-  const handlePdf = async () => {
-    setGeneratingPdf(true)
-    try {
-      const sections = sortedSections.map((s) => ({
-        type: s.type,
-        title: s.title,
-        content: s.content,
-        backgroundImage: s.backgroundImage,
-      }))
-      await generatePDF({
-        number: issue.number,
-        title: issue.title,
-        date: issue.date,
-        sections,
-      })
-    } catch {
-      window.print()
-    } finally {
-      setGeneratingPdf(false)
-    }
-  }
-
   const progress = ((activeSection + 1) / sortedSections.length) * 100
   const canGoPrev = activeSection > 0
   const canGoNext = activeSection < sortedSections.length - 1
@@ -111,7 +89,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             />
           </div>
 
-          <span className="text-[11px] text-gray-600 font-mono tracking-wider">
+          <span className="text-[11px] text-gray-400 font-mono tracking-wider">
             {String(activeSection + 1).padStart(2, '0')}/{String(sortedSections.length).padStart(2, '0')}
           </span>
         </div>
@@ -119,12 +97,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
       {/* Side buttons */}
       <div className="fixed right-4 bottom-6 z-50 no-print flex flex-col gap-2">
-        <button
-          onClick={handlePdf}
-          disabled={generatingPdf}
-          className="w-9 h-9 border border-gray-800 bg-black/80 text-gray-600 flex items-center justify-center hover:border-red-500/50 hover:text-red-400 disabled:opacity-50 transition-all text-xs"
-          title="PDF"
-        >{generatingPdf ? '...' : '⎙'}</button>
         <a
           href="/arxiu"
           className="w-9 h-9 border border-gray-800 bg-black/80 text-gray-600 flex items-center justify-center hover:border-red-500/50 hover:text-red-400 transition-all text-xs"

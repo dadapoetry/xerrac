@@ -129,7 +129,7 @@ async function main() {
     },
     {
       id: uuid(), issueId, type: 'ludita', order: 8,
-      title: 'Ludita - Mots Encreuats',
+      title: 'Ludita',
       content: JSON.stringify({
         crossword: {
           gridSize: 11,
@@ -161,6 +161,30 @@ async function main() {
       sql: 'INSERT INTO Section (id, issueId, type, "order", title, content, backgroundImage) VALUES (?, ?, ?, ?, ?, ?, ?)',
       args: [section.id, section.issueId, section.type, section.order, section.title, section.content, section.backgroundImage],
     })
+  }
+
+  // Default settings
+  const defaultSettings: { key: string; value: string }[] = [
+    { key: 'footer_copyright', value: '© 2025 Xerrac!' },
+    { key: 'footer_issn', value: 'ISSN 2938-2026 (en tràmit)' },
+    { key: 'footer_social_links', value: JSON.stringify([
+      { name: 'Instagram', url: 'https://instagram.com/xerrac' },
+      { name: 'Twitter / X', url: 'https://x.com/xerrac' },
+      { name: 'Bluesky', url: 'https://bsky.app/profile/xerrac.bsky.social' },
+    ]) },
+  ]
+
+  for (const s of defaultSettings) {
+    const existing = await db.execute({
+      sql: 'SELECT key FROM Settings WHERE key = ?',
+      args: [s.key],
+    })
+    if (existing.rows.length === 0) {
+      await db.execute({
+        sql: 'INSERT INTO Settings (key, value) VALUES (?, ?)',
+        args: [s.key, s.value],
+      })
+    }
   }
 
   console.log('Seed completed!')

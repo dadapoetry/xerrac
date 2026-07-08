@@ -31,3 +31,8 @@ CREATE TABLE IF NOT EXISTS Section (
 
 CREATE INDEX IF NOT EXISTS idx_section_issueId ON Section(issueId);
 CREATE INDEX IF NOT EXISTS idx_section_order ON Section("order");
+
+CREATE TABLE IF NOT EXISTS Settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL DEFAULT ''
+);
