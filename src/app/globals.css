@@ -3,30 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --xerrac-black: #0a0a0a;
-  --xerrac-white: #f5f5f5;
-  --xerrac-red: #dc2626;
-  --xerrac-yellow: #eab308;
-  --xerrac-gray: #a3a3a3;
-  --xerrac-red-dim: rgba(220, 38, 38, 0.15);
-  --xerrac-red-glow: rgba(220, 38, 38, 0.08);
-}
-
-@layer utilities {
-  .saw-text {
-    @apply font-black tracking-tight uppercase;
-  }
-  .saw-glow {
-    box-shadow: 0 0 30px rgba(220, 38, 38, 0.15);
-  }
-  .saw-border {
-    border: 2px solid var(--xerrac-red);
-    box-shadow: 6px 6px 0px 0px rgba(220, 38, 38, 0.4);
-  }
-  .saw-border-sm {
-    border: 1px solid var(--xerrac-red);
-    box-shadow: 3px 3px 0px 0px rgba(220, 38, 38, 0.3);
-  }
+  --black: #000000;
+  --white: #fafafa;
+  --red: #ef4444;
+  --gray-900: #171717;
+  --gray-700: #404040;
+  --gray-500: #737373;
+  --gray-400: #a3a3a3;
 }
 
 * {
@@ -40,8 +23,8 @@ html {
 }
 
 body {
-  background-color: var(--xerrac-black);
-  color: var(--xerrac-white);
+  background-color: var(--black);
+  color: var(--white);
   overflow-x: hidden;
 }
 
@@ -57,13 +40,22 @@ body {
   overflow: hidden;
 }
 
-/* stacking managed via inline z-index classes on children */
-
 .section-divider {
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--xerrac-red), transparent);
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  opacity: 0.3;
   margin: 0;
+}
+
+/* Prose overrides for consistent editorial body text */
+.prose-invert {
+  --tw-prose-body: #d4d4d4;
+  --tw-prose-bold: #f5f5f5;
+  --tw-prose-headings: #fafafa;
+  --tw-prose-links: #ef4444;
+  --tw-prose-quotes: #d4d4d4;
+  --tw-prose-quote-borders: #ef4444;
 }
 
 .crossword-cell input {
@@ -72,7 +64,7 @@ body {
   text-align: center;
   background: transparent;
   border: none;
-  color: var(--xerrac-white);
+  color: var(--white);
   font-family: 'Courier New', Courier, monospace;
   font-size: 1.25rem;
   text-transform: uppercase;
@@ -80,31 +72,12 @@ body {
 }
 
 .crossword-cell input:focus {
-  background: rgba(220, 38, 38, 0.2);
+  background: rgba(239, 68, 68, 0.15);
 }
 
 .quill-editor .ql-editor {
   min-height: 200px;
-  color: var(--xerrac-black);
-}
-
-.radical-border {
-  border: 2px solid var(--xerrac-white);
-  box-shadow: 4px 4px 0px 0px var(--xerrac-red);
-}
-
-.radical-border-yellow {
-  border: 2px solid var(--xerrac-yellow);
-  box-shadow: 4px 4px 0px 0px var(--xerrac-yellow);
-}
-
-.brutal-underline {
-  text-decoration: none;
-  background-image: linear-gradient(var(--xerrac-red), var(--xerrac-red));
-  background-repeat: no-repeat;
-  background-position: left bottom;
-  background-size: 100% 3px;
-  padding-bottom: 2px;
+  color: var(--black);
 }
 
 @media print {

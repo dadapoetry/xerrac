@@ -11,7 +11,7 @@ import { VisitaSection } from './sections/VisitaSection'
 import { FullMuralSection } from './sections/FullMuralSection'
 import { LuditaSection } from './sections/LuditaSection'
 
-const sectionMap: Record<string, React.FC<{ section: SectionData }>> = {
+const sectionMap: Record<string, React.FC<{ section: SectionData; index: number }>> = {
   portada: PortadaSection,
   editorial: EditorialSection,
   aclariment_cultural: AclarimentCulturalSection,
@@ -23,7 +23,7 @@ const sectionMap: Record<string, React.FC<{ section: SectionData }>> = {
   ludita: LuditaSection,
 }
 
-export function SectionRenderer({ section }: { section: SectionData }) {
+export function SectionRenderer({ section, index }: { section: SectionData; index: number }) {
   const Component = sectionMap[section.type]
   if (!Component) return null
 
@@ -40,10 +40,10 @@ export function SectionRenderer({ section }: { section: SectionData }) {
           </>
         )}
         <div className="relative z-[3] w-full">
-          <Component section={section} />
+          <Component section={section} index={index} />
         </div>
       </div>
-      <div className="section-divider" />
+      {section.type !== 'portada' && <div className="section-divider" />}
     </>
   )
 }

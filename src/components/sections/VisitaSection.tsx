@@ -1,30 +1,30 @@
 'use client'
 
 import { SectionData, VisitaContent } from '@/types'
+import { SectionHeader } from '@/components/SectionHeader'
 
-export function VisitaSection({ section }: { section: SectionData }) {
+export function VisitaSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as VisitaContent
 
   return (
-    <div className="max-w-3xl w-full mx-auto py-12">
-      <h2 className="text-4xl md:text-5xl font-bold mb-2 text-red-400 uppercase tracking-tight">
-        {section.title}
-      </h2>
+    <div className="max-w-2xl w-full mx-auto py-12">
+      <SectionHeader number={index + 1} title={section.title} />
+
       {content.source && (
-        <p className="text-sm text-gray-600 mb-8 italic">
+        <p className="text-xs text-gray-600 mb-6 italic tracking-wider">
           {content.source}
         </p>
       )}
-      <div className="relative">
-        <span className="text-6xl text-red-800 font-serif absolute -top-4 -left-2 opacity-30">&ldquo;</span>
-        <div className="pl-8 pr-4 pt-4">
+
+      <div>
+        <span className="text-5xl text-red-500/20 font-serif leading-none block -mb-4">&ldquo;</span>
+        <div className="pl-8 pr-4">
           <div
-            className="text-gray-200 text-justify leading-relaxed prose prose-invert prose-lg max-w-none
-              prose-strong:text-red-300 prose-em:text-gray-400"
+            className="text-gray-400 leading-relaxed text-[15px] md:text-base italic"
             dangerouslySetInnerHTML={{ __html: content.body }}
           />
         </div>
-        <span className="text-6xl text-red-800 font-serif absolute -bottom-12 -right-2 opacity-30">&rdquo;</span>
+        <span className="text-5xl text-red-500/20 font-serif leading-none block text-right -mt-4">&rdquo;</span>
       </div>
     </div>
   )

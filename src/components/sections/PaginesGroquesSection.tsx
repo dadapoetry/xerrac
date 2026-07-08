@@ -1,35 +1,29 @@
 'use client'
 
 import { SectionData, PaginesGroquesContent, Proverb } from '@/types'
+import { SectionHeader } from '@/components/SectionHeader'
 
-export function PaginesGroquesSection({ section }: { section: SectionData }) {
+export function PaginesGroquesSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as PaginesGroquesContent
 
   return (
-    <div className="max-w-3xl w-full mx-auto py-12">
-      <h2 className="text-4xl md:text-5xl font-bold mb-2 text-yellow-400 uppercase tracking-tight">
-        {section.title}
-      </h2>
-      <p className="text-sm text-gray-500 mb-8 uppercase tracking-wider">
-        Proverbis accidentals
-      </p>
-      <div className="space-y-6">
+    <div className="max-w-2xl w-full mx-auto py-12">
+      <SectionHeader number={index + 1} title={section.title} subtitle="Proverbis accidentals" />
+      <div className="space-y-8">
         {content.proverbs?.map((proverb: Proverb, i: number) => (
-          <div
-            key={i}
-            className="group relative p-6 border border-gray-800
-              hover:border-yellow-400/50 transition-all duration-300"
-          >
-            <span className="absolute -top-3 left-4 bg-black px-2 text-xs text-yellow-600">
-              #{i + 1}
+          <div key={i} className="group">
+            <span className="text-[10px] text-gray-700 font-mono block mb-2">
+              #{String(i + 1).padStart(2, '0')}
             </span>
-            <p className="text-xl md:text-2xl text-gray-200 italic mb-3 leading-relaxed
-              group-hover:text-white transition-colors">
+            <blockquote className="text-lg md:text-xl text-gray-300 italic leading-relaxed mb-2">
               &ldquo;{proverb.text}&rdquo;
-            </p>
-            <p className="text-sm text-gray-500 text-right">
+            </blockquote>
+            <p className="text-sm text-gray-600 text-right">
               — {proverb.author}
             </p>
+            {i < content.proverbs.length - 1 && (
+              <div className="mt-6 h-px bg-gray-900" />
+            )}
           </div>
         ))}
       </div>

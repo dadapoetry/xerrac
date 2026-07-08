@@ -100,81 +100,42 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   return (
     <div>
       {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 no-print bg-black/90 backdrop-blur-sm border-b border-red-900/30">
-        <div className="flex items-center gap-3 px-3 h-11">
+      <div className="fixed top-0 left-0 right-0 z-50 no-print bg-black/80 backdrop-blur-sm">
+        <div className="flex items-center gap-4 px-4 h-12">
           <Logo compact />
-          <div className="flex-1 h-px bg-gray-800 relative">
+
+          <div className="flex-1 h-px bg-gray-900 relative">
             <div
-              className="absolute left-0 top-0 h-full bg-red-500 transition-all duration-200"
+              className="absolute left-0 top-0 h-full bg-red-500/60 transition-all duration-200"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs text-gray-400 truncate max-w-[180px] uppercase tracking-wider">
-            {currentSection ? SECTION_LABELS[currentSection.type] || currentSection.title : ''}
+
+          <span className="text-[11px] text-gray-600 font-mono tracking-wider">
+            {String(activeSection + 1).padStart(2, '0')}/{String(sortedSections.length).padStart(2, '0')}
           </span>
-          <span className="text-[10px] text-gray-600 uppercase tracking-widest shrink-0 border border-gray-800 px-1.5 py-0.5">
-            N.{issue.number}
-          </span>
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 no-print bg-black/80 backdrop-blur-sm border-t border-gray-800">
-        <div className="flex items-center justify-between px-4 h-14">
-          <button
-            onClick={goPrev}
-            className={`flex items-center gap-2 px-4 py-2 text-sm transition-colors uppercase tracking-wider ${
-              canGoPrev ? 'text-gray-400 hover:text-white' : 'text-gray-700'
-            }`}
-          >
-            ← {canGoPrev ? SECTION_LABELS[sortedSections[activeSection - 1]?.type] || 'Anterior' : '—'}
-          </button>
-
-          <div className="flex items-center gap-2">
-            {sortedSections.map((s, i) => (
-              <button
-                key={s.id}
-                onClick={() => scrollToSectionEl(i)}
-                className={`text-[10px] uppercase tracking-widest transition-all duration-200 px-1.5 py-1 rounded ${
-                  i === activeSection
-                    ? 'text-red-400 bg-red-900/30 font-bold'
-                    : 'text-gray-600 hover:text-gray-300'
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-
-          <button
-            onClick={goNext}
-            className={`flex items-center gap-2 px-4 py-2 text-sm transition-colors uppercase tracking-wider ${
-              canGoNext ? 'text-gray-400 hover:text-white' : 'text-gray-700'
-            }`}
-          >
-            {canGoNext ? SECTION_LABELS[sortedSections[activeSection + 1]?.type] || 'Següent' : '—'} →
-          </button>
         </div>
       </div>
 
       {/* Side buttons */}
-      <div className="fixed right-4 bottom-20 z-50 no-print flex flex-col gap-2">
+      <div className="fixed right-4 bottom-6 z-50 no-print flex flex-col gap-2">
         <button
           onClick={handlePdf}
           disabled={generatingPdf}
-          className="w-10 h-10 border border-gray-700 bg-black/80 text-gray-500 flex items-center justify-center hover:bg-red-600 hover:border-red-600 hover:text-white disabled:opacity-50 transition-all text-sm"
+          className="w-9 h-9 border border-gray-800 bg-black/80 text-gray-600 flex items-center justify-center hover:border-red-500/50 hover:text-red-400 disabled:opacity-50 transition-all text-xs"
           title="PDF"
         >{generatingPdf ? '...' : '⎙'}</button>
         <a
           href="/arxiu"
-          className="w-10 h-10 border border-gray-700 bg-black/80 text-gray-500 flex items-center justify-center hover:bg-red-600 hover:border-red-600 hover:text-white transition-all text-sm"
+          className="w-9 h-9 border border-gray-800 bg-black/80 text-gray-600 flex items-center justify-center hover:border-red-500/50 hover:text-red-400 transition-all text-xs"
           title="Arxiu"
         >☰</a>
       </div>
 
+      {/* Sections */}
       {sortedSections.map((section, i) => (
         <div key={section.id} data-section-index={i}>
-          <SectionRenderer section={section as any} />
+          <SectionRenderer section={section as any} index={i} />
         </div>
       ))}
     </div>

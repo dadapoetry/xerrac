@@ -1,24 +1,23 @@
 'use client'
 
 import { SectionData, CalaixSastreContent } from '@/types'
+import { SectionHeader } from '@/components/SectionHeader'
 
-export function CalaixSastreSection({ section }: { section: SectionData }) {
+export function CalaixSastreSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as CalaixSastreContent
 
   return (
-    <div className="max-w-3xl w-full mx-auto py-12">
-      <h2 className="text-4xl md:text-5xl font-bold mb-8 text-red-400 uppercase tracking-tight">
-        {section.title}
-      </h2>
+    <div className="max-w-2xl w-full mx-auto py-12">
+      <SectionHeader number={index + 1} title={section.title} />
 
       {content.interviews?.length > 0 && (
         <div className="mb-12">
-          <h3 className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-6">Entrevistes</h3>
+          <span className="text-[10px] text-gray-600 tracking-[0.3em] uppercase block mb-6">Entrevistes</span>
           {content.interviews.map((item, i) => (
-            <div key={i} className="mb-8 p-6 border border-gray-800">
-              <h4 className="text-xl font-bold text-white mb-4">{item.subject}</h4>
+            <div key={i} className="mb-6 pb-6 border-b border-gray-800 last:border-0">
+              <h3 className="text-lg font-bold text-white mb-3">{item.subject}</h3>
               <div
-                className="text-gray-300 text-justify leading-relaxed prose prose-invert max-w-none"
+                className="text-gray-400 leading-relaxed text-[15px] md:text-base"
                 dangerouslySetInnerHTML={{ __html: item.body }}
               />
             </div>
@@ -28,12 +27,12 @@ export function CalaixSastreSection({ section }: { section: SectionData }) {
 
       {content.reviews?.length > 0 && (
         <div>
-          <h3 className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-6">Crítiques</h3>
+          <span className="text-[10px] text-gray-600 tracking-[0.3em] uppercase block mb-6">Crítiques</span>
           {content.reviews.map((item, i) => (
-            <div key={i} className="mb-8 p-6 border border-gray-800">
-              <h4 className="text-xl font-bold text-white mb-4">{item.title}</h4>
+            <div key={i} className="mb-6 pb-6 border-b border-gray-800 last:border-0">
+              <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
               <div
-                className="text-gray-300 text-justify leading-relaxed prose prose-invert max-w-none"
+                className="text-gray-400 leading-relaxed text-[15px] md:text-base"
                 dangerouslySetInnerHTML={{ __html: item.body }}
               />
             </div>

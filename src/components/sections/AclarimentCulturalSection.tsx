@@ -1,21 +1,17 @@
 'use client'
 
 import { SectionData, AclarimentCulturalContent } from '@/types'
+import { SectionHeader } from '@/components/SectionHeader'
 
-export function AclarimentCulturalSection({ section }: { section: SectionData }) {
+export function AclarimentCulturalSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as AclarimentCulturalContent
 
   return (
-    <div className="max-w-3xl w-full mx-auto py-12">
-      <h2 className="text-4xl md:text-5xl font-bold mb-8 text-yellow-400 uppercase tracking-tight">
-        {section.title}
-      </h2>
-      <div className="relative pl-8 border-l-2 border-yellow-400/30">
+    <div className="max-w-2xl w-full mx-auto py-12">
+      <SectionHeader number={index + 1} title={section.title} />
+      <div className="relative pl-6 border-l border-red-500/30">
         <div
-          className="prose prose-invert prose-lg max-w-none
-            prose-headings:text-white prose-a:text-yellow-400
-            prose-strong:text-yellow-300 prose-em:text-gray-300
-            leading-relaxed space-y-4 text-gray-200 text-justify"
+          className="text-gray-400 leading-relaxed space-y-6 text-[15px] md:text-base"
           dangerouslySetInnerHTML={{ __html: content.body }}
         />
       </div>
