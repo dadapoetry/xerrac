@@ -3,18 +3,19 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "tsx prisma/migrate.ts && next dev",
     "build": "next build",
     "start": "next start",
-    "postinstall": "prisma generate",
-    "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:migrate": "tsx prisma/migrate.ts",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:setup": "tsx prisma/migrate.ts && tsx prisma/seed.ts",
+    "postinstall": "echo 'Run: npm run db:migrate && npm run db:seed'"
   },
   "dependencies": {
-    "@prisma/client": "^5.22.0",
+    "@libsql/client": "^0.14.0",
     "bcryptjs": "^2.4.3",
-    "jspdf": "^2.5.2",
     "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
     "lucide-react": "^0.460.0",
     "next": "^14.2.18",
     "next-auth": "^4.24.8",
@@ -31,7 +32,7 @@
     "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
-    "prisma": "^5.22.0",
+    "prisma": "^7.8.0",
     "tailwindcss": "^3.4.14",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"

@@ -14,7 +14,7 @@ export default async function EditSeccioPage({
 
   if (!issue) notFound()
 
-  const section = issue.sections.find((s) => s.id === params.sectionId)
+  const section = issue.sections.find((s: any) => s.id === params.sectionId)
   if (!section) notFound()
 
   const parsedSection = {

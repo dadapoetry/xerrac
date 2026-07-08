@@ -19,7 +19,7 @@ export default async function HomePage() {
 
   const parsedIssue = {
     ...issue,
-    sections: issue.sections.map((s) => ({
+    sections: (issue.sections as any[]).map((s: any) => ({
       ...s,
       content: JSON.parse(s.content),
     })),
