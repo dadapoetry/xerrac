@@ -26,13 +26,13 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         }
         let bestIdx = 0
         let bestRatio = 0
-        for (const [el, ratio] of ratios) {
+        ratios.forEach((ratio, el) => {
           const idx = (el as HTMLElement).getAttribute('data-section-index')
           if (idx !== null && ratio > bestRatio) {
             bestRatio = ratio
             bestIdx = parseInt(idx)
           }
-        }
+        })
         setCurrentSection(bestIdx)
       },
       { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] }
