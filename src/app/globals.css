@@ -38,10 +38,7 @@ body {
   overflow: hidden;
 }
 
-.section-container > * {
-  position: relative;
-  z-index: 2;
-}
+/* stacking managed via inline z-index classes on children */
 
 .section-divider {
   width: 100%;
