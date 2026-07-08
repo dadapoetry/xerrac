@@ -80,6 +80,13 @@ body {
   color: var(--black);
 }
 
+@media (max-width: 768px) {
+  .section-container {
+    min-height: 100dvh; 
+    padding: 4rem 1rem;
+  }
+}
+
 @media print {
   .no-print {
     display: none !important;
