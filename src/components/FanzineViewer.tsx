@@ -31,16 +31,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const goToSection = (index: number) => {
-    setCurrentSection(index)
-    const el = document.querySelector(
-      `[data-section-index="${index}"]`
-    ) as HTMLElement | null
-    if (!el) return
-    const top = el.getBoundingClientRect().top + window.scrollY
-    window.scrollTo({ top, behavior: 'smooth' })
-  }
-
   const handlePdf = async () => {
     setGeneratingPdf(true)
     try {
@@ -63,6 +53,17 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     }
   }
 
+  const scrollToSection = (index: number) => {
+    if (index < 0 || index >= sortedSections.length) return
+    setCurrentSection(index)
+    const el = document.querySelector(
+      `[data-section-index="${index}"]`
+    ) as HTMLElement | null
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   return (
     <div>
       <div className="fixed top-4 left-4 z-50 no-print">
@@ -73,13 +74,13 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
       <div className="fixed right-4 top-1/2 -translate-y-1/2 no-print z-50 flex flex-col gap-2">
         <button
-          onClick={() => goToSection(Math.max(0, currentSection - 1))}
+          onClick={() => scrollToSection(currentSection - 1)}
           disabled={currentSection === 0}
           className="w-10 h-10 border border-gray-600 bg-black text-white flex items-center justify-center hover:bg-red-600 hover:border-red-600 disabled:opacity-30 disabled:cursor-not-allowed"
           title="Anterior"
         >←</button>
         <button
-          onClick={() => goToSection(Math.min(sortedSections.length - 1, currentSection + 1))}
+          onClick={() => scrollToSection(currentSection + 1)}
           disabled={currentSection === sortedSections.length - 1}
           className="w-10 h-10 border border-gray-600 bg-black text-white flex items-center justify-center hover:bg-red-600 hover:border-red-600 disabled:opacity-30 disabled:cursor-not-allowed"
           title="Següent"
@@ -97,7 +98,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           {sortedSections.map((section, i) => (
             <button
               key={section.id}
-              onClick={() => goToSection(i)}
+              onClick={() => scrollToSection(i)}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 i === currentSection ? 'bg-red-500 w-3 h-3' : 'bg-gray-700 hover:bg-gray-500'
               }`}
