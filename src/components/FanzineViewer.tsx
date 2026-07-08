@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { IssueData, SECTION_LABELS } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { generatePDF } from '@/lib/pdf'
@@ -15,21 +15,30 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [generatingPdf, setGeneratingPdf] = useState(false)
 
   useEffect(() => {
+    const ratios = new Map<Element, number>()
+    const els = document.querySelectorAll('[data-section-index]')
+    els.forEach((el) => ratios.set(el, 0))
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const idx = (entry.target as HTMLElement).getAttribute('data-section-index')
-            if (idx !== null) setCurrentSection(parseInt(idx))
+          ratios.set(entry.target, entry.intersectionRatio)
+        }
+        let bestIdx = 0
+        let bestRatio = 0
+        for (const [el, ratio] of ratios) {
+          const idx = (el as HTMLElement).getAttribute('data-section-index')
+          if (idx !== null && ratio > bestRatio) {
+            bestRatio = ratio
+            bestIdx = parseInt(idx)
           }
         }
+        setCurrentSection(bestIdx)
       },
-      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] }
     )
 
-    const els = document.querySelectorAll('[data-section-index]')
     els.forEach((el) => observer.observe(el))
-
     return () => observer.disconnect()
   }, [sortedSections.length])
 
