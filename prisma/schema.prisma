@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Issue {
+  id        String    @id @default(cuid())
+  number    Int       @unique
+  title     String
+  date      DateTime  @default(now())
+  published Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sections  Section[]
+}
+
+model Section {
+  id              String   @id @default(cuid())
+  issueId         String
+  type            String
+  order           Int
+  title           String   @default("")
+  content         String   @default("{}")
+  backgroundImage String   @default("")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  issue           Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+}
