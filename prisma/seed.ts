@@ -8,7 +8,7 @@ async function main() {
 
   const db = createClient({ url, ...(authToken ? { authToken } : {}) })
 
-  const hashed = await bcrypt.hash('admin123', 12)
+  const hashed = await bcrypt.hash('Xerrac!2026-admin', 12)
 
   const existingUser = await db.execute({
     sql: 'SELECT id FROM User WHERE email = ?',

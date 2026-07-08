@@ -19,16 +19,23 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
+        let maxRatio = 0
+        let maxIdx = -1
         for (const entry of entries) {
           if (entry.isIntersecting) {
             const idx = (entry.target as HTMLElement).dataset.sectionIndex
             if (idx !== undefined) {
-              setCurrentSection(parseInt(idx))
+              const n = parseInt(idx)
+              if (entry.intersectionRatio > maxRatio) {
+                maxRatio = entry.intersectionRatio
+                maxIdx = n
+              }
             }
           }
         }
+        if (maxIdx >= 0) setCurrentSection(maxIdx)
       },
-      { threshold: 0.3, rootMargin: '0px' }
+      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], rootMargin: '0px 0px -50px 0px' }
     )
 
     const els = document.querySelectorAll('[data-section-index]')

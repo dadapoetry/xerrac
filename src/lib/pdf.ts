@@ -2,15 +2,33 @@
 
 import jsPDF from 'jspdf'
 
+interface PrintSection {
+  type: string
+  title: string
+  content: any
+}
+
 interface PrintIssueData {
   number: number
   title: string
   date: Date
-  sections: {
-    type: string
-    title: string
-    content: any
-  }[]
+  sections: PrintSection[]
+}
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#x27;/g, "'").trim()
+}
+
+function renderText(doc: jsPDF, text: string, margin: number, pageWidth: number, pageHeight: number, pos: { y: number }): void {
+  const lines = doc.splitTextToSize(text, pageWidth - margin * 2)
+  for (const line of lines) {
+    if (pos.y > pageHeight - margin) {
+      doc.addPage()
+      pos.y = margin
+    }
+    doc.text(line as string, margin, pos.y)
+    pos.y += 6
+  }
 }
 
 export async function generatePDF(issueData: PrintIssueData) {
@@ -27,122 +45,128 @@ export async function generatePDF(issueData: PrintIssueData) {
     doc.setFont('Courier', 'bold')
     doc.setFontSize(8)
     doc.setTextColor(100)
-    doc.text(section.type.toUpperCase(), margin, margin)
+    doc.text(section.type.toUpperCase() + ' — ' + section.title, margin, margin)
 
-    doc.setFontSize(24)
-    doc.setTextColor(0)
-    doc.text(section.title, margin, margin + 20)
+    let y = margin + 15
 
-    let y = margin + 35
+    const content = section.content
 
-    if (section.content.body) {
-      const textContent = section.content.body.replace(/<[^>]*>/g, '')
-      const lines = doc.splitTextToSize(textContent, pageWidth - margin * 2)
+    if (content.subtitle) {
+      doc.setFontSize(10)
+      doc.setTextColor(150)
+      doc.text(content.subtitle, margin, y)
+      y += 8
+    }
+
+    if (content.topic) {
+      doc.setFont('Courier', 'italic')
+      doc.setFontSize(9)
+      doc.setTextColor(120)
+      doc.text(content.topic, margin, y)
+      y += 10
+    }
+
+    if (content.body) {
       doc.setFont('Courier', 'normal')
       doc.setFontSize(10)
-      lines.forEach((line: string) => {
-        if (y > pageHeight - margin) {
-          doc.addPage()
-          y = margin
-        }
-        doc.text(line, margin, y)
-        y += 6
-      })
+      doc.setTextColor(0)
+      renderText(doc, stripHtml(content.body), margin, pageWidth, pageHeight, { y })
+      y += 4
     }
 
-    if (section.content.proverbs) {
-      section.content.proverbs.forEach((p: any) => {
-        if (y > pageHeight - margin) {
-          doc.addPage()
-          y = margin
-        }
+    if (content.proverbs) {
+      doc.setFont('Courier', 'normal')
+      doc.setFontSize(10)
+      for (const p of content.proverbs) {
+        if (y > pageHeight - margin) { doc.addPage(); y = margin }
         doc.setFont('Courier', 'italic')
-        doc.setFontSize(10)
-        const lines = doc.splitTextToSize(`"${p.text}" — ${p.author}`, pageWidth - margin * 2)
-        lines.forEach((line: string) => {
-          doc.text(line, margin, y)
-          y += 6
-        })
-        y += 4
-      })
+        const lines = doc.splitTextToSize(`"${p.text}"`, pageWidth - margin * 2)
+        for (const line of lines) {
+          if (y > pageHeight - margin) { doc.addPage(); y = margin }
+          doc.text(line as string, margin, y)
+          y += 5
+        }
+        doc.setFont('Courier', 'normal')
+        doc.setTextColor(120)
+        doc.text(`— ${p.author}`, margin, y + 2)
+        y += 10
+      }
     }
 
-    if (section.content.entries) {
-      section.content.entries.forEach((entry: any) => {
-        if (y > pageHeight - margin) {
-          doc.addPage()
-          y = margin
-        }
+    if (content.entries) {
+      doc.setFont('Courier', 'normal')
+      doc.setFontSize(10)
+      for (const entry of content.entries) {
+        if (y > pageHeight - margin) { doc.addPage(); y = margin }
         doc.setFont('Courier', 'bold')
-        doc.setFontSize(12)
+        doc.setFontSize(11)
         doc.text(entry.title, margin, y)
         y += 8
         doc.setFont('Courier', 'normal')
         doc.setFontSize(10)
-        const text = entry.body.replace(/<[^>]*>/g, '')
-        const lines = doc.splitTextToSize(text, pageWidth - margin * 2)
-        lines.forEach((line: string) => {
-          if (y > pageHeight - margin) {
-            doc.addPage()
-            y = margin
-          }
-          doc.text(line, margin, y)
-          y += 6
-        })
+        doc.setTextColor(60)
+        doc.text(`[${entry.type}]`, margin, y)
         y += 6
-      })
+        doc.setTextColor(0)
+        if (entry.body) {
+          renderText(doc, stripHtml(entry.body), margin, pageWidth, pageHeight, { y })
+        }
+        y += 6
+      }
     }
 
-    if (section.content.interviews) {
-      section.content.interviews.forEach((item: any) => {
-        if (y > pageHeight - margin) {
-          doc.addPage()
-          y = margin
-        }
+    if (content.interviews) {
+      for (const item of content.interviews) {
+        if (y > pageHeight - margin) { doc.addPage(); y = margin }
         doc.setFont('Courier', 'bold')
-        doc.setFontSize(12)
+        doc.setFontSize(11)
+        doc.setTextColor(0)
         doc.text(item.subject, margin, y)
         y += 8
         doc.setFont('Courier', 'normal')
         doc.setFontSize(10)
-        const text = item.body.replace(/<[^>]*>/g, '')
-        const lines = doc.splitTextToSize(text, pageWidth - margin * 2)
-        lines.forEach((line: string) => {
-          if (y > pageHeight - margin) {
-            doc.addPage()
-            y = margin
-          }
-          doc.text(line, margin, y)
-          y += 6
-        })
+        if (item.body) {
+          renderText(doc, stripHtml(item.body), margin, pageWidth, pageHeight, { y })
+        }
         y += 6
-      })
+      }
     }
 
-    if (section.content.reviews) {
-      section.content.reviews.forEach((item: any) => {
-        if (y > pageHeight - margin) {
-          doc.addPage()
-          y = margin
-        }
+    if (content.reviews) {
+      for (const item of content.reviews) {
+        if (y > pageHeight - margin) { doc.addPage(); y = margin }
         doc.setFont('Courier', 'bold')
-        doc.setFontSize(12)
+        doc.setFontSize(11)
+        doc.setTextColor(0)
         doc.text(item.title, margin, y)
         y += 8
         doc.setFont('Courier', 'normal')
         doc.setFontSize(10)
-        const text = item.body.replace(/<[^>]*>/g, '')
-        const lines = doc.splitTextToSize(text, pageWidth - margin * 2)
-        lines.forEach((line: string) => {
-          if (y > pageHeight - margin) {
-            doc.addPage()
-            y = margin
-          }
-          doc.text(line, margin, y)
-          y += 6
-        })
+        if (item.body) {
+          renderText(doc, stripHtml(item.body), margin, pageWidth, pageHeight, { y })
+        }
         y += 6
-      })
+      }
+    }
+
+    if (content.collages) {
+      doc.setFont('Courier', 'normal')
+      doc.setFontSize(10)
+      doc.setTextColor(100)
+      doc.text(`[${content.collages.length} collage(s)]`, margin, y)
+      y += 6
+      for (const item of content.collages) {
+        if (y > pageHeight - margin) { doc.addPage(); y = margin }
+        doc.setTextColor(80)
+        doc.text(`- ${item.description || '(sense descripció)'}`, margin, y)
+        y += 6
+      }
+    }
+
+    if (content.crossword) {
+      doc.setTextColor(100)
+      doc.setFontSize(10)
+      renderText(doc, `Crucigrama de ${content.crossword.gridSize}x${content.crossword.gridSize}. Pistes: ${Object.keys(content.crossword.clues?.across || {}).length} horitzontals, ${Object.keys(content.crossword.clues?.down || {}).length} verticals.`, margin, pageWidth, pageHeight, { y })
     }
   }
 
