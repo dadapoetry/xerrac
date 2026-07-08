@@ -40,7 +40,6 @@ export function SectionRenderer({ section }: { section: SectionData }) {
           </>
         )}
         <div className="relative z-[3] w-full">
-          <span className="section-number">{section.type.toUpperCase()}</span>
           <Component section={section} />
         </div>
       </div>
