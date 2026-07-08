@@ -32,6 +32,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [])
 
   const goToSection = (index: number) => {
+    setCurrentSection(index)
     const el = document.querySelector(
       `[data-section-index="${index}"]`
     ) as HTMLElement | null
