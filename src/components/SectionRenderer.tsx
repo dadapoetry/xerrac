@@ -27,20 +27,13 @@ export function SectionRenderer({ section }: { section: SectionData }) {
   const Component = sectionMap[section.type]
   if (!Component) return null
 
-  const bgStyle = section.backgroundImage
-    ? {
-        backgroundImage: `url(${section.backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }
-    : {}
-
   return (
     <>
       <div
-        id={`section-${section.id}`}
         className={`section-container ${section.backgroundImage ? 'has-bg' : ''}`}
-        style={section.backgroundImage ? { ...bgStyle } : {}}
+        style={section.backgroundImage ? {
+          '--bg-image': `url(${section.backgroundImage})`,
+        } as React.CSSProperties : {}}
       >
         <span className="section-number">{section.type.toUpperCase()}</span>
         <Component section={section} />

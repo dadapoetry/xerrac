@@ -1,9 +1,16 @@
-import { getLatestIssue } from '@/lib/actions'
+import { getLatestIssue, getIssue } from '@/lib/actions'
+
+export const dynamic = 'force-dynamic'
 import { FanzineViewer } from '@/components/FanzineViewer'
 import Link from 'next/link'
 
-export default async function HomePage() {
-  const issue = await getLatestIssue()
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: { issue?: string }
+}) {
+  const issueId = searchParams.issue
+  const issue = issueId ? await getIssue(issueId) : await getLatestIssue()
 
   if (!issue) {
     return (
