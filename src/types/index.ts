@@ -121,7 +121,7 @@ export const SECTION_LABELS: Record<string, string> = {
   editorial: 'Editorial',
   aclariment_cultural: 'Aclariment cultural',
   fadu_catala: 'Fadu Català',
-  pagines_grogues: 'Pàgines Groguess',
+  pagines_grogues: 'Pàgines Grogues',
   calaix_sastre: 'Calaix de Sastre',
   visita: 'Visita',
   full_mural: 'Full Mural',

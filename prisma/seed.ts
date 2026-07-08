@@ -86,7 +86,7 @@ async function main() {
     },
     {
       id: uuid(), issueId, type: 'pagines_grogues', order: 4,
-      title: 'Pàgines Groguess',
+      title: 'Pàgines Grogues',
       content: JSON.stringify({
         proverbs: [
           { text: 'La cultura és com la xocolata: millor si és negra i amarga.', author: 'Inspirat en Cioran' },

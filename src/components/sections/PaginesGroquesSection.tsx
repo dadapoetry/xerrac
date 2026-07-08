@@ -11,7 +11,7 @@ export function PaginesGroquesSection({ section }: { section: SectionData }) {
         {section.title}
       </h2>
       <p className="text-sm text-gray-500 mb-8 uppercase tracking-wider">
-        Proverbs accidents
+        Proverbis accidentals
       </p>
       <div className="space-y-6">
         {content.proverbs?.map((proverb: Proverb, i: number) => (
