@@ -44,7 +44,16 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  opacity: 0.25;
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.section-container.has-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
   z-index: 0;
   pointer-events: none;
 }
@@ -52,6 +61,7 @@ body {
 .section-container > * {
   position: relative;
   z-index: 1;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 
 .section-divider {

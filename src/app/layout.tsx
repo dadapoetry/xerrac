@@ -4,7 +4,7 @@ import { Providers } from '@/components/Providers'
 
 export const metadata: Metadata = {
   title: 'Xerrac! — Revista d\'aclariment cultural',
-  description: 'Revista d\'aclariment cultural. Serra, no martell.',
+  description: 'Revista d\'aclariment cultural',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

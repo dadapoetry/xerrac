@@ -24,9 +24,6 @@ export function PortadaSection({ section }: { section: SectionData }) {
           </p>
         )}
       </div>
-      <div className="text-xs text-gray-600 tracking-[0.5em] mt-8">
-        SERRA • NO • MARTELL
-      </div>
     </div>
   )
 }

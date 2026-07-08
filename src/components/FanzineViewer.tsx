@@ -13,42 +13,51 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const sortedSections = [...issue.sections].sort((a, b) => a.order - b.order)
   const [currentSection, setCurrentSection] = useState(0)
   const [generatingPdf, setGeneratingPdf] = useState(false)
-  const ticking = useRef(false)
+  const rafId = useRef<number>(0)
 
   useEffect(() => {
     const handleScroll = () => {
-      if (ticking.current) return
-      ticking.current = true
-      requestAnimationFrame(() => {
-        const scrollY = window.scrollY + 2
-        let active = 0
+      if (rafId.current) return
+      rafId.current = requestAnimationFrame(() => {
         const els = document.querySelectorAll('[data-section-index]')
+        let active = 0
         els.forEach((el) => {
-          const top = (el as HTMLElement).offsetTop
-          if (top <= scrollY) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= 2) {
             active = parseInt(el.getAttribute('data-section-index') || '0')
           }
         })
-        setCurrentSection(prev => prev !== active ? active : prev)
-        ticking.current = false
+        setCurrentSection(active)
+        rafId.current = 0
       })
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [sortedSections.length])
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (rafId.current) cancelAnimationFrame(rafId.current)
+    }
+  }, [])
 
   const goToSection = useCallback((index: number) => {
-    if (index < 0 || index >= sortedSections.length) return
-    setCurrentSection(index)
     const el = document.querySelector(
       `[data-section-index="${index}"]`
     ) as HTMLElement | null
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }, [sortedSections.length])
+    if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top, behavior: 'smooth' })
+  }, [])
+
+  const handlePrev = useCallback(() => {
+    const next = Math.max(0, currentSection - 1)
+    if (next !== currentSection) goToSection(next)
+  }, [currentSection, goToSection])
+
+  const handleNext = useCallback(() => {
+    const next = Math.min(sortedSections.length - 1, currentSection + 1)
+    if (next !== currentSection) goToSection(next)
+  }, [currentSection, sortedSections.length, goToSection])
 
   const handlePdf = useCallback(async () => {
     setGeneratingPdf(true)
@@ -57,6 +66,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         type: s.type,
         title: s.title,
         content: s.content,
+        backgroundImage: s.backgroundImage,
       }))
       await generatePDF({
         number: issue.number,
@@ -81,13 +91,13 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
       <div className="fixed right-4 top-1/2 -translate-y-1/2 no-print z-50 flex flex-col gap-2">
         <button
-          onClick={() => goToSection(currentSection - 1)}
+          onClick={handlePrev}
           disabled={currentSection === 0}
           className="w-10 h-10 border border-gray-600 bg-black text-white flex items-center justify-center hover:bg-red-600 hover:border-red-600 disabled:opacity-30 disabled:cursor-not-allowed"
           title="Anterior"
         >←</button>
         <button
-          onClick={() => goToSection(currentSection + 1)}
+          onClick={handleNext}
           disabled={currentSection === sortedSections.length - 1}
           className="w-10 h-10 border border-gray-600 bg-black text-white flex items-center justify-center hover:bg-red-600 hover:border-red-600 disabled:opacity-30 disabled:cursor-not-allowed"
           title="Següent"
