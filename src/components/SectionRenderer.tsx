@@ -29,13 +29,17 @@ export function SectionRenderer({ section }: { section: SectionData }) {
 
   return (
     <>
-      <div
-        className={`section-container ${section.backgroundImage ? 'has-bg' : ''}`}
-        style={section.backgroundImage ? {
-          '--bg-image': `url(${section.backgroundImage})`,
-        } as React.CSSProperties : {}}
-      >
-        <span className="section-number">{section.type.toUpperCase()}</span>
+      <div className="section-container">
+        {section.backgroundImage && (
+          <>
+            <div
+              className="absolute inset-0 z-0 bg-cover bg-center bg-fixed"
+              style={{ backgroundImage: `url("${section.backgroundImage}")` }}
+            />
+            <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/85 via-black/60 to-black/85" />
+          </>
+        )}
+        <span className="section-number z-[2]">{section.type.toUpperCase()}</span>
         <Component section={section} />
       </div>
       <div className="section-divider" />

@@ -155,14 +155,19 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         </div>
       </div>
 
-      {/* Side PDF button */}
-      <div className="fixed right-4 bottom-20 z-50 no-print">
+      {/* Side buttons */}
+      <div className="fixed right-4 bottom-20 z-50 no-print flex flex-col gap-2">
         <button
           onClick={handlePdf}
           disabled={generatingPdf}
           className="w-10 h-10 border border-gray-700 bg-black/80 text-gray-500 flex items-center justify-center hover:bg-red-600 hover:border-red-600 hover:text-white disabled:opacity-50 transition-all text-sm"
           title="PDF"
         >{generatingPdf ? '...' : '⎙'}</button>
+        <a
+          href="/arxiu"
+          className="w-10 h-10 border border-gray-700 bg-black/80 text-gray-500 flex items-center justify-center hover:bg-red-600 hover:border-red-600 hover:text-white transition-all text-sm"
+          title="Arxiu"
+        >☰</a>
       </div>
 
       {sortedSections.map((section, i) => (

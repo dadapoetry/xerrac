@@ -38,29 +38,6 @@ body {
   overflow: hidden;
 }
 
-.section-container.has-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: var(--bg-image);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  opacity: 0.08;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.section-container.has-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.85) 100%);
-  z-index: 1;
-  pointer-events: none;
-}
-
 .section-container > * {
   position: relative;
   z-index: 2;
