@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPublishedIssues } from '@/lib/actions'
 import { RedRule } from '@/components/RedRule'
 import { Footer } from '@/components/Footer'
@@ -46,11 +47,12 @@ export default async function ArxiuPage() {
                   >
                     {coverBg && (
                       <>
-                        <img
+                        <Image
                           src={coverBg}
                           alt=""
-                          loading="lazy"
-                          className="absolute inset-0 z-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, 50vw"
                         />
                         <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/95 via-black/60 to-black/30" />
                       </>

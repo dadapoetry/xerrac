@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getIssues } from '@/lib/actions'
 import { DeleteIssueButton } from '@/components/admin/DeleteIssueButton'
+import { PublishToggle } from '@/components/admin/PublishToggle'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,13 +45,7 @@ export default async function NumerosPage() {
             <span className="text-sm text-gray-500">
               {new Date(issue.date).toLocaleDateString('ca-ES')}
             </span>
-            <span className={`text-xs px-2 py-0.5 rounded ${
-              issue.published
-                ? 'bg-green-900/50 text-green-400'
-                : 'bg-gray-800 text-gray-500'
-            }`}>
-              {issue.published ? 'Publicat' : 'Esborrany'}
-            </span>
+            <PublishToggle id={issue.id} published={!!issue.published} />
             <div className="flex gap-2">
               <Link
                 href={`/admin/numeros/${issue.id}`}

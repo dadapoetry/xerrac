@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect } from 'react'
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { Logo } from './Logo'
@@ -95,13 +95,22 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [sortedSections])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const container = navRef.current
     if (!container) return
+    if (activeSection === 0) {
+      container.scrollLeft = 0
+      return
+    }
     const btn = container.children[activeSection] as HTMLElement | undefined
     if (!btn) return
-    const scrollLeft = btn.offsetLeft + btn.offsetWidth / 2 - container.offsetWidth / 2
-    container.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' })
+    if (btn.offsetWidth > container.offsetWidth) {
+      container.scrollLeft = btn.offsetLeft
+    } else {
+      const targetCenter = btn.offsetLeft + btn.offsetWidth / 2
+      const target = Math.max(0, Math.min(targetCenter - container.offsetWidth / 2, container.scrollWidth - container.offsetWidth))
+      container.scrollTo({ left: target, behavior: 'smooth' })
+    }
   }, [activeSection])
 
   useEffect(() => {
@@ -161,7 +170,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
-          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
+          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 pl-1">
             {sortedSections.map((section, i) => (
               <button
                 key={section.id}

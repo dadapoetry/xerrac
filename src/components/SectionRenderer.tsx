@@ -1,17 +1,21 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { SectionData } from '@/types'
-import { PortadaSection } from './sections/PortadaSection'
-import { EditorialSection } from './sections/EditorialSection'
-import { AclarimentCulturalSection } from './sections/AclarimentCulturalSection'
-import { FaduCatalaSection } from './sections/FaduCatalaSection'
-import { PaginesGroquesSection } from './sections/PaginesGroquesSection'
-import { CalaixSastreSection } from './sections/CalaixSastreSection'
-import { VisitaSection } from './sections/VisitaSection'
-import { FullMuralSection } from './sections/FullMuralSection'
-import { LuditaSection } from './sections/LuditaSection'
 
-const sectionMap: Record<string, React.FC<{ section: SectionData; index: number }>> = {
+type SectionProps = { section: SectionData; index: number }
+
+const PortadaSection = dynamic<SectionProps>(() => import('./sections/PortadaSection').then(m => m.PortadaSection))
+const EditorialSection = dynamic<SectionProps>(() => import('./sections/EditorialSection').then(m => m.EditorialSection))
+const AclarimentCulturalSection = dynamic<SectionProps>(() => import('./sections/AclarimentCulturalSection').then(m => m.AclarimentCulturalSection))
+const FaduCatalaSection = dynamic<SectionProps>(() => import('./sections/FaduCatalaSection').then(m => m.FaduCatalaSection))
+const PaginesGroquesSection = dynamic<SectionProps>(() => import('./sections/PaginesGroquesSection').then(m => m.PaginesGroquesSection))
+const CalaixSastreSection = dynamic<SectionProps>(() => import('./sections/CalaixSastreSection').then(m => m.CalaixSastreSection))
+const VisitaSection = dynamic<SectionProps>(() => import('./sections/VisitaSection').then(m => m.VisitaSection))
+const FullMuralSection = dynamic<SectionProps>(() => import('./sections/FullMuralSection').then(m => m.FullMuralSection))
+const LuditaSection = dynamic<SectionProps>(() => import('./sections/LuditaSection').then(m => m.LuditaSection))
+
+const sectionMap: Record<string, React.ComponentType<SectionProps>> = {
   portada: PortadaSection,
   editorial: EditorialSection,
   aclariment_cultural: AclarimentCulturalSection,
