@@ -12,10 +12,13 @@ interface FanzineViewerProps {
 function getCurrentSectionIndex(): number {
   const els = document.querySelectorAll('[data-section-index]')
   let idx = 0
+  let closest = Infinity
   els.forEach((el) => {
     try {
       const rect = el.getBoundingClientRect()
-      if (rect.top != null && rect.top <= 2) {
+      const dist = Math.abs(rect.top)
+      if (dist < closest) {
+        closest = dist
         const val = parseInt(el.getAttribute('data-section-index') || '0', 10)
         if (!isNaN(val)) idx = val
       }
@@ -140,7 +143,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
               <button
                 key={section.id}
                 onClick={() => scrollToSectionEl(i)}
-                className={`text-[10px] uppercase tracking-wider whitespace-nowrap px-2 py-0.5 transition-colors shrink-0 ${
+                className={`text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-5 flex items-center leading-none transition-colors shrink-0 ${
                   i === activeSection
                     ? 'text-red-400'
                     : 'text-gray-600 hover:text-gray-400'
