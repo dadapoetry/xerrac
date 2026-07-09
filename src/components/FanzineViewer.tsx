@@ -103,8 +103,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [sortedSections.length])
 
-  const progress = ((activeSection + 1) / sortedSections.length) * 100
-
   const shareLink = useCallback(() => {
     const section = sortedSections[activeSection]
     if (!section) return
@@ -121,11 +119,16 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
-          <div className="flex-1 h-0.5 bg-gray-900 relative rounded overflow-hidden min-w-[3rem]">
-            <div
-              className="absolute left-0 top-0 h-full bg-red-500 transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
+          <div className="flex-1 min-w-0">
+            <span
+              className="text-sm font-bold truncate block"
+              style={{
+                color: '#ef4444',
+                textShadow: '0 0 8px rgba(239,68,68,0.5), 0 0 16px rgba(239,68,68,0.25)',
+              }}
+            >
+              {sortedSections[activeSection]?.title || issue.title}
+            </span>
           </div>
 
           <span className="text-[10px] text-gray-400 font-mono tracking-wider min-w-[2.5em] text-right shrink-0">

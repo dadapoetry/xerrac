@@ -2,6 +2,7 @@ import { getLatestIssue, getIssue } from '@/lib/actions'
 
 export const dynamic = 'force-dynamic'
 import { FanzineViewer } from '@/components/FanzineViewer'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Footer } from '@/components/Footer'
 
 export default async function HomePage({
@@ -34,7 +35,9 @@ export default async function HomePage({
 
   return (
     <>
-      <FanzineViewer issue={parsedIssue as any} />
+      <ErrorBoundary>
+        <FanzineViewer issue={parsedIssue as any} />
+      </ErrorBoundary>
       <Footer />
     </>
   )
