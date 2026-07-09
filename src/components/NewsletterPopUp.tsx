@@ -40,7 +40,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
       const result = await subscribe(email.trim())
       setStatus('success')
       setMessage(result.message)
-      handleDismiss()
+      setTimeout(() => handleDismiss(), 1500)
     } catch (err: any) {
       setStatus('error')
       setMessage(err?.message || 'Error en subscriure\'t')
@@ -50,13 +50,13 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
   if (!visible || dismissed) return null
 
   return (
-    <div className="absolute top-full right-0 z-50 w-72 animate-fade-in mr-0 mt-0">
-      <div className="bg-black border border-red-900/40 shadow-[0_8px_32px_rgba(0,0,0,0.6)] relative">
-        <div className="h-[2px] bg-red-600" />
-        <div className="p-4">
+    <div className="absolute top-full right-0 z-50 w-72 mt-2 animate-fade-in">
+      <div className="bg-black border border-gray-800 rounded overflow-hidden relative">
+        <div className="h-[3px] bg-red-600" />
+        <div className="p-5">
           <button
             onClick={handleDismiss}
-            className="absolute top-3 right-3 w-5 h-5 flex items-center justify-center text-gray-600 hover:text-white transition-colors"
+            className="absolute top-4 right-4 w-5 h-5 flex items-center justify-center text-gray-600 hover:text-white transition-colors"
             aria-label="Tancar"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
@@ -64,15 +64,24 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
             </svg>
           </button>
 
-          <p className="text-sm text-gray-300 mb-3 pr-5 leading-relaxed">
-            Encara no t&apos;has subscrit?<br />
-            <span className="text-red-400 font-semibold tracking-wide">Aclareix-te</span>!
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
+              Butlletí
+            </span>
+            <div className="h-px flex-1 bg-red-500/30" />
+          </div>
+
+          <p className="text-base font-black tracking-tight text-white leading-tight mb-1">
+            Encara no t&apos;has subscrit?
+          </p>
+          <p className="text-lg font-black tracking-tight text-red-500 leading-none mb-4">
+            Aclareix-te!
           </p>
 
           {status === 'success' ? (
             <p className="text-xs text-green-400">{message}</p>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
               <input
                 ref={inputRef}
                 type="email"
