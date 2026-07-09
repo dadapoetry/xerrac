@@ -162,7 +162,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             ))}
           </div>
 
-          <span className="text-[10px] text-gray-400 font-mono tracking-wider min-w-[2.5em] text-right shrink-0">
+          <span className="hidden sm:inline text-[10px] text-gray-400 font-mono tracking-wider min-w-[2.5em] text-right shrink-0">
             {String(activeSection + 1).padStart(2, '0')}/{String(sortedSections.length).padStart(2, '0')}
           </span>
 
