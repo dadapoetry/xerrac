@@ -74,7 +74,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
           </div>
 
           <p className="text-base font-black tracking-tight text-white leading-tight mb-1">
-            Encara no t&apos;has subscrit?
+            Encara no t&apos;hi has subscrit?
           </p>
           <p className="text-lg font-black tracking-tight text-red-500 leading-none mb-4">
             Aclareix-te!
