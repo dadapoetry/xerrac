@@ -135,19 +135,24 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           <div className="flex items-center gap-1 shrink-0">
             <button
               onClick={shareLink}
-              className="w-7 h-7 border border-gray-800 text-gray-500 hover:text-red-400 hover:border-red-500/50
-                transition-all text-xs flex items-center justify-center"
+              className="w-8 h-8 border border-gray-800 text-gray-400 hover:text-red-400 hover:border-red-500/50
+                transition-all flex items-center justify-center"
               title="Compartir secció"
             >
-              ↗
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path d="M13 4.5a2.5 2.5 0 1 1 .702 1.737L6.97 9.604a2.518 2.518 0 0 1 0 .792l6.733 3.367a2.5 2.5 0 1 1-.671 1.341l-6.733-3.367a2.5 2.5 0 1 1 0-3.475l6.733-3.366A2.52 2.52 0 0 1 13 4.5Z" />
+              </svg>
             </button>
             <a
               href="/arxiu"
-              className="w-7 h-7 border border-gray-800 text-gray-500 hover:text-red-400 hover:border-red-500/50
-                transition-all text-xs flex items-center justify-center"
+              className="w-8 h-8 border border-gray-800 text-gray-400 hover:text-red-400 hover:border-red-500/50
+                transition-all flex items-center justify-center"
               title="Arxiu"
             >
-              ☰
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path d="M2 3a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2Z" />
+                <path d="M2 7.5h16l-.811 7.71a2 2 0 0 1-1.99 1.79H4.802a2 2 0 0 1-1.99-1.79L2 7.5Z" />
+              </svg>
             </a>
           </div>
         </div>
