@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { Logo } from './Logo'
@@ -31,9 +31,32 @@ function sectionSlug(type: string) {
   return `s-${type}`
 }
 
+function isTouchDevice() {
+  if (typeof window === 'undefined') return false
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0
+}
+
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch {
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.style.position = 'fixed'
+    ta.style.opacity = '0'
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+  }
+}
+
 export function FanzineViewer({ issue }: FanzineViewerProps) {
-  const sortedSections = [...issue.sections].sort((a, b) => a.order - b.order)
-  const types = sortedSections.map((s) => s.type)
+  const sortedSections = useMemo(
+    () => [...issue.sections].sort((a, b) => a.order - b.order),
+    [issue.sections]
+  )
+  const types = useMemo(() => sortedSections.map((s) => s.type), [sortedSections])
   const [activeSection, setActiveSection] = useState(() => {
     if (typeof window === 'undefined') return 0
     const hash = window.location.hash.slice(1)
@@ -45,6 +68,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
+    if (isTouchDevice()) return
     const seen = localStorage.getItem('xerrac-keyboard-hint')
     if (!seen) {
       setShowHint(true)
@@ -75,7 +99,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     const els = document.querySelectorAll('[data-section-index]')
     els.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
-  }, [sortedSections])
+  }, [sortedSections.length])
 
   useEffect(() => {
     const hash = window.location.hash.slice(1)
@@ -85,7 +109,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         setTimeout(() => scrollToSectionEl(idx), 150)
       }
     }
-  }, [])
+  }, [types])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -104,15 +128,14 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
   const progress = ((activeSection + 1) / sortedSections.length) * 100
 
-  const copySectionLink = useCallback(
-    (type: string) => {
-      const url = `${window.location.origin}${window.location.pathname}#${sectionSlug(type)}`
-      navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    },
-    []
-  )
+  const shareLink = useCallback(() => {
+    const section = sortedSections[activeSection]
+    if (!section) return
+    const url = `${window.location.origin}${window.location.pathname}#${sectionSlug(section.type)}`
+    copyToClipboard(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }, [activeSection, sortedSections])
 
   return (
     <div>
@@ -134,8 +157,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         </div>
       </div>
 
-      {/* Keyboard hint */}
-      {showHint && (
+      {/* Keyboard hint — desktop only */}
+      {showHint && !isTouchDevice() && (
         <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 no-print bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in">
           ← → o ↑ ↓ per navegar entre seccions
         </div>
@@ -172,7 +195,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       </nav>
 
       {/* Mobile section nav */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 no-print md:hidden flex items-center gap-2 bg-black/80 border border-gray-800 px-3 py-1.5 rounded-full">
+      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 no-print md:hidden flex items-center gap-2 bg-black/80 border border-gray-800 px-3 py-1.5 rounded-full">
         {sortedSections.map((section, i) => (
           <button
             key={section.id}
@@ -186,20 +209,15 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       </div>
 
       {/* Side buttons */}
-      <div className="fixed right-4 bottom-16 z-50 no-print flex flex-col gap-2">
+      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-50 no-print flex flex-col gap-3">
         <button
-          onClick={() => {
-            const section = sortedSections[activeSection]
-            if (section) copySectionLink(section.type)
-          }}
+          onClick={shareLink}
           className="w-9 h-9 border border-gray-800 bg-black/80 text-gray-600 flex items-center justify-center
             hover:border-red-500/50 hover:text-red-400 transition-all text-xs"
           title="Compartir secció"
         >
           ↗
         </button>
-      </div>
-      <div className="fixed right-4 bottom-6 z-50 no-print flex flex-col gap-2">
         <a
           href="/arxiu"
           className="w-9 h-9 border border-gray-800 bg-black/80 text-gray-600 flex items-center justify-center
