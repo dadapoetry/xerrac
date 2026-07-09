@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { Logo } from './Logo'
@@ -66,6 +66,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   })
   const [showHint, setShowHint] = useState(false)
   const [copied, setCopied] = useState(false)
+  const ticking = useRef(false)
 
   useEffect(() => {
     if (isTouchDevice()) return
@@ -81,25 +82,20 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [])
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const i = parseInt(entry.target.getAttribute('data-section-index') || '0')
-            setActiveSection(i)
-            const type = sortedSections[i]?.type
-            if (type) {
-              history.replaceState(null, '', `#${sectionSlug(type)}`)
-            }
-          }
-        }
-      },
-      { threshold: 0.3 }
-    )
-    const els = document.querySelectorAll('[data-section-index]')
-    els.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
-  }, [sortedSections.length])
+    const onScroll = () => {
+      if (ticking.current) return
+      ticking.current = true
+      requestAnimationFrame(() => {
+        const idx = getCurrentSectionIndex()
+        setActiveSection(idx)
+        const type = sortedSections[idx]?.type
+        if (type) history.replaceState(null, '', `#${sectionSlug(type)}`)
+        ticking.current = false
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [sortedSections])
 
   useEffect(() => {
     const hash = window.location.hash.slice(1)
@@ -141,7 +137,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     <div>
       {/* Top bar */}
       <div className="fixed top-0 left-0 right-0 z-50 no-print bg-black/80 backdrop-blur-sm">
-        <div className="flex items-center gap-4 px-4 h-12">
+        <div className="flex items-center gap-3 px-4 h-12">
           <Logo compact />
 
           <div className="flex-1 h-0.5 bg-gray-900 relative rounded overflow-hidden">
@@ -151,9 +147,24 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             />
           </div>
 
-          <span className="text-[11px] text-gray-400 font-mono tracking-wider">
+          <span className="text-[11px] text-gray-400 font-mono tracking-wider min-w-[3em] text-right">
             {String(activeSection + 1).padStart(2, '0')}/{String(sortedSections.length).padStart(2, '0')}
           </span>
+
+          <button
+            onClick={shareLink}
+            className="text-gray-600 hover:text-red-400 transition-colors text-xs leading-none px-1"
+            title="Compartir secció"
+          >
+            ↗
+          </button>
+          <a
+            href="/arxiu"
+            className="text-gray-600 hover:text-red-400 transition-colors text-xs leading-none px-1"
+            title="Arxiu"
+          >
+            ☰
+          </a>
         </div>
       </div>
 
@@ -170,7 +181,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       )}
 
       {/* Desktop section nav */}
-      <nav className="fixed right-5 top-1/2 -translate-y-1/2 z-50 no-print hidden md:flex flex-col items-center gap-3">
+      <nav className="fixed right-5 top-1/2 -translate-y-1/2 z-40 no-print hidden md:flex flex-col items-center gap-3">
         {sortedSections.map((section, i) => (
           <button
             key={section.id}
@@ -184,9 +195,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   : 'w-1.5 h-1.5 bg-gray-600 hover:bg-gray-400'
               }`}
             />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-500
+            <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500
               whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none
-              uppercase tracking-wider"
+              uppercase tracking-wider text-right"
             >
               {section.title}
             </span>
@@ -195,7 +206,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       </nav>
 
       {/* Mobile section nav */}
-      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 no-print md:hidden flex items-center gap-2 bg-black/80 border border-gray-800 px-3 py-1.5 rounded-full">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 no-print md:hidden flex items-center gap-2 bg-black/80 border border-gray-800 px-3 py-1.5 rounded-full">
         {sortedSections.map((section, i) => (
           <button
             key={section.id}
@@ -206,26 +217,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             title={section.title}
           />
         ))}
-      </div>
-
-      {/* Side buttons */}
-      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-50 no-print flex flex-col gap-3">
-        <button
-          onClick={shareLink}
-          className="w-9 h-9 border border-gray-800 bg-black/80 text-gray-600 flex items-center justify-center
-            hover:border-red-500/50 hover:text-red-400 transition-all text-xs"
-          title="Compartir secció"
-        >
-          ↗
-        </button>
-        <a
-          href="/arxiu"
-          className="w-9 h-9 border border-gray-800 bg-black/80 text-gray-600 flex items-center justify-center
-            hover:border-red-500/50 hover:text-red-400 transition-all text-xs"
-          title="Arxiu"
-        >
-          ☰
-        </a>
       </div>
 
       {/* Sections */}
