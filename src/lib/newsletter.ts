@@ -46,30 +46,30 @@ export async function sendNewsletterEmail(
   email: string,
   token: string,
   issue: { id: string; number: number; title: string; date: Date },
-  sections: { title: string; summary: string; image?: string }[],
+  sections: { title: string; summary: string; image?: string; origIndex: number }[],
+  coverImage?: string,
 ) {
   const issueUrl = `${process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'}/?issue=${issue.id}`
   const unsubscribeUrl = `${process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'}/api/newsletter/baixa?token=${token}`
 
-  const sectionsHtml = sections.map((s, i) => `
+  const sectionsHtml = sections.map((s) => `
     <tr>
       <td style="padding:0 0 0 0">
         <table style="width:100%;border-collapse:collapse;border:1px solid #222;margin-bottom:20px">
           ${s.image ? `
           <tr>
             <td style="display:block;line-height:0">
-              <img src="${s.image}" alt="" style="width:100%;max-height:200px;display:block" />
+              <img src="${s.image}" alt="" style="width:100%;height:auto;display:block" />
             </td>
           </tr>` : ''}
           <tr>
             <td style="padding:16px 20px">
               <table style="width:100%;border-collapse:collapse">
                 <tr>
-                  <td style="width:24px;vertical-align:middle">
-                    <span style="display:inline-block;width:6px;height:6px;background:#ef4444;border-radius:50%"></span>
-                  </td>
-                  <td style="font-family:'Courier New',monospace;font-size:11px;color:#666;letter-spacing:2px;text-transform:uppercase;vertical-align:middle">
-                    Secció ${String(i + 1).padStart(2, '0')}
+                  <td style="vertical-align:middle;line-height:0">
+                    <svg width="14" height="14" viewBox="0 0 100 100" fill="#ef4444" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" />
+                    </svg>
                   </td>
                 </tr>
               </table>
@@ -82,7 +82,7 @@ export async function sendNewsletterEmail(
                   ${s.summary}
                 </p>
               ` : ''}
-              <a href="${issueUrl}#s-${i}"
+              <a href="${issueUrl}#s-${s.origIndex}"
                  style="display:inline-block;font-size:12px;color:#ef4444;text-decoration:none;font-weight:600;letter-spacing:1px;text-transform:uppercase">
                 Llegeix més →
               </a>
@@ -120,9 +120,16 @@ export async function sendNewsletterEmail(
               <!-- Divider -->
               <tr><td style="height:24px"></td></tr>
 
+              ${coverImage ? `
+              <tr>
+                <td style="padding:0 0 24px;line-height:0">
+                  <img src="${coverImage}" alt="" style="width:100%;height:auto;display:block;border:1px solid #222" />
+                </td>
+              </tr>` : ''}
+
               <!-- Hero title -->
               <tr>
-                <td style="padding:0 0 32px;text-align:center">
+                <td style="padding:${coverImage ? '0' : '0 0 32px'};text-align:center">
                   <h2 style="font-size:22px;font-weight:900;color:#fff;margin:0 0 10px;letter-spacing:-0.5px;line-height:1.3">
                     ${issue.title}
                   </h2>

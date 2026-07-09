@@ -294,7 +294,14 @@ export async function sendIssueNewsletter(issueId: string) {
     return { ok: true, sent: 0, message: 'No hi ha subscriptors confirmats.' }
   }
 
-  const summaries = sections.map((s: any) => {
+  const portada = sections.find((s: any) => s.type === 'portada')
+  const portadaContent = portada ? safeParse(portada.content) : null
+  const coverImage = portadaContent?.backgroundImage || portadaContent?.image || ''
+
+  const summaries = sections
+    .filter((s: any) => s.type !== 'portada')
+    .map((s: any) => {
+    const origIndex = sections.findIndex((sec: any) => sec.id === s.id)
     const content = safeParse(s.content)
     let summary = ''
     let image = ''
@@ -308,6 +315,11 @@ export async function sendIssueNewsletter(issueId: string) {
           .filter((e: any) => e.body)
           .map((e: any) => e.body.replace(/<[^>]+>/g, ''))
           .join(' ').slice(0, 250)
+      } else if (content.proverbs) {
+        summary = content.proverbs
+          .filter((e: any) => e.text)
+          .map((e: any) => e.text)
+          .join(' · ').slice(0, 250)
       } else if (content.interviews) {
         summary = content.interviews
           .filter((e: any) => e.body)
@@ -325,13 +337,27 @@ export async function sendIssueNewsletter(issueId: string) {
           .filter((e: any) => e.description)
           .map((e: any) => e.description)
           .join(' ').slice(0, 250)
+        const img = content.collages.find((e: any) => e.image)
+        if (img) image = img.image
+      } else if (content.crossword) {
+        const clues: string[] = []
+        const across = content.crossword.clues?.across || {}
+        const down = content.crossword.clues?.down || {}
+        for (const key of Object.keys(across).slice(0, 2)) {
+          clues.push(`${across[key].clue} (${across[key].answer.length})`)
+        }
+        for (const key of Object.keys(down).slice(0, 2)) {
+          clues.push(`${down[key].clue} (${down[key].answer.length})`)
+        }
+        summary = clues.slice(0, 3).join(' · ')
       }
-      image = content.backgroundImage || content.image || ''
+      if (!image) image = content.backgroundImage || content.image || ''
     }
     return {
       title: s.title || s.type,
       summary,
       image,
+      origIndex,
     }
   })
 
@@ -344,7 +370,7 @@ export async function sendIssueNewsletter(issueId: string) {
         number: issue.number,
         title: issue.title,
         date: new Date(issue.date),
-      }, summaries)
+      }, summaries, coverImage)
       sent++
     } catch (err) {
       console.error(`Failed to send to ${sub.email}:`, err)
