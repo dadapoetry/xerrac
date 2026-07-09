@@ -25,7 +25,12 @@ const sectionMap: Record<string, React.FC<{ section: SectionData; index: number 
 
 export function SectionRenderer({ section, index }: { section: SectionData; index: number }) {
   const Component = sectionMap[section.type]
-  if (!Component) return null
+  if (!Component) {
+    if (typeof window !== 'undefined') {
+      console.warn(`Unknown section type: ${section.type}`)
+    }
+    return null
+  }
 
   return (
     <>
@@ -43,7 +48,7 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
           <Component section={section} index={index} />
         </div>
       </div>
-      {section.type !== 'portada' && <div className="section-divider" />}
+      <div className="section-divider" />
     </>
   )
 }

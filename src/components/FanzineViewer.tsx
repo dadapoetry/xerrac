@@ -35,8 +35,8 @@ function scrollToSectionEl(index: number) {
   } catch {}
 }
 
-function sectionSlug(type: string) {
-  return `s-${type}`
+function sectionSlug(index: number) {
+  return `s-${index}`
 }
 
 async function copyToClipboard(text: string) {
@@ -64,8 +64,10 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     if (typeof window === 'undefined') return 0
     const hash = window.location.hash.slice(1)
     if (!hash) return 0
-    const idx = types.indexOf(hash.replace('s-', ''))
-    return idx >= 0 ? idx : 0
+    const match = hash.match(/^s-(\d+)$/)
+    if (!match) return 0
+    const idx = parseInt(match[1], 10)
+    return idx >= 0 && idx < types.length ? idx : 0
   })
   const [copied, setCopied] = useState(false)
   const ticking = useRef(false)
@@ -83,12 +85,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           if (idx === prevIdx) return
           prevIdx = idx
           setActiveSection(idx)
-          const type = sortedSections[idx]?.type
-          if (type) {
-            try {
-              history.replaceState(null, '', `#${sectionSlug(type)}`)
-            } catch {}
-          }
+          try {
+            history.replaceState(null, '', `#${sectionSlug(idx)}`)
+          } catch {}
         } catch {}
       })
     }
@@ -97,21 +96,26 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [sortedSections])
 
   useEffect(() => {
-    const el = navRef.current?.children[activeSection] as HTMLElement | undefined
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
-    }
+    const container = navRef.current
+    if (!container) return
+    const btn = container.children[activeSection] as HTMLElement | undefined
+    if (!btn) return
+    const scrollLeft = btn.offsetLeft + btn.offsetWidth / 2 - container.offsetWidth / 2
+    container.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' })
   }, [activeSection])
 
   useEffect(() => {
     const hash = window.location.hash.slice(1)
     if (hash) {
-      const idx = types.indexOf(hash.replace('s-', ''))
-      if (idx > 0) {
-        setTimeout(() => scrollToSectionEl(idx), 150)
+      const match = hash.match(/^s-(\d+)$/)
+      if (match) {
+        const idx = parseInt(match[1], 10)
+        if (idx >= 0 && idx < sortedSections.length) {
+          setTimeout(() => scrollToSectionEl(idx), 150)
+        }
       }
     }
-  }, [types])
+  }, [sortedSections.length])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -133,11 +137,22 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const shareLink = useCallback(() => {
     const section = sortedSections[activeSection]
     if (!section) return
-    const url = `${window.location.origin}${window.location.pathname}#${sectionSlug(section.type)}`
+    const url = `${window.location.origin}${window.location.pathname}#${sectionSlug(activeSection)}`
     copyToClipboard(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }, [activeSection, sortedSections])
+
+  if (sortedSections.length === 0) {
+    return (
+      <div className="sticky top-0 z-10 bg-black border-b border-gray-800">
+        <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
+          <Logo compact />
+          <span className="text-sm text-gray-600">Cap secció disponible</span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -199,7 +214,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
       {/* Sections */}
       {sortedSections.map((section, i) => (
-        <div key={section.id} data-section-index={i} id={sectionSlug(section.type)}>
+        <div key={section.id} data-section-index={i} id={sectionSlug(i)}>
           <SectionRenderer section={section as any} index={i} />
         </div>
       ))}

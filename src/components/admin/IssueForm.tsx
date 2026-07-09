@@ -21,10 +21,12 @@ export function IssueForm({ initial }: IssueFormProps) {
   const [date, setDate] = useState(initial?.date || new Date().toISOString().split('T')[0])
   const [published, setPublished] = useState(initial?.published ?? true)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError('')
 
     try {
       if (initial) {
@@ -34,8 +36,8 @@ export function IssueForm({ initial }: IssueFormProps) {
       }
       router.push('/admin/numeros')
       router.refresh()
-    } catch (error) {
-      alert('Error en desar el número')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error en desar el número')
     } finally {
       setLoading(false)
     }
@@ -99,6 +101,10 @@ export function IssueForm({ initial }: IssueFormProps) {
             Publicat (visible al web)
           </label>
         </div>
+      )}
+
+      {error && (
+        <p className="text-xs text-red-400 bg-red-900/20 border border-red-900 px-4 py-2">{error}</p>
       )}
 
       <div className="flex gap-3">

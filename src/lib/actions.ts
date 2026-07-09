@@ -11,15 +11,21 @@ async function checkAuth() {
   if (!session) throw new Error('No autoritzat')
 }
 
+function toDate(val: string | null | undefined): Date {
+  if (!val) return new Date()
+  const d = new Date(val + 'Z')
+  return isNaN(d.getTime()) ? new Date() : d
+}
+
 function mapIssue(row: any) {
   return {
     id: row.id,
     number: row.number,
     title: row.title,
-    date: new Date(row.date + 'Z'),
+    date: toDate(row.date),
     published: Boolean(row.published),
-    createdAt: new Date(row.createdAt + 'Z'),
-    updatedAt: new Date(row.updatedAt + 'Z'),
+    createdAt: toDate(row.createdAt),
+    updatedAt: toDate(row.updatedAt),
     sections: [] as any[],
   }
 }
@@ -33,8 +39,8 @@ function mapSection(row: any) {
     title: row.title,
     content: row.content,
     backgroundImage: row.backgroundImage,
-    createdAt: new Date(row.createdAt + 'Z'),
-    updatedAt: new Date(row.updatedAt + 'Z'),
+    createdAt: toDate(row.createdAt),
+    updatedAt: toDate(row.updatedAt),
   }
 }
 

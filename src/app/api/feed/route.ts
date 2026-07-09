@@ -11,10 +11,13 @@ export async function GET() {
   const copyright = settings.footer_copyright || 'Xerrac!'
 
   const items = issues.flatMap((issue) => {
-    const sections = (issue.sections as any[]).map((s: any) => ({
-      ...s,
-      content: typeof s.content === 'string' ? JSON.parse(s.content) : s.content,
-    }))
+    const sections = (issue.sections as any[]).map((s: any) => {
+      let content = s.content
+      if (typeof content === 'string') {
+        try { content = JSON.parse(content) } catch { content = {} }
+      }
+      return { ...s, content }
+    })
 
     return sections.map((section: any) => {
       const body = section.content?.body || ''

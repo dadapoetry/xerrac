@@ -18,19 +18,21 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   const editorRef = useRef<ReactQuillType | null>(null)
 
   const imageHandler = useCallback(() => {
+    const editor = editorRef.current as any
+    if (!editor) return
+    const quill = editor.getEditor?.() || editor
+    const savedRange = quill.getSelection()
+    if (!savedRange) return
+
     const url = prompt('URL de la imatge:')
     if (!url) return
 
     const width = prompt('Amplada màxima (ex: 100%, 400px, 50%):', '100%')
     if (width === null) return
 
-    const editor = editorRef.current as any
-    if (!editor) return
-
-    const quill = editor.getEditor?.() || editor
-    const range = quill.getSelection(true)
+    quill.setSelection(savedRange)
     quill.clipboard.dangerouslyPasteHTML(
-      range.index,
+      savedRange.index,
       `<img src="${url}" style="max-width: ${width || '100%'}; height: auto;" />`
     )
   }, [])

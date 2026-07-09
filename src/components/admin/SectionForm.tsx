@@ -23,10 +23,12 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
     initial ? JSON.stringify(initial.content) : '{}'
   )
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError('')
 
     try {
       if (initial) {
@@ -49,8 +51,8 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
       }
       router.push(`/admin/numeros/${issueId}`)
       router.refresh()
-    } catch (error) {
-      alert('Error en desar la secció')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error en desar la secció')
     } finally {
       setLoading(false)
     }
@@ -135,6 +137,10 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           />
         </div>
       </div>
+
+      {error && (
+        <p className="text-xs text-red-400 bg-red-900/20 border border-red-900 px-4 py-2">{error}</p>
+      )}
 
       <div className="flex gap-3">
         <button
