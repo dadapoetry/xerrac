@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.section-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 1.5rem auto;
+  display: block;
+}
+
 :root {
   --black: #000000;
   --white: #fafafa;

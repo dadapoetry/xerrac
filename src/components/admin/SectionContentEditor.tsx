@@ -96,7 +96,7 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
                   [{ header: [1, 2, 3, false] }],
                   ['bold', 'italic', 'underline', 'strike'],
                   [{ list: 'ordered' }, { list: 'bullet' }],
-                  ['blockquote', 'link'],
+                  ['blockquote', 'link', 'image'],
                   ['clean'],
                 ],
               }}
@@ -144,7 +144,7 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
                   onChange={(v) => updateArrayItem('entries', i, 'body', v)}
                   className="bg-white text-black rounded text-sm"
                   theme="snow"
-                  modules={{ toolbar: [['bold', 'italic'], ['clean']] }}
+                  modules={{ toolbar: [['bold', 'italic', 'image'], ['clean']] }}
                 />
               </div>
             </div>
@@ -225,7 +225,7 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
                   onChange={(v) => updateArrayItem('interviews', i, 'body', v)}
                   className="bg-white text-black rounded text-sm"
                   theme="snow"
-                  modules={{ toolbar: [['bold', 'italic'], ['clean']] }}
+                  modules={{ toolbar: [['bold', 'italic', 'image'], ['clean']] }}
                 />
               </div>
             ))}
@@ -258,7 +258,7 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
                   onChange={(v) => updateArrayItem('reviews', i, 'body', v)}
                   className="bg-white text-black rounded text-sm"
                   theme="snow"
-                  modules={{ toolbar: [['bold', 'italic'], ['clean']] }}
+                  modules={{ toolbar: [['bold', 'italic', 'image'], ['clean']] }}
                 />
               </div>
             ))}
