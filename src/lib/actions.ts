@@ -295,8 +295,7 @@ export async function sendIssueNewsletter(issueId: string) {
   }
 
   const portada = sections.find((s: any) => s.type === 'portada')
-  const portadaContent = portada ? safeParse(portada.content) : null
-  const coverImage = portadaContent?.backgroundImage || portadaContent?.image || ''
+  const coverImage = portada?.backgroundImage || ''
 
   const summaries = sections
     .filter((s: any) => s.type !== 'portada')
