@@ -297,14 +297,40 @@ export async function sendIssueNewsletter(issueId: string) {
   const summaries = sections.map((s: any) => {
     const content = safeParse(s.content)
     let summary = ''
+    let image = ''
     if (typeof content === 'object' && content) {
-      summary = content.text || content.html || content.summary || ''
-      summary = summary.replace(/<[^>]+>/g, '').slice(0, 200)
+      if (content.body) {
+        summary = content.body.replace(/<[^>]+>/g, '').slice(0, 250)
+      } else if (content.topic) {
+        summary = content.topic
+      } else if (content.entries) {
+        summary = content.entries
+          .filter((e: any) => e.body)
+          .map((e: any) => e.body.replace(/<[^>]+>/g, ''))
+          .join(' ').slice(0, 250)
+      } else if (content.interviews) {
+        summary = content.interviews
+          .filter((e: any) => e.body)
+          .map((e: any) => e.body.replace(/<[^>]+>/g, ''))
+          .join(' ').slice(0, 250)
+      } else if (content.reviews) {
+        summary = content.reviews
+          .filter((e: any) => e.body)
+          .map((e: any) => e.body.replace(/<[^>]+>/g, ''))
+          .join(' ').slice(0, 250)
+      } else if (content.source) {
+        summary = `Entrevista a ${content.source}`
+      } else if (content.collages) {
+        summary = content.collages
+          .filter((e: any) => e.description)
+          .map((e: any) => e.description)
+          .join(' ').slice(0, 250)
+      }
+      image = content.backgroundImage || content.image || ''
     }
-    const image = typeof content === 'object' && content ? content.image || '' : ''
     return {
       title: s.title || s.type,
-      summary: summary || `Secció ${s.type}`,
+      summary,
       image,
     }
   })

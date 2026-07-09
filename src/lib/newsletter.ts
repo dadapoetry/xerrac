@@ -53,31 +53,105 @@ export async function sendNewsletterEmail(
 
   const sectionsHtml = sections.map((s, i) => `
     <tr>
-      ${s.image ? `
-        <td style="width:120px;vertical-align:top;padding:0 16px 12px 0">
-          <img src="${s.image}" alt="" style="width:120px;height:auto;border-radius:4px" />
-        </td>
-      ` : ''}
-      <td style="vertical-align:top;padding:0 0 12px 0">
-        <h3 style="font-size:14px;margin:0 0 4px;color:#111">${s.title}</h3>
-        <p style="font-size:13px;color:#666;line-height:1.4;margin:0 0 6px">${s.summary}</p>
-        <a href="${issueUrl}#s-${i}" style="font-size:12px;color:#ef4444">Llegeix més →</a>
+      <td style="padding:0 0 0 0">
+        <table style="width:100%;border-collapse:collapse;border:1px solid #222;margin-bottom:20px">
+          ${s.image ? `
+          <tr>
+            <td style="display:block;line-height:0">
+              <img src="${s.image}" alt="" style="width:100%;max-height:200px;display:block" />
+            </td>
+          </tr>` : ''}
+          <tr>
+            <td style="padding:16px 20px">
+              <table style="width:100%;border-collapse:collapse">
+                <tr>
+                  <td style="width:24px;vertical-align:middle">
+                    <span style="display:inline-block;width:6px;height:6px;background:#ef4444;border-radius:50%"></span>
+                  </td>
+                  <td style="font-family:'Courier New',monospace;font-size:11px;color:#666;letter-spacing:2px;text-transform:uppercase;vertical-align:middle">
+                    Secció ${String(i + 1).padStart(2, '0')}
+                  </td>
+                </tr>
+              </table>
+              <h3 style="font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#fff;margin:8px 0 4px;letter-spacing:-0.5px;line-height:1.2">
+                ${s.title}
+              </h3>
+              <div style="width:36px;height:2px;background:#ef4444;margin:8px 0 10px;opacity:0.6"></div>
+              ${s.summary ? `
+                <p style="font-size:14px;color:#bbb;line-height:1.6;margin:0 0 12px">
+                  ${s.summary}
+                </p>
+              ` : ''}
+              <a href="${issueUrl}#s-${i}"
+                 style="display:inline-block;font-size:12px;color:#ef4444;text-decoration:none;font-weight:600;letter-spacing:1px;text-transform:uppercase">
+                Llegeix més →
+              </a>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
   `).join('')
 
+  const dateStr = new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })
+
   await sendEmail({
     to: email,
-    subject: `Xerrac! — Número ${issue.number} publicat`,
+    subject: `Xerrac! — ${issue.title}`,
     html: `
-      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px">
-        <h1 style="font-size:20px;margin:0 0 4px">Xerrac<span style="color:#ef4444">!</span></h1>
-        <p style="font-size:13px;color:#999;margin:0 0 16px">Núm. ${issue.number} · ${new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</p>
-        <h2 style="font-size:16px;margin:0 0 16px">${issue.title}</h2>
-        <table style="width:100%;border-collapse:collapse">${sectionsHtml}</table>
-        <hr style="border:none;border-top:1px solid #eee;margin:20px 0" />
-        <a href="${unsubscribeUrl}" style="font-size:11px;color:#999">Donar-me de baixa</a>
-      </div>
+      <table style="width:100%;background:#0a0a0a;font-family:Arial,sans-serif">
+        <tr>
+          <td style="padding:40px 16px">
+            <table style="max-width:540px;margin:0 auto;width:100%;border-collapse:collapse">
+
+              <!-- Masthead -->
+              <tr>
+                <td style="padding:0 0 4px;text-align:center">
+                  <h1 style="font-size:28px;font-weight:900;color:#fff;margin:0;letter-spacing:-1px">
+                    XERRAC<span style="color:#ef4444">!</span>
+                  </h1>
+                  <div style="height:3px;background:#ef4444;width:60px;margin:10px auto 8px;opacity:0.5"></div>
+                  <p style="font-size:12px;color:#666;letter-spacing:3px;text-transform:uppercase;margin:0;font-family:'Courier New',monospace">
+                    Núm. ${String(issue.number).padStart(2, '0')} · ${dateStr}
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Divider -->
+              <tr><td style="height:24px"></td></tr>
+
+              <!-- Hero title -->
+              <tr>
+                <td style="padding:0 0 32px;text-align:center">
+                  <h2 style="font-size:22px;font-weight:900;color:#fff;margin:0 0 10px;letter-spacing:-0.5px;line-height:1.3">
+                    ${issue.title}
+                  </h2>
+                  <a href="${issueUrl}"
+                     style="display:inline-block;background:#ef4444;color:#fff;padding:12px 28px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase">
+                    Llegir el número sencer
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Sections -->
+              ${sectionsHtml}
+
+              <!-- Footer -->
+              <tr>
+                <td style="padding:20px 0 0;border-top:1px solid #222">
+                  <p style="font-size:11px;color:#555;margin:0 0 4px;text-align:center">
+                    Has rebut aquest correu perquè estàs subscrit al butlletí de Xerrac!
+                  </p>
+                  <p style="font-size:11px;color:#555;margin:0;text-align:center">
+                    <a href="${unsubscribeUrl}" style="color:#666;text-decoration:underline">Donar-me de baixa</a>
+                  </p>
+                </td>
+              </tr>
+
+            </table>
+          </td>
+        </tr>
+      </table>
     `,
   })
 }
