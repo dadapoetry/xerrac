@@ -222,9 +222,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             Enllaç copiat
           </div>
         )}
+        <NewsletterPopUp visible={showNewsletter} onDismiss={() => setShowNewsletter(false)} />
       </div>
-
-      <NewsletterPopUp visible={showNewsletter} />
 
       {/* Sections */}
       {sortedSections.map((section, i) => (
