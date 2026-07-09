@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
-import { Logo } from './Logo'
 
 interface FanzineViewerProps {
   issue: IssueData
@@ -136,7 +135,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       {/* Header — sticky at top, accompanies reader */}
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print relative">
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
-          <Logo compact />
+          <span className="text-sm font-bold tracking-tight text-white leading-none shrink-0">
+            {issue.title}
+          </span>
 
           <div className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
             {sortedSections.map((section, i) => (
