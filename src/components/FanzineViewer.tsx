@@ -116,7 +116,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
   return (
     <div>
-      {/* Header — scrolls with content */}
+      {/* Header — scrolls with content (NOT fixed) */}
       <div className="bg-black border-b border-gray-800 no-print">
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
