@@ -45,3 +45,11 @@ model Settings {
   key   String @id
   value String @default("")
 }
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  token     String
+  confirmed Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

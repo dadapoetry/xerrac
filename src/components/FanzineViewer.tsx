@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect } fr
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { Logo } from './Logo'
+import { NewsletterPopUp } from './NewsletterPopUp'
 
 interface FanzineViewerProps {
   issue: IssueData
@@ -70,6 +71,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return idx >= 0 && idx < types.length ? idx : 0
   })
   const [copied, setCopied] = useState(false)
+  const [showNewsletter, setShowNewsletter] = useState(false)
   const ticking = useRef(false)
   const navRef = useRef<HTMLDivElement>(null)
 
@@ -85,6 +87,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           if (idx === prevIdx) return
           prevIdx = idx
           setActiveSection(idx)
+          if (idx >= 2) setShowNewsletter(true)
           try {
             history.replaceState(null, '', `#${sectionSlug(idx)}`)
           } catch {}
@@ -220,6 +223,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           </div>
         )}
       </div>
+
+      <NewsletterPopUp visible={showNewsletter} />
 
       {/* Sections */}
       {sortedSections.map((section, i) => (

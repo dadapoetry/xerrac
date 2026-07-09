@@ -206,3 +206,124 @@ export async function deleteSection(id: string) {
   await db.execute({ sql: 'DELETE FROM Section WHERE id = ?', args: [id] })
   revalidatePath('/admin')
 }
+
+/* Newsletter */
+
+export async function subscribe(email: string) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email)) {
+    throw new Error('Correu no vàlid')
+  }
+
+  const existing = await db.execute({
+    sql: 'SELECT id FROM Subscriber WHERE email = ?',
+    args: [email],
+  })
+
+  if (existing.rows.length > 0) {
+    return { ok: true, message: 'Ja estàs subscrit!' }
+  }
+
+  const id = uuid()
+  const token = uuid().replace(/-/g, '') + uuid().replace(/-/g, '')
+
+  await db.execute({
+    sql: 'INSERT INTO Subscriber (id, email, token, confirmed) VALUES (?, ?, ?, 0)',
+    args: [id, email, token],
+  })
+
+  try {
+    const { sendConfirmation } = await import('./newsletter')
+    await sendConfirmation(email, token)
+  } catch (err) {
+    console.error('Failed to send confirmation email:', err)
+  }
+
+  return { ok: true, message: 'Revisa el teu correu per confirmar la subscripció.' }
+}
+
+export async function confirmSubscription(token: string) {
+  const result = await db.execute({
+    sql: 'SELECT id FROM Subscriber WHERE token = ? AND confirmed = 0',
+    args: [token],
+  })
+  if (result.rows.length === 0) return { ok: false, message: 'Enllaç invàlid o ja confirmat.' }
+
+  await db.execute({
+    sql: 'UPDATE Subscriber SET confirmed = 1 WHERE token = ?',
+    args: [token],
+  })
+  return { ok: true, message: 'Subscripció confirmada!' }
+}
+
+export async function unsubscribeByToken(token: string) {
+  await db.execute({
+    sql: 'DELETE FROM Subscriber WHERE token = ?',
+    args: [token],
+  })
+  return { ok: true }
+}
+
+export async function sendIssueNewsletter(issueId: string) {
+  await checkAuth()
+
+  const issueResult = await db.execute({
+    sql: 'SELECT * FROM Issue WHERE id = ?',
+    args: [issueId],
+  })
+  if (issueResult.rows.length === 0) throw new Error('Número no trobat')
+  const issue = issueResult.rows[0] as any
+
+  const sectionsResult = await db.execute({
+    sql: 'SELECT * FROM Section WHERE issueId = ? ORDER BY "order" ASC',
+    args: [issueId],
+  })
+  const sections = sectionsResult.rows as any[]
+
+  const subscribersResult = await db.execute({
+    sql: 'SELECT email, token FROM Subscriber WHERE confirmed = 1',
+    args: [],
+  })
+  const subscribers = subscribersResult.rows as any[]
+
+  if (subscribers.length === 0) {
+    return { ok: true, sent: 0, message: 'No hi ha subscriptors confirmats.' }
+  }
+
+  const summaries = sections.map((s: any) => {
+    const content = safeParse(s.content)
+    let summary = ''
+    if (typeof content === 'object' && content) {
+      summary = content.text || content.html || content.summary || ''
+      summary = summary.replace(/<[^>]+>/g, '').slice(0, 200)
+    }
+    const image = typeof content === 'object' && content ? content.image || '' : ''
+    return {
+      title: s.title || s.type,
+      summary: summary || `Secció ${s.type}`,
+      image,
+    }
+  })
+
+  const { sendNewsletterEmail } = await import('./newsletter')
+  let sent = 0
+  for (const sub of subscribers) {
+    try {
+      await sendNewsletterEmail(sub.email, sub.token, {
+        id: issue.id,
+        number: issue.number,
+        title: issue.title,
+        date: new Date(issue.date),
+      }, summaries)
+      sent++
+    } catch (err) {
+      console.error(`Failed to send to ${sub.email}:`, err)
+    }
+  }
+
+  return { ok: true, sent, message: `Butlletí enviat a ${sent} subscriptor(s).` }
+}
+
+function safeParse(str: string): any {
+  try { return JSON.parse(str) } catch { return {} }
+}
