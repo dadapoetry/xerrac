@@ -1,11 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
-
-import 'react-quill/dist/quill.snow.css'
+import { RichTextEditor } from '@/components/RichTextEditor'
 
 interface SectionContentEditorProps {
   type: string
@@ -86,20 +82,9 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
           )}
           <div>
             <label className="block text-xs uppercase text-gray-500 mb-1">Cos (HTML)</label>
-            <ReactQuill
+            <RichTextEditor
               value={data.body || ''}
               onChange={(v) => updateField('body', v)}
-              className="bg-white text-black rounded"
-              theme="snow"
-              modules={{
-                toolbar: [
-                  [{ header: [1, 2, 3, false] }],
-                  ['bold', 'italic', 'underline', 'strike'],
-                  [{ list: 'ordered' }, { list: 'bullet' }],
-                  ['blockquote', 'link', 'image'],
-                  ['clean'],
-                ],
-              }}
             />
           </div>
         </div>
@@ -139,12 +124,10 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
               />
               <div>
                 <label className="block text-xs text-gray-500 mb-1">Cos (HTML)</label>
-                <ReactQuill
+                <RichTextEditor
                   value={entry.body || ''}
                   onChange={(v) => updateArrayItem('entries', i, 'body', v)}
-                  className="bg-white text-black rounded text-sm"
-                  theme="snow"
-                  modules={{ toolbar: [['bold', 'italic', 'image'], ['clean']] }}
+                  minimal
                 />
               </div>
             </div>
@@ -220,12 +203,10 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
                   placeholder="Tema / Persona entrevistada"
                   className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
                 />
-                <ReactQuill
+                <RichTextEditor
                   value={item.body || ''}
                   onChange={(v) => updateArrayItem('interviews', i, 'body', v)}
-                  className="bg-white text-black rounded text-sm"
-                  theme="snow"
-                  modules={{ toolbar: [['bold', 'italic', 'image'], ['clean']] }}
+                  minimal
                 />
               </div>
             ))}
@@ -253,12 +234,10 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
                   placeholder="Títol de l'obra ressenyada"
                   className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
                 />
-                <ReactQuill
+                <RichTextEditor
                   value={item.body || ''}
                   onChange={(v) => updateArrayItem('reviews', i, 'body', v)}
-                  className="bg-white text-black rounded text-sm"
-                  theme="snow"
-                  modules={{ toolbar: [['bold', 'italic', 'image'], ['clean']] }}
+                  minimal
                 />
               </div>
             ))}
