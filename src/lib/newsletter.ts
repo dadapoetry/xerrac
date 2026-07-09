@@ -1,13 +1,30 @@
-import { Resend } from 'resend'
-
-const resend = new Resend(process.env.RESEND_API_KEY || '')
-
 const FROM = process.env.NEWSLETTER_FROM || 'Xerrac! <contacte@xerrac.cat>'
+
+async function sendEmail({
+  to, subject, html,
+}: { to: string; subject: string; html: string }) {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.warn('RESEND_API_KEY not set — skipping email')
+    return
+  }
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ from: FROM, to, subject, html }),
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Resend error ${res.status}: ${body}`)
+  }
+}
 
 export async function sendConfirmation(email: string, token: string) {
   const url = `${process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'}/api/newsletter/confirm?token=${token}`
-  await resend.emails.send({
-    from: FROM,
+  await sendEmail({
     to: email,
     subject: 'Confirma la teva subscripció',
     html: `
@@ -50,8 +67,7 @@ export async function sendNewsletterEmail(
     </tr>
   `).join('')
 
-  await resend.emails.send({
-    from: FROM,
+  await sendEmail({
     to: email,
     subject: `Xerrac! — Número ${issue.number} publicat`,
     html: `
