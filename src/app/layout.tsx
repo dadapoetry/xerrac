@@ -16,7 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ca">
       <body className={`${inter.className} antialiased`}>
         <Providers>
-          {children}
+          <div className="animate-fade-in">
+            {children}
+          </div>
         </Providers>
       </body>
     </html>

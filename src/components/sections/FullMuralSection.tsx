@@ -17,6 +17,7 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
                 <img
                   src={collage.image}
                   alt={collage.description}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               ) : (

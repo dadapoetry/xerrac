@@ -174,7 +174,7 @@ export function Crossword({ data }: CrosswordProps) {
     <div className="flex flex-col lg:flex-row gap-8">
       <div className="flex-shrink-0">
         <div
-          className="inline-grid border-2 border-gray-600"
+          className="crossword-grid inline-grid border-2 border-gray-600"
           style={{
             gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
             width: `${gridSize * 2.5}rem`,

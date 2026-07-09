@@ -2,12 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out both;
+}
+
 .section-container img {
   max-width: 100%;
   height: auto;
   border-radius: 4px;
   margin: 1.5rem auto;
   display: block;
+}
+
+.crossword-grid {
+  width: 100%;
+  max-width: 100%;
+}
+.crossword-grid > div {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+@media (max-width: 480px) {
+  .crossword-grid {
+    width: auto !important;
+  }
+  .crossword-grid > div {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+  .crossword-grid input {
+    font-size: 0.875rem !important;
+  }
 }
 
 :root {
@@ -99,9 +128,39 @@ body {
   .no-print {
     display: none !important;
   }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
   .section-container {
-    min-height: auto;
+    min-height: auto !important;
     page-break-after: always;
-    padding: 2cm;
+    padding: 1.5cm 2cm !important;
+  }
+  .section-container img {
+    max-width: 60% !important;
+    margin: 1cm auto !important;
+  }
+  .section-divider {
+    opacity: 1 !important;
+    background: #ccc !important;
+  }
+  .text-gray-300,
+  .text-gray-400,
+  .text-gray-500 {
+    color: #444 !important;
+  }
+  .text-white {
+    color: #000 !important;
+  }
+  .border-red-500\/30 {
+    border-color: #ccc !important;
+  }
+  .bg-red-500\/60 {
+    background: #999 !important;
+  }
+  a {
+    color: #000 !important;
+    text-decoration: underline !important;
   }
 }
