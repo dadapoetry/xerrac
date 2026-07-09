@@ -67,9 +67,7 @@ export async function sendNewsletterEmail(
               <table style="width:100%;border-collapse:collapse">
                 <tr>
                   <td style="width:20px;vertical-align:middle;line-height:0">
-                    <svg width="14" height="14" viewBox="0 0 100 100" fill="#ef4444" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" />
-                    </svg>
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik04LDIwIEw5MiwyMCBMOTIsMzIgTDg4LDMyIEw3Niw2OCBMNjQsMzIgTDU4LDMyIEw0Niw2OCBMMzQsMzIgTDI4LDMyIEwxOCw2OCBMOCwzMiBaIiBmaWxsPSIjZWY0NDQ0Ii8+PC9zdmc+" alt="" width="14" height="14" style="display:block" />
                   </td>
                   <td style="vertical-align:middle">
                     <h3 style="font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#fff;margin:0;letter-spacing:-0.5px;line-height:1.2">
