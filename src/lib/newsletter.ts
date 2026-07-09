@@ -66,16 +66,18 @@ export async function sendNewsletterEmail(
             <td style="padding:16px 20px">
               <table style="width:100%;border-collapse:collapse">
                 <tr>
-                  <td style="vertical-align:middle;line-height:0">
+                  <td style="width:20px;vertical-align:middle;line-height:0">
                     <svg width="14" height="14" viewBox="0 0 100 100" fill="#ef4444" xmlns="http://www.w3.org/2000/svg">
                       <path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" />
                     </svg>
                   </td>
+                  <td style="vertical-align:middle">
+                    <h3 style="font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#fff;margin:0;letter-spacing:-0.5px;line-height:1.2">
+                      ${s.title}
+                    </h3>
+                  </td>
                 </tr>
               </table>
-              <h3 style="font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#fff;margin:8px 0 4px;letter-spacing:-0.5px;line-height:1.2">
-                ${s.title}
-              </h3>
               <div style="width:36px;height:2px;background:#ef4444;margin:8px 0 10px;opacity:0.6"></div>
               ${s.summary ? `
                 <p style="font-size:14px;color:#bbb;line-height:1.6;margin:0 0 12px">
