@@ -13,10 +13,13 @@ function getCurrentSectionIndex(): number {
   const els = document.querySelectorAll('[data-section-index]')
   let idx = 0
   els.forEach((el) => {
-    const rect = el.getBoundingClientRect()
-    if (rect.top <= 2) {
-      idx = parseInt(el.getAttribute('data-section-index') || '0')
-    }
+    try {
+      const rect = el.getBoundingClientRect()
+      if (rect.top != null && rect.top <= 2) {
+        const val = parseInt(el.getAttribute('data-section-index') || '0', 10)
+        if (!isNaN(val)) idx = val
+      }
+    } catch {}
   })
   return idx
 }
@@ -24,7 +27,9 @@ function getCurrentSectionIndex(): number {
 function scrollToSectionEl(index: number) {
   const el = document.querySelector(`[data-section-index="${index}"]`) as HTMLElement | null
   if (!el) return
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  try {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  } catch {}
 }
 
 function sectionSlug(type: string) {
@@ -63,15 +68,24 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const ticking = useRef(false)
 
   useEffect(() => {
+    let prevIdx = -1
     const onScroll = () => {
       if (ticking.current) return
       ticking.current = true
       requestAnimationFrame(() => {
-        const idx = getCurrentSectionIndex()
-        setActiveSection(idx)
-        const type = sortedSections[idx]?.type
-        if (type) history.replaceState(null, '', `#${sectionSlug(type)}`)
         ticking.current = false
+        try {
+          const idx = getCurrentSectionIndex()
+          if (idx === prevIdx) return
+          prevIdx = idx
+          setActiveSection(idx)
+          const type = sortedSections[idx]?.type
+          if (type) {
+            try {
+              history.replaceState(null, '', `#${sectionSlug(type)}`)
+            } catch {}
+          }
+        } catch {}
       })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -90,14 +104,16 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const cur = getCurrentSectionIndex()
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault()
-        if (cur > 0) scrollToSectionEl(cur - 1)
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault()
-        if (cur < sortedSections.length - 1) scrollToSectionEl(cur + 1)
-      }
+      try {
+        const cur = getCurrentSectionIndex()
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault()
+          if (cur > 0) scrollToSectionEl(cur - 1)
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault()
+          if (cur < sortedSections.length - 1) scrollToSectionEl(cur + 1)
+        }
+      } catch {}
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
