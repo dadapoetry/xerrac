@@ -10,7 +10,7 @@ export function Logo({ compact, className = '' }: LogoProps) {
     return (
       <a href="/" className={`no-underline inline-block ${className}`}>
         <span className="text-sm font-bold tracking-tight text-white leading-none">
-          XERRAC<span className="text-red-500">!</span>
+          Xerrac<span className="text-red-500">!</span>
         </span>
       </a>
     )

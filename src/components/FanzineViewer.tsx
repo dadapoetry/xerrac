@@ -114,8 +114,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
   return (
     <div>
-      {/* Header — scrolls with content */}
-      <div className="bg-black border-b border-gray-800 no-print">
+      {/* Header — sticky at top, accompanies reader */}
+      <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print">
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
