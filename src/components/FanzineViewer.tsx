@@ -119,16 +119,20 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
-          <div className="flex-1 min-w-0">
-            <span
-              className="text-sm font-bold truncate block"
-              style={{
-                color: '#ef4444',
-                textShadow: '0 0 8px rgba(239,68,68,0.5), 0 0 16px rgba(239,68,68,0.25)',
-              }}
-            >
-              {sortedSections[activeSection]?.title || issue.title}
-            </span>
+          <div className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
+            {sortedSections.map((section, i) => (
+              <button
+                key={section.id}
+                onClick={() => scrollToSectionEl(i)}
+                className={`text-[10px] uppercase tracking-wider whitespace-nowrap px-2 py-0.5 transition-colors shrink-0 ${
+                  i === activeSection
+                    ? 'text-red-400'
+                    : 'text-gray-600 hover:text-gray-400'
+                }`}
+              >
+                {section.title}
+              </button>
+            ))}
           </div>
 
           <span className="text-[10px] text-gray-400 font-mono tracking-wider min-w-[2.5em] text-right shrink-0">
@@ -158,23 +162,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
               </svg>
             </a>
           </div>
-        </div>
-
-        {/* Section nav strip — scrolls with content */}
-        <div className="flex items-center gap-0 px-3 pb-1.5 overflow-x-auto">
-          {sortedSections.map((section, i) => (
-            <button
-              key={section.id}
-              onClick={() => scrollToSectionEl(i)}
-              className={`text-[10px] uppercase tracking-wider whitespace-nowrap px-2 py-0.5 transition-colors ${
-                i === activeSection
-                  ? 'text-red-400'
-                  : 'text-gray-600 hover:text-gray-400'
-              }`}
-            >
-              <span className="md:inline">{section.title}</span>
-            </button>
-          ))}
         </div>
       </div>
 
