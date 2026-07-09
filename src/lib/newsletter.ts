@@ -5,8 +5,7 @@ async function sendEmail({
 }: { to: string; subject: string; html: string }) {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
-    console.warn('RESEND_API_KEY not set — skipping email')
-    return
+    throw new Error('RESEND_API_KEY no configurada')
   }
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
