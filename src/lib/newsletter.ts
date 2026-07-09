@@ -94,6 +94,9 @@ export async function sendNewsletterEmail(
   `).join('')
 
   const dateStr = new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })
+  const heroBg = coverImage
+    ? `background-image:url('${coverImage}');background-size:cover;background-position:center;background-repeat:no-repeat`
+    : ''
 
   await sendEmail({
     to: email,
@@ -104,41 +107,38 @@ export async function sendNewsletterEmail(
           <td style="padding:40px 16px">
             <table style="max-width:540px;margin:0 auto;width:100%;border-collapse:collapse">
 
-              <!-- Masthead -->
+               <!-- Hero with cover background -->
               <tr>
-                <td style="padding:0 0 4px;text-align:center">
-                  <h1 style="font-size:28px;font-weight:900;color:#fff;margin:0;letter-spacing:-1px">
-                    XERRAC<span style="color:#ef4444">!</span>
-                  </h1>
-                  <div style="height:3px;background:#ef4444;width:60px;margin:10px auto 8px;opacity:0.5"></div>
-                  <p style="font-size:12px;color:#666;letter-spacing:3px;text-transform:uppercase;margin:0;font-family:'Courier New',monospace">
-                    Núm. ${String(issue.number).padStart(2, '0')} · ${dateStr}
-                  </p>
+                <td ${coverImage ? `background="${coverImage}"` : ''} bgcolor="#000000" style="${heroBg};border:1px solid #222">
+                  <!--[if gte mso 9]>
+                  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:540px">
+                    <v:fill type="frame" src="${coverImage}" color="#000000" />
+                    <v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0">
+                  <![endif]-->
+                  <div style="background:rgba(0,0,0,0.55);padding:40px 24px;text-align:center">
+                    <h1 style="font-size:28px;font-weight:900;color:#fff;margin:0;letter-spacing:-1px">
+                      XERRAC<span style="color:#ef4444">!</span>
+                    </h1>
+                    <div style="height:3px;background:#ef4444;width:60px;margin:10px auto 8px;opacity:0.5"></div>
+                    <p style="font-size:12px;color:#ccc;letter-spacing:3px;text-transform:uppercase;margin:0 0 16px;font-family:'Courier New',monospace">
+                      Núm. ${String(issue.number).padStart(2, '0')} · ${dateStr}
+                    </p>
+                    <h2 style="font-size:22px;font-weight:900;color:#fff;margin:0 0 16px;letter-spacing:-0.5px;line-height:1.3">
+                      ${issue.title}
+                    </h2>
+                    <a href="${issueUrl}"
+                       style="display:inline-block;background:#ef4444;color:#fff;padding:12px 28px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase">
+                      Llegir el número sencer
+                    </a>
+                  </div>
+                  <!--[if gte mso 9]>
+                    </v:textbox>
+                  </v:rect>
+                  <![endif]-->
                 </td>
               </tr>
 
-              <!-- Divider -->
-              <tr><td style="height:24px"></td></tr>
-
-              ${coverImage ? `
-              <tr>
-                <td style="padding:0 0 24px;line-height:0">
-                  <img src="${coverImage}" alt="" style="width:100%;height:auto;display:block;border:1px solid #222" />
-                </td>
-              </tr>` : ''}
-
-              <!-- Hero title -->
-              <tr>
-                <td style="padding:${coverImage ? '0' : '0 0 32px'};text-align:center">
-                  <h2 style="font-size:22px;font-weight:900;color:#fff;margin:0 0 10px;letter-spacing:-0.5px;line-height:1.3">
-                    ${issue.title}
-                  </h2>
-                  <a href="${issueUrl}"
-                     style="display:inline-block;background:#ef4444;color:#fff;padding:12px 28px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase">
-                    Llegir el número sencer
-                  </a>
-                </td>
-              </tr>
+              <tr><td style="height:32px"></td></tr>
 
               <!-- Sections -->
               ${sectionsHtml}
