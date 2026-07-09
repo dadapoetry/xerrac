@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { IssueData, SECTION_LABELS } from '@/types'
+import { useState, useEffect } from 'react'
+import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 
 import { Logo } from './Logo'
@@ -36,13 +36,19 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
 
   useEffect(() => {
-    let raf: number
-    const check = () => {
-      setActiveSection(getCurrentSectionIndex())
-      raf = requestAnimationFrame(check)
-    }
-    raf = requestAnimationFrame(check)
-    return () => cancelAnimationFrame(raf)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(parseInt(entry.target.getAttribute('data-section-index') || '0'))
+          }
+        }
+      },
+      { threshold: 0.3 }
+    )
+    const els = document.querySelectorAll('[data-section-index]')
+    els.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
   }, [])
 
   useEffect(() => {
@@ -60,20 +66,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [sortedSections.length])
 
-  const goNext = useCallback(() => {
-    const cur = getCurrentSectionIndex()
-    if (cur < sortedSections.length - 1) scrollToSectionEl(cur + 1)
-  }, [sortedSections.length])
-
-  const goPrev = useCallback(() => {
-    const cur = getCurrentSectionIndex()
-    if (cur > 0) scrollToSectionEl(cur - 1)
-  }, [])
-
   const progress = ((activeSection + 1) / sortedSections.length) * 100
-  const canGoPrev = activeSection > 0
-  const canGoNext = activeSection < sortedSections.length - 1
-  const currentSection = sortedSections[activeSection]
 
   return (
     <div>

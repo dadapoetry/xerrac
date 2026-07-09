@@ -33,7 +33,7 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
         {section.backgroundImage && (
           <>
             <div
-              className="absolute inset-0 z-0 bg-cover bg-center bg-fixed"
+              className="absolute inset-0 z-0 bg-cover bg-center"
               style={{ backgroundImage: `url("${section.backgroundImage}")` }}
             />
             <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
