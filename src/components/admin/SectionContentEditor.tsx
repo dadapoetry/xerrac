@@ -44,15 +44,6 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
       return (
         <div className="space-y-4 text-sm text-gray-300">
           <div>
-            <label className="block text-xs uppercase text-gray-500 mb-1">Subtítol</label>
-            <input
-              type="text"
-              value={data.subtitle || ''}
-              onChange={(e) => updateField('subtitle', e.target.value)}
-              className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
-            />
-          </div>
-          <div>
             <label className="block text-xs uppercase text-gray-500 mb-1">Tema / Topic</label>
             <input
               type="text"

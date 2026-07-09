@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { deleteSection } from '@/lib/actions'
+import { deleteSection, updateSection } from '@/lib/actions'
 import { SECTION_LABELS, SECTION_TYPES, SectionData } from '@/types'
 
 interface SectionListProps {
@@ -18,6 +18,24 @@ export function SectionList({ issueId, sections }: SectionListProps) {
   const handleDelete = async (id: string) => {
     if (!confirm('Estàs segur?')) return
     await deleteSection(id)
+    router.refresh()
+  }
+
+  const moveUp = async (index: number) => {
+    if (index <= 0) return
+    const a = sorted[index]
+    const b = sorted[index - 1]
+    await updateSection(a.id, { order: b.order })
+    await updateSection(b.id, { order: a.order })
+    router.refresh()
+  }
+
+  const moveDown = async (index: number) => {
+    if (index >= sorted.length - 1) return
+    const a = sorted[index]
+    const b = sorted[index + 1]
+    await updateSection(a.id, { order: b.order })
+    await updateSection(b.id, { order: a.order })
     router.refresh()
   }
 
@@ -44,13 +62,43 @@ export function SectionList({ issueId, sections }: SectionListProps) {
                 {SECTION_LABELS[section.type] || section.type}
               </span>
             </div>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
+              <div className="flex mr-1">
+                <button
+                  onClick={() => moveUp(i)}
+                  disabled={i === 0}
+                  className="text-gray-600 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed px-1"
+                  title="Moure amunt"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                    <path fillRule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => moveDown(i)}
+                  disabled={i === sorted.length - 1}
+                  className="text-gray-600 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed px-1"
+                  title="Moure avall"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                    <path fillRule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
               <Link
                 href={`/admin/seccions/${issueId}/${section.id}`}
                 className="text-xs text-gray-400 hover:text-white transition-colors"
               >
                 Editar
               </Link>
+              <a
+                href={`/?issue=${issueId}#s-${i}`}
+                target="_blank"
+                className="text-xs text-gray-500 hover:text-red-400 transition-colors"
+                title="Vista prèvia"
+              >
+                Previsualitzar
+              </a>
               <button
                 onClick={() => handleDelete(section.id)}
                 className="text-xs text-red-600 hover:text-red-400 transition-colors"

@@ -48,7 +48,6 @@ export interface FaduEntry {
 }
 
 export interface PortadaContent {
-  subtitle: string
   topic: string
 }
 

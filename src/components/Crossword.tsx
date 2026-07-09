@@ -67,13 +67,11 @@ export function Crossword({ data }: CrosswordProps) {
   }
 
   const getCellNumber = (row: number, col: number): number | null => {
-    const allClues = { ...clues.across, ...clues.down }
-    for (const [, clue] of Object.entries(allClues)) {
-      if (clue.row === row && clue.col === col) {
-        return parseInt(Object.keys(allClues).find(
-          k => allClues[k].row === row && allClues[k].col === col
-        ) || '0')
-      }
+    for (const [num, clue] of Object.entries(clues.across)) {
+      if (clue.row === row && clue.col === col) return parseInt(num)
+    }
+    for (const [num, clue] of Object.entries(clues.down)) {
+      if (clue.row === row && clue.col === col) return parseInt(num)
     }
     return null
   }
