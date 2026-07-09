@@ -152,25 +152,45 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           </div>
         </div>
 
-        {/* Section nav strip */}
-        <div className="flex items-center gap-0 px-3 pb-1.5 overflow-x-auto no-scrollbar">
-          {sortedSections.map((section, i) => (
-            <button
-              key={section.id}
-              onClick={() => scrollToSectionEl(i)}
-              className={`text-[10px] uppercase tracking-wider whitespace-nowrap px-2 py-0.5 transition-colors ${
+      </div>
+
+      {/* Section nav — fixed right side */}
+      <nav className="fixed right-5 top-24 z-40 no-print hidden md:flex flex-col items-center gap-3">
+        {sortedSections.map((section, i) => (
+          <button
+            key={section.id}
+            onClick={() => scrollToSectionEl(i)}
+            className="group relative flex items-center justify-center"
+          >
+            <span
+              className={`block rounded-full transition-all duration-300 ${
                 i === activeSection
-                  ? 'text-red-400'
-                  : 'text-gray-600 hover:text-gray-400'
+                  ? 'w-2.5 h-2.5 bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]'
+                  : 'w-1.5 h-1.5 bg-gray-600 hover:bg-gray-400'
               }`}
+            />
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] text-gray-500
+              whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none
+              uppercase tracking-wider"
             >
-              <span className="hidden md:inline">{section.title}</span>
-              <span className={`md:hidden block w-1.5 h-1.5 rounded-full ${
-                i === activeSection ? 'bg-red-500' : 'bg-gray-600'
-              }`} />
-            </button>
-          ))}
-        </div>
+              {section.title}
+            </span>
+          </button>
+        ))}
+      </nav>
+
+      {/* Mobile section nav — bottom strip */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 no-print md:hidden flex items-center gap-2 bg-black/80 border border-gray-800 px-3 py-1.5 rounded-full">
+        {sortedSections.map((section, i) => (
+          <button
+            key={section.id}
+            onClick={() => scrollToSectionEl(i)}
+            className={`w-2 h-2 rounded-full transition-all ${
+              i === activeSection ? 'bg-red-500 scale-125' : 'bg-gray-600'
+            }`}
+            title={section.title}
+          />
+        ))}
       </div>
 
       {copied && (
