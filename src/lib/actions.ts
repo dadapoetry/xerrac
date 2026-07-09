@@ -236,7 +236,11 @@ export async function subscribe(email: string) {
     const { sendConfirmation } = await import('./newsletter')
     await sendConfirmation(email, token)
   } catch (err) {
-    console.error('Failed to send confirmation email:', err)
+    await db.execute({
+      sql: 'DELETE FROM Subscriber WHERE id = ?',
+      args: [id],
+    })
+    throw new Error('No s\'ha pogut enviar el correu de confirmació. Prova-ho més tard.')
   }
 
   return { ok: true, message: 'Revisa el teu correu per confirmar la subscripció.' }

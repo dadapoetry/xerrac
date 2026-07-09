@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { SawIcon } from './SawIcon'
 import { subscribe } from '@/lib/actions'
 
 const STORAGE_KEY = 'xerrac-newsletter-dismissed'
@@ -65,10 +66,11 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
           </button>
 
           <div className="flex items-center gap-2 mb-3">
+            <SawIcon className="w-4 h-4" />
             <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
               Butlletí
             </span>
-            <div className="h-px flex-1 bg-red-500/30" />
+            <div className="h-px w-12 bg-red-500/40" />
           </div>
 
           <p className="text-base font-black tracking-tight text-white leading-tight mb-1">
