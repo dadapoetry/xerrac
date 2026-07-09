@@ -31,11 +31,6 @@ function sectionSlug(type: string) {
   return `s-${type}`
 }
 
-function isTouchDevice() {
-  if (typeof window === 'undefined') return false
-  return 'ontouchstart' in window || navigator.maxTouchPoints > 0
-}
-
 async function copyToClipboard(text: string) {
   try {
     await navigator.clipboard.writeText(text)
@@ -64,22 +59,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     const idx = types.indexOf(hash.replace('s-', ''))
     return idx >= 0 ? idx : 0
   })
-  const [showHint, setShowHint] = useState(false)
   const [copied, setCopied] = useState(false)
   const ticking = useRef(false)
-
-  useEffect(() => {
-    if (isTouchDevice()) return
-    const seen = localStorage.getItem('xerrac-keyboard-hint')
-    if (!seen) {
-      setShowHint(true)
-      const timer = setTimeout(() => {
-        setShowHint(false)
-        localStorage.setItem('xerrac-keyboard-hint', '1')
-      }, 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -135,89 +116,68 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
   return (
     <div>
-      {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 no-print bg-black/80 backdrop-blur-sm">
-        <div className="flex items-center gap-3 px-4 h-12">
+      {/* Header — scrolls with content */}
+      <div className="bg-black border-b border-gray-800 no-print">
+        <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
-          <div className="flex-1 h-0.5 bg-gray-900 relative rounded overflow-hidden">
+          <div className="flex-1 h-0.5 bg-gray-900 relative rounded overflow-hidden min-w-[3rem]">
             <div
               className="absolute left-0 top-0 h-full bg-red-500 transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <span className="text-[11px] text-gray-400 font-mono tracking-wider min-w-[3em] text-right">
+          <span className="text-[10px] text-gray-400 font-mono tracking-wider min-w-[2.5em] text-right shrink-0">
             {String(activeSection + 1).padStart(2, '0')}/{String(sortedSections.length).padStart(2, '0')}
           </span>
 
-          <button
-            onClick={shareLink}
-            className="text-gray-600 hover:text-red-400 transition-colors text-xs leading-none px-1"
-            title="Compartir secció"
-          >
-            ↗
-          </button>
-          <a
-            href="/arxiu"
-            className="text-gray-600 hover:text-red-400 transition-colors text-xs leading-none px-1"
-            title="Arxiu"
-          >
-            ☰
-          </a>
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              onClick={shareLink}
+              className="w-7 h-7 border border-gray-800 text-gray-500 hover:text-red-400 hover:border-red-500/50
+                transition-all text-xs flex items-center justify-center"
+              title="Compartir secció"
+            >
+              ↗
+            </button>
+            <a
+              href="/arxiu"
+              className="w-7 h-7 border border-gray-800 text-gray-500 hover:text-red-400 hover:border-red-500/50
+                transition-all text-xs flex items-center justify-center"
+              title="Arxiu"
+            >
+              ☰
+            </a>
+          </div>
+        </div>
+
+        {/* Section nav strip */}
+        <div className="flex items-center gap-0 px-3 pb-1.5 overflow-x-auto no-scrollbar">
+          {sortedSections.map((section, i) => (
+            <button
+              key={section.id}
+              onClick={() => scrollToSectionEl(i)}
+              className={`text-[10px] uppercase tracking-wider whitespace-nowrap px-2 py-0.5 transition-colors ${
+                i === activeSection
+                  ? 'text-red-400'
+                  : 'text-gray-600 hover:text-gray-400'
+              }`}
+            >
+              <span className="hidden md:inline">{section.title}</span>
+              <span className={`md:hidden block w-1.5 h-1.5 rounded-full ${
+                i === activeSection ? 'bg-red-500' : 'bg-gray-600'
+              }`} />
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Keyboard hint — desktop only */}
-      {showHint && !isTouchDevice() && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 no-print bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in">
-          ← → o ↑ ↓ per navegar entre seccions
-        </div>
-      )}
       {copied && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 no-print bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 no-print bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in">
           Enllaç copiat
         </div>
       )}
-
-      {/* Desktop section nav */}
-      <nav className="fixed right-5 top-1/2 -translate-y-1/2 z-40 no-print hidden md:flex flex-col items-center gap-3">
-        {sortedSections.map((section, i) => (
-          <button
-            key={section.id}
-            onClick={() => scrollToSectionEl(i)}
-            className="group relative flex items-center justify-center"
-          >
-            <span
-              className={`block rounded-full transition-all duration-300 ${
-                i === activeSection
-                  ? 'w-2.5 h-2.5 bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]'
-                  : 'w-1.5 h-1.5 bg-gray-600 hover:bg-gray-400'
-              }`}
-            />
-            <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500
-              whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none
-              uppercase tracking-wider text-right"
-            >
-              {section.title}
-            </span>
-          </button>
-        ))}
-      </nav>
-
-      {/* Mobile section nav */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 no-print md:hidden flex items-center gap-2 bg-black/80 border border-gray-800 px-3 py-1.5 rounded-full">
-        {sortedSections.map((section, i) => (
-          <button
-            key={section.id}
-            onClick={() => scrollToSectionEl(i)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              i === activeSection ? 'bg-red-500 scale-125' : 'bg-gray-600'
-            }`}
-            title={section.title}
-          />
-        ))}
-      </div>
 
       {/* Sections */}
       {sortedSections.map((section, i) => (
