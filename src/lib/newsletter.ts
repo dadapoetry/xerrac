@@ -25,19 +25,53 @@ export async function sendConfirmation(email: string, token: string) {
   const url = `${process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'}/api/newsletter/confirm?token=${token}`
   await sendEmail({
     to: email,
-    subject: 'Confirma la teva subscripció',
+    subject: 'Xerrac! — Confirma la teva subscripció',
     html: `
-      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
-        <h1 style="font-size:18px;margin:0 0 8px">Xerrac<span style="color:#ef4444">!</span></h1>
-        <p style="color:#666;font-size:14px;line-height:1.5">
-          Gràcies per subscriure't! Fes clic al botó per confirmar:
-        </p>
-        <a href="${url}"
-           style="display:inline-block;background:#ef4444;color:#fff;padding:10px 24px;border-radius:4px;text-decoration:none;font-size:14px;margin:16px 0">
-          Confirmar subscripció
-        </a>
-        <p style="color:#999;font-size:12px">Si no has sol·licitat això, ignora aquest correu.</p>
-      </div>
+      <table style="width:100%;background:#0a0a0a;font-family:Arial,sans-serif">
+        <tr>
+          <td style="padding:40px 16px">
+            <table style="max-width:480px;margin:0 auto;width:100%;border-collapse:collapse">
+
+              <tr>
+                <td style="text-align:center;padding:0 0 24px;border-bottom:1px solid #222">
+                  <h1 style="font-size:28px;font-weight:900;color:#fff;margin:0;letter-spacing:-1px">
+                    XERRAC<span style="color:#ef4444">!</span>
+                  </h1>
+                  <div style="height:3px;background:#ef4444;width:60px;margin:10px auto 8px;opacity:0.5"></div>
+                  <p style="font-size:12px;color:#666;letter-spacing:3px;text-transform:uppercase;margin:0;font-family:'Courier New',monospace">
+                    Butlletí
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:32px 0;text-align:center">
+                  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik04LDIwIEw5MiwyMCBMOTIsMzIgTDg4LDMyIEw3Niw2OCBMNjQsMzIgTDU4LDMyIEw0Niw2OCBMMzQsMzIgTDI4LDMyIEwxOCw2OCBMOCwzMiBaIiBmaWxsPSIjZWY0NDQ0Ii8+PC9zdmc+" alt="" width="24" height="24" style="display:block;margin:0 auto 16px" />
+                  <h2 style="font-size:20px;font-weight:900;color:#fff;margin:0 0 8px;letter-spacing:-0.5px">
+                    Quasi hi som!
+                  </h2>
+                  <p style="font-size:14px;color:#bbb;line-height:1.6;margin:0 0 24px;max-width:360px;margin-left:auto;margin-right:auto">
+                    Gràcies per subscriure't al butlletí de Xerrac! Fes clic al botó per confirmar l'adreça:
+                  </p>
+                  <a href="${url}"
+                     style="display:inline-block;background:#ef4444;color:#fff;padding:14px 32px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase">
+                    Confirmar subscripció
+                  </a>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:24px 0 0;border-top:1px solid #222;text-align:center">
+                  <p style="font-size:12px;color:#555;margin:0;line-height:1.5">
+                    Si no has sol·licitat aquesta subscripció, ignora aquest correu.
+                  </p>
+                </td>
+              </tr>
+
+            </table>
+          </td>
+        </tr>
+      </table>
     `,
   })
 }
