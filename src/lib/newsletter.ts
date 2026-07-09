@@ -46,9 +46,28 @@ export async function sendConfirmation(email: string, token: string) {
 
               <tr>
                 <td style="padding:32px 0;text-align:center">
-                  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik04LDIwIEw5MiwyMCBMOTIsMzIgTDg4LDMyIEw3Niw2OCBMNjQsMzIgTDU4LDMyIEw0Niw2OCBMMzQsMzIgTDI4LDMyIEwxOCw2OCBMOCwzMiBaIiBmaWxsPSIjZWY0NDQ0Ii8+PC9zdmc+" alt="" width="24" height="24" style="display:block;margin:0 auto 16px" />
+                  <table cellpadding="0" cellspacing="0" style="margin:0 auto 16px;line-height:0;font-size:0">
+                    <tr>
+                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                    </tr>
+                    <tr>
+                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                    </tr>
+                  </table>
                   <h2 style="font-size:20px;font-weight:900;color:#fff;margin:0 0 8px;letter-spacing:-0.5px">
-                    Quasi hi som!
+                    Gairebé ho tenim!
                   </h2>
                   <p style="font-size:14px;color:#bbb;line-height:1.6;margin:0 0 24px;max-width:360px;margin-left:auto;margin-right:auto">
                     Gràcies per subscriure't al butlletí de Xerrac! Fes clic al botó per confirmar l'adreça:
@@ -100,8 +119,23 @@ export async function sendNewsletterEmail(
             <td style="padding:16px 20px">
               <table style="width:100%;border-collapse:collapse">
                 <tr>
-                  <td style="width:20px;vertical-align:middle;line-height:0">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik04LDIwIEw5MiwyMCBMOTIsMzIgTDg4LDMyIEw3Niw2OCBMNjQsMzIgTDU4LDMyIEw0Niw2OCBMMzQsMzIgTDI4LDMyIEwxOCw2OCBMOCwzMiBaIiBmaWxsPSIjZWY0NDQ0Ii8+PC9zdmc+" alt="" width="14" height="14" style="display:block" />
+                  <td style="width:22px;vertical-align:middle;line-height:0;font-size:0">
+                    <table cellpadding="0" cellspacing="0" style="display:inline-block;vertical-align:middle;line-height:0;font-size:0">
+                      <tr>
+                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                      </tr>
+                      <tr>
+                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
+                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
+                      </tr>
+                    </table>
                   </td>
                   <td style="vertical-align:middle">
                     <h3 style="font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#fff;margin:0;letter-spacing:-0.5px;line-height:1.2">
