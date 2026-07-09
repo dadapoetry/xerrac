@@ -134,7 +134,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   return (
     <div>
       {/* Header — sticky at top, accompanies reader */}
-      <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print">
+      <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print relative">
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
@@ -182,13 +182,12 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             </a>
           </div>
         </div>
+        {copied && (
+          <div className="absolute left-1/2 -translate-x-1/2 top-full z-50 bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in whitespace-nowrap">
+            Enllaç copiat
+          </div>
+        )}
       </div>
-
-      {copied && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 no-print bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in">
-          Enllaç copiat
-        </div>
-      )}
 
       {/* Sections */}
       {sortedSections.map((section, i) => (
