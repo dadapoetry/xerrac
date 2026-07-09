@@ -69,6 +69,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   })
   const [copied, setCopied] = useState(false)
   const ticking = useRef(false)
+  const navRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let prevIdx = -1
@@ -94,6 +95,13 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [sortedSections])
+
+  useEffect(() => {
+    const el = navRef.current?.children[activeSection] as HTMLElement | undefined
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+    }
+  }, [activeSection])
 
   useEffect(() => {
     const hash = window.location.hash.slice(1)
@@ -138,7 +146,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
-          <div className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
+          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
             {sortedSections.map((section, i) => (
               <button
                 key={section.id}
