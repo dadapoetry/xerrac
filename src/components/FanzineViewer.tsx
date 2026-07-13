@@ -278,7 +278,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
               </>
             )}
             <div className="relative z-[3] w-full">
-              <PortadaSection section={sortedSections[0] as any} sumariEntries={sumariEntries} />
+              <PortadaSection section={sortedSections[0] as any} sumariEntries={sumariEntries} issueNumber={issue.number} />
             </div>
           </div>
           <div className="section-divider"><span className="text-lg font-black select-none opacity-20" style={{ color: 'var(--accent)' }}>!</span></div>

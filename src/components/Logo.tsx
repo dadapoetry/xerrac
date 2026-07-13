@@ -22,7 +22,7 @@ export function Logo({ compact, className = '' }: LogoProps) {
         XERRAC<span style={{ color: 'var(--accent, #ef4444)', filter: 'drop-shadow(0 0 8px rgba(239,68,68,0.4))' }}>!</span>
       </h1>
       <div className="h-[2px] w-full mt-1.5 md:mt-2" style={{ backgroundColor: 'var(--accent, #ef4444)' }} />
-      <p className="text-[10px] text-gray-400 tracking-[0.25em] uppercase mt-2 md:mt-3 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+      <p className="text-[10px] text-gray-300 tracking-[0.25em] uppercase mt-2 md:mt-3 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
         Revista d&apos;aclariment cultural
       </p>
     </a>
