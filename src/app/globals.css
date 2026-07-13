@@ -115,6 +115,18 @@ body {
   overflow-x: hidden;
 }
 
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
 .section-container {
   min-height: 100vh;
   min-height: 100dvh;
@@ -250,6 +262,9 @@ body {
   .section-container img {
     max-width: 60% !important;
     margin: 1cm auto !important;
+  }
+  body::before {
+    display: none !important;
   }
   .section-divider {
     opacity: 1 !important;
