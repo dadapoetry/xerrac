@@ -38,7 +38,7 @@ export default async function HomePage({
       <ErrorBoundary>
         <FanzineViewer issue={parsedIssue as any} />
       </ErrorBoundary>
-      <Footer />
+      <Footer currentIssueNumber={issue.number} />
     </>
   )
 }

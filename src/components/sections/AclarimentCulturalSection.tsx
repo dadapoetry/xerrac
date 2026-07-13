@@ -2,6 +2,7 @@
 
 import { SectionData, AclarimentCulturalContent } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
+import { styleBlockquotes } from '@/lib/html'
 
 export function AclarimentCulturalSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as AclarimentCulturalContent
@@ -12,7 +13,7 @@ export function AclarimentCulturalSection({ section, index }: { section: Section
       <div className="relative pl-6 border-l" style={{ borderColor: 'rgba(var(--accent-rgb), 0.3)' }}>
         <div
           className="text-gray-300 leading-relaxed space-y-6 text-[15px] md:text-base drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-          dangerouslySetInnerHTML={{ __html: content.body }}
+          dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body) }}
         />
       </div>
     </div>

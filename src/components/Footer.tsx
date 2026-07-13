@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
+import { getPublishedIssues } from '@/lib/actions'
 import { SawIcon } from '@/components/SawIcon'
 
 interface SocialLink {
@@ -7,7 +8,7 @@ interface SocialLink {
   url: string
 }
 
-export async function Footer() {
+export async function Footer({ currentIssueNumber }: { currentIssueNumber?: number }) {
   const settings = await getAllSettings()
 
   let socialLinks: SocialLink[] = []
@@ -19,6 +20,25 @@ export async function Footer() {
 
   const copyright = settings.footer_copyright || ''
   const issn = settings.footer_issn || ''
+
+  let prevIssue: { number: number; title: string; id: string } | null = null
+  let nextIssue: { number: number; title: string; id: string } | null = null
+
+  if (currentIssueNumber !== undefined) {
+    try {
+      const issues = await getPublishedIssues()
+      const sorted = issues.sort((a: any, b: any) => a.number - b.number)
+      const idx = sorted.findIndex((i: any) => i.number === currentIssueNumber)
+      if (idx > 0) {
+        const p = sorted[idx - 1]
+        prevIssue = { number: p.number, title: p.title, id: p.id }
+      }
+      if (idx >= 0 && idx < sorted.length - 1) {
+        const n = sorted[idx + 1]
+        nextIssue = { number: n.number, title: n.title, id: n.id }
+      }
+    } catch {}
+  }
 
   return (
     <footer className="border-t border-gray-800 py-16 px-4 no-print">
@@ -45,6 +65,25 @@ export async function Footer() {
                 {link.name}
               </a>
             ))}
+          </div>
+        )}
+
+        {(prevIssue || nextIssue) && (
+          <div className="flex justify-center gap-6 mt-8 pt-6 border-t border-gray-800 text-[11px]">
+            {prevIssue ? (
+              <Link href={`/?issue=${prevIssue.id}`} className="text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
+                ← {String(prevIssue.number).padStart(2, '0')}
+              </Link>
+            ) : (
+              <span />
+            )}
+            {nextIssue ? (
+              <Link href={`/?issue=${nextIssue.id}`} className="text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
+                {String(nextIssue.number).padStart(2, '0')} →
+              </Link>
+            ) : (
+              <span />
+            )}
           </div>
         )}
 
