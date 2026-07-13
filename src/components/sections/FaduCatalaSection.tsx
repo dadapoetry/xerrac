@@ -14,7 +14,7 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
       </div>
       <h3 className="text-lg md:text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
       <div
-        className="text-gray-300 leading-relaxed text-[15px] md:text-base drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+        className="text-gray-300 leading-relaxed text-base font-serif drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
         dangerouslySetInnerHTML={{ __html: entry.body }}
       />
     </div>

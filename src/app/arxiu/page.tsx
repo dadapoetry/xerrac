@@ -23,7 +23,7 @@ export default async function ArxiuPage() {
           <span className="text-[10px] text-gray-400 tracking-[0.3em] uppercase font-mono block mb-4">
             Arxiu
           </span>
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-none mb-3">
+          <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight text-white uppercase leading-none mb-3">
             Xerrac<span className="text-red-500">!</span>
           </h1>
           <p className="text-sm text-gray-400 mb-6">

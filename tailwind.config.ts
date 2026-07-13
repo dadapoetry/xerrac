@@ -10,10 +10,11 @@ const config: Config = {
     extend: {
       fontFamily: {
         mono: ['Courier New', 'Courier', 'monospace'],
-        display: ['Impact', 'Haettenschweiler', 'sans-serif'],
-        serif: ['Georgia', 'Times New Roman', 'serif'],
+        serif: ['var(--font-source-serif)', 'Georgia', 'serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
       colors: {
+        'warm-white': '#f0ede8',
         xerrac: {
           black: '#0a0a0a',
           white: '#f5f5f5',
