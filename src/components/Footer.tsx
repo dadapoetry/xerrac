@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
+import { SawIcon } from '@/components/SawIcon'
 
 interface SocialLink {
   name: string
@@ -23,7 +24,9 @@ export async function Footer() {
     <footer className="border-t border-gray-800 py-16 px-4 no-print">
       <div className="max-w-lg mx-auto text-center">
         <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Revista d'aclariment cultural</p>
-        <div className="w-8 h-[2px] mx-auto mb-6" style={{ backgroundColor: '#ef4444', opacity: 0.6 }} />
+        <div className="flex justify-center mb-6">
+          <SawIcon className="w-5 h-5 opacity-60" />
+        </div>
         <div className="text-[11px] text-gray-600 leading-relaxed space-y-1">
           {issn && <p>{issn}</p>}
           {copyright && <p>{copyright}</p>}
