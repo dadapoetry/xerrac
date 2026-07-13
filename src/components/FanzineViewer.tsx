@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect } fr
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { Logo } from './Logo'
+import { SawIcon } from './SawIcon'
 import { NewsletterPopUp } from './NewsletterPopUp'
 
 function hexToRgb(hex: string): string {
@@ -77,8 +78,31 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   })
   const [copied, setCopied] = useState(false)
   const [showNewsletter, setShowNewsletter] = useState(false)
+  const [idle, setIdle] = useState(false)
   const ticking = useRef(false)
+  const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
+  const isMobile = useRef(false)
+
+  useEffect(() => {
+    isMobile.current = window.matchMedia('(pointer: coarse)').matches
+  }, [])
+
+  useEffect(() => {
+    const onActivity = () => {
+      setIdle(false)
+      clearTimeout(idleTimer.current)
+      idleTimer.current = setTimeout(() => setIdle(true), 4000)
+    }
+    window.addEventListener('scroll', onActivity, { passive: true })
+    window.addEventListener('wheel', onActivity, { passive: true })
+    onActivity()
+    return () => {
+      window.removeEventListener('scroll', onActivity)
+      window.removeEventListener('wheel', onActivity)
+      clearTimeout(idleTimer.current)
+    }
+  }, [])
 
   useEffect(() => {
     let prevIdx = -1
@@ -179,6 +203,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print relative">
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
+
+          <SawIcon
+            className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 && !isMobile.current ? 'animate-blade-sway' : ''}`}
+            color={accentColor}
+          />
 
           <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 pl-1">
             {sortedSections.map((section, i) => (

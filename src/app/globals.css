@@ -17,6 +17,16 @@
   animation: spin-slow 120s linear infinite;
 }
 
+@keyframes blade-sway {
+  0%, 100% { transform: rotate(0deg) scaleY(1); }
+  25% { transform: rotate(-3deg) scaleY(0.997); }
+  75% { transform: rotate(3deg) scaleY(0.997); }
+}
+.animate-blade-sway {
+  animation: blade-sway 2.5s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
 @keyframes check-pop {
   0% { transform: scale(0); opacity: 0; }
   50% { transform: scale(1.2); }
@@ -166,6 +176,62 @@ body {
 .quill-editor .ql-editor {
   min-height: 200px;
   color: var(--black);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.stagger-number {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+.stagger-rule {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s ease-out;
+}
+.stagger-rule.subtitle {
+  width: 100%;
+  max-width: 3rem;
+}
+.entered .stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+.entered .stagger-number {
+  opacity: 0.04;
+}
+.entered .stagger-rule {
+  transform: scaleX(1);
+}
+.stagger-item, .stagger-number, .stagger-rule {
+  transition-delay: 0ms;
+}
+.delay-1 { transition-delay: 80ms; }
+.delay-2 { transition-delay: 176ms; }
+.delay-3 { transition-delay: 291ms; }
+.delay-4 { transition-delay: 429ms; }
+.delay-5 { transition-delay: 595ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-item {
+    opacity: 1;
+    transform: translateY(0);
+    transition: none;
+  }
+  .stagger-number {
+    opacity: 0.04;
+    transition: none;
+  }
+  .stagger-rule {
+    transform: scaleX(1);
+    transition: none;
+  }
+  .animate-blade-sway {
+    animation: none;
+  }
 }
 
 @media print {
