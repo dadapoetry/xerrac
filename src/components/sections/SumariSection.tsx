@@ -37,48 +37,41 @@ export function SumariSection({ entries, coverImage }: { entries: SumariEntry[];
   }
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden">
+    <div className="min-h-screen w-full relative overflow-hidden flex flex-col justify-end pb-16 md:pb-24">
       {coverImage ? (
         <>
           <div
             className="absolute inset-0 z-0 bg-cover bg-center"
             style={{ backgroundImage: `url("${coverImage}")` }}
           />
-          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/50 to-black" />
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/60 to-black" />
         </>
       ) : (
         <div className="absolute inset-0 z-0 bg-black" />
       )}
       <div
         ref={ref}
-        className={`relative z-[2] min-h-screen flex flex-col justify-center px-4 py-24 ${entered ? 'entered' : ''}`}
+        className={`relative z-[2] px-4 ${entered ? 'entered' : ''}`}
       >
         <div className="max-w-lg mx-auto w-full">
-          <p className="stagger-item text-[10px] text-gray-500 tracking-[0.3em] uppercase font-mono mb-12 text-center">
+          <p className="stagger-item text-[9px] text-gray-600 tracking-[0.35em] uppercase font-mono mb-5 text-center">
             En aquest número
           </p>
-          <div className="space-y-5">
+          <div className="flex flex-col gap-0.5">
             {entries.map((entry, i) => (
               <button
                 key={entry.displayIndex}
                 onClick={() => goToSection(entry.displayIndex)}
-                className="w-full text-left group flex items-start gap-4 stagger-item"
+                className="w-full text-left group flex items-center gap-2 stagger-item py-0.5"
                 style={{ transitionDelay: `${80 + i * 85}ms` }}
               >
-                <span
-                  className="text-[40px] md:text-[52px] font-black leading-none shrink-0 select-none"
-                  style={{ color: 'var(--accent)', opacity: 0.12 }}
-                >
+                <span className="text-[10px] font-mono text-gray-600 w-5 shrink-0 text-right leading-none">
                   {String(entry.displayIndex).padStart(2, '0')}
                 </span>
-                <div className="flex-1 min-w-0 pt-1">
-                  <div className="flex items-center gap-2">
-                    <SawIcon className="w-4 h-4 shrink-0 transition-opacity duration-500 opacity-60" />
-                    <span className="text-sm font-bold text-white tracking-tight leading-tight group-hover:text-gray-300 transition-colors">
-                      {entry.title}
-                    </span>
-                  </div>
-                </div>
+                <SawIcon className="w-[10px] h-[10px] shrink-0 opacity-30" />
+                <span className="text-sm text-white/70 tracking-tight leading-tight group-hover:text-white transition-colors">
+                  {entry.title}
+                </span>
               </button>
             ))}
           </div>

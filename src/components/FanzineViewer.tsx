@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect } fr
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { SumariSection } from './sections/SumariSection'
+import { PortadaSection } from './sections/PortadaSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
 import { NewsletterPopUp } from './NewsletterPopUp'
@@ -280,7 +281,20 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       {/* Sections */}
       {sortedSections[0] && (
         <div key={sortedSections[0].id} data-section-index={0} id={sectionSlug(0)}>
-          <SectionRenderer section={sortedSections[0] as any} index={0} />
+          <div className="section-container">
+            {sortedSections[0].backgroundImage && (
+              <>
+                <div
+                  className="absolute inset-0 z-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url("${sortedSections[0].backgroundImage}")` }}
+                />
+                <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
+              </>
+            )}
+            <div className="relative z-[3] w-full">
+              <PortadaSection section={sortedSections[0] as any} />
+            </div>
+          </div>
         </div>
       )}
       <div data-section-index={1} id={sectionSlug(1)}>
