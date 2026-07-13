@@ -22,19 +22,14 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                   style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.03)' }}
                 />
                 <div className="relative flex items-start gap-3">
-                  <span
-                    className="font-mono text-[11px] leading-none mt-0.5 shrink-0 w-7 text-right select-none"
-                    style={{ color: 'rgba(var(--accent-rgb), 0.3)' }}
-                  >
+                  <span className="font-mono text-[11px] leading-none mt-0.5 shrink-0 w-7 text-right select-none text-gray-500">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <div className="flex-1 min-w-0">
                     <blockquote className="text-[16px] md:text-lg text-gray-200 italic leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
                       &ldquo;{proverb.text}&rdquo;
                     </blockquote>
-                    <p className="text-xs mt-1.5 text-right font-mono tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-                      style={{ color: 'rgba(var(--accent-rgb), 0.5)' }}
-                    >
+                    <p className="text-xs mt-1.5 text-right font-mono tracking-wide text-gray-500 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                       — {proverb.author}
                     </p>
                   </div>
