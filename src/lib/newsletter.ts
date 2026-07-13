@@ -1,4 +1,6 @@
 const FROM = process.env.NEWSLETTER_FROM || 'Xerrac! <contacte@xerrac.cat>'
+const BASE_URL = process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'
+const SAW_IMG = `<img src="${BASE_URL}/saw-icon.svg" width="20" height="20" alt="" style="display:inline-block;vertical-align:middle;line-height:0;font-size:0;width:20px;height:20px" />`
 
 async function sendEmail({
   to, subject, html,
@@ -46,26 +48,8 @@ export async function sendConfirmation(email: string, token: string) {
 
               <tr>
                 <td style="padding:32px 0;text-align:center">
-                  <table cellpadding="0" cellspacing="0" style="margin:0 auto 16px;line-height:0;font-size:0">
-                    <tr>
-                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                    </tr>
-                    <tr>
-                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                      <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                    </tr>
-                  </table>
+                  ${SAW_IMG}
+                  <div style="height:12px"></div>
                   <h2 style="font-size:20px;font-weight:900;color:#fff;margin:0 0 8px;letter-spacing:-0.5px">
                     Gairebé ho tenim!
                   </h2>
@@ -119,23 +103,8 @@ export async function sendNewsletterEmail(
             <td style="padding:16px 20px">
               <table style="width:100%;border-collapse:collapse">
                 <tr>
-                  <td style="width:22px;vertical-align:middle;line-height:0;font-size:0">
-                    <table cellpadding="0" cellspacing="0" style="display:inline-block;vertical-align:middle;line-height:0;font-size:0">
-                      <tr>
-                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                      </tr>
-                      <tr>
-                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                        <td style="width:4px;height:4px;background:#ef4444;padding:0;font-size:0;line-height:0"></td>
-                        <td style="width:4px;height:4px;padding:0;font-size:0;line-height:0"></td>
-                      </tr>
-                    </table>
+                  <td style="width:20px;vertical-align:middle;line-height:0;font-size:0;padding-right:10px">
+                    ${SAW_IMG}
                   </td>
                   <td style="vertical-align:middle">
                     <h3 style="font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#fff;margin:0;letter-spacing:-0.5px;line-height:1.2">
