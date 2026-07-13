@@ -28,7 +28,12 @@ function ScrollHint() {
   )
 }
 
-export function PortadaSection({ section }: { section: SectionData }) {
+interface SumariEntry {
+  number: string
+  title: string
+}
+
+export function PortadaSection({ section, sumariEntries }: { section: SectionData; sumariEntries?: SumariEntry[] }) {
   const content = section.content as unknown as PortadaContent
 
   return (
@@ -42,6 +47,18 @@ export function PortadaSection({ section }: { section: SectionData }) {
           <p className="text-3xl md:text-4xl text-gray-100 font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
             {content.topic}
           </p>
+        )}
+
+        {sumariEntries && sumariEntries.length > 0 && (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-1 text-xs text-gray-400">
+            {sumariEntries.map((entry, i) => (
+              <span key={i} className="inline-flex items-center gap-1">
+                {i > 0 && <span className="text-gray-700 select-none">/</span>}
+                <span className="font-mono text-[10px] text-gray-500">{entry.number}</span>
+                <span className="text-gray-400">{entry.title}</span>
+              </span>
+            ))}
+          </div>
         )}
       </div>
 
