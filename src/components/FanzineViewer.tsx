@@ -128,7 +128,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       container.scrollLeft = 0
       return
     }
-    const btn = container.querySelector(`[data-nav-btn="${activeSection}"]`) as HTMLElement | undefined
+    const btn = container.children[activeSection] as HTMLElement | undefined
     if (!btn) return
     if (btn.offsetWidth > container.offsetWidth) {
       container.scrollLeft = btn.offsetLeft
@@ -195,22 +195,20 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     <div style={{ '--accent': accentColor, '--accent-rgb': hexToRgb(accentColor) } as React.CSSProperties}>
       {/* Header — sticky at top, accompanies reader */}
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print relative">
-        <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
+        <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
-          <div ref={navRef} className="flex items-center gap-1 flex-1 overflow-x-auto min-w-0">
-            <div className="sticky left-0 z-10 bg-black shrink-0 flex items-center">
-              <SawIcon
-                className={`w-4 h-4 transition-opacity duration-300 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''}`}
-                color={accentColor}
-              />
-            </div>
+          <SawIcon
+            className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''}`}
+            color={accentColor}
+          />
+
+          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
             {sortedSections.map((section, i) => (
               <button
                 key={section.id}
-                data-nav-btn={i}
                 onClick={() => scrollToSectionEl(i)}
-                className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-1.5 h-5 flex items-center leading-none transition-colors shrink-0 ${
+                className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-5 flex items-center leading-none transition-colors shrink-0 ${
                   i === activeSection
                     ? 'active'
                     : 'text-gray-600 hover:text-gray-400'
