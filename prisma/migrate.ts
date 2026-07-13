@@ -15,7 +15,7 @@ async function migrate() {
   }
 
   const alterStatements = [
-    `ALTER TABLE Issue ADD COLUMN accentColor TEXT DEFAULT '#ef4444'`,
+    `ALTER TABLE Issue ADD COLUMN accentColor TEXT NOT NULL DEFAULT '#ef4444'`,
   ]
 
   for (const stmt of alterStatements) {
