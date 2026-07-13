@@ -203,7 +203,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             color={accentColor}
           />
 
-          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 md:-ml-2">
+          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 md:-ml-2 pl-1.5">
             {sortedSections.map((section, i) => (
               <button
                 key={section.id}
