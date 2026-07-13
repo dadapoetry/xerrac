@@ -14,6 +14,18 @@ async function migrate() {
     await db.execute(stmt)
   }
 
+  const alterStatements = [
+    `ALTER TABLE Issue ADD COLUMN accentColor TEXT NOT NULL DEFAULT '#ef4444'`,
+  ]
+
+  for (const stmt of alterStatements) {
+    try {
+      await db.execute(stmt)
+    } catch {
+      // column already exists — safe to ignore
+    }
+  }
+
   console.log('Migration completed!')
   db.close()
 }
