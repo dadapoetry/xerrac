@@ -50,12 +50,12 @@ export function PortadaSection({ section, sumariEntries }: { section: SectionDat
         )}
 
         {sumariEntries && sumariEntries.length > 0 && (
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-1 text-xs text-gray-400">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-1 text-xs text-gray-300">
             {sumariEntries.map((entry, i) => (
               <span key={i} className="inline-flex items-center gap-1">
-                {i > 0 && <span className="text-gray-700 select-none">/</span>}
-                <span className="font-mono text-[10px] text-gray-500">{entry.number}</span>
-                <span className="text-gray-400">{entry.title}</span>
+                {i > 0 && <span className="text-gray-600 select-none mx-0.5">/</span>}
+                <span className="font-mono text-[10px] text-gray-400">{entry.number}</span>
+                <span className="text-gray-200">{entry.title}</span>
               </span>
             ))}
           </div>
