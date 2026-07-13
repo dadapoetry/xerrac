@@ -130,13 +130,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     }
     const btn = container.children[activeSection] as HTMLElement | undefined
     if (!btn) return
-    if (btn.offsetWidth > container.offsetWidth) {
-      container.scrollLeft = btn.offsetLeft
-    } else {
-      const targetCenter = btn.offsetLeft + btn.offsetWidth / 2
-      const target = Math.max(0, Math.min(targetCenter - container.offsetWidth / 2, container.scrollWidth - container.offsetWidth))
-      container.scrollTo({ left: target, behavior: 'smooth' })
-    }
+    container.scrollLeft = Math.max(0, btn.offsetLeft - 12)
   }, [activeSection])
 
   useEffect(() => {
