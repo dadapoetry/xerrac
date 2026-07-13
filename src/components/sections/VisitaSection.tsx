@@ -16,15 +16,15 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
         </p>
       )}
 
-      <div>
-        <span className="text-5xl text-red-500/20 font-serif leading-none block -mb-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">&ldquo;</span>
-        <div className="pl-8 pr-4">
+      <div className="-mx-4 md:-mx-12 px-4 md:px-12 border-l-2 border-red-500/10">
+        <span className="text-6xl text-red-500/20 font-serif leading-none block -mb-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">&ldquo;</span>
+        <div className="pl-8 md:pl-12 pr-4">
           <div
             className="text-gray-300 leading-relaxed text-[15px] md:text-base italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
             dangerouslySetInnerHTML={{ __html: content.body }}
           />
         </div>
-        <span className="text-5xl text-red-500/20 font-serif leading-none block text-right -mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">&rdquo;</span>
+        <span className="text-6xl text-red-500/20 font-serif leading-none block text-right -mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">&rdquo;</span>
       </div>
     </div>
   )

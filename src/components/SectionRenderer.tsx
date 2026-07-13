@@ -52,7 +52,9 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
           <Component section={section} index={index} />
         </div>
       </div>
-      <div className="section-divider" />
+      <div className="section-divider">
+        <span className="text-red-500/20 text-lg font-black select-none">!</span>
+      </div>
     </>
   )
 }

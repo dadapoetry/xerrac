@@ -33,7 +33,7 @@ export function PortadaSection({ section }: { section: SectionData }) {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] w-full text-center px-4 relative overflow-hidden">
-      <SawIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] md:w-[420px] opacity-[0.04] pointer-events-none" />
+      <SawIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] md:w-[420px] opacity-[0.04] pointer-events-none animate-spin-slow" />
 
       <div className="max-w-lg w-full relative">
         <Logo className="mb-8" />
