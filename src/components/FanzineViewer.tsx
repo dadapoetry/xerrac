@@ -121,22 +121,16 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [sortedSections])
 
-  useLayoutEffect(() => {
+   useLayoutEffect(() => {
     const container = navRef.current
     if (!container) return
     if (activeSection === 0) {
-      container.scrollLeft = 0
+      container.scrollTo({ left: 0, behavior: 'smooth' })
       return
     }
     const btn = container.children[activeSection] as HTMLElement | undefined
     if (!btn) return
-    if (btn.offsetWidth > container.offsetWidth) {
-      container.scrollLeft = btn.offsetLeft
-    } else {
-      const targetCenter = btn.offsetLeft + btn.offsetWidth / 2
-      const target = Math.max(0, Math.min(targetCenter - container.offsetWidth / 2, container.scrollWidth - container.offsetWidth))
-      container.scrollLeft = target
-    }
+    btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
   }, [activeSection])
 
   useEffect(() => {
@@ -199,11 +193,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           <Logo compact />
 
           <SawIcon
-            className={`w-4 h-4 transition-opacity duration-300 shrink-0 order-3 md:order-1 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''}`}
+            className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''}`}
             color={accentColor}
           />
 
-          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 order-1 md:order-2">
+          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 scroll-pl-3">
             {sortedSections.map((section, i) => (
               <button
                 key={section.id}
@@ -220,7 +214,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             ))}
           </div>
 
-          <div className="flex items-center gap-1 shrink-0 order-2 md:order-3">
+          <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={shareLink}
                 className="w-8 h-8 border border-gray-800 text-gray-400 hover:border-red-500/50
