@@ -199,11 +199,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           <Logo compact />
 
           <SawIcon
-            className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''}`}
+            className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''} mr-1.5 md:mr-0`}
             color={accentColor}
           />
 
-          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 md:-ml-2 pl-1.5">
+          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 md:-ml-2">
             {sortedSections.map((section, i) => (
               <button
                 key={section.id}
