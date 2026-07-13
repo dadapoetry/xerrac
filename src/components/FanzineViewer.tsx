@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect } from 'react'
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
+import { SumariSection } from './sections/SumariSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
 import { NewsletterPopUp } from './NewsletterPopUp'
@@ -66,7 +67,25 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     () => [...issue.sections].sort((a, b) => a.order - b.order),
     [issue.sections]
   )
-  const types = useMemo(() => sortedSections.map((s) => s.type), [sortedSections])
+  const displayCount = sortedSections.length + 1
+
+  const navItems = useMemo(() => {
+    const items: { label: string; index: number }[] = []
+    items.push({ label: issue.title, index: 0 })
+    items.push({ label: 'Sumari', index: 1 })
+    sortedSections.slice(1).forEach((s, i) => {
+      items.push({ label: s.title, index: i + 2 })
+    })
+    return items
+  }, [sortedSections, issue.title])
+
+  const sumariEntries = useMemo(() => {
+    return sortedSections.slice(1).map((s, i) => ({
+      title: s.title,
+      displayIndex: i + 2,
+    }))
+  }, [sortedSections])
+
   const [activeSection, setActiveSection] = useState(() => {
     if (typeof window === 'undefined') return 0
     const hash = window.location.hash.slice(1)
@@ -74,7 +93,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     const match = hash.match(/^s-(\d+)$/)
     if (!match) return 0
     const idx = parseInt(match[1], 10)
-    return idx >= 0 && idx < types.length ? idx : 0
+    return idx >= 0 && idx < displayCount ? idx : 0
   })
   const [copied, setCopied] = useState(false)
   const [showNewsletter, setShowNewsletter] = useState(false)
@@ -139,12 +158,12 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       const match = hash.match(/^s-(\d+)$/)
       if (match) {
         const idx = parseInt(match[1], 10)
-        if (idx >= 0 && idx < sortedSections.length) {
+        if (idx >= 0 && idx < displayCount) {
           setTimeout(() => scrollToSectionEl(idx), 150)
         }
       }
     }
-  }, [sortedSections.length])
+  }, [displayCount])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -155,7 +174,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           if (cur > 0) scrollToSectionEl(cur - 1)
         } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
           e.preventDefault()
-          if (cur < sortedSections.length - 1) scrollToSectionEl(cur + 1)
+          if (cur < sortedSections.length) scrollToSectionEl(cur + 1)
         }
       } catch {}
     }
@@ -164,7 +183,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [sortedSections.length])
 
   const shareLink = useCallback(() => {
-    const section = sortedSections[activeSection]
+    const sectionIdx = activeSection === 1 ? 0 : activeSection > 1 ? activeSection - 1 : 0
+    const section = sortedSections[sectionIdx]
     if (!section) return
     const url = `${window.location.origin}${window.location.pathname}#${sectionSlug(activeSection)}`
     copyToClipboard(url)
@@ -198,18 +218,18 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           />
 
           <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
-            {sortedSections.map((section, i) => (
+            {navItems.map((item) => (
               <button
-                key={section.id}
-                onClick={() => scrollToSectionEl(i)}
+                key={item.index}
+                onClick={() => scrollToSectionEl(item.index)}
                 className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-5 flex items-center leading-none transition-colors shrink-0 ${
-                  i === activeSection
+                  item.index === activeSection
                     ? 'active'
                     : 'text-gray-600 hover:text-gray-400'
                 }`}
-                style={i === activeSection ? { color: 'var(--accent)' } : undefined}
+                style={item.index === activeSection ? { color: 'var(--accent)' } : undefined}
               >
-                {section.type === 'portada' ? issue.title : section.title}
+                {item.label}
               </button>
             ))}
           </div>
@@ -258,11 +278,23 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       </div>
 
       {/* Sections */}
-      {sortedSections.map((section, i) => (
-        <div key={section.id} data-section-index={i} id={sectionSlug(i)}>
-          <SectionRenderer section={section as any} index={i} />
+      {sortedSections[0] && (
+        <div key={sortedSections[0].id} data-section-index={0} id={sectionSlug(0)}>
+          <SectionRenderer section={sortedSections[0] as any} index={0} />
         </div>
-      ))}
+      )}
+      <div data-section-index={1} id={sectionSlug(1)}>
+        <SumariSection entries={sumariEntries} coverImage={sortedSections[0]?.backgroundImage || ''} />
+      </div>
+      {sortedSections.slice(1).map((section, i) => {
+        const sectionNumber = i + 1
+        const displayIndex = i + 2
+        return (
+          <div key={section.id} data-section-index={displayIndex} id={sectionSlug(displayIndex)}>
+            <SectionRenderer section={section as any} index={sectionNumber} />
+          </div>
+        )
+      })}
     </div>
   )
 }
