@@ -1,18 +1,37 @@
 'use client'
 
+import { useRef, useEffect, useState } from 'react'
 import { SectionData, AclarimentCulturalContent } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
 import { styleBlockquotes } from '@/lib/html'
 
 export function AclarimentCulturalSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as AclarimentCulturalContent
+  const ref = useRef<HTMLDivElement>(null)
+  const [entered, setEntered] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setEntered(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.15 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <div className="max-w-2xl w-full mx-auto py-12">
+    <div ref={ref} className={`max-w-prose w-full mx-auto py-12 ${entered ? 'entered' : ''}`}>
       <SectionHeader number={index} title={section.title} subtitle="Aclarir allò que continua sense aclarir-se" />
       <div className="relative pl-6 border-l" style={{ borderColor: 'rgba(var(--accent-rgb), 0.3)' }}>
         <div
-          className="text-gray-300 leading-relaxed space-y-6 text-[15px] md:text-base drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+          className="editorial-body text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
           dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body) }}
         />
       </div>
