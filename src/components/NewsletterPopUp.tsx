@@ -73,10 +73,10 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
             <div className="h-px w-12 bg-red-500/40" />
           </div>
 
-          <p className="text-base font-black font-display tracking-tight text-white leading-tight mb-1">
+          <p className="text-base font-black tracking-tight text-white leading-tight mb-1">
             Encara no t&apos;hi has subscrit?
           </p>
-          <p className="text-lg font-black font-display tracking-tight text-red-500 leading-none mb-4">
+          <p className="text-lg font-black tracking-tight text-red-500 leading-none mb-4">
             Aclareix-te!
           </p>
 

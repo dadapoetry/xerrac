@@ -47,12 +47,6 @@
   --gray-700: #404040;
   --gray-500: #737373;
   --gray-400: #a3a3a3;
-  --warm-white: #f0ede8;
-}
-
-.font-display {
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-variation-settings: 'wght' 900, 'SOFT' 40;
 }
 
 * {

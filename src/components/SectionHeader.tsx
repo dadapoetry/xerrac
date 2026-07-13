@@ -17,7 +17,7 @@ export function SectionHeader({ number, title, subtitle }: SectionHeaderProps) {
           {String(number).padStart(2, '0')}
         </span>
       </div>
-      <h2 className="text-3xl md:text-5xl font-black font-display tracking-tight text-white uppercase leading-none mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+      <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-none mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
         {title}
       </h2>
       {subtitle && (

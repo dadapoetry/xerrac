@@ -1,19 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter, Fraunces, Source_Serif_4 } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/Providers'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-fraunces',
-  display: 'swap',
-})
-const sourceSerif = Source_Serif_4({
-  subsets: ['latin'],
-  variable: '--font-source-serif',
-  display: 'swap',
-})
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Xerrac! — Revista d\'aclariment cultural',
@@ -38,7 +28,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ca">
-      <body className={`${inter.variable} ${fraunces.variable} ${sourceSerif.variable} antialiased`}>
+      <body className={`${inter.className} antialiased`}>
         <Providers>
           <div className="animate-fade-in">
             {children}

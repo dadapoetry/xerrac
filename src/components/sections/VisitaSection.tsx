@@ -20,7 +20,7 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
         <span className="text-5xl text-red-500/20 font-serif leading-none block -mb-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">&ldquo;</span>
         <div className="pl-8 pr-4">
           <div
-            className="text-gray-300 leading-relaxed text-base font-serif italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+            className="text-gray-300 leading-relaxed text-[15px] md:text-base italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
             dangerouslySetInnerHTML={{ __html: content.body }}
           />
         </div>
