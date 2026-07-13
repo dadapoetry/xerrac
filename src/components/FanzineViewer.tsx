@@ -82,12 +82,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const ticking = useRef(false)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
-  const isMobile = useRef(false)
-
-  useEffect(() => {
-    isMobile.current = window.matchMedia('(pointer: coarse)').matches
-  }, [])
-
   useEffect(() => {
     const onActivity = () => {
       setIdle(false)
@@ -205,11 +199,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           <Logo compact />
 
           <SawIcon
-            className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 && !isMobile.current ? 'animate-blade-sway' : ''}`}
+            className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''}`}
             color={accentColor}
           />
 
-          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0 pl-1">
+          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
             {sortedSections.map((section, i) => (
               <button
                 key={section.id}
