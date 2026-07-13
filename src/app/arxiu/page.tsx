@@ -68,7 +68,7 @@ export default async function ArxiuPage() {
                         {issue.title}
                       </h2>
                       <span className="text-xs text-gray-500">
-                        {issue.sections.length} seccions
+                        {issue.sections.filter((s: any) => s.type !== 'portada').length} seccions
                       </span>
                     </div>
                   </Link>
