@@ -1,33 +1,14 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
 import { SectionData, AclarimentCulturalContent } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
 import { styleBlockquotes } from '@/lib/html'
 
 export function AclarimentCulturalSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as AclarimentCulturalContent
-  const ref = useRef<HTMLDivElement>(null)
-  const [entered, setEntered] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setEntered(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.15 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
 
   return (
-    <div ref={ref} className={`max-w-prose w-full mx-auto py-12 ${entered ? 'entered' : ''}`}>
+    <div className="max-w-prose w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle="Aclarir allò que continua sense aclarir-se" />
       <div className="relative pl-6 border-l" style={{ borderColor: 'rgba(var(--accent-rgb), 0.3)' }}>
         <div
