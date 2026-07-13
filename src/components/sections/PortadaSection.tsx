@@ -5,29 +5,6 @@ import { SectionData, PortadaContent } from '@/types'
 import { Logo } from '@/components/Logo'
 import { SawIcon } from '@/components/SawIcon'
 
-function ScrollHint() {
-  const [visible, setVisible] = useState(true)
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY > 40) setVisible(false)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  if (!visible) return null
-
-  return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-pulse pointer-events-none">
-      <span className="text-[10px] text-gray-500 uppercase tracking-[0.25em]">Desplaça</span>
-      <svg className="w-4 h-4 text-gray-400 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-      </svg>
-    </div>
-  )
-}
-
 interface SumariEntry {
   number: string
   title: string
@@ -37,32 +14,42 @@ export function PortadaSection({ section, sumariEntries }: { section: SectionDat
   const content = section.content as unknown as PortadaContent
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] w-full text-center px-4 relative overflow-hidden">
-      <SawIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] md:w-[420px] opacity-[0.04] pointer-events-none animate-spin-slow" />
+    <div className="relative w-full min-h-[80vh] flex flex-col overflow-hidden">
+      <SawIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[520px] opacity-[0.03] pointer-events-none animate-spin-slow" />
 
-      <div className="max-w-lg w-full relative">
-        <Logo className="mb-8" />
+      <div className="relative z-10 flex flex-col min-h-[80vh]">
+        <div className="flex items-start justify-between px-4 md:px-6 pt-6 md:pt-8">
+          <Logo />
+          <span className="text-[11px] text-gray-600 font-mono">Nº&nbsp;03</span>
+        </div>
 
-        {content.topic && (
-          <p className="text-3xl md:text-4xl text-gray-100 font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
-            {content.topic}
-          </p>
-        )}
+        <div className="flex-1 flex items-center justify-center px-4 py-8">
+          {content.topic && (
+            <p className="text-4xl md:text-5xl lg:text-6xl text-gray-100 font-bold leading-tight text-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)] max-w-3xl">
+              {content.topic}
+            </p>
+          )}
+        </div>
 
         {sumariEntries && sumariEntries.length > 0 && (
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-1 text-xs text-gray-300">
-            {sumariEntries.map((entry, i) => (
-              <span key={i} className="inline-flex items-center gap-1">
-                {i > 0 && <span className="text-gray-600 select-none mx-0.5">/</span>}
-                <span className="font-mono text-[10px] text-gray-400">{entry.number}</span>
-                <span className="text-gray-200">{entry.title}</span>
-              </span>
-            ))}
+          <div className="px-4 md:px-6 pb-6 md:pb-8">
+            <div className="max-w-md mx-auto md:mx-0 md:ml-auto">
+              <div className="space-y-2">
+                {sumariEntries.map((entry, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <span className="font-mono text-[11px] leading-none w-6 text-right shrink-0"
+                      style={{ color: 'rgba(var(--accent-rgb), 0.5)' }}
+                    >
+                      {entry.number}
+                    </span>
+                    <span className="text-sm text-gray-200/80 leading-none">{entry.title}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>
-
-      <ScrollHint />
     </div>
   )
 }

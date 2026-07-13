@@ -274,7 +274,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   className="absolute inset-0 z-0 bg-cover bg-center"
                   style={{ backgroundImage: `url("${sortedSections[0].backgroundImage}")` }}
                 />
-                <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
+                <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
               </>
             )}
             <div className="relative z-[3] w-full">
