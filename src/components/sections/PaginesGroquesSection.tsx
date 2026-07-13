@@ -8,7 +8,7 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
 
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
-      <SectionHeader number={index + 1} title={section.title} subtitle="Proverbis accidentals" />
+      <SectionHeader number={index} title={section.title} subtitle="Proverbis accidentals" />
       <div className="space-y-8">
         {content.proverbs?.map((proverb: Proverb, i: number) => (
           <div key={i} className="group">

@@ -8,7 +8,7 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
 
   return (
     <div className="max-w-5xl w-full mx-auto py-12">
-      <SectionHeader number={index + 1} title={section.title} subtitle="Collages i contribucions dels lectors" />
+      <SectionHeader number={index} title={section.title} subtitle="Collages i contribucions dels lectors" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {content.collages?.map((collage: CollageEntry, i: number) => (
           <div key={i} className="group">

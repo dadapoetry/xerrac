@@ -26,7 +26,7 @@ export function FaduCatalaSection({ section, index }: { section: SectionData; in
 
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
-      <SectionHeader number={index + 1} title={section.title} subtitle="Caricatures i humor negre" />
+      <SectionHeader number={index} title={section.title} subtitle="Caricatures i humor negre" />
       <div>
         {content.entries?.map((entry: FaduEntry, i: number) => (
           <EntryCard key={i} entry={entry} index={i} />

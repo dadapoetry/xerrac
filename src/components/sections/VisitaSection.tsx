@@ -8,7 +8,7 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
 
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
-      <SectionHeader number={index + 1} title={section.title} subtitle="Turisme teòric"  />
+      <SectionHeader number={index} title={section.title} subtitle="Turisme teòric"  />
 
       {content.source && (
         <p className="text-xs text-gray-400 mb-6 italic tracking-wider drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">

@@ -9,7 +9,7 @@ export function LuditaSection({ section, index }: { section: SectionData; index:
 
   return (
     <div className="max-w-3xl w-full mx-auto py-12">
-      <SectionHeader number={index + 1} title={section.title} subtitle="Mots encreuats d'aclariment" />
+      <SectionHeader number={index} title={section.title} subtitle="Mots encreuats d'aclariment" />
       {content.crossword ? (
         <Crossword data={content.crossword} />
       ) : (

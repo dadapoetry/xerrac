@@ -8,7 +8,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
 
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
-      <SectionHeader number={index + 1} title={section.title} subtitle="Parlem amb algú quan toca" />
+      <SectionHeader number={index} title={section.title} subtitle="Parlem amb algú quan toca" />
 
       {content.interviews?.length > 0 && (
         <div className="mb-12">
