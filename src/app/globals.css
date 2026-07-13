@@ -11,7 +11,8 @@
 }
 
 @keyframes spin-slow {
-  to { transform: rotate(360deg); }
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 .animate-spin-slow {
   animation: spin-slow 120s linear infinite;

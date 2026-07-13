@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { SectionData, PortadaContent } from '@/types'
 import { Logo } from '@/components/Logo'
 import { SawIcon } from '@/components/SawIcon'
@@ -35,10 +35,28 @@ interface SumariEntry {
 
 export function PortadaSection({ section, sumariEntries, issueNumber }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number }) {
   const content = section.content as unknown as PortadaContent
+  const sawRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = sawRef.current
+    if (!el) return
+    let rafId: number
+    const start = performance.now()
+    function tick(now: number) {
+      const elapsed = (now - start) / 1000
+      const deg = ((elapsed % 120) / 120) * 360
+      el!.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`
+      rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] w-full text-center px-4 relative overflow-hidden">
-      <SawIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] md:w-[420px] opacity-[0.07] pointer-events-none animate-spin-slow" />
+      <div ref={sawRef} className="absolute top-1/2 left-1/2 w-[320px] md:w-[420px] opacity-[0.07] pointer-events-none">
+        <SawIcon className="w-full h-full" />
+      </div>
 
       <div className="max-w-lg w-full relative">
         <Logo className="mb-5" />
