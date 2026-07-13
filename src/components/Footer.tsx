@@ -20,24 +20,24 @@ export async function Footer() {
   const issn = settings.footer_issn || ''
 
   return (
-    <footer className="border-t border-gray-700 py-8 px-4 no-print">
-      <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <Link
-          href="/arxiu"
-          className="text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-wider"
-        >
-          ↪ Arxiu
-        </Link>
+    <footer className="border-t border-gray-800 py-16 px-4 no-print">
+      <div className="max-w-lg mx-auto text-center">
+        <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Revista d'aclariment cultural</p>
+        <div className="w-8 h-[2px] mx-auto mb-6" style={{ backgroundColor: '#ef4444', opacity: 0.6 }} />
+        <div className="text-[11px] text-gray-600 leading-relaxed space-y-1">
+          {issn && <p>{issn}</p>}
+          {copyright && <p>{copyright}</p>}
+        </div>
 
         {socialLinks.length > 0 && (
-          <div className="flex gap-4 text-sm text-gray-400">
+          <div className="flex justify-center gap-5 mt-5 text-xs text-gray-500">
             {socialLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-gray-300 transition-colors"
+                className="hover:text-white transition-colors uppercase tracking-wider"
               >
                 {link.name}
               </a>
@@ -45,9 +45,10 @@ export async function Footer() {
           </div>
         )}
 
-        <div className="flex flex-col items-end gap-1">
-          {issn && <span className="text-xs text-gray-500">{issn}</span>}
-          {copyright && <span className="text-xs text-gray-500">{copyright}</span>}
+        <div className="flex justify-center gap-4 mt-6 text-[11px]">
+          <Link href="/arxiu" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Arxiu</Link>
+          <span className="text-gray-700">·</span>
+          <a href="/api/feed" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">RSS</a>
         </div>
       </div>
     </footer>

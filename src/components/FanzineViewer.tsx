@@ -250,24 +250,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           <SectionRenderer section={section as any} index={i} />
         </div>
       ))}
-
-      {/* Colophon */}
-      <div className="border-t border-gray-800 py-16 px-4">
-        <div className="max-w-lg mx-auto text-center">
-          <div className="text-3xl font-black text-white mb-6 tracking-tight">XERRAC<span style={{ color: 'var(--accent)' }}>!</span></div>
-          <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Revista d'aclariment cultural</p>
-          <div className="w-8 h-[2px] mx-auto mb-6 opacity-60" style={{ backgroundColor: 'var(--accent)' }} />
-          <div className="text-[11px] text-gray-600 leading-relaxed space-y-1">
-            <p>Número {issue.number} · {new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</p>
-            <p>Publicat amb ✦ per Xerrac!</p>
-            <p className="pt-4">
-              <a href="/arxiu" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Arxiu</a>
-              <span className="mx-3 text-gray-700">·</span>
-              <a href="/api/feed" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">RSS</a>
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
