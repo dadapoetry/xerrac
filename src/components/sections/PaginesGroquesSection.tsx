@@ -15,9 +15,9 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
             <span className="text-[10px] text-gray-500 font-mono block mb-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
               #{String(i + 1).padStart(2, '0')}
             </span>
-            <div className="pl-4 border-l-2 border-red-500/20">
+            <div className="pl-4 border-l-2" style={{ borderColor: 'rgba(var(--accent-rgb), 0.2)' }}>
               <blockquote className="text-lg md:text-xl text-gray-200 italic leading-relaxed mb-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
-                &ldquo;{proverb.text}&rdquo;
+                <span className="-ml-3 inline-block" style={{ color: 'rgba(var(--accent-rgb), 0.2)' }}>&ldquo;</span>{proverb.text}&rdquo;
               </blockquote>
             </div>
             <p className="text-sm text-gray-400 text-right drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">

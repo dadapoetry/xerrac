@@ -112,6 +112,7 @@ export interface IssueData {
   title: string
   date: Date
   published: boolean
+  accentColor?: string
   sections: SectionData[]
 }
 

@@ -53,7 +53,7 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
         </div>
       </div>
       <div className="section-divider">
-        <span className="text-red-500/20 text-lg font-black select-none">!</span>
+        <span className="text-lg font-black select-none opacity-20" style={{ color: 'var(--accent)' }}>!</span>
       </div>
     </>
   )

@@ -24,6 +24,7 @@ function mapIssue(row: any) {
     title: row.title,
     date: toDate(row.date),
     published: Boolean(row.published),
+    accentColor: row.accentColor || '#ef4444',
     createdAt: toDate(row.createdAt),
     updatedAt: toDate(row.updatedAt),
     sections: [] as any[],
@@ -115,15 +116,15 @@ export async function createIssue(data: { number: number; title: string; date: s
   await checkAuth()
   const id = uuid()
   await db.execute({
-    sql: 'INSERT INTO Issue (id, number, title, date) VALUES (?, ?, ?, ?)',
-    args: [id, data.number, data.title, data.date],
+    sql: 'INSERT INTO Issue (id, number, title, date, accentColor) VALUES (?, ?, ?, ?, ?)',
+    args: [id, data.number, data.title, data.date, '#ef4444'],
   })
   revalidatePath('/admin')
   revalidatePath('/')
   return { id, ...data }
 }
 
-export async function updateIssue(id: string, data: { title?: string; number?: number; date?: string; published?: boolean }) {
+export async function updateIssue(id: string, data: { title?: string; number?: number; date?: string; published?: boolean; accentColor?: string }) {
   await checkAuth()
   const sets: string[] = []
   const args: any[] = []
@@ -132,6 +133,7 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
   if (data.number !== undefined) { sets.push('number = ?'); args.push(data.number) }
   if (data.date !== undefined) { sets.push('date = ?'); args.push(data.date) }
   if (data.published !== undefined) { sets.push('published = ?'); args.push(data.published ? 1 : 0) }
+  if (data.accentColor !== undefined) { sets.push('accentColor = ?'); args.push(data.accentColor) }
 
   if (sets.length > 0) {
     args.push(id)

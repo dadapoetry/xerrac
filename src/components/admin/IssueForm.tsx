@@ -11,6 +11,7 @@ interface IssueFormProps {
     title: string
     date: string
     published: boolean
+    accentColor?: string
   }
 }
 
@@ -20,6 +21,7 @@ export function IssueForm({ initial }: IssueFormProps) {
   const [title, setTitle] = useState(initial?.title || '')
   const [date, setDate] = useState(initial?.date || new Date().toISOString().split('T')[0])
   const [published, setPublished] = useState(initial?.published ?? true)
+  const [accentColor, setAccentColor] = useState(initial?.accentColor || '#ef4444')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -30,7 +32,7 @@ export function IssueForm({ initial }: IssueFormProps) {
 
     try {
       if (initial) {
-        await updateIssue(initial.id, { number, title, date, published })
+        await updateIssue(initial.id, { number, title, date, published, accentColor })
       } else {
         await createIssue({ number, title, date })
       }
@@ -89,18 +91,40 @@ export function IssueForm({ initial }: IssueFormProps) {
       </div>
 
       {initial && (
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            id="published"
-            checked={published}
-            onChange={(e) => setPublished(e.target.checked)}
-            className="accent-red-500"
-          />
-          <label htmlFor="published" className="text-sm text-gray-400">
-            Publicat (visible al web)
-          </label>
-        </div>
+        <>
+          <div>
+            <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+              Color d'accent
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={accentColor}
+                onChange={(e) => setAccentColor(e.target.value)}
+                className="w-10 h-10 border border-gray-700 bg-transparent cursor-pointer"
+              />
+              <input
+                type="text"
+                value={accentColor}
+                onChange={(e) => setAccentColor(e.target.value)}
+                className="w-28 bg-gray-900 border border-gray-700 px-3 py-2 text-white
+                  text-sm font-mono focus:outline-none focus:border-gray-500 transition-colors"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="published"
+              checked={published}
+              onChange={(e) => setPublished(e.target.checked)}
+              className="accent-red-500"
+            />
+            <label htmlFor="published" className="text-sm text-gray-400">
+              Publicat (visible al web)
+            </label>
+          </div>
+        </>
       )}
 
       {error && (

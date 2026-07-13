@@ -37,7 +37,7 @@
   left: 50%;
   width: 60%;
   height: 1px;
-  background: #ef4444;
+  background: var(--accent, #ef4444);
   transform: translateX(-50%) scaleX(0);
   transition: transform 0.2s ease;
 }
@@ -81,6 +81,8 @@
   --black: #000000;
   --white: #fafafa;
   --red: #ef4444;
+  --accent: #ef4444;
+  --accent-rgb: 239, 68, 68;
   --gray-900: #171717;
   --gray-700: #404040;
   --gray-500: #737373;
@@ -128,7 +130,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent, #ef4444), transparent);
   opacity: 0.3;
   margin: 0;
   position: relative;

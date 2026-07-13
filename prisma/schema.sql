@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS Issue (
   title TEXT NOT NULL,
   date TEXT NOT NULL DEFAULT (datetime('now')),
   published INTEGER NOT NULL DEFAULT 1,
+  accentColor TEXT NOT NULL DEFAULT '#ef4444',
   createdAt TEXT NOT NULL DEFAULT (datetime('now')),
   updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
 );

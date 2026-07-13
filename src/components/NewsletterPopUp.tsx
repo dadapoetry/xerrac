@@ -53,7 +53,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
   return (
     <div className="absolute top-full right-0 z-50 w-72 mt-2 animate-fade-in">
       <div className="bg-black border border-gray-800 rounded overflow-hidden relative">
-        <div className="h-[3px] bg-red-600" />
+        <div className="h-[3px]" style={{ backgroundColor: 'var(--accent, #dc2626)' }} />
         <div className="p-5">
           <button
             onClick={handleDismiss}
@@ -70,13 +70,13 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
             <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
               Butlletí
             </span>
-            <div className="h-px w-12 bg-red-500/40" />
+            <div className="h-px w-12" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.4)' }} />
           </div>
 
           <p className="text-base font-black tracking-tight text-white leading-tight mb-1">
             Encara no t&apos;hi has subscrit?
           </p>
-          <p className="text-lg font-black tracking-tight text-red-500 leading-none mb-4">
+          <p className="text-lg font-black tracking-tight leading-none mb-4" style={{ color: 'var(--accent)' }}>
             Aclareix-te!
           </p>
 
@@ -97,7 +97,10 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs py-2.5 uppercase tracking-widest transition-colors disabled:opacity-50"
+                className="w-full text-white text-xs py-2.5 uppercase tracking-widest transition-colors disabled:opacity-50"
+                style={{ backgroundColor: 'var(--accent, #dc2626)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.filter = 'brightness(0.85)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.filter = '' }}
               >
                 {status === 'loading' ? 'Enviant...' : 'Subscriure\'m'}
               </button>

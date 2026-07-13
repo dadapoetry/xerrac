@@ -18,14 +18,15 @@ model User {
 }
 
 model Issue {
-  id        String    @id @default(cuid())
-  number    Int       @unique
-  title     String
-  date      DateTime  @default(now())
-  published Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  sections  Section[]
+  id           String    @id @default(cuid())
+  number       Int       @unique
+  title        String
+  date         DateTime  @default(now())
+  published    Boolean   @default(true)
+  accentColor  String    @default("#ef4444")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sections     Section[]
 }
 
 model Section {

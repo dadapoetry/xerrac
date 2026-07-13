@@ -6,6 +6,11 @@ import { SectionRenderer } from './SectionRenderer'
 import { Logo } from './Logo'
 import { NewsletterPopUp } from './NewsletterPopUp'
 
+function hexToRgb(hex: string): string {
+  const h = hex.replace('#', '')
+  return `${parseInt(h.substring(0,2), 16)}, ${parseInt(h.substring(2,4), 16)}, ${parseInt(h.substring(4,6), 16)}`
+}
+
 interface FanzineViewerProps {
   issue: IssueData
 }
@@ -166,8 +171,10 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     )
   }
 
+  const accentColor = issue.accentColor || '#ef4444'
+
   return (
-    <div>
+    <div style={{ '--accent': accentColor, '--accent-rgb': hexToRgb(accentColor) } as React.CSSProperties}>
       {/* Header — sticky at top, accompanies reader */}
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print relative">
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
@@ -180,9 +187,10 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                 onClick={() => scrollToSectionEl(i)}
                 className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-5 flex items-center leading-none transition-colors shrink-0 ${
                   i === activeSection
-                    ? 'active text-red-400'
+                    ? 'active'
                     : 'text-gray-600 hover:text-gray-400'
                 }`}
+                style={i === activeSection ? { color: 'var(--accent)' } : undefined}
               >
                 {section.type === 'portada' ? issue.title : section.title}
               </button>
@@ -196,9 +204,12 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={shareLink}
-                className="w-8 h-8 border border-gray-800 text-gray-400 hover:text-red-400 hover:border-red-500/50
+                className="w-8 h-8 border border-gray-800 text-gray-400 hover:border-red-500/50
                   transition-all flex items-center justify-center"
+                style={{ '--btn-hover': 'var(--accent)' } as React.CSSProperties}
                 title="Compartir secció"
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '' }}
               >
                 {copied ? (
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 animate-check-pop">
@@ -212,9 +223,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
               </button>
             <a
               href="/arxiu"
-              className="w-8 h-8 border border-gray-800 text-gray-400 hover:text-red-400 hover:border-red-500/50
+              className="w-8 h-8 border border-gray-800 text-gray-400 hover:border-red-500/50
                 transition-all flex items-center justify-center"
               title="Arxiu"
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path d="M2 3a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2Z" />
@@ -237,6 +250,24 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           <SectionRenderer section={section as any} index={i} />
         </div>
       ))}
+
+      {/* Colophon */}
+      <div className="border-t border-gray-800 py-16 px-4">
+        <div className="max-w-lg mx-auto text-center">
+          <div className="text-3xl font-black text-white mb-6 tracking-tight">XERRAC<span style={{ color: 'var(--accent)' }}>!</span></div>
+          <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Revista d'aclariment cultural</p>
+          <div className="w-8 h-[2px] mx-auto mb-6 opacity-60" style={{ backgroundColor: 'var(--accent)' }} />
+          <div className="text-[11px] text-gray-600 leading-relaxed space-y-1">
+            <p>Número {issue.number} · {new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</p>
+            <p>Publicat amb ✦ per Xerrac!</p>
+            <p className="pt-4">
+              <a href="/arxiu" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Arxiu</a>
+              <span className="mx-3 text-gray-700">·</span>
+              <a href="/api/feed" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">RSS</a>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

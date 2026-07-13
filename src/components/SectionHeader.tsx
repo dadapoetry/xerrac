@@ -11,7 +11,7 @@ interface SectionHeaderProps {
 export function SectionHeader({ number, title, subtitle }: SectionHeaderProps) {
   return (
     <div className="mb-12 md:mb-16 relative">
-      <div className="absolute -top-10 -left-4 text-[140px] md:text-[220px] font-black text-red-500/[0.04] select-none pointer-events-none leading-none">
+      <div className="absolute -top-10 -left-4 text-[140px] md:text-[220px] font-black select-none pointer-events-none leading-none opacity-[0.04]" style={{ color: 'var(--accent)' }}>
         {String(number).padStart(2, '0')}
       </div>
       <div className="relative">
@@ -29,7 +29,7 @@ export function SectionHeader({ number, title, subtitle }: SectionHeaderProps) {
             {subtitle}
           </p>
         )}
-        <div className="w-12 h-[2px] bg-red-500/60" />
+        <div className="w-12 h-[2px] opacity-60" style={{ backgroundColor: 'var(--accent)' }} />
       </div>
     </div>
   )
