@@ -5,7 +5,7 @@ import { SectionHeader } from '@/components/SectionHeader'
 
 function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
   return (
-    <div className="mb-6 pb-6 border-b border-gray-700 last:border-0">
+    <div className="mb-6 pb-6 last:border-0">
       <div className="flex items-center gap-3 mb-3">
         <span className="text-[10px] uppercase tracking-widest drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" style={{ color: 'rgba(var(--accent-rgb), 0.7)' }}>
           {entry.type === 'biography' ? 'Biografia apòcrifa' : entry.type === 'ucronia' ? 'Ucronia' : 'Personatge inventat'}
