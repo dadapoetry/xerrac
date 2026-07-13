@@ -9,6 +9,24 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
   return (
     <div className="max-w-5xl w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle="Collages i contribucions dels lectors" />
+
+      <div className="mb-10 text-center">
+        <div className="inline-flex items-center gap-3 text-[11px] text-gray-500">
+          <span className="h-px w-6 bg-gray-800" />
+          <span>
+            Participa-hi — envia els teus treballs visuals o textos a{' '}
+            <a
+              href="mailto:contacte@xerrac.cat"
+              className="hover:underline decoration-from-font"
+              style={{ color: 'var(--accent)' }}
+            >
+              contacte@xerrac.cat
+            </a>
+          </span>
+          <span className="h-px w-6 bg-gray-800" />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {content.collages?.map((collage: CollageEntry, i: number) => (
           <div key={i} className="group">

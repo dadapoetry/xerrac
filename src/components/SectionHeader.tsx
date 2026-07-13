@@ -36,7 +36,9 @@ export function SectionHeader({ number, title, subtitle }: SectionHeaderProps) {
       </div>
       <div className="relative">
         <div className="stagger-item delay-1 flex items-center gap-2 mb-4">
-          <SawIcon className="w-5 h-5" />
+          <span style={{ color: 'var(--accent)' }}>
+            <SawIcon className="w-4 h-4" />
+          </span>
           <span className="text-[10px] text-gray-400 tracking-[0.3em] uppercase font-mono drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
             {String(number).padStart(2, '0')}
           </span>
