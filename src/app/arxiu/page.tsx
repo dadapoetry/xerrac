@@ -15,16 +15,16 @@ export default async function ArxiuPage() {
         <div className="max-w-4xl mx-auto">
           <Link
             href="/"
-            className="text-xs text-gray-400 hover:text-white transition-colors mb-10 inline-block uppercase tracking-[0.25em] font-mono"
+            className="text-xs text-gray-400 hover:text-white transition-colors mb-10 inline-block uppercase tracking-[0.25em]"
           >
             ← Tornar
           </Link>
 
-          <span className="text-[10px] text-gray-400 tracking-[0.3em] uppercase font-mono block mb-4">
+          <span className="text-[10px] text-gray-400 tracking-[0.3em] uppercase block mb-4">
             Arxiu
           </span>
           <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-none mb-3">
-            Xerrac<span className="text-red-500">!</span>
+            Xerrac<span style={{ color: 'var(--accent, #ef4444)' }}>!</span>
           </h1>
           <p className="text-sm text-gray-400 mb-6">
             Tots els números publicats
@@ -43,7 +43,7 @@ export default async function ArxiuPage() {
                   <Link
                     key={issue.id}
                     href={`/?issue=${issue.id}`}
-                    className="group relative flex flex-col justify-end p-6 min-h-[220px] border border-gray-800 hover:border-red-900/40 transition-colors overflow-hidden bg-black"
+                    className="group relative flex flex-col justify-end p-6 min-h-[220px] border border-gray-800 transition-colors overflow-hidden bg-black hover:[border-color:rgba(var(--accent-rgb,239,68,68),0.4)]"
                   >
                     {coverBg && (
                       <>
@@ -64,7 +64,7 @@ export default async function ArxiuPage() {
                           month: 'short',
                         })}
                       </span>
-                      <h2 className="text-xl font-bold text-white group-hover:text-red-400 transition-colors leading-snug mb-1">
+                      <h2 className="text-xl font-bold text-white leading-snug mb-1 group-hover:[color:var(--accent,#ef4444)] transition-colors">
                         {issue.title}
                       </h2>
                       <span className="text-xs text-gray-500">
