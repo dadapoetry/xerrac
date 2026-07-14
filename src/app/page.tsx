@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 import { FanzineViewer } from '@/components/FanzineViewer'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Footer } from '@/components/Footer'
+import { Afterthought } from '@/components/Afterthought'
 
 export default async function HomePage({
   searchParams,
@@ -38,6 +39,7 @@ export default async function HomePage({
       <ErrorBoundary>
         <FanzineViewer issue={parsedIssue as any} />
       </ErrorBoundary>
+      <Afterthought />
       <Footer currentIssueNumber={issue.number} />
     </>
   )
