@@ -6,6 +6,7 @@ import { SectionRenderer } from './SectionRenderer'
 import { PortadaSection } from './sections/PortadaSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
+import { SectionDivider } from './SectionDivider'
 import { NewsletterPopUp } from './NewsletterPopUp'
 
 function hexToRgb(hex: string): string {
@@ -297,7 +298,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
               <PortadaSection section={sortedSections[0] as any} sumariEntries={sumariEntries} issueNumber={issue.number} />
             </div>
           </div>
-          <div className="section-divider"><span className="text-lg font-black select-none opacity-20" style={{ color: 'var(--accent)' }}>!</span></div>
+          <SectionDivider />
         </div>
       )}
       {sortedSections.slice(1).map((section, i) => {
