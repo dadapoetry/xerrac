@@ -86,6 +86,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [copied, setCopied] = useState(false)
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
+  const [bgReady, setBgReady] = useState(false)
   const ticking = useRef(false)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
@@ -152,6 +153,10 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       }
     }
   }, [sortedSections.length])
+
+  useEffect(() => {
+    setBgReady(true)
+  }, [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -264,6 +269,17 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         <NewsletterPopUp visible={showNewsletter} onDismiss={() => setShowNewsletter(false)} />
       </div>
 
+      {/* Progress bar */}
+      {sortedSections.length > 1 && (
+        <div
+          className="fixed top-0 left-0 h-[2px] z-[10000] pointer-events-none transition-all duration-300 ease-out"
+          style={{
+            width: `${(activeSection / (sortedSections.length - 1)) * 100}%`,
+            backgroundColor: 'var(--accent)',
+          }}
+        />
+      )}
+
       {/* Sections */}
       {sortedSections[0] && (
         <div key={sortedSections[0].id} data-section-index={0} id={sectionSlug(0)}>
@@ -271,7 +287,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             {sortedSections[0].backgroundImage && (
               <>
                 <div
-                  className="absolute inset-0 z-0 bg-cover bg-center"
+                  className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
                   style={{ backgroundImage: `url("${sortedSections[0].backgroundImage}")` }}
                 />
                 <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />

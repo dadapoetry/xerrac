@@ -7,9 +7,10 @@ interface SectionHeaderProps {
   number: number
   title: string
   subtitle?: string | null
+  readingTime?: number
 }
 
-export function SectionHeader({ number, title, subtitle }: SectionHeaderProps) {
+export function SectionHeader({ number, title, subtitle, readingTime }: SectionHeaderProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [entered, setEntered] = useState(false)
 
@@ -51,7 +52,12 @@ export function SectionHeader({ number, title, subtitle }: SectionHeaderProps) {
             {subtitle}
           </p>
         )}
-        <div className={`stagger-rule ${subtitle ? 'delay-4' : 'delay-3'} w-12 h-[2px] opacity-60`} style={{ backgroundColor: 'var(--accent)' }} />
+        {readingTime && (
+          <p className={`stagger-item ${subtitle ? 'delay-4' : 'delay-3'} text-[10px] text-gray-500 tracking-wider mb-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]`}>
+            ~{readingTime} min de lectura
+          </p>
+        )}
+        <div className={`stagger-rule ${subtitle ? readingTime ? 'delay-5' : 'delay-4' : readingTime ? 'delay-4' : 'delay-3'} w-12 h-[2px] opacity-60`} style={{ backgroundColor: 'var(--accent)' }} />
       </div>
     </div>
   )

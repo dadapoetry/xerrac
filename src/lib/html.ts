@@ -3,15 +3,29 @@ export function styleBlockquotes(html: string): string {
     /<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g,
     (_, inner: string) => {
       const trimmed = inner.trim()
+      const hasAttribution = /—\s+\S/.test(trimmed)
+      let quoteText = trimmed
+      let attribution = ''
+      if (hasAttribution) {
+        const split = trimmed.lastIndexOf('—')
+        quoteText = trimmed.substring(0, split).trim()
+        attribution = trimmed.substring(split).trim()
+      }
       return [
-        '<div class="-mx-4 md:-mx-12 px-4 md:px-12 border-l-2 my-8" style="border-color: rgba(var(--accent-rgb), 0.1);">',
-        '<span class="text-7xl font-serif leading-none block -mb-8 -ml-3 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]" style="color: rgba(var(--accent-rgb), 0.2);">&ldquo;</span>',
+        '<div class="-mx-4 md:-mx-12 px-4 md:px-12 border-l-2 my-10" style="border-color: rgba(var(--accent-rgb), 0.15);">',
+        '<span class="text-8xl font-serif leading-none block -mb-10 -ml-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]" style="color: rgba(var(--accent-rgb), 0.15);">&ldquo;</span>',
         '<div class="pl-8 md:pl-12 pr-4 relative">',
-        '<div class="text-gray-300 leading-relaxed text-[15px] md:text-base italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">' + trimmed + '</div>',
+        '<div class="text-gray-100 leading-relaxed text-lg md:text-xl font-light italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">' + quoteText + '</div>',
+        attribution ? '<p class="text-xs text-gray-500 text-right mt-4 mr-2 font-mono tracking-wide">' + attribution + '</p>' : '',
         '</div>',
-        '<span class="text-7xl font-serif leading-none block text-right -mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]" style="color: rgba(var(--accent-rgb), 0.2);">&rdquo;</span>',
         '</div>'
       ].join('')
     }
   )
+}
+
+export function readingTime(html: string, wordsPerMinute = 200): number {
+  const text = html.replace(/<[^>]*>/g, '').trim()
+  const words = text.split(/\s+/).filter(Boolean).length
+  return Math.max(1, Math.round(words / wordsPerMinute))
 }

@@ -2,13 +2,14 @@
 
 import { SectionData, VisitaContent } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
+import { readingTime } from '@/lib/html'
 
 export function VisitaSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as VisitaContent
 
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
-      <SectionHeader number={index} title={section.title} subtitle="Turisme teòric"  />
+      <SectionHeader number={index} title={section.title} subtitle="Turisme teòric" readingTime={readingTime(content.body)} />
 
       {content.source && (
         <p className="text-xs text-gray-400 mb-6 italic tracking-wider drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
