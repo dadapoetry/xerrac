@@ -47,33 +47,14 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
         )}
 
         {sumariEntries && sumariEntries.length > 0 && (
-          <div className="mt-6 w-full max-w-md mx-auto">
-            <div className="flex items-end gap-[2px] h-14 mb-3">
-              {sumariEntries.map((entry, i) => {
-                const height = 30 + Math.sin(i * 1.3 + 0.7) * 14
-                return (
-                  <div key={i} className="flex-1 flex flex-col items-center justify-end group">
-                    <div
-                      className="w-full transition-all duration-300"
-                      style={{
-                        height: `${height}px`,
-                        background: 'var(--accent)',
-                        opacity: 0.12,
-                        clipPath: 'polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%)',
-                      }}
-                    />
-                    <span className="text-[7px] text-gray-500 font-mono mt-0.5 leading-none">{entry.number}</span>
-                  </div>
-                )
-              })}
-            </div>
-            <div className="flex flex-wrap justify-center gap-x-3 gap-y-0.5 text-[10px] text-gray-300">
-              {sumariEntries.map((entry, i) => (
-                <span key={i} className="text-gray-400">
-                  <span className="font-mono text-gray-500">{entry.number}</span> {entry.title}
-                </span>
-              ))}
-            </div>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-1 text-xs text-gray-300">
+            {sumariEntries.map((entry, i) => (
+              <span key={i} className="inline-flex items-center gap-1">
+                {i > 0 && <span className="text-gray-500 select-none mx-0.5">/</span>}
+                <span className="font-mono text-[10px] text-gray-400">{entry.number}</span>
+                <span className="text-gray-200">{entry.title}</span>
+              </span>
+            ))}
           </div>
         )}
       </div>
