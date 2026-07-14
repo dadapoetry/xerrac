@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fragment } from 'react'
 import { IssueData } from '@/types'
 import { SectionRenderer } from './SectionRenderer'
 import { PortadaSection } from './sections/PortadaSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
-import { SectionDivider } from './SectionDivider'
+import { SectionCut } from './SectionCut'
 import { NewsletterPopUp } from './NewsletterPopUp'
 
 function hexToRgb(hex: string): string {
@@ -282,33 +282,35 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       )}
 
       {/* Sections */}
-      {sortedSections[0] && (
-        <div key={sortedSections[0].id} data-section-index={0} id={sectionSlug(0)}>
+      {sortedSections.map((section, i) => (
+        <Fragment key={section.id}>
+
+      {i === 0 ? (
+        <div data-section-index={i} id={sectionSlug(i)}>
           <div className="section-container">
-            {sortedSections[0].backgroundImage && (
+            {section.backgroundImage && (
               <>
                 <div
                   className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
-                  style={{ backgroundImage: `url("${sortedSections[0].backgroundImage}")` }}
+                  style={{ backgroundImage: `url("${section.backgroundImage}")` }}
                 />
                 <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
               </>
             )}
             <div className="relative z-[3] w-full">
-              <PortadaSection section={sortedSections[0] as any} sumariEntries={sumariEntries} issueNumber={issue.number} />
+              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} />
             </div>
           </div>
-          <SectionDivider />
+        </div>
+      ) : (
+        <div data-section-index={i} id={sectionSlug(i)}>
+          <SectionRenderer section={section as any} index={i} />
         </div>
       )}
-      {sortedSections.slice(1).map((section, i) => {
-        const displayIndex = i + 1
-        return (
-          <div key={section.id} data-section-index={displayIndex} id={sectionSlug(displayIndex)}>
-            <SectionRenderer section={section as any} index={displayIndex} />
-          </div>
-        )
-      })}
+
+          {i < sortedSections.length - 1 && <SectionCut />}
+        </Fragment>
+      ))}
     </div>
   )
 }

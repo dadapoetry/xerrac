@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { SectionData } from '@/types'
-import { SectionDivider } from './SectionDivider'
 
 type SectionProps = { section: SectionData; index: number }
 
@@ -59,7 +58,6 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
           <Component section={section} index={index} />
         </div>
       </div>
-      <SectionDivider />
     </>
   )
 }
