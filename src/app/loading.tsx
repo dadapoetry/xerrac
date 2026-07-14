@@ -7,7 +7,8 @@ export default function Loading() {
         <div className="mb-8 opacity-50">
           <Logo />
         </div>
-        <div className="h-6 bg-gray-800 rounded w-3/4 mx-auto" />
+        <p className="text-xs text-gray-600 uppercase tracking-[0.25em]">Tallant la xerrameca</p>
+        <div className="h-6 bg-gray-800 rounded w-3/4 mx-auto mt-4" />
       </div>
     </div>
   )

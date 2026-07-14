@@ -159,6 +159,7 @@ body::before {
     9.375% 100%, 6.25% 50%, 3.125% 100%, 0% 50%
   );
   pointer-events: none;
+  filter: drop-shadow(0 0 1px rgba(var(--accent-rgb), 0.25));
 }
 
 /* Prose overrides for consistent editorial body text */
