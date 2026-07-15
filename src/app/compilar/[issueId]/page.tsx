@@ -9,7 +9,7 @@ export default async function CompilarPage({
   searchParams,
 }: {
   params: { issueId: string }
-  searchParams?: { auto?: string }
+  searchParams?: { print?: string }
 }) {
   const issue = await getIssue(params.issueId)
 
@@ -25,5 +25,5 @@ export default async function CompilarPage({
     })),
   }
 
-  return <TabloidPreview issue={parsedIssue as any} autoDownload={searchParams?.auto === '1'} />
+  return <TabloidPreview issue={parsedIssue as any} autoPrint={searchParams?.print === '1'} />
 }

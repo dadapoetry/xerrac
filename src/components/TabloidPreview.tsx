@@ -1,10 +1,8 @@
 'use client'
 
-import { useMemo, useRef, useEffect, useState, useCallback } from 'react'
+import { useMemo, useRef, useEffect, useState } from 'react'
 import { IssueData, SectionData, CrosswordData, CrosswordClue } from '@/types'
 import { computeLayout, LayoutSlot } from '@/lib/layoutEngine'
-import html2canvas from 'html2canvas'
-import { jsPDF } from 'jspdf'
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
@@ -268,10 +266,10 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
 </div></body></html>`
 }
 
-export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; autoDownload?: boolean; pdfMode?: boolean }) {
+export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPrint?: boolean }) {
   const pageRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
-  const [downloaded, setDownloaded] = useState(false)
+  const [printing, setPrinting] = useState(false)
   const accentColor = issue.accentColor || '#ef4444'
 
   const portada = issue.sections.find(s => s.type === 'portada')
@@ -296,88 +294,46 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
     return () => window.removeEventListener('resize', updateScale)
   }, [])
 
-  const [downloading, setDownloading] = useState(false)
-  const [pdfMode, setPdfMode] = useState(false)
-
   useEffect(() => {
-    if (!autoDownload) return
-    setPdfMode(true)
-    const t = setTimeout(() => handleDownloadPdf(), 800)
+    if (!autoPrint) return
+    const t = setTimeout(() => handlePrint(), 1000)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoDownload])
+  }, [autoPrint])
 
-  const handleDownloadPdf = useCallback(async () => {
-    if (downloading) return
-    setDownloading(true)
-    setPdfMode(true)
-    try {
-      const canvas = await html2canvas(pageRef.current!, {
-        scale: 4,
-        useCORS: true,
-        backgroundColor: '#f2ede4',
-        logging: false,
-      })
-      const imgData = canvas.toDataURL('image/jpeg', 0.95)
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a3',
-      })
-      const pdfW = 420
-      const pdfH = 297
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH, undefined, 'FAST')
-      pdf.save(`xerrac-${String(issue.number).padStart(2, '0')}.pdf`)
-      setDownloaded(true)
-    } catch (err) {
-      alert('Error en generar el PDF. Torna-ho a provar.')
-      console.error(err)
-    } finally {
-      setDownloading(false)
-      setPdfMode(false)
-    }
-  }, [downloading, issue.number])
+  function handlePrint() {
+    setPrinting(true)
+    const html = buildPrintHTML(issue, layout.placed, layout.norm)
+    const win = window.open('', Math.random().toString(36).slice(2))
+    if (!win) { setPrinting(false); alert('Permet les finestres emergents per exportar el PDF.'); return }
+    win.document.write(html)
+    win.document.close()
+    setTimeout(() => {
+      win.focus()
+      win.print()
+      setPrinting(false)
+    }, 500)
+  }
 
   const rowsCSS = layout.norm.map(f => `${f.toFixed(1)}fr`).join(' ')
-
-  const done = autoDownload && downloaded
 
   return (
     <div style={{
       width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
       backgroundColor: '#dad3c7',
-      flexDirection: 'column', gap: 24,
     }}>
-      {done ? (
-        <>
-          <svg className="w-16 h-16 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-          <p style={{ color: '#fff', fontSize: 18, fontFamily: 'Arial,sans-serif', fontWeight: 700, letterSpacing: '0.05em' }}>
-            PDF descarregat
-          </p>
-          <a href="/"
-            style={{
-              color: '#fff', fontSize: 12, fontFamily: 'Arial,sans-serif', opacity: 0.6,
-              textDecoration: 'underline', cursor: 'pointer',
-            }}>
-            Tornar a la portada
-          </a>
-        </>
-      ) : (
-      <>
       <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 50, display: 'flex', gap: 8, alignItems: 'center' }}>
         <span style={{ color: '#fff', fontSize: 10, fontFamily: 'Arial,sans-serif', opacity: 0.6 }}>
           {Math.round(scale * 100)}%
         </span>
-        <button onClick={handleDownloadPdf} disabled={downloading}
+        <button onClick={handlePrint}
           style={{
-            background: downloading ? '#444' : '#000',
-            color: '#fff', fontSize: 11, padding: '8px 20px', border: 'none', cursor: downloading ? 'wait' : 'pointer',
+            background: printing ? '#444' : '#000',
+            color: '#fff', fontSize: 11, padding: '8px 20px', border: 'none', cursor: 'pointer',
             textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Arial,sans-serif',
             transition: 'background 0.2s',
           }}>
-          {downloading ? 'Generant…' : 'Exportar PDF'}
+          {printing ? 'Generant…' : 'Exportar PDF'}
         </button>
       </div>
 
@@ -432,15 +388,13 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
                 borderBottom: p.row < layout.rows - 1 ? '1px solid #ddd3c4' : 'none',
                 display: 'flex', flexDirection: 'column', overflow: 'hidden',
               }}>
-                {!pdfMode && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, marginBottom: 2 }}>
-                    <div style={{ width: 12, height: 1.5, backgroundColor: accentColor, flexShrink: 0 }} />
-                    <span style={{
-                      fontSize: 6.5, textTransform: 'uppercase', letterSpacing: '0.2em', color: accentColor,
-                      fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif',
-                    }}>{sectionLabel(s.type)}</span>
-                  </div>
-                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, marginBottom: 2 }}>
+                  <div style={{ width: 12, height: 1.5, backgroundColor: accentColor, flexShrink: 0 }} />
+                  <span style={{
+                    fontSize: 6.5, textTransform: 'uppercase', letterSpacing: '0.2em', color: accentColor,
+                    fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif',
+                  }}>{sectionLabel(s.type)}</span>
+                </div>
                 <h2 style={{
                   fontSize: p.colSpan >= 5 ? '16px' : p.colSpan >= 3 ? '14px' : '12px',
                   fontWeight: 800, lineHeight: 1.2, margin: '0 0 1px', color: '#1a1a1a',
@@ -479,10 +433,9 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
           <span>Xerrac!<span style={{ color: accentColor, margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
           <span>Compilat des de xerrac.cat</span>
         </div>
-      </div>
-      </div>
-      </div>
-      </>)}
+    </div>
+    </div>
+    </div>
     </div>
   )
 }
