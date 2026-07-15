@@ -9,10 +9,11 @@ function stripHtml(html: string): string {
 
 const PAGE_W = 1580
 const PAGE_H = 1120
-const PAD = 14
 const COLS = 8
-
-const SECT_H = PAGE_H - 140 - 32  // full content height minus masthead/footer
+const MASTHEAD_H = 148
+const FOOTER_H = 32
+const SECT_H = PAGE_H - MASTHEAD_H - FOOTER_H
+const OVERHEAD = 65
 
 function getText(section: SectionData): { length: number } {
   const c = section.content as any
@@ -43,9 +44,11 @@ function getText(section: SectionData): { length: number } {
 
 function calcFontSize(textLen: number, colSpan: number): number {
   if (textLen < 10) return 12
-  const colW = (PAGE_W - PAD * 2) * (colSpan / COLS) - PAD * 2
-  const f = Math.sqrt((colW * SECT_H) / (textLen * 0.55 * 1.45))
-  return Math.min(Math.max(Math.round(f), 7), 15)
+  const inside = PAGE_W - 28
+  const colW = inside * (colSpan / COLS) - 28
+  const availH = SECT_H - OVERHEAD
+  const f = Math.sqrt((colW * availH) / (textLen * 0.55 * 1.45))
+  return Math.round(Math.max(7, Math.min(f, 15)))
 }
 
 interface Placed {
@@ -54,34 +57,51 @@ interface Placed {
   fontSize: number
 }
 
+function allocateCols(pool: { section: SectionData; length: number }[]): number[] {
+  const totalLen = Math.max(pool.reduce((s, i) => s + i.length, 0), 1)
+  const raw = pool.map(item => Math.max(1, Math.round((item.length / totalLen) * COLS)))
+  let sum = raw.reduce((a, b) => a + b, 0)
+
+  while (sum > COLS) {
+    const maxIdx = raw.indexOf(Math.max(...raw))
+    if (raw[maxIdx] > 1) {
+      raw[maxIdx]--
+      sum--
+    } else {
+      let anyBigger = false
+      for (let i = 0; i < raw.length; i++) {
+        if (raw[i] > 1) {
+          raw[i]--
+          sum--
+          anyBigger = true
+          break
+        }
+      }
+      if (!anyBigger) break
+    }
+  }
+  while (sum < COLS) {
+    const maxIdx = raw.indexOf(Math.max(...raw))
+    raw[maxIdx]++
+    sum++
+  }
+  return raw
+}
+
 export function TabloidPreview({ issue }: { issue: IssueData }) {
   const layout = useMemo(() => {
     const pool = issue.sections
       .filter(s => s.type !== 'portada')
+      .slice(0, COLS)
       .map(s => ({ section: s, ...getText(s) }))
       .sort((a, b) => b.length - a.length)
 
-    const totalLen = Math.max(pool.reduce((s, i) => s + i.length, 0), 1)
-    const placed: Placed[] = []
-
-    let remaining = COLS
-    pool.forEach((item, idx) => {
-      const isLast = idx === pool.length - 1
-      let colSpan
-      if (isLast) {
-        colSpan = remaining
-      } else {
-        colSpan = Math.max(1, Math.round((item.length / totalLen) * COLS))
-        const needForRest = pool.length - idx - 1
-        colSpan = Math.min(colSpan, remaining - needForRest)
-      }
-      if (colSpan < 1) colSpan = 1
-      if (colSpan > remaining) colSpan = remaining
-
-      const fontSize = calcFontSize(item.length, colSpan)
-      placed.push({ section: item.section, colSpan, fontSize })
-      remaining -= colSpan
-    })
+    const colSpans = allocateCols(pool)
+    const placed: Placed[] = pool.map((item, idx) => ({
+      section: item.section,
+      colSpan: colSpans[idx],
+      fontSize: calcFontSize(item.length, colSpans[idx]),
+    }))
 
     const portada = issue.sections.find(s => s.type === 'portada')
     const pc = portada?.content as any
@@ -90,12 +110,11 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       placed,
       portadaTopic: pc?.topic || '',
       portadaBg: portada?.backgroundImage || '',
-      totalSpan: placed.reduce((s, p) => s + p.colSpan, 0),
     }
   }, [issue])
 
   return (
-    <div className="min-h-screen flex flex-col items-center py-8 px-4 no-print" style={{ backgroundColor: '#dad3c7' }}>
+    <div className="min-h-screen flex flex-col items-center py-8 no-print" style={{ backgroundColor: '#dad3c7', overflowX: 'auto' }}>
       <button
         onClick={() => window.print()}
         className="fixed top-4 right-4 z-50 bg-black text-white text-xs px-4 py-2 uppercase tracking-wider hover:bg-gray-800 transition-colors no-print"
@@ -106,13 +125,12 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       <div
         className="tabloid-page"
         style={{
-          width: `${PAGE_W}px`,
-          minHeight: `${PAGE_H}px`,
           backgroundColor: '#f2ede4',
           color: '#1a1a1a',
           fontFamily: 'Georgia, "Times New Roman", Times, serif',
           position: 'relative',
           boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+          overflow: 'hidden',
         }}
       >
         {/* Masthead */}
@@ -162,11 +180,10 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           </div>
         )}
 
-        {/* Grid — one row, exact COLS sum guaranteed */}
+        {/* Grid */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-          gap: '0',
           minHeight: `${SECT_H}px`,
         }}>
           {layout.placed.map((item) => {
@@ -179,7 +196,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
                 key={s.id}
                 style={{
                   gridColumn: `span ${item.colSpan}`,
-                  padding: `${PAD}px ${PAD}px`,
+                  padding: `14px 14px`,
                   borderRight: item.colSpan < COLS ? '1px solid #d4cdbe' : 'none',
                   display: 'flex',
                   flexDirection: 'column',
@@ -212,6 +229,8 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
                   color: '#333',
                   textAlign: 'justify',
                   flex: 1,
+                  wordWrap: 'break-word',
+                  overflowWrap: 'break-word',
                 }}>
                   {renderSection(s, c, fs, item.colSpan)}
                 </div>

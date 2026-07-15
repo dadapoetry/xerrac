@@ -23,17 +23,5 @@ export default async function CompilarPage({
     })),
   }
 
-  return (
-    <>
-      <style>{`
-        @page { size: A3 landscape; margin: 0; }
-        @media print {
-          body { margin: 0; padding: 0; }
-          .no-print { display: none !important; }
-          .tabloid-page { box-shadow: none !important; margin: 0; width: 297mm !important; min-height: 210mm !important; }
-        }
-      `}</style>
-      <TabloidPreview issue={parsedIssue as any} />
-    </>
-  )
+  return <TabloidPreview issue={parsedIssue as any} />
 }

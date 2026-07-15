@@ -338,9 +338,21 @@ body::before {
   }
 }
 
+/* Tabloid — screen dimensions as class (not inline, so print can override) */
+.tabloid-page {
+  width: 1580px;
+  min-height: 1120px;
+}
+
+@page { size: A3 landscape; margin: 0; }
+
+html, body { margin: 0; padding: 0; }
+
 /* Tabloid print */
 @media print {
   .tabloid-page {
+    width: 297mm !important;
+    min-height: 210mm !important;
     box-shadow: none !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -352,9 +364,8 @@ body::before {
     background: #f5f0e8 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-  }
-  .tabloid-article {
-    page-break-inside: avoid;
-    break-inside: avoid;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
   }
 }
