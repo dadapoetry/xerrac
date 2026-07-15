@@ -281,13 +281,14 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
   const portadaTopic = pc?.topic || ''
 
   const layout = useMemo(() => {
-    const result = computeLayout(issue, PAGE_W, PAGE_H, MASTHEAD_H, FOOTER_H)
+    const result = computeLayout(issue, PAGE_W, PAGE_H, MASTHEAD_H, FOOTER_H, !!portadaTopic)
     return {
       placed: result.slots,
       norm: result.rowFractions,
       rows: result.numRows,
+      squareRow: result.squareRow,
     }
-  }, [issue])
+  }, [issue, portadaTopic])
 
   useEffect(() => {
     function updateScale() {
@@ -397,17 +398,19 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
               </div>
             )
           })}
-        </div>
-
-        <div style={{
-          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-          width: 140, height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          textAlign: 'center', background: '#f2ede4', border: `2px solid ${accentColor}`,
-          zIndex: 3, fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
-          fontSize: 18, fontWeight: 800, lineHeight: 1.2, textTransform: 'uppercase',
-          color: accentColor, padding: 14, wordBreak: 'break-word',
-        }}>
-          {portadaTopic || issue.title}
+          {layout.squareRow && (
+            <div key="topic" style={{
+              gridColumn: `4 / span 2`,
+              gridRow: `${layout.squareRow} / span 2`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              textAlign: 'center', background: '#f2ede4', border: `2px solid ${accentColor}`,
+              fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
+              fontSize: 18, fontWeight: 800, lineHeight: 1.2, textTransform: 'uppercase',
+              color: accentColor, padding: 14, wordBreak: 'break-word',
+            }}>
+              {portadaTopic}
+            </div>
+          )}
         </div>
 
         <div style={{

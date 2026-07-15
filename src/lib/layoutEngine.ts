@@ -27,6 +27,7 @@ export interface LayoutResult {
   slots: LayoutSlot[]
   rowFractions: number[]
   numRows: number
+  squareRow?: number
 }
 
 const PROFILES: Record<string, SectionProfile> = {
@@ -223,12 +224,18 @@ function calcFontSize(textLen: number, slotW: number, slotH: number, baseFontSiz
   return Math.max(8, Math.min(blended, 18))
 }
 
+const SQUARE_COL = 3
+const SQUARE_SPAN = 2
+const SQUARE_ROWS = 2
+const SQUARE_SIDE = 3
+
 export function computeLayout(
   issue: IssueData,
   pageW: number,
   pageH: number,
   mastheadH: number,
   footerH: number,
+  hasTopic?: boolean,
 ): LayoutResult {
   const sectH = pageH - mastheadH - footerH
 
@@ -249,17 +256,79 @@ export function computeLayout(
   if (ordered.length === 0) return { slots: [], rowFractions: [], numRows: 0 }
 
   const rows = buildRows(ordered)
+  const numRealRows = rows.length
 
+  if (!hasTopic) {
+    return computeSlots(rows, ordered, sectH, pageW, false)
+  }
+
+  // --- Topic layout: insert square hole in the middle ---
+  // Split rows into: above (first rows), middle (square rows), below (last rows)
+  const totalRows = rows.length + SQUARE_ROWS
+  const aboveEnd = Math.max(0, Math.min(1, rows.length - 1))
+  const belowStart = Math.min(rows.length, aboveEnd + SQUARE_ROWS)
+
+  const topicRows: LayoutItem[][] = []
+
+  // Above rows (pass-through)
+  for (let i = 0; i < aboveEnd; i++) {
+    topicRows.push(rows[i])
+  }
+
+  // Middle rows: split sections to left/right of square
+  for (let sr = 0; sr < SQUARE_ROWS; sr++) {
+    const srcRow = sr < rows.length - aboveEnd ? rows[aboveEnd + sr] : []
+    // Two slots: left (cols 0-2) and right (cols 5-7)
+    const leftSlots: LayoutItem[] = []
+    const rightSlots: LayoutItem[] = []
+    // Distribute items in this row to left/right
+    srcRow.forEach((item, ci) => {
+      if (ci % 2 === 0) {
+        leftSlots.push(item)
+      } else {
+        rightSlots.push(item)
+      }
+    })
+    if (leftSlots.length === 1 && rightSlots.length === 1) {
+      topicRows.push([leftSlots[0], rightSlots[0]])
+    } else if (leftSlots.length >= 1) {
+      // All on left
+      topicRows.push(leftSlots)
+    } else if (rightSlots.length >= 1) {
+      // All on right
+      topicRows.push(rightSlots)
+    } else {
+      topicRows.push([])
+    }
+  }
+
+  // Below rows (pass-through)
+  for (let i = belowStart; i < rows.length; i++) {
+    topicRows.push(rows[i])
+  }
+
+  const result = computeSlotsWithSquare(topicRows, ordered, sectH, pageW, aboveEnd, SQUARE_ROWS)
+  result.squareRow = aboveEnd + 1
+  return result
+}
+
+function computeSlots(rows: LayoutItem[][], ordered: LayoutItem[], sectH: number, pageW: number, hasSquare: boolean): LayoutResult {
   const slots: LayoutSlot[] = []
   let prevSig: string | null = null
 
   rows.forEach((row, ri) => {
+    let col = 0
+
+    if (hasSquare) {
+      // For rows that should leave a gap for the square
+      // Not implemented here — handled in computeSlotsWithSquare
+    }
+
     const hasCW = row.some(s => s.section.type === 'ludita')
     const pattern = pickPattern(row.length, hasCW, ri === 0, prevSig)
     const spans = assignSpansToRow(row, pattern)
     const sig = patternSignature(spans)
 
-    let col = 0
     row.forEach((item, ci) => {
       slots.push({
         section: item.section,
@@ -276,6 +345,72 @@ export function computeLayout(
     prevSig = sig
   })
 
+  return finalizeSlots(slots, rows, ordered, sectH, pageW)
+}
+
+function computeSlotsWithSquare(rows: LayoutItem[][], ordered: LayoutItem[], sectH: number, pageW: number, aboveEnd: number, sqRows: number): LayoutResult {
+  const slots: LayoutSlot[] = []
+  const realRows = rows.filter(r => r.length > 0)
+
+  rows.forEach((row, ri) => {
+    if (row.length === 0) return
+
+    const isMiddle = ri >= aboveEnd && ri < aboveEnd + sqRows
+
+    if (isMiddle) {
+      let col = 0
+      row.forEach((item, ci) => {
+        if (ci === 0) {
+          // First item on left
+          slots.push({
+            section: item!.section,
+            row: ri,
+            col: 0,
+            colSpan: SQUARE_COL,
+            slotW: 0,
+            slotH: 0,
+            fontSize: 0,
+          })
+          col = SQUARE_COL + SQUARE_SPAN
+        } else {
+          // Subsequent items on right
+          slots.push({
+            section: item!.section,
+            row: ri,
+            col,
+            colSpan: SQUARE_SIDE,
+            slotW: 0,
+            slotH: 0,
+            fontSize: 0,
+          })
+        }
+      })
+    } else {
+      let col = 0
+      const hasCW = row.some(s => s!.section.type === 'ludita')
+      const patterns = row.length === 1 || row.length === 2
+        ? row.length === 1 ? [COLS] : [5, 3]
+        : [3, 3, 2]
+      const spans = assignSpansToRow(row as LayoutItem[], patterns)
+      row.forEach((item, ci) => {
+        slots.push({
+          section: item!.section,
+          row: ri,
+          col,
+          colSpan: spans[ci],
+          slotW: 0,
+          slotH: 0,
+          fontSize: 0,
+        })
+        col += spans[ci]
+      })
+    }
+  })
+
+  return finalizeSlots(slots, realRows, ordered, sectH, pageW)
+}
+
+function finalizeSlots(slots: LayoutSlot[], rows: LayoutItem[][], ordered: LayoutItem[], sectH: number, pageW: number): LayoutResult {
   let rowFractions = calculateRowFractions(rows)
   const fracSum = rowFractions.reduce((a, b) => a + b, 0)
   const targetSum = rows.length * 2
@@ -285,8 +420,8 @@ export function computeLayout(
 
   const normSum = rowFractions.reduce((a, b) => a + b, 0)
   slots.forEach(slot => {
-    const rowFrac = rowFractions[slot.row]
-    const rowH = normSum > 0 ? (rowFrac / normSum) * sectH : sectH / rows.length
+    const rowFrac = rowFractions[slot.row] || 2
+    const rowH = normSum > 0 ? (rowFrac / normSum) * sectH : sectH / Math.max(rows.length, 1)
     const slotH = rowH - 52
     const slotW = (slot.colSpan / COLS) * (pageW - 28) - 20
 
