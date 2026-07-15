@@ -256,12 +256,11 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);font-family:Arial,Helvetica,sans-serif;padding:0 0 6px">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
     <div style="height:1px;background-color:rgba(255,255,255,0.1);margin-bottom:8px"></div>
     <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif">XERRAC<span style="color:${accentColor}">!</span></h1>
-    <div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">Revista d&apos;aclariment cultural</div>
+    <div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">${portadaTopic ? `<span style="color:${accentColor};font-weight:700">${portadaTopic}</span>` : "Revista d'aclariment cultural"}</div>
     <div style="height:1px;background-color:rgba(255,255,255,0.1);margin-top:8px"></div>
   </div>
   <div class="sawtooth"></div>
   <div class="grid">${cells}</div>
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;display:flex;align-items:center;justify-content:center;text-align:center;background:#f2ede4;border:2px solid ${accentColor};z-index:3;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif;font-size:14px;font-weight:800;line-height:1.2;text-transform:uppercase;color:${accentColor};padding:12px;word-break:break-word">${portadaTopic || issue.title}</div>
   <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">
     <span>Xerrac!<span style="color:${accentColor};margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
@@ -347,7 +346,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
             XERRAC<span style={{ color: accentColor }}>!</span>
           </div>
           <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginTop: 3, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
-            Revista d&apos;aclariment cultural
+            {portadaTopic ? <span style={{ color: accentColor, fontWeight: 700 }}>{portadaTopic}</span> : "Revista d'aclariment cultural"}
           </div>
           <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.1)', marginTop: 8 }} />
         </div>
@@ -397,17 +396,6 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
               </div>
             )
           })}
-        </div>
-
-        <div style={{
-          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-          width: 140, height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          textAlign: 'center', background: '#f2ede4', border: `2px solid ${accentColor}`,
-          zIndex: 3, fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
-          fontSize: 18, fontWeight: 800, lineHeight: 1.2, textTransform: 'uppercase',
-          color: accentColor, padding: 14, wordBreak: 'break-word',
-        }}>
-          {portadaTopic || issue.title}
         </div>
 
         <div style={{
