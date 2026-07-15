@@ -146,8 +146,8 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
     <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
     ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
   </div>
-  <svg width="100%" height="16" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="24" height="16" patternUnits="userSpaceOnUse"><path d="M2,0 L12,14 L22,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="16" fill="url(#saw)" /></svg>
   <div class="grid">${cells}</div>
+  <svg width="100%" height="10" style="display:block;flex-shrink:0;margin:2px 0"><defs><pattern id="sawblade-divider" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0.8,2 L9.2,2 L9.2,3.2 L8.8,3.2 L7.6,6.8 L6.4,3.2 L5.8,3.2 L4.6,6.8 L3.4,3.2 L2.8,3.2 L1.8,6.8 L0.8,3.2 Z" fill="${accentColor}" /></pattern></defs><rect width="100%" height="10" fill="url(#sawblade-divider)" /></svg>
   <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">
     <span>Xerrac!<span style="color:${accentColor};margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>

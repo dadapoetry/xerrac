@@ -215,11 +215,6 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
           )}
         </div>
 
-        <svg width="100%" height="16" style={{ display: 'block', flexShrink: 0 }}>
-          <defs><pattern id="saw" width="24" height="16" patternUnits="userSpaceOnUse"><path d="M2,0 L12,14 L22,0 Z" fill="#000" /></pattern></defs>
-          <rect width="100%" height="16" fill="url(#saw)" />
-        </svg>
-
         <div style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${COLS}, 1fr)`,
@@ -265,6 +260,10 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
           })}
         </div>
 
+        <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0, margin: '2px 0' }}>
+          <defs><pattern id="sawblade-divider" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0.8,2 L9.2,2 L9.2,3.2 L8.8,3.2 L7.6,6.8 L6.4,3.2 L5.8,3.2 L4.6,6.8 L3.4,3.2 L2.8,3.2 L1.8,6.8 L0.8,3.2 Z" fill={accentColor} /></pattern></defs>
+          <rect width="100%" height="10" fill="url(#sawblade-divider)" />
+        </svg>
         <div style={{
           position: 'absolute', bottom: 28, right: 8,
           background: accentColor, color: '#fff',
