@@ -86,39 +86,48 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId }:
         )}
         {issueId && (
           <button
-            onClick={handleDownload}
-            disabled={downloading}
-            className="group relative mt-6 inline-flex items-center gap-2.5 px-5 py-2.5 text-[11px] font-bold
-              tracking-[0.15em] uppercase text-gray-300 border border-gray-700 rounded-sm
-              hover:text-red-400 hover:border-red-500/50 disabled:opacity-50 disabled:cursor-wait
-              transition-colors duration-300 overflow-hidden"
-          >
-            <span className="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/8 to-red-500/0
-              translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
-            <span className="absolute inset-0 bg-red-500/0 group-hover:bg-red-500/5 transition-colors duration-300" />
-            <span className="relative z-10 flex items-center gap-2.5">
-              {downloading ? (
-                <>
-                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  <span>Generant...</span>
-                </>
-              ) : (
-                <>
-                  <span className="relative">
-                    Llegeix en PDF
-                    <span className="absolute -inset-x-1 bottom-0 h-px bg-red-400/0 group-hover:bg-red-400/60
-                      transition-all duration-300 scale-x-0 group-hover:scale-x-100 origin-left" />
-                  </span>
-                  <svg className="w-3.5 h-3.5 transition-all duration-500 group-hover:translate-y-0.5 group-hover:drop-shadow-[0_0_4px_rgba(239,68,68,0.4)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ transform: 'translateY(1px)' }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                  </svg>
-                </>
-              )}
-            </span>
-          </button>
+  onClick={handleDownload}
+  disabled={downloading}
+  style={{ '--btn-hover': 'var(--accent)' } as React.CSSProperties}
+  className="group relative mt-6 inline-flex items-center gap-2.5 px-5 py-2.5 text-[11px] font-bold
+    tracking-[0.15em] uppercase text-gray-300 border border-gray-700 rounded-sm
+    hover:text-[var(--btn-hover)] hover:border-[var(--btn-hover)]
+    disabled:opacity-50 disabled:cursor-wait
+    transition-colors duration-300 overflow-hidden"
+>
+  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--btn-hover)]/10 to-transparent
+    translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+  <span className="absolute inset-0 bg-[var(--btn-hover)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+  <span className="relative z-10 flex items-center gap-2.5">
+    {downloading ? (
+      <>
+        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+        <span>Generant...</span>
+      </>
+    ) : (
+      <>
+        <span className="relative">
+          Llegeix en PDF
+          <span className="absolute -inset-x-1 bottom-0 h-px bg-[var(--btn-hover)]/0 group-hover:bg-[var(--btn-hover)]/60
+            transition-all duration-300 scale-x-0 group-hover:scale-x-100 origin-left" />
+        </span>
+        <svg
+          className="w-3.5 h-3.5 transition-all duration-500 group-hover:translate-y-0.5 group-hover:drop-shadow-[0_0_4px_var(--btn-hover)]"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+          style={{ transform: 'translateY(1px)' }}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+      </>
+    )}
+  </span>
+</button>
         )}
       </div>
 
