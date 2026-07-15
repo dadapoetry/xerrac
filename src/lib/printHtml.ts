@@ -94,7 +94,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, 
         let h = `<div style="display:flex;flex-direction:column;gap:3px"><div style="display:inline-grid;grid-template-columns:repeat(${n},${cellSize}px);align-self:center">`
         for (let r = 0; r < n; r++) { for (let c = 0; c < n; c++) {
           const val = grid[r]?.[c]; const num = numbers[r]?.[c]; const isBlack = !val
-          h += `<div style="width:${cellSize}px;height:${cellSize}px;border:0.5px solid #999;background:${isBlack?'#1a1a1a':'#f2ede4'};display:flex;align-items:center;justify-content:center;position:relative;font-size:${fontSize}px;font-weight:700;font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;text-transform:uppercase">${isBlack?'':val}${num?`<span style="position:absolute;top:0;left:1px;font-size:${Math.max(fs*0.4,4)}px;font-weight:400;color:#555">${num}</span>`:''}</div>`
+          h += `<div style="width:${cellSize}px;height:${cellSize}px;border:0.5px solid #999;background:${isBlack?'#1a1a1a':'#f2ede4'};display:flex;align-items:center;justify-content:center;position:relative;font-size:${fontSize}px;font-weight:700;color:#1a1a1a;text-transform:uppercase">${isBlack?'':val}${num?`<span style="position:absolute;top:0;left:1px;font-size:${Math.max(fs*0.4,4)}px;font-weight:400;color:#555">${num}</span>`:''}</div>`
         }}
         h += '</div>'
         h += `<div style="line-height:1.2;font-size:${cluesSize}px;text-align:left">`
@@ -108,7 +108,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, 
   })()
 
   return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:10px 12px;border-right:${colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
-    <h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;margin:0 0 1px;color:#1a1a1a;font-family:'Playfair Display',Georgia,serif;text-transform:uppercase;letter-spacing:-0.02em;flex-shrink:0">${s.title}</h2>
+    <h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;margin:0 0 1px;color:#1a1a1a;text-transform:uppercase;letter-spacing:-0.02em;flex-shrink:0">${s.title}</h2>
     <div style="height:1px;background-color:#d4cdbe;margin-bottom:4px;flex-shrink:0"></div>
     <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
   </div>`
@@ -119,36 +119,33 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
   const portada = issue.sections.find(s => s.type === 'portada')
   const pc = portada?.content as any
   const portadaTopic = pc?.topic || ''
-  const portadaBg = portada?.backgroundImage || ''
-
   const cells = placed.map(p => renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.colSpan, accentColor)).join('')
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800;900&display=swap" rel="stylesheet">
 <style>
   @page { size: A3 landscape; margin: 0; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  .page { width:420mm; height:297mm; font-family:'Source Serif 4',Georgia,'Times New Roman',Times,serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
+  .page { width:420mm; height:297mm; font-family:Inter,Arial,Helvetica,sans-serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
   .masthead { background:#000; padding:12px 40px 0; text-align:center; flex-shrink:0; position:relative; z-index:2; }
   .grid { display:grid; grid-template-columns:repeat(8,1fr); flex:1; grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
-  .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; font-family:Arial,Helvetica,sans-serif; flex-shrink:0; }
+  .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; flex-shrink:0; }
 </style></head>
 <body><div class="page">
   <div style="display:flex;flex-direction:column;flex:1;position:relative;z-index:1">
   <div class="masthead">
-    ${portadaBg ? `<div style="position:absolute;inset:0;opacity:0.15;background-image:url('${portadaBg}');background-size:cover;background-position:center;pointer-events:none"></div>` : ''}
-    <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);font-family:Arial,Helvetica,sans-serif;padding:0 0 6px">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
-    ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};margin-bottom:4px;font-weight:700;font-family:'Playfair Display',Georgia,serif">${portadaTopic}</div>` : ''}
-    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff;font-family:'Playfair Display',Georgia,serif">XERRAC<span style="color:${accentColor}">!</span></h1>
-    ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">Revista d&apos;aclariment cultural</div>' : ''}
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5)">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
+    ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};margin-bottom:4px;font-weight:700">${portadaTopic}</div>` : ''}
+    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
+    ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
   </div>
-  <svg width="100%" height="10" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#f2ede4" /></pattern></defs><rect width="100%" height="10" fill="#000" /><rect width="100%" height="10" fill="url(#saw)" /></svg>
+  <svg width="100%" height="10" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="10" fill="url(#saw)" /></svg>
   <div class="grid">${cells}</div>
-  <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
+  <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">
     <span>Xerrac!<span style="color:${accentColor};margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
     <span>${issn || 'Compilat des de xerrac.cat'}</span>
