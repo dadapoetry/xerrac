@@ -222,7 +222,6 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, 
   })()
 
   return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:10px 12px;border-right:${colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
-    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-bottom:2px"><div style="width:12px;height:1.5px;background-color:${accentColor};flex-shrink:0"></div><span style="font-size:6.5px;text-transform:uppercase;letter-spacing:0.2em;color:${accentColor};font-weight:700;font-family:Arial,Helvetica,sans-serif">${label}</span></div>
     <h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;margin:0 0 1px;color:#1a1a1a;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif;text-transform:uppercase;letter-spacing:-0.02em;flex-shrink:0">${s.title}</h2>
     <div style="height:1px;background-color:#d4cdbe;margin-bottom:4px;flex-shrink:0"></div>
     <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
@@ -254,8 +253,9 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   <div class="masthead">
     ${portadaBg ? `<div style="position:absolute;inset:0;opacity:0.03;background-image:url('${portadaBg}');background-size:cover;background-position:center;pointer-events:none"></div>` : ''}
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);font-family:Arial,Helvetica,sans-serif;padding:0 0 6px">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
+    ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};margin-bottom:4px;font-weight:700;font-family:Arial,Helvetica,sans-serif">${portadaTopic}</div>` : ''}
     <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif">XERRAC<span style="color:${accentColor}">!</span></h1>
-    <div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:6px;font-weight:300;font-family:Arial,Helvetica,sans-serif">${portadaTopic ? `<span style="color:${accentColor};font-weight:700">${portadaTopic}</span>` : "Revista d'aclariment cultural"}</div>
+    ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">Revista d&apos;aclariment cultural</div>' : ''}
   </div>
   <svg width="100%" height="10" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="10" fill="url(#saw)" /></svg>
   <div class="grid">${cells}</div>
@@ -268,7 +268,7 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
 </div></body></html>`
 }
 
-export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; autoDownload?: boolean }) {
+export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; autoDownload?: boolean; pdfMode?: boolean }) {
   const pageRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [downloaded, setDownloaded] = useState(false)
@@ -297,9 +297,11 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
   }, [])
 
   const [downloading, setDownloading] = useState(false)
+  const [pdfMode, setPdfMode] = useState(false)
 
   useEffect(() => {
     if (!autoDownload) return
+    setPdfMode(true)
     const t = setTimeout(() => handleDownloadPdf(), 800)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -308,6 +310,7 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
   const handleDownloadPdf = useCallback(async () => {
     if (downloading) return
     setDownloading(true)
+    setPdfMode(true)
     try {
       const canvas = await html2canvas(pageRef.current!, {
         scale: 4,
@@ -331,6 +334,7 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
       console.error(err)
     } finally {
       setDownloading(false)
+      setPdfMode(false)
     }
   }, [downloading, issue.number])
 
@@ -385,19 +389,25 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
         boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
         position: 'relative',
       }}>
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.02, background: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px)', backgroundSize: '4px 4px' }} />
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 1 }}>
         <div style={{ backgroundColor: '#000', padding: '12px 40px 10px', textAlign: 'center', flexShrink: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontFamily: 'Arial,Helvetica,sans-serif', padding: '0 0 6px' }}>
             <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
             <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
           </div>
+          {portadaTopic && (
+            <div style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: accentColor, marginBottom: 4, fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif' }}>
+              {portadaTopic}
+            </div>
+          )}
           <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
             XERRAC<span style={{ color: accentColor }}>!</span>
           </div>
-          <div style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginTop: 6, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
-            {portadaTopic ? <span style={{ color: accentColor, fontWeight: 700 }}>{portadaTopic}</span> : "Revista d'aclariment cultural"}
-          </div>
+          {!portadaTopic && (
+            <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginTop: 3, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
+              Revista d&apos;aclariment cultural
+            </div>
+          )}
         </div>
 
         <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}>
@@ -422,13 +432,15 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
                 borderBottom: p.row < layout.rows - 1 ? '1px solid #ddd3c4' : 'none',
                 display: 'flex', flexDirection: 'column', overflow: 'hidden',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, marginBottom: 2 }}>
-                  <div style={{ width: 12, height: 1.5, backgroundColor: accentColor, flexShrink: 0 }} />
-                  <span style={{
-                    fontSize: 6.5, textTransform: 'uppercase', letterSpacing: '0.2em', color: accentColor,
-                    fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif',
-                  }}>{sectionLabel(s.type)}</span>
-                </div>
+                {!pdfMode && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, marginBottom: 2 }}>
+                    <div style={{ width: 12, height: 1.5, backgroundColor: accentColor, flexShrink: 0 }} />
+                    <span style={{
+                      fontSize: 6.5, textTransform: 'uppercase', letterSpacing: '0.2em', color: accentColor,
+                      fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif',
+                    }}>{sectionLabel(s.type)}</span>
+                  </div>
+                )}
                 <h2 style={{
                   fontSize: p.colSpan >= 5 ? '16px' : p.colSpan >= 3 ? '14px' : '12px',
                   fontWeight: 800, lineHeight: 1.2, margin: '0 0 1px', color: '#1a1a1a',
@@ -451,7 +463,9 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
           position: 'absolute', bottom: 28, right: 8,
           background: accentColor, color: '#fff',
           fontFamily: 'Arial,Helvetica,sans-serif', fontSize: 7, fontWeight: 700,
-          textTransform: 'uppercase', letterSpacing: '0.08em', padding: '5px 10px', zIndex: 3,
+          textTransform: 'uppercase', letterSpacing: '0.08em', padding: '5px 8px', zIndex: 3,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+          lineHeight: 1, whiteSpace: 'nowrap',
         }}>
           Ha quedat clar?
         </div>
