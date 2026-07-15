@@ -85,6 +85,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return idx >= 0 && idx < sortedSections.length ? idx : 0
   })
   const [copied, setCopied] = useState(false)
+  const [snip, setSnip] = useState(false)
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
   const [bgReady, setBgReady] = useState(false)
@@ -179,11 +180,15 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const shareLink = useCallback(() => {
     const section = sortedSections[activeSection]
     if (!section) return
+    const year = new Date(issue.date).getFullYear()
+    const sectionTitle = section.type === 'portada' ? issue.title : section.title
     const url = `${window.location.origin}${window.location.pathname}#${sectionSlug(activeSection)}`
-    copyToClipboard(url)
+    const citation = `${sectionTitle}. (${year}). Xerrac!: Revista d'aclariment cultural, (Núm. ${String(issue.number).padStart(2, '0')}). ${url}`
+    copyToClipboard(citation)
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }, [activeSection, sortedSections])
+    setSnip(true)
+    setTimeout(() => { setCopied(false); setSnip(false) }, 2000)
+  }, [activeSection, sortedSections, issue])
 
   if (sortedSections.length === 0) {
     return (
@@ -230,8 +235,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={shareLink}
-                className="w-8 h-8 border border-gray-800 text-gray-400 hover:border-red-500/50
-                  transition-all flex items-center justify-center"
+                className={`w-8 h-8 border border-gray-800 text-gray-400 hover:border-red-500/50
+                  transition-all flex items-center justify-center ${snip ? 'animate-snip' : ''}`}
                 style={{ '--btn-hover': 'var(--accent)' } as React.CSSProperties}
                 title="Aclarir"
                 onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
