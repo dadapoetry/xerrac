@@ -194,8 +194,7 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         position: 'relative',
       }}>
-        <div style={{ height: 148, backgroundColor: '#000', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '0 40px' }}>
+        <div style={{ height: 148, backgroundColor: '#000', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '0 40px', flexShrink: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontFamily: 'Arial,Helvetica,sans-serif', width: '100%' }}>
               <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
               <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
@@ -213,8 +212,6 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
                 Revista d&apos;aclariment cultural
               </div>
             )}
-          </div>
-          <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}><defs><pattern id="sbt" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0.8,2 L9.2,2 L9.2,3.2 L8.8,3.2 L7.6,6.8 L6.4,3.2 L5.8,3.2 L4.6,6.8 L3.4,3.2 L2.8,3.2 L1.8,6.8 L0.8,3.2 Z" fill={accentColor} /></pattern></defs><rect width="100%" height="10" fill="url(#sbt)" /></svg>
         </div>
 
         <div style={{

@@ -51,7 +51,7 @@ export function buildGrid(cw: CrosswordData, showSolution = true): { grid: strin
   return { grid: g, numbers: nums }
 }
 
-function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, accentColor: string): string {
+function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colSpan: number, accentColor: string): string {
   const lh = 1.35; const label = sectionLabel(s.type)
   const titleSize = (() => { 
     const base = colSpan >= 5 ? 17 : colSpan >= 3 ? 15 : colSpan >= 2 ? 13 : 12
@@ -110,7 +110,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, 
     }
   })()
 
-  return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:20px 12px;border-right:${colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
+  return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:20px 12px;border-right:${col + colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
     <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin:0 0 4px"><svg viewBox="0 0 100 100" style="width:10px;height:10px;flex-shrink:0" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" fill="${accentColor}" /></svg><h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;color:#1a1a1a;text-transform:uppercase;letter-spacing:-0.02em">${s.title}</h2></div>
     <div style="height:1px;background-color:#d4cdbe;margin-bottom:6px;flex-shrink:0"></div>
     <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
@@ -122,9 +122,7 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
   const portada = issue.sections.find(s => s.type === 'portada')
   const pc = portada?.content as any
   const portadaTopic = pc?.topic || ''
-  const cells = placed.map(p => renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.colSpan, accentColor)).join('')
-
-  const sawbladeSVG = `<svg width="100%" height="10" style="display:block;flex-shrink:0"><defs><pattern id="sb" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0.8,2 L9.2,2 L9.2,3.2 L8.8,3.2 L7.6,6.8 L6.4,3.2 L5.8,3.2 L4.6,6.8 L3.4,3.2 L2.8,3.2 L1.8,6.8 L0.8,3.2 Z" fill="${accentColor}" /></pattern></defs><rect width="100%" height="10" fill="url(#sb)" /></svg>`
+  const cells = placed.map(p => renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.col, p.colSpan, accentColor)).join('')
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8">
@@ -134,22 +132,18 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
 <style>
   @page { size: A3 landscape; margin: 0; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html,body { width:100%; height:100%; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  .page { width:1580px; height:1120px; font-family:Inter,Arial,Helvetica,sans-serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
-  .masthead { height:148px; background:#000; display:flex; flex-direction:column; flex-shrink:0; }
-  .masthead-content { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:0 40px; }
+  html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .page { width:420mm; height:297mm; font-family:Inter,Arial,Helvetica,sans-serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
+  .masthead { height:148px; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:0 40px; flex-shrink:0; }
   .grid { display:grid; grid-template-columns:repeat(8,1fr); flex:1; grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
   .footer { height:32px; border-top:1px solid #1a1a1a; display:flex; align-items:center; justify-content:space-between; padding:0 24px; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; flex-shrink:0; }
 </style></head>
 <body><div class="page">
   <div class="masthead">
-    <div class="masthead-content">
-      <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);width:100%">\n        <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n        <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n      </div>
-      ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};font-weight:700">${portadaTopic}</div>` : ''}
-      <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
-      ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
-    </div>
-    ${sawbladeSVG}
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);width:100%">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
+    ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};font-weight:700">${portadaTopic}</div>` : ''}
+    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
+    ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
   </div>
   <div class="grid">${cells}</div>
   <div class="footer">
