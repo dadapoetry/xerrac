@@ -267,17 +267,8 @@ export function TabloidPreview({ issue, issn, autoPrint }: { issue: IssueData; i
           fontFamily: 'Arial,Helvetica,sans-serif',
         }}>
           <span>Xerrac!<span style={{ color: accentColor, margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
-          <span>Compilat des de xerrac.cat</span>
-        </div>
-        <div style={{
-          position: 'absolute', bottom: 28, right: 8,
-          background: accentColor, color: '#fff',
-          fontFamily: 'Arial,Helvetica,sans-serif', fontSize: 7, fontWeight: 700,
-          textTransform: 'uppercase', letterSpacing: '0.08em', padding: '5px 8px', zIndex: 3,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
-          lineHeight: 1, whiteSpace: 'nowrap',
-        }}>
-          Ha quedat clar?
+          <span style={{ color: accentColor }}>Ha quedat clar?</span>
+          <span>{issn || 'Compilat des de xerrac.cat'}</span>
         </div>
     </div>
     </div>
