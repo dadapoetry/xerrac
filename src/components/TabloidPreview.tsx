@@ -191,10 +191,9 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         width: PAGE_W, height: PAGE_H,
         backgroundColor: '#f2ede4', color: '#1a1a1a',
         fontFamily: 'Georgia,"Times New Roman",Times,serif',
-        display: 'flex', flexDirection: 'column', overflow: 'hidden',
-        position: 'relative',
+        position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ height: 148, backgroundColor: '#000', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '0 40px', flexShrink: 0 }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 148, backgroundColor: '#000', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '0 40px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontFamily: 'Arial,Helvetica,sans-serif', width: '100%' }}>
               <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
               <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
@@ -215,10 +214,10 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         </div>
 
         <div style={{
+          position: 'absolute', top: 148, left: 0, right: 0, bottom: 32,
           display: 'grid',
           gridTemplateColumns: `repeat(${COLS}, 1fr)`,
           gridTemplateRows: rowsCSS,
-          flex: 1,
         }}>
           {layout.placed.map((p) => {
             const s = p.section; const fs = p.fontSize; const c = s.content as any
@@ -260,11 +259,12 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         </div>
 
         <div style={{
-          height: 32, borderTop: '1px solid #1a1a1a',
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: 32,
+          borderTop: '1px solid #1a1a1a',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '0 24px', fontSize: 6, textTransform: 'uppercase',
-          letterSpacing: '0.15em', color: '#999',
-          fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
+          padding: '0 24px', fontSize: 10, textTransform: 'uppercase',
+          letterSpacing: '0.15em', color: '#666',
+          fontFamily: 'Arial,Helvetica,sans-serif',
         }}>
           <span>Xerrac!<span style={{ color: accentColor, margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
           <span>Compilat des de xerrac.cat</span>
