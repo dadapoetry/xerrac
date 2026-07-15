@@ -1,8 +1,10 @@
 'use client'
 
-import { useMemo, useRef, useEffect, useState } from 'react'
+import { useMemo, useRef, useEffect, useState, useCallback } from 'react'
 import { IssueData, SectionData, CrosswordData, CrosswordClue } from '@/types'
 import { computeLayout, LayoutSlot } from '@/lib/layoutEngine'
+import html2canvas from 'html2canvas'
+import { jsPDF } from 'jspdf'
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
@@ -248,7 +250,6 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; font-family:Arial,Helvetica,sans-serif; flex-shrink:0; }
 </style></head>
 <body><div class="page">
-  <div style="position:absolute;inset:0;pointer-events:none;opacity:0.02;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);background-size:4px 4px"></div>
   <div style="display:flex;flex-direction:column;flex:1;position:relative;z-index:1">
   <div class="masthead">
     ${portadaBg ? `<div style="position:absolute;inset:0;opacity:0.03;background-image:url('${portadaBg}');background-size:cover;background-position:center;pointer-events:none"></div>` : ''}
@@ -294,14 +295,35 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
     return () => window.removeEventListener('resize', updateScale)
   }, [])
 
-  function handlePrint() {
-    const html = buildPrintHTML(issue, layout.placed, layout.norm)
-    const win = window.open('', Math.random().toString(36).slice(2))
-    if (!win) { alert('Permet les finestres emergents per exportar el PDF.'); return }
-    win.document.write(html)
-    win.document.close()
-    setTimeout(() => { win.focus(); win.print() }, 300)
-  }
+  const [downloading, setDownloading] = useState(false)
+
+  const handleDownloadPdf = useCallback(async () => {
+    if (downloading) return
+    setDownloading(true)
+    try {
+      const canvas = await html2canvas(pageRef.current!, {
+        scale: 4,
+        useCORS: true,
+        backgroundColor: '#f2ede4',
+        logging: false,
+      })
+      const imgData = canvas.toDataURL('image/jpeg', 0.95)
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a3',
+      })
+      const pdfW = 420
+      const pdfH = 297
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH, undefined, 'FAST')
+      pdf.save(`xerrac-${String(issue.number).padStart(2, '0')}.pdf`)
+    } catch (err) {
+      alert('Error en generar el PDF. Torna-ho a provar.')
+      console.error(err)
+    } finally {
+      setDownloading(false)
+    }
+  }, [downloading, issue.number])
 
   const rowsCSS = layout.norm.map(f => `${f.toFixed(1)}fr`).join(' ')
 
@@ -314,12 +336,14 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
         <span style={{ color: '#fff', fontSize: 10, fontFamily: 'Arial,sans-serif', opacity: 0.6 }}>
           {Math.round(scale * 100)}%
         </span>
-        <button onClick={handlePrint}
+        <button onClick={handleDownloadPdf} disabled={downloading}
           style={{
-            background: '#000', color: '#fff', fontSize: 11, padding: '8px 20px', border: 'none', cursor: 'pointer',
+            background: downloading ? '#444' : '#000',
+            color: '#fff', fontSize: 11, padding: '8px 20px', border: 'none', cursor: downloading ? 'wait' : 'pointer',
             textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Arial,sans-serif',
+            transition: 'background 0.2s',
           }}>
-          Exportar PDF
+          {downloading ? 'Generant…' : 'Exportar PDF'}
         </button>
       </div>
 
