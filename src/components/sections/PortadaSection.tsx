@@ -59,7 +59,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId }:
         )}
         {issueId && (
           <a
-            href={`/compilar/${issueId}`}
+            href={`/compilar/${issueId}?auto=1`}
             className="group relative mt-6 inline-flex items-center gap-2.5 px-5 py-2.5 text-[11px] font-bold
               tracking-[0.15em] uppercase text-gray-300 border border-gray-700 rounded-sm
               hover:text-red-400 hover:border-red-500/50

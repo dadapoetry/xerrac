@@ -268,9 +268,10 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
 </div></body></html>`
 }
 
-export function TabloidPreview({ issue }: { issue: IssueData }) {
+export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; autoDownload?: boolean }) {
   const pageRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
+  const [downloaded, setDownloaded] = useState(false)
   const accentColor = issue.accentColor || '#ef4444'
 
   const portada = issue.sections.find(s => s.type === 'portada')
@@ -297,6 +298,13 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
 
   const [downloading, setDownloading] = useState(false)
 
+  useEffect(() => {
+    if (!autoDownload) return
+    const t = setTimeout(() => handleDownloadPdf(), 800)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoDownload])
+
   const handleDownloadPdf = useCallback(async () => {
     if (downloading) return
     setDownloading(true)
@@ -317,6 +325,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       const pdfH = 297
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH, undefined, 'FAST')
       pdf.save(`xerrac-${String(issue.number).padStart(2, '0')}.pdf`)
+      setDownloaded(true)
     } catch (err) {
       alert('Error en generar el PDF. Torna-ho a provar.')
       console.error(err)
@@ -327,11 +336,32 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
 
   const rowsCSS = layout.norm.map(f => `${f.toFixed(1)}fr`).join(' ')
 
+  const done = autoDownload && downloaded
+
   return (
     <div style={{
       width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
       backgroundColor: '#dad3c7',
+      flexDirection: 'column', gap: 24,
     }}>
+      {done ? (
+        <>
+          <svg className="w-16 h-16 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+          <p style={{ color: '#fff', fontSize: 18, fontFamily: 'Arial,sans-serif', fontWeight: 700, letterSpacing: '0.05em' }}>
+            PDF descarregat
+          </p>
+          <a href="/"
+            style={{
+              color: '#fff', fontSize: 12, fontFamily: 'Arial,sans-serif', opacity: 0.6,
+              textDecoration: 'underline', cursor: 'pointer',
+            }}>
+            Tornar a la portada
+          </a>
+        </>
+      ) : (
+      <>
       <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 50, display: 'flex', gap: 8, alignItems: 'center' }}>
         <span style={{ color: '#fff', fontSize: 10, fontFamily: 'Arial,sans-serif', opacity: 0.6 }}>
           {Math.round(scale * 100)}%
@@ -437,6 +467,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
         </div>
       </div>
       </div>
+      </>)}
     </div>
   )
 }

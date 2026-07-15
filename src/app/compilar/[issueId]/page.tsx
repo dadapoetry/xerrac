@@ -6,8 +6,10 @@ export const dynamic = 'force-dynamic'
 
 export default async function CompilarPage({
   params,
+  searchParams,
 }: {
   params: { issueId: string }
+  searchParams?: { auto?: string }
 }) {
   const issue = await getIssue(params.issueId)
 
@@ -23,5 +25,5 @@ export default async function CompilarPage({
     })),
   }
 
-  return <TabloidPreview issue={parsedIssue as any} />
+  return <TabloidPreview issue={parsedIssue as any} autoDownload={searchParams?.auto === '1'} />
 }
