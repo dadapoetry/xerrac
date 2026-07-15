@@ -214,9 +214,9 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
           )}
         </div>
 
-        <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}>
-          <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs>
-          <rect width="100%" height="10" fill="url(#saw)" />
+        <svg width="100%" height="14" style={{ display: 'block', flexShrink: 0 }}>
+          <defs><pattern id="saw" width="24" height="14" patternUnits="userSpaceOnUse"><path d="M2,2 L12,13 L22,2 Z" fill="#000" /></pattern></defs>
+          <rect width="100%" height="14" fill="url(#saw)" />
         </svg>
 
         <div style={{
@@ -231,7 +231,7 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
               <div key={s.id} style={{
                 gridColumn: `${p.col + 1} / span ${p.colSpan}`,
                 gridRow: `${p.row + 1} / span 1`,
-                padding: '10px 12px',
+                padding: '14px 12px',
                 borderRight: p.col + p.colSpan < COLS ? '1px solid #ddd3c4' : 'none',
                 borderBottom: p.row < layout.rows - 1 ? '1px solid #ddd3c4' : 'none',
                 display: 'flex', flexDirection: 'column', overflow: 'hidden',
