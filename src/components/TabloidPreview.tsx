@@ -254,7 +254,7 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
     <div style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.85);margin-top:2px">Revista d&apos;aclariment cultural</div>
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center;font-size:8px;text-transform:uppercase;letter-spacing:0.08em;color:#666;padding:4px 24px;border-bottom:3px double #1a1a1a;font-family:Arial,Helvetica,sans-serif;flex-shrink:0">
-    <span>Any ${new Date(issue.date).getFullYear()-2024} &middot; N&uacute;m. ${String(issue.number).padStart(2,'0')}</span>
+    <span>N&uacute;m. ${String(issue.number).padStart(2,'0')}</span>
     <span style="font-weight:700;color:#1a1a1a;font-size:9px">${issue.title}</span>
     <span>${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>
   </div>
@@ -339,7 +339,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           fontSize: 8, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#666',
           padding: '4px 24px', borderBottom: '3px double #1a1a1a', fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
         }}>
-          <span>Any {new Date(issue.date).getFullYear() - 2024} &middot; N&uacute;m. {String(issue.number).padStart(2, '0')}</span>
+          <span>N&uacute;m. {String(issue.number).padStart(2, '0')}</span>
           <span style={{ fontWeight: 700, color: '#1a1a1a', fontSize: 9 }}>{issue.title}</span>
           <span>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
         </div>
