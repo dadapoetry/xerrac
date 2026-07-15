@@ -241,12 +241,15 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   @page { size: A3 landscape; margin: 0; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  .page { width:420mm; height:297mm; font-family:Georgia,"Times New Roman",Times,serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; }
-  .masthead { background:#b91c1c; padding:12px 40px 16px; text-align:center; flex-shrink:0; }
+  .page { width:420mm; height:297mm; font-family:Georgia,"Times New Roman",Times,serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
+  .masthead { background:#b91c1c; padding:12px 40px 16px; text-align:center; flex-shrink:0; position:relative; z-index:2; }
+  .sawtooth { height:10px; flex-shrink:0; background:linear-gradient(135deg,transparent 33%,#b91c1c 33%,#b91c1c 66%,transparent 66%),linear-gradient(225deg,transparent 33%,#b91c1c 33%,#b91c1c 66%,transparent 66%);background-size:6px 10px;background-position:0 0,3px 0;background-repeat:repeat-x; }
   .grid { display:grid; grid-template-columns:repeat(8,1fr); flex:1; grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
   .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; font-family:Arial,Helvetica,sans-serif; flex-shrink:0; }
 </style></head>
 <body><div class="page">
+  <div style="position:absolute;inset:0;pointer-events:none;opacity:0.02;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);background-size:4px 4px"></div>
+  <div style="display:flex;flex-direction:column;flex:1;position:relative;z-index:1">
   <div class="masthead">
     ${portadaBg ? `<div style="position:absolute;inset:0;opacity:0.03;background-image:url('${portadaBg}');background-size:cover;background-position:center;pointer-events:none"></div>` : ''}
     <div style="height:1px;background-color:rgba(255,255,255,0.15);margin-bottom:8px"></div>
@@ -254,6 +257,7 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
     <div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">Revista d&apos;aclariment cultural</div>
     <div style="height:1px;background-color:rgba(255,255,255,0.15);margin-top:8px"></div>
   </div>
+  <div class="sawtooth"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:#999;padding:5px 24px;border-bottom:2px solid #1a1a1a;font-family:Arial,Helvetica,sans-serif;flex-shrink:0">
     <span>N&uacute;m. <span style="font-weight:700;color:#b91c1c;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>
     <span style="font-weight:700;color:#1a1a1a;font-size:8px;letter-spacing:0.08em">${issue.title}</span>
@@ -265,6 +269,7 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
     <span>Xerrac!<span style="color:#b91c1c;margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
     <span>Compilat des de xerrac.cat</span>
   </div>
+</div>
 </div></body></html>`
 }
 
@@ -325,7 +330,10 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
         fontFamily: 'Georgia,"Times New Roman",Times,serif',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+        position: 'relative',
       }}>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.02, background: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px)', backgroundSize: '4px 4px' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 1 }}>
         <div style={{ backgroundColor: '#b91c1c', padding: '12px 40px 16px', textAlign: 'center', flexShrink: 0 }}>
           <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.15)', marginBottom: 8 }} />
           <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
@@ -336,6 +344,11 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           </div>
           <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.15)', marginTop: 8 }} />
         </div>
+
+        <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}>
+          <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#b91c1c" /></pattern></defs>
+          <rect width="100%" height="10" fill="url(#saw)" />
+        </svg>
 
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -399,6 +412,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           <span>Xerrac!<span style={{ color: '#b91c1c', margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
           <span>Compilat des de xerrac.cat</span>
         </div>
+      </div>
       </div>
     </div>
   )
