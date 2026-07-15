@@ -274,8 +274,8 @@ export function Crossword({ data }: CrosswordProps) {
         <div className="flex gap-3 pt-4">
           <button
             onClick={checkAnswers}
-            className="px-4 py-2 text-xs uppercase tracking-wider border border-[var(--btn-hover)]
-              text-[var(--btn-hover)] hover:bg-[var(--btn-hover)]/30 transition-colors"
+            className="px-4 py-2 text-xs uppercase tracking-wider border border-{{ color: 'var(--accent)' }}
+              text-{{ color: 'var(--accent)' }} hover:bg-[var(--btn-hover)]/30 transition-colors"
           >
             Solucionar
           </button>
