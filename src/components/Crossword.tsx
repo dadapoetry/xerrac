@@ -261,7 +261,7 @@ export function Crossword({ data }: CrosswordProps) {
           <div className="space-y-1.5">
             {Object.entries(clues.down).map(([num, clue]) => (
               <p key={`d-${num}`} className="text-xs text-gray-400">
-                <span className="text-red-400 font-bold mr-2">{num}.</span>
+                <span className="font-bold mr-2" style={{ color: 'var(--accent)' }}>{num}.</span>
                 {clue.clue}
                 <span className="text-gray-700 ml-2">
                   ({clue.answer.length} lletres)
@@ -274,8 +274,8 @@ export function Crossword({ data }: CrosswordProps) {
         <div className="flex gap-3 pt-4">
           <button
             onClick={checkAnswers}
-            className="px-4 py-2 text-xs uppercase tracking-wider border border-red-800
-              text-red-400 hover:bg-red-900/30 transition-colors"
+            className="px-4 py-2 text-xs uppercase tracking-wider border border-[var(--btn-hover)]
+              text-[var(--btn-hover)] hover:bg-[var(--btn-hover)]/30 transition-colors"
           >
             Solucionar
           </button>
