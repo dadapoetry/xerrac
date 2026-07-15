@@ -395,12 +395,12 @@ function buildCrosswordLayout(words: WordEntry[]) {
         setCell(x, y, wordObj.answer[i])
       }
     } else {
-      // Si no pot creuar-se, la posa a la part inferior perquè no es perdi
+// Si no pot creuar-se, la posa a la part inferior perquè no es perdi
       let maxY = -Infinity
-      for (const key of grid.keys()) {
+      grid.forEach((_value, key) => {
         const [, yStr] = key.split(',')
         if (Number(yStr) > maxY) maxY = Number(yStr)
-      }
+      })
       const startY = maxY === -Infinity ? 0 : maxY + 2
       placements.push({ ...wordObj, x: 0, y: startY, dir: 'across' })
       for (let i = 0; i < wordObj.answer.length; i++) setCell(i, startY, wordObj.answer[i])
