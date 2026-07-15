@@ -111,7 +111,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colS
   })()
 
   return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:20px 12px;border-right:${col + colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column;overflow:hidden">
-    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin:0 0 4px"><svg viewBox="0 0 100 100" style="width:10px;height:10px;flex-shrink:0" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" fill="${accentColor}" /></svg><h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;color:#1a1a1a;text-transform:uppercase;letter-spacing:-0.02em">${s.title}</h2></div>
+    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin:0 0 4px"><svg viewBox="0 0 100 100" style="width:10px;height:10px;flex-shrink:0" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" fill="${accentColor}" /></svg><h2 style="font-size:${titleSize};font-weight:700;line-height:1.2;color:#1a1a1a;text-transform:uppercase;letter-spacing:-0.02em">${s.title}</h2></div>
     <div style="height:1px;background-color:#d4cdbe;margin-bottom:6px;flex-shrink:0"></div>
     <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
   </div>`
@@ -128,7 +128,7 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
 <html><head><meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   @page { size: A3 landscape; margin: 0; }
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -143,7 +143,7 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);width:100%">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
     ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};font-weight:700">${portadaTopic}</div>` : ''}
     <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
-    ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
+    ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);font-weight:400">Revista d&apos;aclariment cultural</div>' : ''}
   </div>
   <div class="grid">${cells}</div>
   <div class="footer">

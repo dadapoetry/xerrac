@@ -207,7 +207,7 @@ export function TabloidPreview({ issue, issn, autoPrint }: { issue: IssueData; i
               XERRAC<span style={{ color: accentColor }}>!</span>
             </div>
             {!portadaTopic && (
-              <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
+              <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 400, fontFamily: 'Arial,Helvetica,sans-serif' }}>
                 Revista d&apos;aclariment cultural
               </div>
             )}
@@ -241,7 +241,7 @@ export function TabloidPreview({ issue, issn, autoPrint }: { issue: IssueData; i
                   <SawIcon className="w-[10px] h-[10px]" color={accentColor} />
                   <h2 style={{
                     fontSize: p.colSpan >= 5 ? '17px' : p.colSpan >= 3 ? '15px' : '13px',
-                    fontWeight: 800, lineHeight: 1.2, color: '#1a1a1a',
+                    fontWeight: 700, lineHeight: 1.2, color: '#1a1a1a',
                     fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
                     textTransform: 'uppercase', letterSpacing: '-0.02em',
                   }}>{s.title}</h2>
