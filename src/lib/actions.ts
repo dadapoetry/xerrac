@@ -143,6 +143,11 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
     })
   }
 
+  if (data.published) {
+    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'
+    fetch(`${baseUrl}/api/pdf/${id}`).catch(() => {})
+  }
+
   revalidatePath('/admin')
   revalidatePath('/')
 }
