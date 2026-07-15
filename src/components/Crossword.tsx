@@ -242,13 +242,13 @@ export function Crossword({ data }: CrosswordProps) {
         )}
 
         <div>
-          <h4 className="text-xs uppercase tracking-[0.3em] text-gray-600 mb-3">Horitzontals</h4>
+          <h4 className="text-xs uppercase tracking-[0.3em] text-gray-200 mb-3">Horitzontals</h4>
           <div className="space-y-1.5">
             {Object.entries(clues.across).map(([num, clue]) => (
               <p key={`a-${num}`} className="text-xs text-gray-400">
                 <span className="font-bold mr-2" style={{ color: 'var(--accent)' }}>{num}.</span>
                 {clue.clue}
-                <span className="text-gray-700 ml-2">
+                <span className="text-gray-100 ml-2">
                   ({clue.answer.length} lletres)
                 </span>
               </p>
@@ -257,13 +257,13 @@ export function Crossword({ data }: CrosswordProps) {
         </div>
 
         <div>
-          <h4 className="text-xs uppercase tracking-[0.3em] text-gray-600 mb-3">Verticals</h4>
+          <h4 className="text-xs uppercase tracking-[0.3em] text-gray-200 mb-3">Verticals</h4>
           <div className="space-y-1.5">
             {Object.entries(clues.down).map(([num, clue]) => (
               <p key={`d-${num}`} className="text-xs text-gray-400">
                 <span className="font-bold mr-2" style={{ color: 'var(--accent)' }}>{num}.</span>
                 {clue.clue}
-                <span className="text-gray-700 ml-2">
+                <span className="text-gray-100 ml-2">
                   ({clue.answer.length} lletres)
                 </span>
               </p>
