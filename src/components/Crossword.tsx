@@ -246,7 +246,7 @@ export function Crossword({ data }: CrosswordProps) {
           <div className="space-y-1.5">
             {Object.entries(clues.across).map(([num, clue]) => (
               <p key={`a-${num}`} className="text-xs text-gray-400">
-                <span className="text-red-400 font-bold mr-2">{num}.</span>
+                <span className="font-bold mr-2" style={{ color: 'var(--accent)' }}>{num}.</span>
                 {clue.clue}
                 <span className="text-gray-700 ml-2">
                   ({clue.answer.length} lletres)
