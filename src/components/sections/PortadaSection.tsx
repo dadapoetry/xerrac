@@ -90,12 +90,12 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId }:
             disabled={downloading}
             className="group relative mt-6 inline-flex items-center gap-2.5 px-5 py-2.5 text-[11px] font-bold
               tracking-[0.15em] uppercase text-gray-300 border border-gray-700 rounded-sm
-              hover:text-{{ color: 'var(--accent, #ef4444)' }} hover:border-{{ color: 'var(--accent, #ef4444)' }} disabled:opacity-50 disabled:cursor-wait
+              hover:text-[var(--button-accent)] hover:border-[var(--button-accent)] disabled:opacity-50 disabled:cursor-wait
               transition-colors duration-300 overflow-hidden"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/8 to-red-500/0
               translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
-            <span className="absolute inset-0 bg-{{ color: 'var(--accent, #ef4444)' }} group-hover:bg-{{ color: 'var(--accent, #ef4444)' }} transition-colors duration-300" />
+            <span className="absolute inset-0 bg-[var(--button-accent)] group-hover:bg-[var(--button-accent)] transition-colors duration-300" />
             <span className="relative z-10 flex items-center gap-2.5">
               {downloading ? (
                 <>
@@ -109,7 +109,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId }:
                 <>
                   <span className="relative">
                     Llegeix en PDF
-                    <span className="absolute -inset-x-1 bottom-0 h-px bg-{{ color: 'var(--accent, #ef4444)' }} group-hover:bg-{{ color: 'var(--accent, #ef4444)' }}
+                    <span className="absolute -inset-x-1 bottom-0 h-px bg-[var(--button-accent)] group-hover:bg-[var(--button-accent)]
                       transition-all duration-300 scale-x-0 group-hover:scale-x-100 origin-left" />
                   </span>
                   <svg className="w-3.5 h-3.5 transition-all duration-500 group-hover:translate-y-0.5 group-hover:drop-shadow-[0_0_4px_rgba(239,68,68,0.4)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ transform: 'translateY(1px)' }}>
