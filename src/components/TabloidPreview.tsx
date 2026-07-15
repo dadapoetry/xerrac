@@ -281,6 +281,39 @@ function CrosswordPreview({ cw, fs, maxW }: { cw: CrosswordData; fs: number; max
   </div>
 }
 
+function renderCrosswordHTML(cw: CrosswordData, fs: number, colSpan: number): string {
+  const n = cw.gridSize
+  const { grid, numbers } = buildGrid(cw)
+  const maxW = colSpan >= 4 ? 450 : colSpan >= 2 ? 280 : 180
+  const cellSize = Math.min(fs * 2, Math.floor((maxW - 8) / n))
+  const fontSize = Math.max(fs * 0.85, 6)
+
+  let html = '<div style="display:flex;flex-direction:column;gap:4px">'
+  html += `<div style="display:inline-grid;grid-template-columns:repeat(${n},${cellSize}px);align-self:center">`
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      const val = grid[r]?.[c]; const num = numbers[r]?.[c]
+      const isBlack = !val
+      html += `<div style="width:${cellSize}px;height:${cellSize}px;border:0.5px solid #999;background:${isBlack ? '#1a1a1a' : '#f2ede4'};display:flex;align-items:center;justify-content:center;position:relative;font-size:${fontSize}px;font-weight:700;font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;text-transform:uppercase">`
+      if (!isBlack) html += val
+      if (num) html += `<span style="position:absolute;top:0;left:1px;font-size:${Math.max(fs * 0.45, 5)}px;font-weight:400;color:#555">${num}</span>`
+      html += '</div>'
+    }
+  }
+  html += '</div>'
+  html += '<div style="line-height:1.25;font-size:' + Math.max(fs * 0.7, 6) + 'px;text-align:left">'
+  const across = Object.entries(cw.clues.across)
+  const down = Object.entries(cw.clues.down)
+  if (across.length > 0) {
+    html += `<div style="margin-bottom:2px"><strong>Horitzontals:</strong> ${across.map(([k, v]) => `${k}. ${v.clue}`).join(' &middot; ')}</div>`
+  }
+  if (down.length > 0) {
+    html += `<div><strong>Verticals:</strong> ${down.map(([k, v]) => `${k}. ${v.clue}`).join(' &middot; ')}</div>`
+  }
+  html += '</div></div>'
+  return html
+}
+
 function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number): string {
   const lh = 1.35; const label = sectionLabel(s.type)
   const titleSize = colSpan >= 5 ? '17px' : colSpan >= 3 ? '15px' : '13px'
@@ -319,7 +352,11 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number):
           `<div style="display:flex;align-items:center;gap:4px;background-color:rgba(0,0,0,0.03);padding:2px 4px">${x.image ? `<div style="width:${thumb}px;height:${thumb}px;background-image:url('${x.image}');background-size:cover;background-position:center;flex-shrink:0;border:1px solid rgba(0,0,0,0.08)"></div>` : ''}<p style="font-size:${fs-0.5}px;line-height:${lh};margin:0">${x.description}</p></div>`
         ).join('')}${collages.length > dc ? `<p style="font-size:${fs-1}px;font-style:italic;opacity:0.6;margin:0">+${collages.length-dc} col·latges m&eacute;s</p>` : ''}</div>`
       }
-      case 'ludita': return ''
+      case 'ludita': {
+        const cw = c.crossword as CrosswordData
+        if (!cw) return '<p style="font-style:italic">No hi ha crucigrama disponible</p>'
+        return renderCrosswordHTML(cw, fs, colSpan)
+      }
       default: return ''
     }
   })()
