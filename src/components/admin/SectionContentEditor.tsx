@@ -305,12 +305,7 @@ function CrosswordEditor({ data, onChange }: { data: any; onChange: (json: strin
     const dirClues = { ...(clues[dir] || {}) }
     const keys = Object.keys(dirClues).map(Number).filter(n => !isNaN(n))
     const next = keys.length > 0 ? Math.max(...keys) + 1 : 1
-    dirClues[String(next)] = { 
-  clue: '', 
-  answer: '', 
-  row: 0, 
-  col: 0 
-}
+dirClues[String(next)] = { clue: '', answer: '', row: 0, col: 0 }
     setCw({ ...crossword, clues: { ...clues, [dir]: dirClues } })
   }
 
