@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { CrosswordData } from '@/types'
 
 interface CrosswordProps {
@@ -13,37 +13,34 @@ interface Position {
 }
 
 export function Crossword({ data }: CrosswordProps) {
-  const { gridSize, clues } = data
+  const { clues } = data
 
+  // 1. Calcular dinàmicament les dimensions reals (files i columnes)
+  let maxR = 0
+  let maxC = 0
+
+  Object.values(clues.across).forEach((clue) => {
+    if (clue.row > maxR) maxR = clue.row
+    if (clue.col + clue.answer.length - 1 > maxC) maxC = clue.col + clue.answer.length - 1
+  })
+
+  Object.values(clues.down).forEach((clue) => {
+    if (clue.row + clue.answer.length - 1 > maxR) maxR = clue.row + clue.answer.length - 1
+    if (clue.col > maxC) maxC = clue.col
+  })
+
+  const numRows = maxR + 1
+  const numCols = maxC + 1
+
+  // 2. Inicialitzar la graella amb les dimensions exactes
   const [grid, setGrid] = useState<string[][]>(() => {
     const g: string[][] = []
-    for (let r = 0; r < gridSize; r++) {
+    for (let r = 0; r < numRows; r++) {
       g[r] = []
-      for (let c = 0; c < gridSize; c++) {
+      for (let c = 0; c < numCols; c++) {
         g[r][c] = ''
       }
     }
-for (const clue of Object.values(clues.across)) {
-  for (let i = 0; i < clue.answer.length; i++) {
-    const r = clue.row
-    const c = clue.col + i
-
-    if (r < gridSize && c < gridSize) {
-      g[r][c] = ''
-    }
-  }
-}
-
-for (const clue of Object.values(clues.down)) {
-  for (let i = 0; i < clue.answer.length; i++) {
-    const r = clue.row + i
-    const c = clue.col
-
-    if (r < gridSize && c < gridSize) {
-      g[r][c] = ''
-    }
-  }
-}
     return g
   })
 
@@ -52,33 +49,19 @@ for (const clue of Object.values(clues.down)) {
   const [revealed, setRevealed] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[][]>([])
 
-const isBlackCell = (row: number, col: number): boolean => {
-  // Comprobar horizontales
-  for (const clue of Object.values(clues.across)) {
-    for (let i = 0; i < clue.answer.length; i++) {
-      const r = clue.row
-      const c = clue.col + i
-
-      if (r === row && c === col) {
-        return false
+  const isBlackCell = (row: number, col: number): boolean => {
+    for (const clue of Object.values(clues.across)) {
+      for (let i = 0; i < clue.answer.length; i++) {
+        if (clue.row === row && clue.col + i === col) return false
       }
     }
-  }
-
-  // Comprobar verticales
-  for (const clue of Object.values(clues.down)) {
-    for (let i = 0; i < clue.answer.length; i++) {
-      const r = clue.row + i
-      const c = clue.col
-
-      if (r === row && c === col) {
-        return false
+    for (const clue of Object.values(clues.down)) {
+      for (let i = 0; i < clue.answer.length; i++) {
+        if (clue.row + i === row && clue.col === col) return false
       }
     }
+    return true
   }
-
-  return true
-}
 
   const getCellNumber = (row: number, col: number): number | null => {
     for (const [num, clue] of Object.entries(clues.across)) {
@@ -93,15 +76,13 @@ const isBlackCell = (row: number, col: number): boolean => {
   const getClueForCell = (row: number, col: number): { clue: string; answer: string } | null => {
     if (direction === 'across') {
       for (const [, clue] of Object.entries(clues.across)) {
-        if (row >= clue.row && row < clue.row + 1 &&
-            col >= clue.col && col < clue.col + clue.answer.length) {
+        if (row === clue.row && col >= clue.col && col < clue.col + clue.answer.length) {
           return { clue: clue.clue, answer: clue.answer }
         }
       }
     } else {
       for (const [, clue] of Object.entries(clues.down)) {
-        if (col >= clue.col && col < clue.col + 1 &&
-            row >= clue.row && row < clue.row + clue.answer.length) {
+        if (col === clue.col && row >= clue.row && row < clue.row + clue.answer.length) {
           return { clue: clue.clue, answer: clue.answer }
         }
       }
@@ -134,7 +115,7 @@ const isBlackCell = (row: number, col: number): boolean => {
   }
 
   const moveTo = (row: number, col: number) => {
-    if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) return
+    if (row < 0 || row >= numRows || col < 0 || col >= numCols) return
     if (isBlackCell(row, col)) return
     setActivePos({ row, col })
     inputRefs.current[row]?.[col]?.focus()
@@ -148,44 +129,38 @@ const isBlackCell = (row: number, col: number): boolean => {
     setActivePos({ row, col })
   }
 
-const checkAnswers = () => {
-  setRevealed(true)
+  const checkAnswers = () => {
+    setRevealed(true)
+    const newGrid = grid.map(r => [...r])
 
-  const newGrid = grid.map(r => [...r])
-
-  // Rellenar horizontales
-  for (const clue of Object.values(clues.across)) {
-    for (let i = 0; i < clue.answer.length; i++) {
-      const r = clue.row
-      const c = clue.col + i
-
-      if (r < gridSize && c < gridSize) {
-        newGrid[r][c] = clue.answer[i]?.toUpperCase() || ''
+    for (const clue of Object.values(clues.across)) {
+      for (let i = 0; i < clue.answer.length; i++) {
+        const r = clue.row
+        const c = clue.col + i
+        if (r < numRows && c < numCols) {
+          newGrid[r][c] = clue.answer[i]?.toUpperCase() || ''
+        }
       }
     }
-  }
 
-  // Rellenar verticales
-  for (const clue of Object.values(clues.down)) {
-    for (let i = 0; i < clue.answer.length; i++) {
-      const r = clue.row + i
-      const c = clue.col
-
-      if (r < gridSize && c < gridSize) {
-        newGrid[r][c] = clue.answer[i]?.toUpperCase() || ''
+    for (const clue of Object.values(clues.down)) {
+      for (let i = 0; i < clue.answer.length; i++) {
+        const r = clue.row + i
+        const c = clue.col
+        if (r < numRows && c < numCols) {
+          newGrid[r][c] = clue.answer[i]?.toUpperCase() || ''
+        }
       }
     }
+    setGrid(newGrid)
   }
-
-  setGrid(newGrid)
-}
 
   const resetGrid = () => {
     setRevealed(false)
     const g: string[][] = []
-    for (let r = 0; r < gridSize; r++) {
+    for (let r = 0; r < numRows; r++) {
       g[r] = []
-      for (let c = 0; c < gridSize; c++) {
+      for (let c = 0; c < numCols; c++) {
         g[r][c] = ''
       }
     }
@@ -194,17 +169,17 @@ const checkAnswers = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 overflow-x-auto pb-4">
         <div
           className="crossword-grid inline-grid border-2 border-gray-600"
           style={{
-            gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
-            width: `${gridSize * 2.5}rem`,
+            gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`,
+            width: `${numCols * 2.5}rem`,
           }}
         >
-          {Array.from({ length: gridSize * gridSize }).map((_, idx) => {
-            const row = Math.floor(idx / gridSize)
-            const col = idx % gridSize
+          {Array.from({ length: numRows * numCols }).map((_, idx) => {
+            const row = Math.floor(idx / numCols)
+            const col = idx % numCols
             const black = isBlackCell(row, col)
             const cellNum = getCellNumber(row, col)
             const isActive = activePos?.row === row && activePos?.col === col
@@ -234,7 +209,7 @@ const checkAnswers = () => {
                     }}
                     type="text"
                     maxLength={1}
-                    value={grid[row][col]}
+                    value={grid[row]?.[col] || ''}
                     onChange={(e) => handleCellChange(row, col, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(row, col, e)}
                     onClick={() => handleCellClick(row, col)}
