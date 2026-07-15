@@ -90,7 +90,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="El teu correu"
-                className="w-full bg-gray-950 border border-gray-800 px-3 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:{{ color: 'var(--accent)' }} transition-colors"
+                className="w-full bg-gray-950 border border-gray-800 px-3 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none transition-colors"
                 required
                 disabled={status === 'loading'}
               />
