@@ -319,7 +319,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
               </>
             )}
             <div className="relative z-[3] w-full">
-              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} />
+              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} issueId={issue.id} />
             </div>
           </div>
         </div>
