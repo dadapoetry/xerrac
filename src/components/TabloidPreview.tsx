@@ -244,7 +244,6 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .page { width:420mm; height:297mm; font-family:Georgia,"Times New Roman",Times,serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
   .masthead { background:#000; padding:12px 40px 10px; text-align:center; flex-shrink:0; position:relative; z-index:2; }
-  .sawtooth { height:10px; flex-shrink:0; background:linear-gradient(135deg,transparent 33%,#000 33%,#000 66%,transparent 66%),linear-gradient(225deg,transparent 33%,#000 33%,#000 66%,transparent 66%);background-size:6px 10px;background-position:0 0,3px 0;background-repeat:repeat-x; }
   .grid { display:grid; grid-template-columns:repeat(8,1fr); flex:1; grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
   .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; font-family:Arial,Helvetica,sans-serif; flex-shrink:0; }
 </style></head>
@@ -254,12 +253,10 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   <div class="masthead">
     ${portadaBg ? `<div style="position:absolute;inset:0;opacity:0.03;background-image:url('${portadaBg}');background-size:cover;background-position:center;pointer-events:none"></div>` : ''}
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);font-family:Arial,Helvetica,sans-serif;padding:0 0 6px">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
-    <div style="height:1px;background-color:rgba(255,255,255,0.1);margin-bottom:8px"></div>
     <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif">XERRAC<span style="color:${accentColor}">!</span></h1>
-    <div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">${portadaTopic ? `<span style="color:${accentColor};font-weight:700">${portadaTopic}</span>` : "Revista d'aclariment cultural"}</div>
-    <div style="height:1px;background-color:rgba(255,255,255,0.1);margin-top:8px"></div>
+    <div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:6px;font-weight:300;font-family:Arial,Helvetica,sans-serif">${portadaTopic ? `<span style="color:${accentColor};font-weight:700">${portadaTopic}</span>` : "Revista d'aclariment cultural"}</div>
   </div>
-  <div class="sawtooth"></div>
+  <svg width="100%" height="10" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="10" fill="url(#saw)" /></svg>
   <div class="grid">${cells}</div>
   <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">
@@ -341,14 +338,12 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
             <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
             <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
           </div>
-          <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.1)', marginBottom: 8 }} />
           <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
             XERRAC<span style={{ color: accentColor }}>!</span>
           </div>
-          <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginTop: 3, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
+          <div style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginTop: 6, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
             {portadaTopic ? <span style={{ color: accentColor, fontWeight: 700 }}>{portadaTopic}</span> : "Revista d'aclariment cultural"}
           </div>
-          <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.1)', marginTop: 8 }} />
         </div>
 
         <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}>
