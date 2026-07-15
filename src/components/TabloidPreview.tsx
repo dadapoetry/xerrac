@@ -24,9 +24,10 @@ function sectionLabel(type: string): string {
   return labels[type] || type
 }
 
-function buildGrid(cw: CrosswordData): { grid: string[][]; numbers: (number | null)[][] } {
+function buildGrid(cw: CrosswordData, showSolution = true): { grid: string[][]; numbers: (number | null)[][] } {
   const n = cw.gridSize
   const g: string[][] = Array.from({ length: n }, () => Array(n).fill(''))
+  const covered: boolean[][] = Array.from({ length: n }, () => Array(n).fill(false))
   const nums: (number | null)[][] = Array.from({ length: n }, () => Array(n).fill(null))
   const allClues: [string, CrosswordClue, string][] = []
   for (const [k, v] of Object.entries(cw.clues.across)) allClues.push([k, v, 'across'])
@@ -41,18 +42,28 @@ function buildGrid(cw: CrosswordData): { grid: string[][]; numbers: (number | nu
     for (let k = 0; k < letters.length; k++) {
       const r = dr + k * dir[0]; const c = dc + k * dir[1]
       if (r >= 0 && r < n && c >= 0 && c < n) {
-        g[r][c] = letters[k]
+        covered[r][c] = true
+        if (showSolution) {
+          if (!g[r][c]) g[r][c] = letters[k]
+        }
         const key = `${r},${c}`
         if (!used.has(key)) { nums[r][c] = num; used.add(key) }
+      }
+    }
+  }
+  if (!showSolution) {
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        if (covered[r][c]) g[r][c] = ' '
       }
     }
   }
   return { grid: g, numbers: nums }
 }
 
-function CrosswordPreview({ cw, fs, colSpan }: { cw: CrosswordData; fs: number; colSpan: number }) {
+function CrosswordPreview({ cw, fs, colSpan, showSolution = false }: { cw: CrosswordData; fs: number; colSpan: number; showSolution?: boolean }) {
   const n = cw.gridSize
-  const { grid, numbers } = useMemo(() => buildGrid(cw), [cw])
+  const { grid, numbers } = useMemo(() => buildGrid(cw, showSolution), [cw, showSolution])
   const maxW = colSpan >= 4 ? 420 : colSpan >= 2 ? 240 : 160
   const cellSize = Math.min(fs * 1.8, Math.floor((maxW - 8) / n))
   const fontSize = Math.max(fs * 0.8, 5)
@@ -143,7 +154,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
     case 'ludita': {
       const cw = c.crossword as CrosswordData
       if (!cw) return <p style={{ fontStyle: 'italic', lineHeight: lh, margin: 0 }}>No hi ha crucigrama disponible</p>
-      return <CrosswordPreview cw={cw} fs={fs} colSpan={colSpan} />
+      return <CrosswordPreview cw={cw} fs={fs} colSpan={colSpan} showSolution={false} />
     }
     default: return null
   }
@@ -184,7 +195,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number):
       case 'ludita': {
         const cw = c.crossword as CrosswordData
         if (!cw) return ''
-        const n = cw.gridSize; const { grid, numbers } = buildGrid(cw)
+        const n = cw.gridSize; const { grid, numbers } = buildGrid(cw, true)
         const maxW = colSpan >= 4 ? 420 : colSpan >= 2 ? 240 : 160
         const cellSize = Math.min(fs * 1.8, Math.floor((maxW - 8) / n)); const fontSize = Math.max(fs * 0.8, 5); const cluesSize = Math.max(fs * 0.65, 5)
         let h = `<div style="display:flex;flex-direction:column;gap:3px"><div style="display:inline-grid;grid-template-columns:repeat(${n},${cellSize}px);align-self:center">`
