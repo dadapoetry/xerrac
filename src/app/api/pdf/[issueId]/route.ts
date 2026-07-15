@@ -54,8 +54,9 @@ export async function GET(
     }
 
     const filename = `xerrac-${String(issue.number).padStart(2, '0')}.pdf`
+    const pdfBuffer = await response.arrayBuffer()
 
-    return new Response(response.body, {
+    return new Response(new Blob([pdfBuffer], { type: 'application/pdf' }), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${filename}"`,

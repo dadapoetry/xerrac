@@ -194,7 +194,7 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         position: 'relative',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 1 }}>
-        <div style={{ backgroundColor: '#000', padding: '12px 40px 10px', textAlign: 'center', flexShrink: 0 }}>
+        <div style={{ backgroundColor: '#000', padding: '12px 40px 0', textAlign: 'center', flexShrink: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontFamily: 'Arial,Helvetica,sans-serif', padding: '0 0 6px' }}>
             <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
             <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
@@ -215,7 +215,8 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         </div>
 
         <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}>
-          <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs>
+          <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#f2ede4" /></pattern></defs>
+          <rect width="100%" height="10" fill="#000" />
           <rect width="100%" height="10" fill="url(#saw)" />
         </svg>
 
