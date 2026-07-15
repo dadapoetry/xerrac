@@ -7,57 +7,45 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
 }
 
-function getText(section: SectionData): { text: string; length: number } {
+const PAGE_W = 1580
+const PAGE_H = 1120
+const PAD = 14
+const COLS = 8
+
+const SECT_H = PAGE_H - 140 - 32  // full content height minus masthead/footer
+
+function getText(section: SectionData): { length: number } {
   const c = section.content as any
   switch (section.type) {
     case 'editorial':
     case 'aclariment_cultural':
-    case 'visita': {
-      const t = stripHtml(c.body || '')
-      return { text: t, length: t.length }
-    }
+    case 'visita':
+      return { length: stripHtml(c.body || '').length }
     case 'fadu_catala': {
-      const t = (c.entries || []).map((e: any) => `${e.title} ${stripHtml(e.body)}`).join('\n\n')
-      return { text: t, length: t.length }
+      const t = (c.entries || []).map((e: any) => e.title + ' ' + stripHtml(e.body)).join(' ')
+      return { length: t.length }
     }
-    case 'pagines_grogues': {
-      const t = (c.proverbs || []).map((p: any) => `"${p.text}" — ${p.author}`).join('\n')
-      return { text: t, length: t.length }
-    }
+    case 'pagines_grogues':
+      return { length: (c.proverbs || []).map((p: any) => p.text + p.author).join(' ').length }
     case 'calaix_sastre': {
-      const parts: string[] = []
-      ;(c.interviews || []).forEach((x: any) => parts.push(`${x.subject} ${stripHtml(x.body)}`))
-      ;(c.reviews || []).forEach((x: any) => parts.push(`${x.title} ${stripHtml(x.body)}`))
-      return { text: parts.join('\n\n'), length: parts.join(' ').length }
+      const i = (c.interviews || []).map((x: any) => x.subject + ' ' + stripHtml(x.body)).join(' ')
+      const r = (c.reviews || []).map((x: any) => x.title + ' ' + stripHtml(x.body)).join(' ')
+      return { length: i.length + r.length }
     }
-    case 'full_mural': {
-      const t = (c.collages || []).map((x: any) => x.description).join(' ')
-      return { text: t, length: t.length }
-    }
-    case 'ludita': {
-      return { text: 'Mots encreuats d\'aclariment', length: 50 }
-    }
+    case 'full_mural':
+      return { length: (c.collages || []).map((x: any) => x.description).join(' ').length }
+    case 'ludita':
+      return { length: 60 }
     default:
-      return { text: '', length: 0 }
+      return { length: 0 }
   }
 }
 
-const PAGE_W = 1580
-const PAGE_H = 1120
-const MASTHEAD_H = 150
-const FOOTER_H = 36
-const PAD = 14
-const COLS = 8
-const CONTENT_H = PAGE_H - MASTHEAD_H - FOOTER_H
-
 function calcFontSize(textLen: number, colSpan: number): number {
+  if (textLen < 10) return 12
   const colW = (PAGE_W - PAD * 2) * (colSpan / COLS) - PAD * 2
-  const availH = CONTENT_H - PAD * 2
-  const chW = 0.55
-  const lh = 1.45
-  const target = textLen / 0.92
-  const size = Math.sqrt((colW * availH) / (target * chW * lh))
-  return Math.min(Math.max(Math.round(size), 8), 14)
+  const f = Math.sqrt((colW * SECT_H) / (textLen * 0.55 * 1.45))
+  return Math.min(Math.max(Math.round(f), 7), 15)
 }
 
 interface Placed {
@@ -73,18 +61,26 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       .map(s => ({ section: s, ...getText(s) }))
       .sort((a, b) => b.length - a.length)
 
-    const totalLen = pool.reduce((s, i) => s + i.length, 0)
+    const totalLen = Math.max(pool.reduce((s, i) => s + i.length, 0), 1)
     const placed: Placed[] = []
 
-    pool.forEach((item) => {
-      let colSpan = Math.max(1, Math.round((item.length / totalLen) * COLS))
-      const used = placed.reduce((s, p) => s + p.colSpan, 0)
-      if (used + colSpan > COLS) colSpan = COLS - used
+    let remaining = COLS
+    pool.forEach((item, idx) => {
+      const isLast = idx === pool.length - 1
+      let colSpan
+      if (isLast) {
+        colSpan = remaining
+      } else {
+        colSpan = Math.max(1, Math.round((item.length / totalLen) * COLS))
+        const needForRest = pool.length - idx - 1
+        colSpan = Math.min(colSpan, remaining - needForRest)
+      }
       if (colSpan < 1) colSpan = 1
+      if (colSpan > remaining) colSpan = remaining
 
       const fontSize = calcFontSize(item.length, colSpan)
-
       placed.push({ section: item.section, colSpan, fontSize })
+      remaining -= colSpan
     })
 
     const portada = issue.sections.find(s => s.type === 'portada')
@@ -94,6 +90,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       placed,
       portadaTopic: pc?.topic || '',
       portadaBg: portada?.backgroundImage || '',
+      totalSpan: placed.reduce((s, p) => s + p.colSpan, 0),
     }
   }, [issue])
 
@@ -115,7 +112,6 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           color: '#1a1a1a',
           fontFamily: 'Georgia, "Times New Roman", Times, serif',
           position: 'relative',
-          overflow: 'hidden',
           boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
         }}
       >
@@ -166,13 +162,12 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           </div>
         )}
 
-        {/* Content grid — one row, sections span proportional columns */}
+        {/* Grid — one row, exact COLS sum guaranteed */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${COLS}, 1fr)`,
           gap: '0',
-          height: `${CONTENT_H}px`,
-          overflow: 'hidden',
+          minHeight: `${SECT_H}px`,
         }}>
           {layout.placed.map((item) => {
             const s = item.section
@@ -186,12 +181,10 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
                   gridColumn: `span ${item.colSpan}`,
                   padding: `${PAD}px ${PAD}px`,
                   borderRight: item.colSpan < COLS ? '1px solid #d4cdbe' : 'none',
-                  overflow: 'hidden',
                   display: 'flex',
                   flexDirection: 'column',
                 }}
               >
-                {/* Section label */}
                 <div style={{
                   fontSize: '7px', textTransform: 'uppercase', letterSpacing: '0.15em',
                   color: '#cc2222', marginBottom: '2px', fontWeight: 700,
@@ -200,12 +193,10 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
                   {sectionLabel(s.type)}
                 </div>
 
-                {/* Red rule */}
                 <div style={{
                   width: '24px', height: '2px', backgroundColor: '#cc2222', marginBottom: '3px',
                 }} />
 
-                {/* Title */}
                 <h2 style={{
                   fontSize: item.colSpan >= 4 ? '16px' : item.colSpan >= 2 ? '14px' : '12px',
                   fontWeight: 700, lineHeight: 1.15, marginBottom: '4px', color: '#1a1a1a',
@@ -215,13 +206,11 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
 
                 <div style={{ height: '1px', backgroundColor: '#bbb', marginBottom: '5px' }} />
 
-                {/* Body */}
                 <div style={{
                   fontSize: `${fs}px`,
                   lineHeight: 1.45,
                   color: '#333',
                   textAlign: 'justify',
-                  overflow: 'hidden',
                   flex: 1,
                 }}>
                   {renderSection(s, c, fs, item.colSpan)}
@@ -233,11 +222,10 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
 
         {/* Footer */}
         <div style={{
-          borderTop: '2px solid #1a1a1a', padding: '6px 24px',
+          borderTop: '2px solid #1a1a1a', padding: '5px 24px',
           display: 'flex', justifyContent: 'space-between',
           fontSize: '7px', textTransform: 'uppercase', letterSpacing: '0.1em',
           color: '#888', fontFamily: 'Arial, Helvetica, sans-serif',
-          height: `${FOOTER_H}px`, alignItems: 'center',
         }}>
           <span>Xerrac! — Revista d&apos;aclariment cultural</span>
           <span>Compilat digitalment des de xerrac.cat</span>
@@ -290,10 +278,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
         <div style={{ lineHeight: lh }}>
           {interviews.length > 0 && (
             <div style={{ marginBottom: `${fs * 0.6}px` }}>
-              <span style={{
-                fontSize: `${fs - 1}px`, textTransform: 'uppercase', letterSpacing: '0.1em',
-                fontWeight: 700, display: 'block', marginBottom: `${fs * 0.3}px`,
-              }}>Entrevistes</span>
+              <span style={{ fontSize: `${fs - 1}px`, textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, display: 'block', marginBottom: `${fs * 0.3}px` }}>Entrevistes</span>
               {interviews.map((x: any, i: number) => (
                 <div key={`i${i}`} style={{ marginBottom: `${fs * 0.5}px` }}>
                   <strong style={{ fontSize: `${fs}px` }}>{x.subject}</strong>
@@ -304,10 +289,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
           )}
           {reviews.length > 0 && (
             <div>
-              <span style={{
-                fontSize: `${fs - 1}px`, textTransform: 'uppercase', letterSpacing: '0.1em',
-                fontWeight: 700, display: 'block', marginBottom: `${fs * 0.3}px`,
-              }}>Ressenyes</span>
+              <span style={{ fontSize: `${fs - 1}px`, textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, display: 'block', marginBottom: `${fs * 0.3}px` }}>Ressenyes</span>
               {reviews.map((x: any, i: number) => (
                 <div key={`r${i}`} style={{ marginBottom: `${fs * 0.5}px` }}>
                   <strong style={{ fontSize: `${fs}px` }}>{x.title}</strong>
@@ -323,9 +305,8 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
     case 'full_mural': {
       const collages = c.collages || []
       if (collages.length === 0) return null
-
-      const collageH = colSpan >= 3 ? 60 : colSpan >= 2 ? 50 : 40
       const displayCount = Math.min(collages.length, colSpan >= 3 ? 4 : 2)
+      const thumb = colSpan >= 3 ? 60 : 50
 
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: `${fs * 0.5}px` }}>
@@ -333,15 +314,13 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
             <div key={i} style={{
               display: 'flex', alignItems: 'center', gap: '6px',
               backgroundColor: 'rgba(0,0,0,0.03)', padding: '4px 6px',
-              borderRadius: '2px',
             }}>
               {x.image && (
                 <div style={{
-                  width: `${collageH}px`, height: `${collageH}px`,
+                  width: `${thumb}px`, height: `${thumb}px`,
                   backgroundImage: `url("${x.image}")`,
                   backgroundSize: 'cover', backgroundPosition: 'center',
-                  flexShrink: 0, borderRadius: '2px',
-                  border: '1px solid rgba(0,0,0,0.08)',
+                  flexShrink: 0, border: '1px solid rgba(0,0,0,0.08)',
                 }} />
               )}
               <p style={{ fontSize: `${fs - 0.5}px`, lineHeight: lh, margin: 0 }}>
