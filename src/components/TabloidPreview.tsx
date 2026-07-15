@@ -194,8 +194,8 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         position: 'relative',
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 1 }}>
-        <div style={{ backgroundColor: '#000', padding: '12px 40px 0', textAlign: 'center', flexShrink: 0 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <div style={{ backgroundColor: '#000', padding: '16px 40px 36px', textAlign: 'center', flexShrink: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontFamily: 'Arial,Helvetica,sans-serif', padding: '0 0 6px' }}>
             <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
             <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
@@ -264,6 +264,16 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
           <defs><pattern id="sawblade-divider" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0.8,2 L9.2,2 L9.2,3.2 L8.8,3.2 L7.6,6.8 L6.4,3.2 L5.8,3.2 L4.6,6.8 L3.4,3.2 L2.8,3.2 L1.8,6.8 L0.8,3.2 Z" fill={accentColor} /></pattern></defs>
           <rect width="100%" height="10" fill="url(#sawblade-divider)" />
         </svg>
+    </div>
+        <div style={{
+          borderTop: '1px solid #1a1a1a', padding: '6px 24px',
+          display: 'flex', justifyContent: 'space-between',
+          fontSize: 6, textTransform: 'uppercase', letterSpacing: '0.15em',
+          color: '#999', fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
+        }}>
+          <span>Xerrac!<span style={{ color: accentColor, margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
+          <span>Compilat des de xerrac.cat</span>
+        </div>
         <div style={{
           position: 'absolute', bottom: 28, right: 8,
           background: accentColor, color: '#fff',
@@ -274,17 +284,6 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         }}>
           Ha quedat clar?
         </div>
-
-        <div style={{
-          borderTop: '1px solid #1a1a1a', padding: '6px 24px',
-          display: 'flex', justifyContent: 'space-between',
-          fontSize: 6, textTransform: 'uppercase', letterSpacing: '0.15em',
-          color: '#999', fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
-        }}>
-          <span>Xerrac!<span style={{ color: accentColor, margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
-          <span>Compilat des de xerrac.cat</span>
-        </div>
-    </div>
     </div>
     </div>
     </div>

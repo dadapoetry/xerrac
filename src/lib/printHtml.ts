@@ -134,25 +134,25 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .page { width:420mm; height:297mm; font-family:Inter,Arial,Helvetica,sans-serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
-  .masthead { background:#000; padding:12px 40px 0; text-align:center; flex-shrink:0; position:relative; z-index:2; }
+   .masthead { background:#000; padding:16px 40px 36px; text-align:center; flex-shrink:0; position:relative; z-index:2; }
   .grid { display:grid; grid-template-columns:repeat(8,1fr); flex:1; grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
   .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; flex-shrink:0; }
 </style></head>
 <body><div class="page">
-  <div style="display:flex;flex-direction:column;flex:1;position:relative;z-index:1">
-  <div class="masthead">
-    <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5)">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
-    ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};margin-bottom:4px;font-weight:700">${portadaTopic}</div>` : ''}
-    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
-    ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
+  <div style="display:flex;flex-direction:column;flex:1">
+    <div class="masthead">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5)">\n        <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n        <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n      </div>
+      ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};margin-bottom:4px;font-weight:700">${portadaTopic}</div>` : ''}
+      <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
+      ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
+    </div>
+    <div class="grid">${cells}</div>
   </div>
-  <div class="grid">${cells}</div>
   <svg width="100%" height="10" style="display:block;flex-shrink:0;margin:2px 0"><defs><pattern id="sawblade-divider" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0.8,2 L9.2,2 L9.2,3.2 L8.8,3.2 L7.6,6.8 L6.4,3.2 L5.8,3.2 L4.6,6.8 L3.4,3.2 L2.8,3.2 L1.8,6.8 L0.8,3.2 Z" fill="${accentColor}" /></pattern></defs><rect width="100%" height="10" fill="url(#sawblade-divider)" /></svg>
   <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">
     <span>Xerrac!<span style="color:${accentColor};margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
     <span>${issn || 'Compilat des de xerrac.cat'}</span>
   </div>
-</div>
 </div></body></html>`
 }
