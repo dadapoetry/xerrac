@@ -114,12 +114,11 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, 
   </div>`
 }
 
-export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: number[]): string {
+export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: number[], issn?: string): string {
   const accentColor = issue.accentColor || '#ef4444'
   const portada = issue.sections.find(s => s.type === 'portada')
   const pc = portada?.content as any
   const portadaTopic = pc?.topic || ''
-  const portadaBg = portada?.backgroundImage || ''
 
   const cells = placed.map(p => renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.colSpan, accentColor)).join('')
 
@@ -137,7 +136,6 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
 <body><div class="page">
   <div style="display:flex;flex-direction:column;flex:1;position:relative;z-index:1">
   <div class="masthead">
-    ${portadaBg ? `<div style="position:absolute;inset:0;opacity:0.03;background-image:url('${portadaBg}');background-size:cover;background-position:center;pointer-events:none"></div>` : ''}
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);font-family:Arial,Helvetica,sans-serif;padding:0 0 6px">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
     ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};margin-bottom:4px;font-weight:700;font-family:Arial,Helvetica,sans-serif">${portadaTopic}</div>` : ''}
     <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif">XERRAC<span style="color:${accentColor}">!</span></h1>
@@ -148,7 +146,7 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
   <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">
     <span>Xerrac!<span style="color:${accentColor};margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
-    <span>Compilat des de xerrac.cat</span>
+    <span>${issn || 'Compilat des de xerrac.cat'}</span>
   </div>
 </div>
 </div></body></html>`
