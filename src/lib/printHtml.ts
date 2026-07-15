@@ -146,7 +146,7 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
     <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
     ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
   </div>
-  <svg width="100%" height="14" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="28" height="14" patternUnits="userSpaceOnUse"><rect width="28" height="14" fill="#000" /><path d="M4,0 L14,14 L24,0 Z" fill="#f2ede4" /></pattern></defs><rect width="100%" height="14" fill="url(#saw)" /></svg>
+  <svg width="100%" height="14" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="24" height="14" patternUnits="userSpaceOnUse"><path d="M2,0 L12,14 L22,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="14" fill="url(#saw)" /></svg>
   <div class="grid">${cells}</div>
   <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">

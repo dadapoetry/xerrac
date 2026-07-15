@@ -215,7 +215,7 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         </div>
 
         <svg width="100%" height="14" style={{ display: 'block', flexShrink: 0 }}>
-          <defs><pattern id="saw" width="28" height="14" patternUnits="userSpaceOnUse"><rect width="28" height="14" fill="#000" /><path d="M4,0 L14,14 L24,0 Z" fill="#f2ede4" /></pattern></defs>
+          <defs><pattern id="saw" width="24" height="14" patternUnits="userSpaceOnUse"><path d="M2,0 L12,14 L22,0 Z" fill="#000" /></pattern></defs>
           <rect width="100%" height="14" fill="url(#saw)" />
         </svg>
 
