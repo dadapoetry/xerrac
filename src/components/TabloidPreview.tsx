@@ -165,7 +165,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
 
 function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number): string {
   const lh = 1.35; const label = sectionLabel(s.type)
-  const titleSize = colSpan >= 5 ? '17px' : colSpan >= 3 ? '15px' : colSpan >= 2 ? '13px' : '12px'
+  const titleSize = colSpan >= 5 ? '16px' : colSpan >= 3 ? '14px' : colSpan >= 2 ? '12px' : '11px'
 
   const body = (() => {
     switch (s.type) {
@@ -219,12 +219,11 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number):
     }
   })()
 
-  return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:8px 10px;border-right:${colSpan < 8 ? '1px solid #d4cdbe' : 'none'};border-bottom:1px solid #d4cdbe;display:flex;flex-direction:column">
-    <div style="font-size:7px;text-transform:uppercase;letter-spacing:0.15em;color:#cc2222;margin-bottom:1px;font-weight:700;font-family:Arial,Helvetica,sans-serif;flex-shrink:0">${label}</div>
-    <div style="width:20px;height:2px;background-color:#cc2222;margin-bottom:2px;flex-shrink:0"></div>
-    <h2 style="font-size:${titleSize};font-weight:700;line-height:1.15;margin:0 0 2px;color:#1a1a1a;flex-shrink:0">${s.title}</h2>
-    <div style="height:1px;background-color:#bbb;margin-bottom:4px;flex-shrink:0"></div>
-    <div style="font-size:${fs}px;line-height:1.45;color:#333;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
+  return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:10px 12px;border-right:${colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-bottom:2px"><div style="width:12px;height:1.5px;background-color:#b91c1c;flex-shrink:0"></div><span style="font-size:6.5px;text-transform:uppercase;letter-spacing:0.2em;color:#b91c1c;font-weight:700;font-family:Arial,Helvetica,sans-serif">${label}</span></div>
+    <h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;margin:0 0 1px;color:#1a1a1a;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif;text-transform:uppercase;letter-spacing:-0.02em;flex-shrink:0">${s.title}</h2>
+    <div style="height:1px;background-color:#d4cdbe;margin-bottom:4px;flex-shrink:0"></div>
+    <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
   </div>`
 }
 
@@ -243,26 +242,28 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .page { width:420mm; height:297mm; font-family:Georgia,"Times New Roman",Times,serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; }
-  .masthead { background:#cc2222; padding:18px 40px 10px; text-align:center; flex-shrink:0; }
+  .masthead { background:#b91c1c; padding:12px 40px 16px; text-align:center; flex-shrink:0; }
   .grid { display:grid; grid-template-columns:repeat(8,1fr); flex:1; grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
-  .footer { border-top:2px solid #1a1a1a; padding:5px 24px; display:flex; justify-content:space-between; font-size:7px; text-transform:uppercase; letter-spacing:0.1em; color:#888; font-family:Arial,Helvetica,sans-serif; flex-shrink:0; }
+  .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; font-family:Arial,Helvetica,sans-serif; flex-shrink:0; }
 </style></head>
 <body><div class="page">
   <div class="masthead">
     ${portadaBg ? `<div style="position:absolute;inset:0;opacity:0.03;background-image:url('${portadaBg}');background-size:cover;background-position:center;pointer-events:none"></div>` : ''}
-    <h1 style="font-size:72px;font-weight:900;letter-spacing:-0.03em;line-height:1;color:#fff;font-family:'Times New Roman',Times,serif">XERRAC!</h1>
-    <div style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.85);margin-top:2px">Revista d&apos;aclariment cultural</div>
+    <div style="height:1px;background-color:rgba(255,255,255,0.15);margin-bottom:8px"></div>
+    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif">XERRAC<span style="color:#ff6b6b">!</span></h1>
+    <div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">Revista d&apos;aclariment cultural</div>
+    <div style="height:1px;background-color:rgba(255,255,255,0.15);margin-top:8px"></div>
   </div>
-  <div style="display:flex;justify-content:space-between;align-items:center;font-size:8px;text-transform:uppercase;letter-spacing:0.08em;color:#666;padding:4px 24px;border-bottom:3px double #1a1a1a;font-family:Arial,Helvetica,sans-serif;flex-shrink:0">
-    <span>N&uacute;m. ${String(issue.number).padStart(2,'0')}</span>
-    <span style="font-weight:700;color:#1a1a1a;font-size:9px">${issue.title}</span>
-    <span>${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:#999;padding:5px 24px;border-bottom:2px solid #1a1a1a;font-family:Arial,Helvetica,sans-serif;flex-shrink:0">
+    <span>N&uacute;m. <span style="font-weight:700;color:#b91c1c;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>
+    <span style="font-weight:700;color:#1a1a1a;font-size:8px;letter-spacing:0.08em">${issue.title}</span>
+    <span style="letter-spacing:0.08em">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>
   </div>
   ${portadaTopic ? `<div style="text-align:center;padding:6px 24px;border-bottom:1px solid #ccc;font-size:18px;font-weight:700;font-style:italic;color:#333;flex-shrink:0">${portadaTopic}</div>` : ''}
   <div class="grid">${cells}</div>
   <div class="footer">
-    <span>Xerrac! &mdash; Revista d&apos;aclariment cultural</span>
-    <span>Compilat digitalment des de xerrac.cat</span>
+    <span>Xerrac!<span style="color:#b91c1c;margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
+    <span>Compilat des de xerrac.cat</span>
   </div>
 </div></body></html>`
 }
@@ -325,23 +326,26 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
       }}>
-        <div style={{ backgroundColor: '#cc2222', padding: '18px 40px 10px', textAlign: 'center', flexShrink: 0 }}>
-          <div style={{ fontSize: 72, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1, color: '#fff', fontFamily: '"Times New Roman",Times,serif' }}>
-            XERRAC<em style={{ fontStyle: 'normal' }}>!</em>
+        <div style={{ backgroundColor: '#b91c1c', padding: '12px 40px 16px', textAlign: 'center', flexShrink: 0 }}>
+          <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.15)', marginBottom: 8 }} />
+          <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
+            XERRAC<span style={{ color: '#ff6b6b' }}>!</span>
           </div>
-          <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.85)', marginTop: 2 }}>
+          <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginTop: 3, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
             Revista d&apos;aclariment cultural
           </div>
+          <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.15)', marginTop: 8 }} />
         </div>
 
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          fontSize: 8, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#666',
-          padding: '4px 24px', borderBottom: '3px double #1a1a1a', fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
+          fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#999',
+          padding: '5px 24px', borderBottom: '2px solid #1a1a1a',
+          fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
         }}>
-          <span>N&uacute;m. {String(issue.number).padStart(2, '0')}</span>
-          <span style={{ fontWeight: 700, color: '#1a1a1a', fontSize: 9 }}>{issue.title}</span>
-          <span>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
+          <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#b91c1c', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
+          <span style={{ fontWeight: 700, color: '#1a1a1a', fontSize: 8, letterSpacing: '0.08em' }}>{issue.title}</span>
+          <span style={{ letterSpacing: '0.08em' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
         </div>
 
         <div style={{
@@ -356,23 +360,27 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
               <div key={s.id} style={{
                 gridColumn: `${p.col + 1} / span ${p.colSpan}`,
                 gridRow: `${p.row + 1} / span 1`,
-                padding: '8px 10px',
-                borderRight: p.col + p.colSpan < COLS ? '1px solid #d4cdbe' : 'none',
-                borderBottom: p.row < layout.rows - 1 ? '1px solid #d4cdbe' : 'none',
+                padding: '10px 12px',
+                borderRight: p.col + p.colSpan < COLS ? '1px solid #ddd3c4' : 'none',
+                borderBottom: p.row < layout.rows - 1 ? '1px solid #ddd3c4' : 'none',
                 display: 'flex', flexDirection: 'column', overflow: 'hidden',
               }}>
-                <div style={{
-                  fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.15em', color: '#cc2222',
-                  marginBottom: 1, fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
-                }}>{sectionLabel(s.type)}</div>
-                <div style={{ width: 20, height: 2, backgroundColor: '#cc2222', marginBottom: 2, flexShrink: 0 }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, marginBottom: 2 }}>
+                  <div style={{ width: 12, height: 1.5, backgroundColor: '#b91c1c', flexShrink: 0 }} />
+                  <span style={{
+                    fontSize: 6.5, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#b91c1c',
+                    fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif',
+                  }}>{sectionLabel(s.type)}</span>
+                </div>
                 <h2 style={{
-                  fontSize: p.colSpan >= 5 ? '17px' : p.colSpan >= 3 ? '15px' : '13px',
-                  fontWeight: 700, lineHeight: 1.15, margin: '0 0 2px', color: '#1a1a1a', flexShrink: 0,
+                  fontSize: p.colSpan >= 5 ? '16px' : p.colSpan >= 3 ? '14px' : '12px',
+                  fontWeight: 800, lineHeight: 1.2, margin: '0 0 1px', color: '#1a1a1a',
+                  fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
+                  textTransform: 'uppercase', letterSpacing: '-0.02em', flexShrink: 0,
                 }}>{s.title}</h2>
-                <div style={{ height: 1, backgroundColor: '#bbb', marginBottom: 4, flexShrink: 0 }} />
+                <div style={{ height: 1, backgroundColor: '#d4cdbe', marginBottom: 4, flexShrink: 0 }} />
                 <div style={{
-                  fontSize: fs, lineHeight: 1.45, color: '#333', textAlign: 'justify',
+                  fontSize: fs, lineHeight: 1.55, color: '#2a2a2a', textAlign: 'justify',
                   flex: 1, wordWrap: 'break-word', overflowWrap: 'break-word',
                 }}>
                   {renderSection(s, c, fs, p.colSpan)}
@@ -383,13 +391,13 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
         </div>
 
         <div style={{
-          borderTop: '2px solid #1a1a1a', padding: '5px 24px',
+          borderTop: '1px solid #1a1a1a', padding: '6px 24px',
           display: 'flex', justifyContent: 'space-between',
-          fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.1em',
-          color: '#888', fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
+          fontSize: 6, textTransform: 'uppercase', letterSpacing: '0.15em',
+          color: '#999', fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
         }}>
-          <span>Xerrac! &mdash; Revista d&apos;aclariment cultural</span>
-          <span>Compilat digitalment des de xerrac.cat</span>
+          <span>Xerrac!<span style={{ color: '#b91c1c', margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
+          <span>Compilat des de xerrac.cat</span>
         </div>
       </div>
     </div>
