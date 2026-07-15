@@ -1,10 +1,7 @@
 import { IssueData, SectionData } from '@/types'
 
-// ── Types ────────────────────────────────────────────────────────────
-
 export interface SectionProfile {
   priority: number
-  idealCols: number
   minCols: number
   weight: number
   baseFontSize: number
@@ -32,22 +29,26 @@ export interface LayoutResult {
   numRows: number
 }
 
-// ── Section Profiles ─────────────────────────────────────────────────
-
 const PROFILES: Record<string, SectionProfile> = {
-  editorial:          { priority: 10, idealCols: 4, minCols: 3, weight: 8,  baseFontSize: 12 },
-  fadu_catala:        { priority:  9, idealCols: 4, minCols: 3, weight: 8,  baseFontSize: 11 },
-  visita:             { priority:  8, idealCols: 3, minCols: 2, weight: 6,  baseFontSize: 11 },
-  aclariment_cultural:{ priority:  7, idealCols: 3, minCols: 2, weight: 6,  baseFontSize: 11 },
-  calaix_sastre:      { priority:  6, idealCols: 3, minCols: 2, weight: 6,  baseFontSize: 11 },
-  pagines_grogues:    { priority:  4, idealCols: 2, minCols: 1, weight: 2,  baseFontSize: 10 },
-  full_mural:         { priority:  3, idealCols: 2, minCols: 2, weight: 2,  baseFontSize: 10 },
-  ludita:             { priority:  1, idealCols: 4, minCols: 2, weight: 10, baseFontSize: 9  },
+  editorial:          { priority: 10, minCols: 3, weight: 8,  baseFontSize: 12 },
+  fadu_catala:        { priority:  9, minCols: 3, weight: 8,  baseFontSize: 11 },
+  visita:             { priority:  8, minCols: 2, weight: 6,  baseFontSize: 11 },
+  aclariment_cultural:{ priority:  7, minCols: 2, weight: 6,  baseFontSize: 11 },
+  calaix_sastre:      { priority:  6, minCols: 2, weight: 6,  baseFontSize: 11 },
+  pagines_grogues:    { priority:  4, minCols: 1, weight: 2,  baseFontSize: 10 },
+  full_mural:         { priority:  3, minCols: 2, weight: 2,  baseFontSize: 10 },
+  ludita:             { priority:  1, minCols: 3, weight: 10, baseFontSize: 9  },
 }
 
-const DEFAULTS: SectionProfile = { priority: 5, idealCols: 2, minCols: 1, weight: 4, baseFontSize: 11 }
+const DEFAULTS: SectionProfile = { priority: 5, minCols: 1, weight: 4, baseFontSize: 11 }
 
-// ── Text Length ──────────────────────────────────────────────────────
+const COLS = 8
+const CROSSWORD_ROW_MULT = 1.9
+
+const ROW_SIZE_PLANS: Record<number, number[]> = {
+  1: [1], 2: [2], 3: [3], 4: [2, 2], 5: [2, 3],
+  6: [2, 2, 2], 7: [2, 3, 2], 8: [2, 3, 3], 9: [3, 3, 3],
+}
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
@@ -86,27 +87,19 @@ function getTextLength(section: SectionData): number {
   }
 }
 
-// ── Row Distribution ─────────────────────────────────────────────────
-
-function distributeIntoRows(items: LayoutItem[]): LayoutItem[][] {
+function buildRows(items: LayoutItem[]): LayoutItem[][] {
   const crosswords = items.filter(s => s.section.type === 'ludita')
   const content = items.filter(s => s.section.type !== 'ludita')
     .sort((a, b) => b.profile.priority - a.profile.priority)
 
   if (content.length === 0) return crosswords.length > 0 ? [crosswords] : []
 
-  const rows: LayoutItem[][] = [[]]
-  let currentRowCols = 0
-
-  for (const item of content) {
-    const ideal = item.profile.idealCols
-    if (currentRowCols + ideal <= COLS && rows[rows.length - 1].length < 3) {
-      rows[rows.length - 1].push(item)
-      currentRowCols += ideal
-    } else {
-      rows.push([item])
-      currentRowCols = ideal
-    }
+  const plan = ROW_SIZE_PLANS[content.length] || [content.length]
+  const rows: LayoutItem[][] = []
+  let idx = 0
+  for (const size of plan) {
+    rows.push(content.slice(idx, idx + size))
+    idx += size
   }
 
   if (crosswords.length > 0) {
@@ -120,56 +113,97 @@ function distributeIntoRows(items: LayoutItem[]): LayoutItem[][] {
   return rows
 }
 
-// ── Column Span Allocation ───────────────────────────────────────────
+function pickPattern(n: number, hasCW: boolean, isTop: boolean, prevSig: string | null): number[] {
+  if (n === 1) return [COLS]
 
-const COLS = 8
+  if (n === 2) {
+    if (isTop) return [5, 3]
+    if (hasCW) return [5, 3]
+    if (prevSig === '5-3' || prevSig === '3-5') return [4, 4]
+    return [5, 3]
+  }
 
-function allocateColSpans(items: LayoutItem[]): number[] {
+  if (hasCW) {
+    return [2, 2, 4]
+  }
+
+  if (isTop) return [4, 2, 2]
+
+  if (prevSig === '4-2-2') return [3, 3, 2]
+  if (prevSig === '3-3-2') return [2, 4, 2]
+  if (prevSig === '2-4-2') return [4, 2, 2]
+  if (prevSig === '5-3') return [3, 3, 2]
+  if (prevSig === '3-5') return [2, 4, 2]
+
+  return [3, 3, 2]
+}
+
+function patternSignature(spans: number[]): string {
+  return spans.join('-')
+}
+
+function assignSpansToRow(items: LayoutItem[], pattern: number[]): number[] {
   const n = items.length
   if (n === 0) return []
   if (n === 1) return [COLS]
 
+  const cwIdx = items.findIndex(s => s.section.type === 'ludita')
+  let spans = new Array(n).fill(0)
+
+  if (cwIdx >= 0) {
+    const cwTarget = pattern[cwIdx]
+    const nonCWIndices = items.map((_, i) => i).filter(i => i !== cwIdx)
+    const nonCWItems = nonCWIndices.map(i => ({ item: items[i], origIdx: i }))
+      .sort((a, b) => b.item.profile.priority - a.item.profile.priority)
+    const nonCWPattern = pattern.filter((_, i) => i !== cwIdx)
+    const nonCWSizes = [...nonCWPattern].sort((a, b) => b - a)
+    nonCWItems.forEach((entry, si) => { spans[entry.origIdx] = nonCWSizes[si] })
+    spans[cwIdx] = cwTarget
+  } else {
+    const sortedItems = items
+      .map((item, i) => ({ item, origIdx: i }))
+      .sort((a, b) => b.item.profile.priority - a.item.profile.priority)
+    const sortedPattern = [...pattern].sort((a, b) => b - a)
+    sortedItems.forEach((entry, si) => { spans[entry.origIdx] = sortedPattern[si] })
+  }
+
+  spans = spans.map((v, i) => Math.max(v, items[i].profile.minCols))
+
   const totalLength = items.reduce((s, it) => s + it.textLength, 0)
-  const avgRatio = 1 / n
-
-  let spans = items.map((item, i) => {
-    let adj = item.profile.idealCols
-    const ratio = totalLength > 0 ? item.textLength / totalLength : avgRatio
-
-    if (ratio > avgRatio * 1.5 && adj < COLS - n + 1) adj++
-    else if (ratio < avgRatio * 0.5 && adj > item.profile.minCols) adj--
-
-    return Math.max(adj, item.profile.minCols)
-  })
+  if (totalLength > 0) {
+    spans = spans.map((v, i) => {
+      if (items[i].section.type === 'ludita') return v
+      const ratio = items[i].textLength / totalLength
+      const avg = 1 / n
+      if (ratio > avg * 1.5 && v < COLS - n + 1) return v + 1
+      if (ratio < avg * 0.5 && v > items[i].profile.minCols) return v - 1
+      return v
+    })
+  }
 
   let sum = spans.reduce((a, b) => a + b, 0)
-
-  while (sum !== COLS) {
+  let iter = 0
+  while (sum !== COLS && iter < 30) {
+    iter++
     if (sum < COLS) {
-      const candidates = spans
-        .map((v, i) => ({ idx: i, cur: v, max: COLS - n + 1 }))
-        .filter(c => c.cur < c.max)
-      if (candidates.length === 0) break
-      candidates.sort((a, b) => items[b.idx].profile.priority - items[a.idx].profile.priority)
-      spans[candidates[0].idx]++
-      sum++
+      const cands = spans
+        .map((v, i) => ({ i, v, max: COLS - n + 1 }))
+        .filter(c => c.v < c.max)
+      if (cands.length === 0) break
+      cands.sort((a, b) => items[b.i].profile.priority - items[a.i].profile.priority)
+      spans[cands[0].i]++; sum++
     } else {
-      const candidates = spans
-        .map((v, i) => ({ idx: i, cur: v, min: items[i].profile.minCols }))
-        .filter(c => c.cur > c.min)
-      if (candidates.length === 0) break
-      candidates.sort((a, b) => items[a.idx].profile.priority - items[b.idx].profile.priority)
-      spans[candidates[0].idx]--
-      sum--
+      const cands = spans
+        .map((v, i) => ({ i, v, min: items[i].profile.minCols }))
+        .filter(c => c.v > c.min)
+      if (cands.length === 0) break
+      cands.sort((a, b) => items[a.i].profile.priority - items[b.i].profile.priority)
+      spans[cands[0].i]--; sum--
     }
   }
 
   return spans
 }
-
-// ── Row Fractions ────────────────────────────────────────────────────
-
-const CROSSWORD_ROW_MULT = 1.8
 
 function calculateRowFractions(rows: LayoutItem[][]): number[] {
   if (rows.length === 0) return []
@@ -180,8 +214,6 @@ function calculateRowFractions(rows: LayoutItem[][]): number[] {
   })
 }
 
-// ── Font Size ────────────────────────────────────────────────────────
-
 function calcFontSize(textLen: number, slotW: number, slotH: number, baseFontSize: number): number {
   if (textLen < 10) return Math.min(baseFontSize + 4, 18)
   if (slotW < 1 || slotH < 1) return Math.max(baseFontSize - 2, 8)
@@ -189,8 +221,6 @@ function calcFontSize(textLen: number, slotW: number, slotH: number, baseFontSiz
   const blended = Math.round(f * 0.6 + baseFontSize * 0.4)
   return Math.max(8, Math.min(blended, 18))
 }
-
-// ── Main Layout Computation ──────────────────────────────────────────
 
 export function computeLayout(
   issue: IssueData,
@@ -217,24 +247,32 @@ export function computeLayout(
 
   if (ordered.length === 0) return { slots: [], rowFractions: [], numRows: 0 }
 
-  const rows = distributeIntoRows(ordered)
+  const rows = buildRows(ordered)
 
   const slots: LayoutSlot[] = []
+  let prevSig: string | null = null
+
   rows.forEach((row, ri) => {
-    const colSpans = allocateColSpans(row)
+    const hasCW = row.some(s => s.section.type === 'ludita')
+    const pattern = pickPattern(row.length, hasCW, ri === 0, prevSig)
+    const spans = assignSpansToRow(row, pattern)
+    const sig = patternSignature(spans)
+
     let col = 0
     row.forEach((item, ci) => {
       slots.push({
         section: item.section,
         row: ri,
         col,
-        colSpan: colSpans[ci],
+        colSpan: spans[ci],
         slotW: 0,
         slotH: 0,
         fontSize: 0,
       })
-      col += colSpans[ci]
+      col += spans[ci]
     })
+
+    prevSig = sig
   })
 
   let rowFractions = calculateRowFractions(rows)
@@ -249,7 +287,7 @@ export function computeLayout(
     const rowFrac = rowFractions[slot.row]
     const rowH = normSum > 0 ? (rowFrac / normSum) * sectH : sectH / rows.length
     const slotH = rowH - 52
-    const slotW = (slot.colSpan / COLS) * (pageW - 28) - GUTTER
+    const slotW = (slot.colSpan / COLS) * (pageW - 28) - 20
 
     slot.slotW = Math.max(slotW, 50)
     slot.slotH = Math.max(slotH, 50)
@@ -262,5 +300,3 @@ export function computeLayout(
 
   return { slots, rowFractions, numRows: rows.length }
 }
-
-const GUTTER = 20
