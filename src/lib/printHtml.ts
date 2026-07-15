@@ -53,7 +53,10 @@ export function buildGrid(cw: CrosswordData, showSolution = true): { grid: strin
 
 function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, accentColor: string): string {
   const lh = 1.35; const label = sectionLabel(s.type)
-  const titleSize = colSpan >= 5 ? '16px' : colSpan >= 3 ? '14px' : colSpan >= 2 ? '12px' : '11px'
+  const titleSize = (() => { 
+    const base = colSpan >= 5 ? 17 : colSpan >= 3 ? 15 : colSpan >= 2 ? 13 : 12
+    return Math.max(base, fs + 2) + 'px'
+  })()
 
   const body = (() => {
     switch (s.type) {
@@ -82,13 +85,13 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, 
         if (!collages.length) return ''
         const dc = Math.min(collages.length, colSpan >= 3 ? 3 : 2); const thumb = colSpan >= 3 ? 45 : 36
         return `<div style="display:flex;flex-direction:column;gap:${fs*0.3}px">${collages.slice(0, dc).map((x: any) =>
-          `<div style="display:flex;align-items:center;gap:4px;background-color:rgba(0,0,0,0.03);padding:2px 4px"><p style="font-size:${fs-0.5}px;line-height:${lh};margin:0">${x.description}</p></div>`
+          `<div style="display:flex;align-items:center;gap:4px;background-color:rgba(0,0,0,0.03);padding:2px 4px">${x.image ? `<div style="width:${thumb}px;height:${thumb}px;background-image:url('${x.image}');background-size:cover;background-position:center;flex-shrink:0;border:1px solid rgba(0,0,0,0.08)"></div>` : ''}<p style="font-size:${fs-0.5}px;line-height:${lh};margin:0">${x.description}</p></div>`
         ).join('')}${collages.length > dc ? `<p style="font-size:${fs-1}px;font-style:italic;opacity:0.6;margin:0">+${collages.length-dc} col·latges m&eacute;s</p>` : ''}</div>`
       }
       case 'ludita': {
         const cw = c.crossword as CrosswordData
         if (!cw) return ''
-        const n = cw.gridSize; const { grid, numbers } = buildGrid(cw, true)
+        const n = cw.gridSize;         const { grid, numbers } = buildGrid(cw, false)
         const maxW = colSpan >= 4 ? 420 : colSpan >= 2 ? 240 : 160
         const cellSize = Math.min(fs * 1.8, Math.floor((maxW - 8) / n)); const fontSize = Math.max(fs * 0.8, 5); const cluesSize = Math.max(fs * 0.65, 5)
         let h = `<div style="display:flex;flex-direction:column;gap:3px"><div style="display:inline-grid;grid-template-columns:repeat(${n},${cellSize}px);align-self:center">`
@@ -140,10 +143,10 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
   <div class="masthead">
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5)">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
     ${portadaTopic ? `<div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${accentColor};margin-bottom:4px;font-weight:700">${portadaTopic}</div>` : ''}
-    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
+    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
     ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
   </div>
-  <svg width="100%" height="10" style="display:block;flex-shrink:0;margin-top:-6px"><defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="10" fill="url(#saw)" /></svg>
+  <svg width="100%" height="10" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="10" fill="url(#saw)" /></svg>
   <div class="grid">${cells}</div>
   <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">

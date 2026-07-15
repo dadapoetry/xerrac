@@ -204,7 +204,7 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
               {portadaTopic}
             </div>
           )}
-          <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
+          <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 0.92, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
             XERRAC<span style={{ color: accentColor }}>!</span>
           </div>
           {!portadaTopic && (
@@ -214,7 +214,7 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
           )}
         </div>
 
-        <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0, marginTop: -6 }}>
+        <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}>
           <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs>
           <rect width="100%" height="10" fill="url(#saw)" />
         </svg>
