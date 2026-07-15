@@ -99,7 +99,7 @@ function CrosswordPreview({ cw, fs, colSpan, showSolution = false }: { cw: Cross
   </div>
 }
 
-function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
+function renderSection(s: SectionData, c: any, fs: number, colSpan: number, accentColor: string) {
   const lh = 1.35
   switch (s.type) {
     case 'editorial': case 'aclariment_cultural':
@@ -163,7 +163,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
   }
 }
 
-function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number): string {
+function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, accentColor: string): string {
   const lh = 1.35; const label = sectionLabel(s.type)
   const titleSize = colSpan >= 5 ? '16px' : colSpan >= 3 ? '14px' : colSpan >= 2 ? '12px' : '11px'
 
@@ -220,7 +220,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number):
   })()
 
   return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:10px 12px;border-right:${colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
-    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-bottom:2px"><div style="width:12px;height:1.5px;background-color:#b91c1c;flex-shrink:0"></div><span style="font-size:6.5px;text-transform:uppercase;letter-spacing:0.2em;color:#b91c1c;font-weight:700;font-family:Arial,Helvetica,sans-serif">${label}</span></div>
+    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-bottom:2px"><div style="width:12px;height:1.5px;background-color:${accentColor};flex-shrink:0"></div><span style="font-size:6.5px;text-transform:uppercase;letter-spacing:0.2em;color:${accentColor};font-weight:700;font-family:Arial,Helvetica,sans-serif">${label}</span></div>
     <h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;margin:0 0 1px;color:#1a1a1a;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif;text-transform:uppercase;letter-spacing:-0.02em;flex-shrink:0">${s.title}</h2>
     <div style="height:1px;background-color:#d4cdbe;margin-bottom:4px;flex-shrink:0"></div>
     <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
@@ -228,12 +228,18 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number):
 }
 
 function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: number[]): string {
+  const accentColor = issue.accentColor || '#ef4444'
   const portada = issue.sections.find(s => s.type === 'portada')
   const pc = portada?.content as any
   const portadaTopic = pc?.topic || ''
   const portadaBg = portada?.backgroundImage || ''
 
-  const cells = placed.map(p => renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.colSpan)).join('')
+  const cells = placed.map(p => {
+    if (p.fixedType === 'clar') return ''
+    return renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.colSpan, accentColor)
+  }).join('')
+
+  const clarSlot = placed.find(p => p.fixedType === 'clar')
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8">
@@ -242,31 +248,28 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .page { width:420mm; height:297mm; font-family:Georgia,"Times New Roman",Times,serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
-  .masthead { background:#b91c1c; padding:12px 40px 16px; text-align:center; flex-shrink:0; position:relative; z-index:2; }
-  .sawtooth { height:10px; flex-shrink:0; background:linear-gradient(135deg,transparent 33%,#b91c1c 33%,#b91c1c 66%,transparent 66%),linear-gradient(225deg,transparent 33%,#b91c1c 33%,#b91c1c 66%,transparent 66%);background-size:6px 10px;background-position:0 0,3px 0;background-repeat:repeat-x; }
+  .masthead { background:#000; padding:12px 40px 10px; text-align:center; flex-shrink:0; position:relative; z-index:2; }
+  .sawtooth { height:10px; flex-shrink:0; background:linear-gradient(135deg,transparent 33%,${accentColor} 33%,${accentColor} 66%,transparent 66%),linear-gradient(225deg,transparent 33%,${accentColor} 33%,${accentColor} 66%,transparent 66%);background-size:6px 10px;background-position:0 0,3px 0;background-repeat:repeat-x; }
   .grid { display:grid; grid-template-columns:repeat(8,1fr); flex:1; grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
   .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; font-family:Arial,Helvetica,sans-serif; flex-shrink:0; }
+  .title-row { text-align:center; padding:10px 24px; border-bottom:1px solid #ccc; flex-shrink:0; font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif; font-size:24px; font-weight:800; letter-spacing:-0.03em; text-transform:uppercase; color:${accentColor}; }
 </style></head>
 <body><div class="page">
   <div style="position:absolute;inset:0;pointer-events:none;opacity:0.02;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);background-size:4px 4px"></div>
   <div style="display:flex;flex-direction:column;flex:1;position:relative;z-index:1">
   <div class="masthead">
     ${portadaBg ? `<div style="position:absolute;inset:0;opacity:0.03;background-image:url('${portadaBg}');background-size:cover;background-position:center;pointer-events:none"></div>` : ''}
-    <div style="height:1px;background-color:rgba(255,255,255,0.15);margin-bottom:8px"></div>
-    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif">XERRAC<span style="color:#ff6b6b">!</span></h1>
-    <div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">Revista d&apos;aclariment cultural</div>
-    <div style="height:1px;background-color:rgba(255,255,255,0.15);margin-top:8px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);font-family:Arial,Helvetica,sans-serif;padding:0 0 6px">\n      <span>N&uacute;m. <span style="font-weight:700;color:#fff;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>\n      <span style="letter-spacing:0.08em;color:rgba(255,255,255,0.5)">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>\n    </div>
+    <div style="height:1px;background-color:rgba(255,255,255,0.1);margin-bottom:8px"></div>
+    <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:1;color:#fff;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif">XERRAC<span style="color:${accentColor}">!</span></h1>
+    <div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300;font-family:Arial,Helvetica,sans-serif">Revista d&apos;aclariment cultural</div>
+    <div style="height:1px;background-color:rgba(255,255,255,0.1);margin-top:8px"></div>
   </div>
   <div class="sawtooth"></div>
-  <div style="display:flex;justify-content:space-between;align-items:center;font-size:7px;text-transform:uppercase;letter-spacing:0.12em;color:#999;padding:5px 24px;border-bottom:2px solid #1a1a1a;font-family:Arial,Helvetica,sans-serif;flex-shrink:0">
-    <span>N&uacute;m. <span style="font-weight:700;color:#b91c1c;letter-spacing:0.05em">${String(issue.number).padStart(2,'0')}</span></span>
-    <span style="font-weight:700;color:#1a1a1a;font-size:8px;letter-spacing:0.08em">${issue.title}</span>
-    <span style="letter-spacing:0.08em">${new Date(issue.date).toLocaleDateString('ca-ES',{year:'numeric',month:'long'})}</span>
-  </div>
-  ${portadaTopic ? `<div style="text-align:center;padding:6px 24px;border-bottom:1px solid #ccc;font-size:18px;font-weight:700;font-style:italic;color:#333;flex-shrink:0">${portadaTopic}</div>` : ''}
-  <div class="grid">${cells}</div>
+  <div class="title-row">${portadaTopic || issue.title}</div>
+  <div class="grid">${cells}${clarSlot ? `<div style="grid-column:${clarSlot.col+1}/span ${clarSlot.colSpan};grid-row:${clarSlot.row+1};display:flex;align-items:flex-end;justify-content:flex-end;padding:8px 10px;font-family:Arial,Helvetica,sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:${accentColor}">Ha quedat clar?</div>` : ''}</div>
   <div class="footer">
-    <span>Xerrac!<span style="color:#b91c1c;margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
+    <span>Xerrac!<span style="color:${accentColor};margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
     <span>Compilat des de xerrac.cat</span>
   </div>
 </div>
@@ -276,6 +279,11 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
 export function TabloidPreview({ issue }: { issue: IssueData }) {
   const pageRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
+  const accentColor = issue.accentColor || '#ef4444'
+
+  const portada = issue.sections.find(s => s.type === 'portada')
+  const pc = portada?.content as any
+  const portadaTopic = pc?.topic || ''
 
   const layout = useMemo(() => {
     const result = computeLayout(issue, PAGE_W, PAGE_H, MASTHEAD_H, FOOTER_H)
@@ -285,6 +293,9 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       rows: result.numRows,
     }
   }, [issue])
+
+  const clarSlot = layout.placed.find(p => p.fixedType === 'clar')
+  const sectionSlots = layout.placed.filter(p => !p.fixedType)
 
   useEffect(() => {
     function updateScale() {
@@ -334,31 +345,33 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       }}>
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.02, background: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px)', backgroundSize: '4px 4px' }} />
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 1 }}>
-        <div style={{ backgroundColor: '#b91c1c', padding: '12px 40px 16px', textAlign: 'center', flexShrink: 0 }}>
-          <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.15)', marginBottom: 8 }} />
-          <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
-            XERRAC<span style={{ color: '#ff6b6b' }}>!</span>
+        <div style={{ backgroundColor: '#000', padding: '12px 40px 10px', textAlign: 'center', flexShrink: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontFamily: 'Arial,Helvetica,sans-serif', padding: '0 0 6px' }}>
+            <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
+            <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
           </div>
-          <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginTop: 3, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
+          <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.1)', marginBottom: 8 }} />
+          <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
+            XERRAC<span style={{ color: accentColor }}>!</span>
+          </div>
+          <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginTop: 3, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
             Revista d&apos;aclariment cultural
           </div>
-          <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.15)', marginTop: 8 }} />
+          <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.1)', marginTop: 8 }} />
         </div>
 
         <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}>
-          <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#b91c1c" /></pattern></defs>
+          <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill={accentColor} /></pattern></defs>
           <rect width="100%" height="10" fill="url(#saw)" />
         </svg>
 
         <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#999',
-          padding: '5px 24px', borderBottom: '2px solid #1a1a1a',
-          fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
+          textAlign: 'center', padding: '10px 24px', borderBottom: '1px solid #ccc',
+          fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
+          fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em',
+          textTransform: 'uppercase', color: accentColor, flexShrink: 0,
         }}>
-          <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#b91c1c', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
-          <span style={{ fontWeight: 700, color: '#1a1a1a', fontSize: 8, letterSpacing: '0.08em' }}>{issue.title}</span>
-          <span style={{ letterSpacing: '0.08em' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
+          {portadaTopic || issue.title}
         </div>
 
         <div style={{
@@ -367,7 +380,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           gridTemplateRows: rowsCSS,
           flex: 1,
         }}>
-          {layout.placed.map((p) => {
+          {sectionSlots.map((p) => {
             const s = p.section; const fs = p.fontSize; const c = s.content as any
             return (
               <div key={s.id} style={{
@@ -379,9 +392,9 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
                 display: 'flex', flexDirection: 'column', overflow: 'hidden',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, marginBottom: 2 }}>
-                  <div style={{ width: 12, height: 1.5, backgroundColor: '#b91c1c', flexShrink: 0 }} />
+                  <div style={{ width: 12, height: 1.5, backgroundColor: accentColor, flexShrink: 0 }} />
                   <span style={{
-                    fontSize: 6.5, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#b91c1c',
+                    fontSize: 6.5, textTransform: 'uppercase', letterSpacing: '0.2em', color: accentColor,
                     fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif',
                   }}>{sectionLabel(s.type)}</span>
                 </div>
@@ -396,11 +409,24 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
                   fontSize: fs, lineHeight: 1.55, color: '#2a2a2a', textAlign: 'justify',
                   flex: 1, wordWrap: 'break-word', overflowWrap: 'break-word',
                 }}>
-                  {renderSection(s, c, fs, p.colSpan)}
+                  {renderSection(s, c, fs, p.colSpan, accentColor)}
                 </div>
               </div>
             )
           })}
+          {clarSlot && (
+            <div key="clar" style={{
+              gridColumn: `${clarSlot.col + 1} / span ${clarSlot.colSpan}`,
+              gridRow: `${clarSlot.row + 1} / span 1`,
+              display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
+              padding: '8px 10px',
+              fontFamily: 'Arial,Helvetica,sans-serif',
+              fontSize: 8, fontWeight: 700, textTransform: 'uppercase',
+              letterSpacing: '0.12em', color: accentColor,
+            }}>
+              Ha quedat clar?
+            </div>
+          )}
         </div>
 
         <div style={{
@@ -409,7 +435,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           fontSize: 6, textTransform: 'uppercase', letterSpacing: '0.15em',
           color: '#999', fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
         }}>
-          <span>Xerrac!<span style={{ color: '#b91c1c', margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
+          <span>Xerrac!<span style={{ color: accentColor, margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
           <span>Compilat des de xerrac.cat</span>
         </div>
       </div>
