@@ -7,66 +7,59 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
 }
 
-function measureContent(section: SectionData): { text: string; length: number } {
+function measureContent(section: SectionData): { length: number } {
   const c = section.content as any
   switch (section.type) {
     case 'editorial':
     case 'aclariment_cultural':
     case 'visita': {
       const t = stripHtml(c.body || '')
-      return { text: t, length: t.length }
+      return { length: t.length }
     }
     case 'fadu_catala': {
       const t = (c.entries || []).map((e: any) => e.title + ' ' + stripHtml(e.body)).join(' ')
-      return { text: t, length: t.length }
+      return { length: t.length }
     }
     case 'pagines_grogues': {
       const t = (c.proverbs || []).map((p: any) => p.text + ' ' + p.author).join(' ')
-      return { text: t, length: t.length }
+      return { length: t.length }
     }
     case 'calaix_sastre': {
       const i = (c.interviews || []).map((x: any) => x.subject + ' ' + stripHtml(x.body)).join(' ')
       const r = (c.reviews || []).map((x: any) => x.title + ' ' + stripHtml(x.body)).join(' ')
-      return { text: i + ' ' + r, length: i.length + r.length }
+      return { length: i.length + r.length }
     }
     case 'full_mural': {
       const t = (c.collages || []).map((x: any) => x.description).join(' ')
-      return { text: t, length: t.length }
+      return { length: t.length }
     }
     case 'ludita': {
-      return { text: 'Mots encreuats', length: 50 }
+      return { length: 50 }
     }
     default:
-      return { text: '', length: 0 }
+      return { length: 0 }
   }
 }
 
-function Excerpt({ html, maxChars = 300 }: { html: string; maxChars?: number }) {
-  const text = stripHtml(html)
-  const truncated = text.length > maxChars ? text.slice(0, maxChars) + '…' : text
-  return <>{truncated}</>
-}
-
-function SectionBody({ section }: { section: SectionData }) {
+function renderBody(section: SectionData) {
   const c = section.content as any
 
   switch (section.type) {
     case 'editorial':
     case 'aclariment_cultural':
     case 'visita':
-      return <Excerpt html={c.body || ''} maxChars={400} />
+      return <span>{stripHtml(c.body || '')}</span>
 
     case 'fadu_catala': {
       const entries = c.entries || []
       return (
         <>
-          {entries.slice(0, 2).map((e: any, i: number) => (
-            <div key={i} className="mb-2">
-              <strong className="text-xs uppercase tracking-wider">{e.title}</strong>
-              <p className="text-xs mt-1 leading-relaxed"><Excerpt html={e.body} maxChars={150} /></p>
+          {entries.map((e: any, i: number) => (
+            <div key={i} className="mb-3">
+              <strong className="block uppercase tracking-wider text-[10px] mb-0.5 leading-snug">{e.title}</strong>
+              <p className="leading-snug">{stripHtml(e.body)}</p>
             </div>
           ))}
-          {entries.length > 2 && <p className="text-xs italic mt-1">+{entries.length - 2} més</p>}
         </>
       )
     }
@@ -74,11 +67,10 @@ function SectionBody({ section }: { section: SectionData }) {
     case 'pagines_grogues': {
       const proverbs = c.proverbs || []
       return (
-        <div className="space-y-1.5">
-          {proverbs.slice(0, 5).map((p: any, i: number) => (
-            <p key={i} className="text-xs leading-relaxed">&ldquo;{p.text}&rdquo; <span className="text-gray-500">— {p.author}</span></p>
+        <div className="space-y-2">
+          {proverbs.map((p: any, i: number) => (
+            <p key={i} className="leading-snug">&ldquo;{p.text}&rdquo; <span className="opacity-60">— {p.author}</span></p>
           ))}
-          {proverbs.length > 5 && <p className="text-xs italic">+{proverbs.length - 5} proverbis més</p>}
         </div>
       )
     }
@@ -88,18 +80,28 @@ function SectionBody({ section }: { section: SectionData }) {
       const reviews = c.reviews || []
       return (
         <>
-          {interviews.slice(0, 1).map((x: any, i: number) => (
-            <div key={`i${i}`} className="mb-2">
-              <strong className="text-xs">{x.subject}</strong>
-              <p className="text-xs mt-1 leading-relaxed"><Excerpt html={x.body} maxChars={150} /></p>
+          {interviews.length > 0 && (
+            <div className="mb-3">
+              <span className="block uppercase tracking-wider text-[9px] font-bold mb-1">Entrevistes</span>
+              {interviews.map((x: any, i: number) => (
+                <div key={`i${i}`} className="mb-2">
+                  <strong className="text-[11px]">{x.subject}</strong>
+                  <p className="leading-snug">{stripHtml(x.body)}</p>
+                </div>
+              ))}
             </div>
-          ))}
-          {reviews.slice(0, 1).map((x: any, i: number) => (
-            <div key={`r${i}`} className="mb-1">
-              <strong className="text-xs">{x.title}</strong>
-              <p className="text-xs mt-1 leading-relaxed"><Excerpt html={x.body} maxChars={100} /></p>
+          )}
+          {reviews.length > 0 && (
+            <div>
+              <span className="block uppercase tracking-wider text-[9px] font-bold mb-1">Ressenyes</span>
+              {reviews.map((x: any, i: number) => (
+                <div key={`r${i}`} className="mb-2">
+                  <strong className="text-[11px]">{x.title}</strong>
+                  <p className="leading-snug">{stripHtml(x.body)}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </>
       )
     }
@@ -107,17 +109,16 @@ function SectionBody({ section }: { section: SectionData }) {
     case 'full_mural': {
       const collages = c.collages || []
       return (
-        <div className="space-y-1">
-          {collages.slice(0, 3).map((x: any, i: number) => (
-            <p key={i} className="text-xs leading-relaxed">{x.description}</p>
+        <div className="space-y-2">
+          {collages.map((x: any, i: number) => (
+            <p key={i} className="leading-snug">{x.description}</p>
           ))}
-          {collages.length > 3 && <p className="text-xs italic">+{collages.length - 3} collages</p>}
         </div>
       )
     }
 
     case 'ludita':
-      return <p className="text-xs italic">Mots encreuats d&apos;aclariment — resol el crucigrama complet al web.</p>
+      return <p className="italic">Mots encreuats d&apos;aclariment — resol el crucigrama complet a xerrac.cat</p>
 
     default:
       return null
@@ -127,7 +128,6 @@ function SectionBody({ section }: { section: SectionData }) {
 interface PlacedSection {
   section: SectionData
   colSpan: number
-  sortOrder: number
 }
 
 export function TabloidPreview({ issue }: { issue: IssueData }) {
@@ -140,13 +140,19 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       .map(s => ({ section: s, ...measureContent(s) }))
       .sort((a, b) => b.length - a.length)
 
+    const totalLength = sorted.reduce((sum, s) => sum + s.length, 0)
+    const cols = 8
+    const contentHeight = 1120 - 180
+    const available = cols * contentHeight
+
     const placed: PlacedSection[] = []
-    sorted.forEach((item, i) => {
-      let colSpan = 1
-      if (i === 0 && sorted.length >= 3) colSpan = 3
-      else if (i < 3 && sorted.length >= 5) colSpan = 2
-      else if (i < 2 && sorted.length >= 4) colSpan = 2
-      placed.push({ section: item.section, colSpan, sortOrder: i })
+    sorted.forEach((item) => {
+      const proportion = item.length / totalLength
+      let colSpan = Math.max(1, Math.round(proportion * cols))
+      const used = placed.reduce((s, p) => s + p.colSpan, 0)
+      if (used + colSpan > cols) colSpan = cols - used
+      if (colSpan < 1) colSpan = 1
+      placed.push({ section: item.section, colSpan })
     })
 
     const portadaIndex = issue.sections.findIndex(s => s.type === 'portada')
@@ -157,7 +163,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
   }, [issue])
 
   return (
-    <div className="min-h-screen flex flex-col items-center py-8 px-4" style={{ backgroundColor: '#e8e0d0' }}>
+    <div className="min-h-screen flex flex-col items-center py-8 px-4" style={{ backgroundColor: '#dad3c7' }}>
       {/* Print button */}
       <button
         onClick={() => window.print()}
@@ -166,14 +172,14 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
         Exportar PDF
       </button>
 
-      {/* Tabloid page */}
+      {/* Tabloid page — landscape */}
       <div
         ref={pageRef}
         className="tabloid-page"
         style={{
-          width: '1120px',
-          minHeight: '1580px',
-          backgroundColor: '#f5f0e8',
+          width: '1580px',
+          minHeight: '1120px',
+          backgroundColor: '#f2ede4',
           color: '#1a1a1a',
           fontFamily: 'Georgia, "Times New Roman", Times, serif',
           position: 'relative',
@@ -181,115 +187,141 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
         }}
       >
-        {/* Masthead */}
-        <div className="tabloid-masthead" style={{
-          textAlign: 'center',
-          padding: '28px 40px 16px',
-          borderBottom: '3px solid #1a1a1a',
+        {/* Masthead — white text on red banner */}
+        <div style={{
+          position: 'relative',
         }}>
           {sections.portadaBg && (
             <div style={{
-              position: 'absolute', inset: 0, opacity: 0.04,
+              position: 'absolute', inset: 0, opacity: 0.03,
               backgroundImage: `url("${sections.portadaBg}")`,
               backgroundSize: 'cover', backgroundPosition: 'center',
               pointerEvents: 'none',
             }} />
           )}
-          <div style={{ fontSize: '72px', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, color: '#cc2222', position: 'relative' }}>
-            XERRAC<em style={{ fontStyle: 'normal', color: '#cc2222' }}>!</em>
-          </div>
-          <div style={{ fontSize: '11px', letterSpacing: '0.35em', textTransform: 'uppercase', color: '#666', marginTop: '6px', position: 'relative' }}>
-            Revista d&apos;aclariment cultural
-          </div>
+
+          {/* Red masthead band */}
           <div style={{
-            display: 'flex', justifyContent: 'space-between', fontSize: '10px',
-            textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888',
-            marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #ccc',
-            position: 'relative',
+            backgroundColor: '#cc2222',
+            padding: '20px 40px 14px',
+            textAlign: 'center',
           }}>
-            <span>Núm. {String(issue.number).padStart(2, '0')}</span>
-            <span style={{ fontWeight: 700, color: '#1a1a1a' }}>{issue.title}</span>
+            <div style={{
+              fontSize: '80px',
+              fontWeight: 900,
+              letterSpacing: '-0.03em',
+              lineHeight: 1,
+              color: '#ffffff',
+              fontFamily: '"Times New Roman", Times, serif',
+            }}>
+              XERRAC<em style={{ fontStyle: 'normal' }}>!</em>
+            </div>
+            <div style={{
+              fontSize: '10px',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.85)',
+              marginTop: '4px',
+              fontWeight: 400,
+            }}>
+              Revista d&apos;aclariment cultural
+            </div>
+          </div>
+
+          {/* Issue info bar */}
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.08em',
+            color: '#666', padding: '6px 40px',
+            borderBottom: '3px double #1a1a1a',
+            fontFamily: 'Arial, Helvetica, sans-serif',
+          }}>
+            <span>Any {new Date(issue.date).getFullYear() - 2024} &middot; Núm. {String(issue.number).padStart(2, '0')}</span>
+            <span style={{ fontWeight: 700, color: '#1a1a1a', fontSize: '10px' }}>{issue.title}</span>
             <span>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
           </div>
+
+          {/* Topic headline */}
+          {sections.portadaTopic && (
+            <div style={{
+              textAlign: 'center', padding: '10px 40px 10px',
+              borderBottom: '1px solid #ccc',
+              fontSize: '22px', fontWeight: 700, fontStyle: 'italic',
+              color: '#333',
+              fontFamily: 'Georgia, "Times New Roman", Times, serif',
+            }}>
+              {sections.portadaTopic}
+            </div>
+          )}
         </div>
 
-        {/* Topic headline */}
-        {sections.portadaTopic && (
-          <div style={{
-            textAlign: 'center', padding: '14px 40px 16px',
-            borderBottom: '1px solid #ccc',
-            fontSize: '24px', fontWeight: 700, fontStyle: 'italic',
-            color: '#333',
-          }}>
-            {sections.portadaTopic}
-          </div>
-        )}
-
-        {/* Grid layout */}
-        <div className="tabloid-grid" style={{
+        {/* 8-column grid layout — Il Politecnico architecture (landscape) */}
+        <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(8, 1fr)',
           gap: '0',
-          padding: '20px 0',
+          padding: '0',
         }}>
           {sections.placed.map((item, i) => {
             const colSpan = item.colSpan
-            const isLast = i === sections.placed.length - 1
-            const rightBorder = (i + colSpan) % 4 !== 0 && !isLast
 
             return (
               <div
                 key={item.section.id}
-                className="tabloid-article"
                 style={{
                   gridColumn: `span ${colSpan}`,
-                  padding: '0 20px',
-                  borderRight: rightBorder ? '1px solid #ddd' : 'none',
-                  borderBottom: !isLast && Math.floor((i + colSpan) / 4) !== Math.floor(i / 4) ? 'none' : 'none',
-                  marginBottom: '0',
+                  padding: '16px 14px',
+                  borderRight: colSpan < 8 && sections.placed.findIndex(p => p.section.id === item.section.id) < sections.placed.length - 1
+                    ? '1px solid #d4cdbe' : 'none',
+                  borderBottom: 'none',
                   pageBreakInside: 'avoid',
                   breakInside: 'avoid',
                 }}
               >
-                {/* Section type label */}
+                {/* Red accent rule above section */}
                 <div style={{
-                  fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.15em',
-                  color: '#cc2222', marginBottom: '4px', fontWeight: 600,
+                  width: '30px', height: '3px',
+                  backgroundColor: '#cc2222',
+                  marginBottom: '6px',
+                }} />
+
+                {/* Section type label — red */}
+                <div style={{
+                  fontSize: '7px', textTransform: 'uppercase', letterSpacing: '0.15em',
+                  color: '#cc2222', marginBottom: '2px', fontWeight: 700,
+                  fontFamily: 'Arial, Helvetica, sans-serif',
                 }}>
                   {sectionLabel(item.section.type)}
                 </div>
 
                 {/* Title */}
                 <h2 style={{
-                  fontSize: colSpan >= 2 ? '20px' : '16px',
+                  fontSize: colSpan >= 4 ? '18px' : colSpan >= 2 ? '15px' : '13px',
                   fontWeight: 700,
-                  lineHeight: 1.2,
-                  marginBottom: '4px',
+                  lineHeight: 1.15,
+                  marginBottom: '6px',
                   color: '#1a1a1a',
+                  fontFamily: 'Georgia, "Times New Roman", Times, serif',
                 }}>
                   {item.section.title}
                 </h2>
 
-                {/* Rule */}
+                {/* Thin rule below title */}
                 <div style={{
-                  height: '2px', backgroundColor: '#cc2222',
-                  width: colSpan >= 3 ? '60px' : '40px',
+                  height: '1px', backgroundColor: '#bbb',
                   marginBottom: '8px',
                 }} />
 
-                {/* Content */}
-                <div className="tabloid-body" style={{
-                  fontSize: '11px', lineHeight: 1.55, color: '#333',
+                {/* Full content — no truncation */}
+                <div style={{
+                  fontSize: '10px',
+                  lineHeight: 1.45,
+                  color: '#333',
+                  textAlign: 'justify',
+                  fontFamily: 'Georgia, "Times New Roman", Times, serif',
                 }}>
-                  <SectionBody section={item.section} />
+                  {renderBody(item.section)}
                 </div>
-
-                {/* Continue reading link */}
-                <p style={{
-                  fontSize: '9px', marginTop: '8px', fontStyle: 'italic', color: '#cc2222',
-                }}>
-                  Continua llegint a xerrac.cat →
-                </p>
               </div>
             )
           })}
@@ -298,10 +330,11 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
         {/* Footer */}
         <div style={{
           borderTop: '2px solid #1a1a1a',
-          padding: '12px 40px',
+          padding: '10px 40px',
           display: 'flex', justifyContent: 'space-between',
-          fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.1em',
-          color: '#888', position: 'absolute', bottom: 0, left: 0, right: 0,
+          fontSize: '7px', textTransform: 'uppercase', letterSpacing: '0.1em',
+          color: '#888',
+          fontFamily: 'Arial, Helvetica, sans-serif',
         }}>
           <span>Xerrac! — Revista d&apos;aclariment cultural</span>
           <span>Compilat digitalment des de xerrac.cat</span>
