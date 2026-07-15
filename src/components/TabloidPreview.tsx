@@ -102,8 +102,11 @@ function CrosswordPreview({ cw, fs, colSpan, showSolution = false }: { cw: Cross
 function renderSection(s: SectionData, c: any, fs: number, colSpan: number) {
   const lh = 1.35
   switch (s.type) {
-    case 'editorial': case 'aclariment_cultural': case 'visita':
+    case 'editorial': case 'aclariment_cultural':
       return <p style={{ lineHeight: lh, margin: 0 }}>{stripHtml(c.body || '')}</p>
+    case 'visita':
+      return <div><p style={{ lineHeight: lh, margin: 0 }}>{stripHtml(c.body || '')}</p>
+        {c.source && <p style={{ fontSize: `${fs - 1}px`, fontStyle: 'italic', opacity: 0.6, textAlign: 'right', marginTop: 3 }}>Font: {c.source}</p>}</div>
     case 'fadu_catala': {
       const entries = c.entries || []
       return <div style={{ lineHeight: lh }}>{entries.map((e: any, i: number) => (
@@ -166,8 +169,10 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number):
 
   const body = (() => {
     switch (s.type) {
-      case 'editorial': case 'aclariment_cultural': case 'visita':
+      case 'editorial': case 'aclariment_cultural':
         return `<p style="line-height:${lh};margin:0">${stripHtml(c.body || '')}</p>`
+      case 'visita':
+        return `<div><p style="line-height:${lh};margin:0">${stripHtml(c.body || '')}</p>${c.source ? `<p style="font-size:${fs-1}px;font-style:italic;opacity:0.6;text-align:right;margin-top:3px">Font: ${c.source}</p>` : ''}</div>`
       case 'fadu_catala': return `<div style="line-height:${lh}">${(c.entries || []).map((e: any) =>
         `<div style="margin-bottom:${fs*0.3}px"><strong style="font-size:${fs+1}px;text-transform:uppercase;letter-spacing:0.05em">${e.title}</strong><p style="margin:1px 0 0;line-height:${lh}">${stripHtml(e.body)}</p></div>`
       ).join('')}</div>`

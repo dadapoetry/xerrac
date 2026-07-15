@@ -59,8 +59,9 @@ function getTextLength(section: SectionData): number {
   switch (section.type) {
     case 'editorial':
     case 'aclariment_cultural':
-    case 'visita':
       return stripHtml(c.body || '').length
+    case 'visita':
+      return stripHtml(c.body || '').length + (c.source || '').length
     case 'fadu_catala': {
       const t = (c.entries || []).map((e: any) => e.title + ' ' + stripHtml(e.body)).join(' ')
       return t.length
