@@ -234,12 +234,7 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   const portadaTopic = pc?.topic || ''
   const portadaBg = portada?.backgroundImage || ''
 
-  const cells = placed.map(p => {
-    if (p.fixedType === 'clar') return ''
-    return renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.colSpan, accentColor)
-  }).join('')
-
-  const clarSlot = placed.find(p => p.fixedType === 'clar')
+  const cells = placed.map(p => renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.colSpan, accentColor)).join('')
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8">
@@ -249,10 +244,9 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
   html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .page { width:420mm; height:297mm; font-family:Georgia,"Times New Roman",Times,serif; color:#1a1a1a; display:flex; flex-direction:column; background:#f2ede4; position:relative; }
   .masthead { background:#000; padding:12px 40px 10px; text-align:center; flex-shrink:0; position:relative; z-index:2; }
-  .sawtooth { height:10px; flex-shrink:0; background:linear-gradient(135deg,transparent 33%,${accentColor} 33%,${accentColor} 66%,transparent 66%),linear-gradient(225deg,transparent 33%,${accentColor} 33%,${accentColor} 66%,transparent 66%);background-size:6px 10px;background-position:0 0,3px 0;background-repeat:repeat-x; }
+  .sawtooth { height:10px; flex-shrink:0; background:linear-gradient(135deg,transparent 33%,#000 33%,#000 66%,transparent 66%),linear-gradient(225deg,transparent 33%,#000 33%,#000 66%,transparent 66%);background-size:6px 10px;background-position:0 0,3px 0;background-repeat:repeat-x; }
   .grid { display:grid; grid-template-columns:repeat(8,1fr); flex:1; grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
   .footer { border-top:1px solid #1a1a1a; padding:6px 24px; display:flex; justify-content:space-between; font-size:6px; text-transform:uppercase; letter-spacing:0.15em; color:#999; font-family:Arial,Helvetica,sans-serif; flex-shrink:0; }
-  .title-row { text-align:center; padding:10px 24px; border-bottom:1px solid #ccc; flex-shrink:0; font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif; font-size:24px; font-weight:800; letter-spacing:-0.03em; text-transform:uppercase; color:${accentColor}; }
 </style></head>
 <body><div class="page">
   <div style="position:absolute;inset:0;pointer-events:none;opacity:0.02;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);background-size:4px 4px"></div>
@@ -266,8 +260,9 @@ function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: nu
     <div style="height:1px;background-color:rgba(255,255,255,0.1);margin-top:8px"></div>
   </div>
   <div class="sawtooth"></div>
-  <div class="title-row">${portadaTopic || issue.title}</div>
-  <div class="grid">${cells}${clarSlot ? `<div style="grid-column:${clarSlot.col+1}/span ${clarSlot.colSpan};grid-row:${clarSlot.row+1};display:flex;align-items:flex-end;justify-content:flex-end;padding:8px 10px;font-family:Arial,Helvetica,sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:${accentColor}">Ha quedat clar?</div>` : ''}</div>
+  <div class="grid">${cells}</div>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;display:flex;align-items:center;justify-content:center;text-align:center;background:#f2ede4;border:2px solid ${accentColor};z-index:3;font-family:'Arial Black',Impact,'Helvetica Neue',sans-serif;font-size:14px;font-weight:800;line-height:1.2;text-transform:uppercase;color:${accentColor};padding:12px;word-break:break-word">${portadaTopic || issue.title}</div>
+  <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">
     <span>Xerrac!<span style="color:${accentColor};margin:0 6px">◆</span>Revista d&apos;aclariment cultural</span>
     <span>Compilat des de xerrac.cat</span>
@@ -293,9 +288,6 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
       rows: result.numRows,
     }
   }, [issue])
-
-  const clarSlot = layout.placed.find(p => p.fixedType === 'clar')
-  const sectionSlots = layout.placed.filter(p => !p.fixedType)
 
   useEffect(() => {
     function updateScale() {
@@ -361,18 +353,9 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
         </div>
 
         <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}>
-          <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill={accentColor} /></pattern></defs>
+          <defs><pattern id="saw" width="20" height="10" patternUnits="userSpaceOnUse"><path d="M0,0 L10,10 L20,0 Z" fill="#000" /></pattern></defs>
           <rect width="100%" height="10" fill="url(#saw)" />
         </svg>
-
-        <div style={{
-          textAlign: 'center', padding: '10px 24px', borderBottom: '1px solid #ccc',
-          fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
-          fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em',
-          textTransform: 'uppercase', color: accentColor, flexShrink: 0,
-        }}>
-          {portadaTopic || issue.title}
-        </div>
 
         <div style={{
           display: 'grid',
@@ -380,7 +363,7 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
           gridTemplateRows: rowsCSS,
           flex: 1,
         }}>
-          {sectionSlots.map((p) => {
+          {layout.placed.map((p) => {
             const s = p.section; const fs = p.fontSize; const c = s.content as any
             return (
               <div key={s.id} style={{
@@ -414,19 +397,26 @@ export function TabloidPreview({ issue }: { issue: IssueData }) {
               </div>
             )
           })}
-          {clarSlot && (
-            <div key="clar" style={{
-              gridColumn: `${clarSlot.col + 1} / span ${clarSlot.colSpan}`,
-              gridRow: `${clarSlot.row + 1} / span 1`,
-              display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
-              padding: '8px 10px',
-              fontFamily: 'Arial,Helvetica,sans-serif',
-              fontSize: 8, fontWeight: 700, textTransform: 'uppercase',
-              letterSpacing: '0.12em', color: accentColor,
-            }}>
-              Ha quedat clar?
-            </div>
-          )}
+        </div>
+
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          width: 140, height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          textAlign: 'center', background: '#f2ede4', border: `2px solid ${accentColor}`,
+          zIndex: 3, fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
+          fontSize: 18, fontWeight: 800, lineHeight: 1.2, textTransform: 'uppercase',
+          color: accentColor, padding: 14, wordBreak: 'break-word',
+        }}>
+          {portadaTopic || issue.title}
+        </div>
+
+        <div style={{
+          position: 'absolute', bottom: 28, right: 8,
+          background: accentColor, color: '#fff',
+          fontFamily: 'Arial,Helvetica,sans-serif', fontSize: 7, fontWeight: 700,
+          textTransform: 'uppercase', letterSpacing: '0.08em', padding: '5px 10px', zIndex: 3,
+        }}>
+          Ha quedat clar?
         </div>
 
         <div style={{

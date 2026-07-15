@@ -21,7 +21,6 @@ export interface LayoutSlot {
   slotW: number
   slotH: number
   fontSize: number
-  fixedType?: 'title' | 'clar'
 }
 
 export interface LayoutResult {
@@ -299,33 +298,6 @@ export function computeLayout(
       slot.fontSize = calcFontSize(item.textLength, slot.slotW, slot.slotH, item.profile.baseFontSize)
     }
   })
-
-  if (rows.length > 0) {
-    const lr = rows.length - 1
-    const lastSlots = slots.filter(s => s.row === lr)
-    const rightEdge = lastSlots.reduce((max, s) => Math.max(max, s.col + s.colSpan), 0)
-    if (rightEdge >= COLS) {
-      const rightmost = lastSlots.reduce((a, b) => a.col + a.colSpan > b.col + b.colSpan ? a : b)
-      rightmost.colSpan = Math.max(rightmost.colSpan - 1, 1)
-    }
-    const vacated = lastSlots.reduce((max, s) => Math.max(max, s.col + s.colSpan), 0)
-    if (vacated < COLS) {
-      slots.push({
-        section: null as unknown as SectionData,
-        row: lr, col: vacated, colSpan: COLS - vacated,
-        slotW: 0, slotH: 0, fontSize: 10,
-        fixedType: 'clar',
-      })
-    } else {
-      const rightmost = lastSlots.reduce((a, b) => a.col + a.colSpan > b.col + b.colSpan ? a : b)
-      slots.push({
-        section: null as unknown as SectionData,
-        row: lr, col: 7, colSpan: 1,
-        slotW: 0, slotH: 0, fontSize: 10,
-        fixedType: 'clar',
-      })
-    }
-  }
 
   return { slots, rowFractions, numRows: rows.length }
 }
