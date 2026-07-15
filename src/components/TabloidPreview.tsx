@@ -115,7 +115,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number, acce
   }
 }
 
-export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPrint?: boolean }) {
+export function TabloidPreview({ issue, issn, autoPrint }: { issue: IssueData; issn?: string; autoPrint?: boolean }) {
   const pageRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [printing, setPrinting] = useState(false)
@@ -152,7 +152,7 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
 
   function handlePrint() {
     setPrinting(true)
-    const html = buildPrintHTML(issue, layout.placed, layout.norm)
+    const html = buildPrintHTML(issue, layout.placed, layout.norm, issn)
     const win = window.open('', Math.random().toString(36).slice(2))
     if (!win) { setPrinting(false); alert('Permet les finestres emergents per exportar el PDF.'); return }
     win.document.write(html)

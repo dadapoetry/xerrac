@@ -1,4 +1,5 @@
 import { getIssue } from '@/lib/actions'
+import { getSetting } from '@/lib/settings'
 import { TabloidPreview } from '@/components/TabloidPreview'
 import { notFound } from 'next/navigation'
 
@@ -25,5 +26,7 @@ export default async function CompilarPage({
     })),
   }
 
-  return <TabloidPreview issue={parsedIssue as any} autoPrint={searchParams?.print === '1'} />
+  const issn = await getSetting('footer_issn')
+
+  return <TabloidPreview issue={parsedIssue as any} issn={issn} autoPrint={searchParams?.print === '1'} />
 }
