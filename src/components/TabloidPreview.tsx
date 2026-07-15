@@ -381,13 +381,12 @@ export function TabloidPreview({ issue, autoDownload }: { issue: IssueData; auto
         </button>
       </div>
 
-      <div style={{ transform: `scale(${scale})`, transformOrigin: 'center center', flexShrink: 0 }}>
+      <div style={{ transform: `scale(${scale})`, transformOrigin: 'center center', flexShrink: 0, boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
       <div ref={pageRef} style={{
         width: PAGE_W, height: PAGE_H,
         backgroundColor: '#f2ede4', color: '#1a1a1a',
         fontFamily: 'Georgia,"Times New Roman",Times,serif',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
         position: 'relative',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 1 }}>
