@@ -110,7 +110,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, 
     }
   })()
 
-  return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:14px 12px;border-right:${colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
+  return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:20px 12px;border-right:${colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
     <h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;margin:0 0 1px;color:#1a1a1a;text-transform:uppercase;letter-spacing:-0.02em;flex-shrink:0">${s.title}</h2>
     <div style="height:1px;background-color:#d4cdbe;margin-bottom:4px;flex-shrink:0"></div>
     <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
@@ -146,7 +146,7 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
     <h1 style="font-size:78px;font-weight:900;letter-spacing:-0.05em;line-height:0.92;color:#fff">XERRAC<span style="color:${accentColor}">!</span></h1>
     ${!portadaTopic ? '<div style="font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:300">Revista d&apos;aclariment cultural</div>' : ''}
   </div>
-  <svg width="100%" height="14" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="24" height="14" patternUnits="userSpaceOnUse"><path d="M2,0 L12,14 L22,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="14" fill="url(#saw)" /></svg>
+  <svg width="100%" height="16" style="display:block;flex-shrink:0"><defs><pattern id="saw" width="24" height="16" patternUnits="userSpaceOnUse"><path d="M2,0 L12,14 L22,0 Z" fill="#000" /></pattern></defs><rect width="100%" height="16" fill="url(#saw)" /></svg>
   <div class="grid">${cells}</div>
   <div style="position:absolute;bottom:28px;right:8px;background:${accentColor};color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:5px 10px;z-index:3">Ha quedat clar?</div>
   <div class="footer">
