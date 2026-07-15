@@ -194,25 +194,27 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         position: 'relative',
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <div style={{ backgroundColor: '#000', padding: '16px 40px 36px', textAlign: 'center', flexShrink: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontFamily: 'Arial,Helvetica,sans-serif', padding: '0 0 6px' }}>
-            <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
-            <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
-          </div>
-          {portadaTopic && (
-            <div style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: accentColor, marginBottom: 4, fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif' }}>
-              {portadaTopic}
+        <div style={{ height: 148, backgroundColor: '#000', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '0 40px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontFamily: 'Arial,Helvetica,sans-serif', width: '100%' }}>
+              <span>N&uacute;m. <span style={{ fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{String(issue.number).padStart(2, '0')}</span></span>
+              <span style={{ letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)' }}>{new Date(issue.date).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}</span>
             </div>
-          )}
-          <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 0.92, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
-            XERRAC<span style={{ color: accentColor }}>!</span>
-          </div>
-          {!portadaTopic && (
-            <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginTop: 3, fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
-              Revista d&apos;aclariment cultural
+            {portadaTopic && (
+              <div style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: accentColor, fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif' }}>
+                {portadaTopic}
+              </div>
+            )}
+            <div style={{ fontSize: 78, fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 0.92, color: '#fff', fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif' }}>
+              XERRAC<span style={{ color: accentColor }}>!</span>
             </div>
-          )}
+            {!portadaTopic && (
+              <div style={{ fontSize: 8, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 300, fontFamily: 'Arial,Helvetica,sans-serif' }}>
+                Revista d&apos;aclariment cultural
+              </div>
+            )}
+          </div>
+          <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0 }}><defs><pattern id="sbt" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0.8,2 L9.2,2 L9.2,3.2 L8.8,3.2 L7.6,6.8 L6.4,3.2 L5.8,3.2 L4.6,6.8 L3.4,3.2 L2.8,3.2 L1.8,6.8 L0.8,3.2 Z" fill={accentColor} /></pattern></defs><rect width="100%" height="10" fill="url(#sbt)" /></svg>
         </div>
 
         <div style={{
@@ -260,16 +262,12 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
           })}
         </div>
 
-        <svg width="100%" height="10" style={{ display: 'block', flexShrink: 0, margin: '2px 0' }}>
-          <defs><pattern id="sawblade-divider" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0.8,2 L9.2,2 L9.2,3.2 L8.8,3.2 L7.6,6.8 L6.4,3.2 L5.8,3.2 L4.6,6.8 L3.4,3.2 L2.8,3.2 L1.8,6.8 L0.8,3.2 Z" fill={accentColor} /></pattern></defs>
-          <rect width="100%" height="10" fill="url(#sawblade-divider)" />
-        </svg>
-    </div>
         <div style={{
-          borderTop: '1px solid #1a1a1a', padding: '6px 24px',
-          display: 'flex', justifyContent: 'space-between',
-          fontSize: 6, textTransform: 'uppercase', letterSpacing: '0.15em',
-          color: '#999', fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
+          height: 32, borderTop: '1px solid #1a1a1a',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 24px', fontSize: 6, textTransform: 'uppercase',
+          letterSpacing: '0.15em', color: '#999',
+          fontFamily: 'Arial,Helvetica,sans-serif', flexShrink: 0,
         }}>
           <span>Xerrac!<span style={{ color: accentColor, margin: '0 6px' }}>◆</span>Revista d&apos;aclariment cultural</span>
           <span>Compilat des de xerrac.cat</span>
