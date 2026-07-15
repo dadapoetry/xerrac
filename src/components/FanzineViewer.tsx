@@ -48,19 +48,36 @@ function sectionSlug(index: number) {
   return `s-${index}`
 }
 
-async function copyToClipboard(text: string) {
-  try {
-    await navigator.clipboard.writeText(text)
-  } catch {
-    const ta = document.createElement('textarea')
-    ta.value = text
-    ta.style.position = 'fixed'
-    ta.style.opacity = '0'
-    document.body.appendChild(ta)
-    ta.select()
-    document.execCommand('copy')
-    document.body.removeChild(ta)
+async function copyToClipboard(text: string): Promise<boolean> {
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text)
+      return true
+    } catch (err) {
+      console.error("Clipboard API failed:", err)
+    }
   }
+
+  const textArea = document.createElement("textarea")
+  textArea.value = text
+  textArea.setAttribute("readonly", "")
+  textArea.style.position = "fixed"
+  textArea.style.left = "-9999px"
+  textArea.style.top = "0"
+  textArea.style.opacity = "0"
+  textArea.style.fontSize = "16px"
+
+  document.body.appendChild(textArea)
+
+  textArea.focus()
+  textArea.select()
+  textArea.setSelectionRange(0, textArea.value.length)
+
+  const copied = document.execCommand("copy")
+
+  document.body.removeChild(textArea)
+
+  return copied
 }
 
 export function FanzineViewer({ issue }: FanzineViewerProps) {
@@ -177,18 +194,26 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [sortedSections.length])
 
-  const shareLink = useCallback(() => {
-    const section = sortedSections[activeSection]
-    if (!section) return
-    const year = new Date(issue.date).getFullYear()
-    const sectionTitle = section.type === 'portada' ? issue.title : section.title
-    const url = `${window.location.origin}${window.location.pathname}${`?issue=${issue.id}`}#${sectionSlug(activeSection)}`
-    const citation = `${sectionTitle}. (${year}). Xerrac!: Revista d'aclariment cultural, (No. ${String(issue.number).padStart(2, '0')}). ${url}`
-    copyToClipboard(citation)
+const shareLink = useCallback(async () => {
+  const section = sortedSections[activeSection]
+  if (!section) return
+
+  const year = new Date(issue.date).getFullYear()
+  const sectionTitle = section.type === 'portada' ? issue.title : section.title
+  const url = `${window.location.origin}${window.location.pathname}?issue=${issue.id}#${sectionSlug(activeSection)}`
+  const citation = `${sectionTitle}. (${year}). Xerrac!: Revista d'aclariment cultural, (No. ${String(issue.number).padStart(2, '0')}). ${url}`
+
+  const copied = await copyToClipboard(citation)
+
+  if (copied) {
     setCopied(true)
     setSnip(true)
-    setTimeout(() => { setCopied(false); setSnip(false) }, 2000)
-  }, [activeSection, sortedSections, issue])
+    setTimeout(() => {
+      setCopied(false)
+      setSnip(false)
+    }, 2000)
+  }
+}, [activeSection, sortedSections, issue])
 
   if (sortedSections.length === 0) {
     return (
