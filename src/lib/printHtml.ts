@@ -111,8 +111,8 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, colSpan: number, 
   })()
 
   return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:20px 12px;border-right:${colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column">
-    <h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;margin:0 0 1px;color:#1a1a1a;text-transform:uppercase;letter-spacing:-0.02em;flex-shrink:0">${s.title}</h2>
-    <div style="height:1px;background-color:#d4cdbe;margin-bottom:4px;flex-shrink:0"></div>
+    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin:0 0 4px"><svg viewBox="0 0 100 100" style="width:10px;height:10px;flex-shrink:0" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" fill="${accentColor}" /></svg><h2 style="font-size:${titleSize};font-weight:800;line-height:1.2;color:#1a1a1a;text-transform:uppercase;letter-spacing:-0.02em">${s.title}</h2></div>
+    <div style="height:1px;background-color:#d4cdbe;margin-bottom:6px;flex-shrink:0"></div>
     <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
   </div>`
 }

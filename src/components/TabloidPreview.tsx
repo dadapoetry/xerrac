@@ -3,6 +3,7 @@
 import { useMemo, useRef, useEffect, useState } from 'react'
 import { IssueData, SectionData, CrosswordData } from '@/types'
 import { computeLayout } from '@/lib/layoutEngine'
+import { SawIcon } from '@/components/SawIcon'
 import { buildPrintHTML, stripHtml, sectionLabel, buildGrid } from '@/lib/printHtml'
 
 const PAGE_W = 1580
@@ -243,13 +244,16 @@ export function TabloidPreview({ issue, autoPrint }: { issue: IssueData; autoPri
                     fontWeight: 700, fontFamily: 'Arial,Helvetica,sans-serif',
                   }}>{sectionLabel(s.type)}</span>
                 </div>
-                <h2 style={{
-                  fontSize: p.colSpan >= 5 ? '16px' : p.colSpan >= 3 ? '14px' : '12px',
-                  fontWeight: 800, lineHeight: 1.2, margin: '0 0 1px', color: '#1a1a1a',
-                  fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
-                  textTransform: 'uppercase', letterSpacing: '-0.02em', flexShrink: 0,
-                }}>{s.title}</h2>
-                <div style={{ height: 1, backgroundColor: '#d4cdbe', marginBottom: 4, flexShrink: 0 }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, margin: '0 0 4px' }}>
+                  <SawIcon className="w-[10px] h-[10px]" color={accentColor} />
+                  <h2 style={{
+                    fontSize: p.colSpan >= 5 ? '17px' : p.colSpan >= 3 ? '15px' : '13px',
+                    fontWeight: 800, lineHeight: 1.2, color: '#1a1a1a',
+                    fontFamily: '"Arial Black",Impact,"Helvetica Neue",sans-serif',
+                    textTransform: 'uppercase', letterSpacing: '-0.02em',
+                  }}>{s.title}</h2>
+                </div>
+                <div style={{ height: 1, backgroundColor: '#d4cdbe', marginBottom: 6, flexShrink: 0 }} />
                 <div style={{
                   fontSize: fs, lineHeight: 1.55, color: '#2a2a2a', textAlign: 'justify',
                   flex: 1, wordWrap: 'break-word', overflowWrap: 'break-word',
