@@ -23,23 +23,27 @@ export function Crossword({ data }: CrosswordProps) {
         g[r][c] = ''
       }
     }
-    const allClues = [
-      ...Object.values(clues.across),
-      ...Object.values(clues.down),
-    ]
-    for (const clue of allClues) {
-      const { row, col, answer } = clue
-      const isAcross = Object.values(clues.across).some(
-        (c) => c.row === row && c.col === col && c.answer === answer
-      )
-      for (let i = 0; i < answer.length; i++) {
-        const r = isAcross ? row : row + i
-        const c = isAcross ? col + i : col
-        if (r < gridSize && c < gridSize) {
-          if (!g[r][c]) g[r][c] = ''
-        }
-      }
+for (const clue of Object.values(clues.across)) {
+  for (let i = 0; i < clue.answer.length; i++) {
+    const r = clue.row
+    const c = clue.col + i
+
+    if (r < gridSize && c < gridSize) {
+      g[r][c] = ''
     }
+  }
+}
+
+for (const clue of Object.values(clues.down)) {
+  for (let i = 0; i < clue.answer.length; i++) {
+    const r = clue.row + i
+    const c = clue.col
+
+    if (r < gridSize && c < gridSize) {
+      g[r][c] = ''
+    }
+  }
+}
     return g
   })
 
@@ -48,23 +52,33 @@ export function Crossword({ data }: CrosswordProps) {
   const [revealed, setRevealed] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[][]>([])
 
-  const isBlackCell = (row: number, col: number): boolean => {
-    const allClues = [
-      ...Object.values(clues.across),
-      ...Object.values(clues.down),
-    ]
-    for (const clue of allClues) {
-      const isAcross = Object.values(clues.across).some(
-        (c) => c.row === clue.row && c.col === clue.col && c.answer === clue.answer
-      )
-      for (let i = 0; i < clue.answer.length; i++) {
-        const r = isAcross ? clue.row : clue.row + i
-        const c = isAcross ? clue.col + i : clue.col
-        if (r === row && c === col) return false
+const isBlackCell = (row: number, col: number): boolean => {
+  // Comprobar horizontales
+  for (const clue of Object.values(clues.across)) {
+    for (let i = 0; i < clue.answer.length; i++) {
+      const r = clue.row
+      const c = clue.col + i
+
+      if (r === row && c === col) {
+        return false
       }
     }
-    return true
   }
+
+  // Comprobar verticales
+  for (const clue of Object.values(clues.down)) {
+    for (let i = 0; i < clue.answer.length; i++) {
+      const r = clue.row + i
+      const c = clue.col
+
+      if (r === row && c === col) {
+        return false
+      }
+    }
+  }
+
+  return true
+}
 
   const getCellNumber = (row: number, col: number): number | null => {
     for (const [num, clue] of Object.entries(clues.across)) {
@@ -134,27 +148,37 @@ export function Crossword({ data }: CrosswordProps) {
     setActivePos({ row, col })
   }
 
-  const checkAnswers = () => {
-    setRevealed(true)
-    const newGrid = grid.map(r => [...r])
-    const allClues = [
-      ...Object.values(clues.across),
-      ...Object.values(clues.down),
-    ]
-    for (const clue of allClues) {
-      const isAcross = Object.values(clues.across).some(
-        (c) => c.row === clue.row && c.col === clue.col && c.answer === clue.answer
-      )
-      for (let i = 0; i < clue.answer.length; i++) {
-        const r = isAcross ? clue.row : clue.row + i
-        const c = isAcross ? clue.col + i : clue.col
-        if (r < gridSize && c < gridSize) {
-          newGrid[r][c] = clue.answer[i]?.toUpperCase() || ''
-        }
+const checkAnswers = () => {
+  setRevealed(true)
+
+  const newGrid = grid.map(r => [...r])
+
+  // Rellenar horizontales
+  for (const clue of Object.values(clues.across)) {
+    for (let i = 0; i < clue.answer.length; i++) {
+      const r = clue.row
+      const c = clue.col + i
+
+      if (r < gridSize && c < gridSize) {
+        newGrid[r][c] = clue.answer[i]?.toUpperCase() || ''
       }
     }
-    setGrid(newGrid)
   }
+
+  // Rellenar verticales
+  for (const clue of Object.values(clues.down)) {
+    for (let i = 0; i < clue.answer.length; i++) {
+      const r = clue.row + i
+      const c = clue.col
+
+      if (r < gridSize && c < gridSize) {
+        newGrid[r][c] = clue.answer[i]?.toUpperCase() || ''
+      }
+    }
+  }
+
+  setGrid(newGrid)
+}
 
   const resetGrid = () => {
     setRevealed(false)
