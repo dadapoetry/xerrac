@@ -132,8 +132,8 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
 <style>
   @page { size: A3 landscape; margin: 0; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html,body { width:1580px; height:1120px; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  .page { width:1580px; height:1120px; font-family:Inter,Arial,Helvetica,sans-serif; color:#1a1a1a; position:relative; overflow:hidden; background:#f2ede4; }
+  html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .page { width:420mm; height:297mm; font-family:Inter,Arial,Helvetica,sans-serif; color:#1a1a1a; position:relative; overflow:hidden; background:#f2ede4; }
   .masthead { position:absolute; top:0; left:0; right:0; height:148px; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:0 40px; }
   .grid { position:absolute; top:148px; left:0; right:0; bottom:32px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
   .footer { position:absolute; bottom:0; left:0; right:0; height:32px; border-top:1px solid #1a1a1a; display:flex; align-items:center; justify-content:space-between; padding:0 24px; font-size:10px; text-transform:uppercase; letter-spacing:0.15em; color:#666; }
