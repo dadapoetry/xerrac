@@ -260,7 +260,7 @@ const shareLink = useCallback(async () => {
           <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={shareLink}
-                className={`w-8 h-8 border border-gray-800 text-gray-400 hover:border-red-500/50
+                className={`w-8 h-8 border border-gray-800 text-gray-400 hover:border-[var(--btn-hover)]/50
                   transition-all flex items-center justify-center ${snip ? 'animate-snip' : ''}`}
                 style={{ '--btn-hover': 'var(--accent)' } as React.CSSProperties}
                 title="Aclarir"
@@ -279,7 +279,7 @@ const shareLink = useCallback(async () => {
               </button>
             <a
               href="/arxiu"
-              className="w-8 h-8 border border-gray-800 text-gray-400 hover:border-red-500/50
+              className="w-8 h-8 border border-gray-800 text-gray-400 hover:border-[var(--btn-hover)]/50
                 transition-all flex items-center justify-center"
               title="Arxiu d'aclariments"
               onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
