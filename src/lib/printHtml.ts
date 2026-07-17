@@ -88,7 +88,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colS
       case 'full_mural': {
         const collages = c.collages || []
         if (!collages.length) return ''
-        const dc = Math.min(collages.length, colSpan >= 3 ? 3 : 2); const thumb = colSpan >= 3 ? 45 : 36
+        const dc = Math.min(collages.length, colSpan >= 3 ? 3 : 2); const thumb = colSpan >= 3 ? 80 : 60
         return `<div style="display:flex;flex-direction:column;gap:${fs*0.3}px">${collages.slice(0, dc).map((x: any) =>
           `<div style="display:flex;align-items:center;gap:4px;background-color:rgba(0,0,0,0.03);padding:2px 4px">${x.image ? `<div style="width:${thumb}px;height:${thumb}px;background-image:url('${optimizeImageUrl(x.image, baseUrl)}');background-size:cover;background-position:center;flex-shrink:0;border:1px solid rgba(0,0,0,0.08)"></div>` : ''}<p style="font-size:${fs-0.5}px;line-height:${lh};margin:0">${x.description}</p></div>`
         ).join('')}${collages.length > dc ? `<p style="font-size:${fs-1}px;font-style:italic;opacity:0.6;margin:0">+${collages.length-dc} col·latges m&eacute;s</p>` : ''}</div>`
@@ -115,7 +115,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colS
     }
   })()
 
-  return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:20px 12px;border-right:${col + colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column;overflow:hidden">
+  return `<div style="grid-column:span ${colSpan};grid-row:span 1;padding:14px 12px;border-right:${col + colSpan < 8 ? '1px solid #ddd3c4' : 'none'};border-bottom:1px solid #ddd3c4;display:flex;flex-direction:column;overflow:hidden">
     <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin:0 0 4px"><svg viewBox="0 0 100 100" style="width:10px;height:10px;flex-shrink:0" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" fill="${accentColor}" /></svg><h2 style="font-size:${titleSize};font-weight:700;line-height:1.2;color:#1a1a1a;text-transform:uppercase;letter-spacing:-0.02em">${s.title}</h2></div>
     <div style="height:1px;background-color:#d4cdbe;margin-bottom:6px;flex-shrink:0"></div>
     <div style="font-size:${fs}px;line-height:1.55;color:#2a2a2a;text-align:justify;flex:1;word-wrap:break-word;overflow-wrap:break-word">${body}</div>
@@ -139,9 +139,9 @@ export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFracti
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { width:420mm; height:297mm; overflow:hidden; background:#f2ede4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .page { width:420mm; height:297mm; font-family:Inter,Arial,Helvetica,sans-serif; color:#1a1a1a; position:relative; overflow:hidden; background:#f2ede4; }
-  .masthead { position:absolute; top:0; left:0; right:0; height:148px; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:0 40px; }
-  .grid { position:absolute; top:148px; left:0; right:0; bottom:32px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; }
-  .footer { position:absolute; bottom:0; left:0; right:0; height:32px; border-top:1px solid #1a1a1a; display:flex; align-items:center; justify-content:space-between; padding:0 24px; font-size:10px; text-transform:uppercase; letter-spacing:0.15em; color:#666; }
+  .masthead { position:absolute; top:0; left:0; right:0; height:148px; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:0 40px; z-index:2; }
+  .grid { position:absolute; top:148px; left:0; right:0; bottom:32px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:${rowFractions.map(f => `${f.toFixed(1)}fr`).join(' ')}; overflow:hidden; }
+  .footer { position:absolute; bottom:0; left:0; right:0; height:32px; border-top:1px solid #1a1a1a; display:flex; align-items:center; justify-content:space-between; padding:0 24px; font-size:10px; text-transform:uppercase; letter-spacing:0.15em; color:#666; background:#f2ede4; z-index:2; }
 </style></head>
 <body><div class="page">
   <div class="masthead">

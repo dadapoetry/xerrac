@@ -36,7 +36,7 @@ const PROFILES: Record<string, SectionProfile> = {
   aclariment_cultural:{ priority:  7, minCols: 2, weight: 6,  baseFontSize: 11 },
   calaix_sastre:      { priority:  6, minCols: 2, weight: 6,  baseFontSize: 11 },
   pagines_grogues:    { priority:  4, minCols: 1, weight: 2,  baseFontSize: 10 },
-  full_mural:         { priority:  3, minCols: 2, weight: 2,  baseFontSize: 10 },
+  full_mural:         { priority:  3, minCols: 2, weight: 5,  baseFontSize: 11 },
   ludita:             { priority:  1, minCols: 3, weight: 10, baseFontSize: 9  },
 }
 
@@ -74,7 +74,7 @@ function getTextLength(section: SectionData): number {
       return i.length + r.length
     }
     case 'full_mural':
-      return (c.collages || []).filter((x: any) => x.description).length * 200
+      return (c.collages || []).length * 400
     case 'ludita': {
       const cw = c.crossword
       if (cw) {

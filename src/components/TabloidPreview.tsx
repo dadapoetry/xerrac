@@ -95,7 +95,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number, acce
     case 'full_mural': {
       const collages = c.collages || []
       if (!collages.length) return null
-      const dc = Math.min(collages.length, colSpan >= 3 ? 3 : 2); const thumb = colSpan >= 3 ? 45 : 36
+      const dc = Math.min(collages.length, colSpan >= 3 ? 3 : 2); const thumb = colSpan >= 3 ? 80 : 60
       return <div style={{ display: 'flex', flexDirection: 'column', gap: `${fs * 0.3}px` }}>
         {collages.slice(0, dc).map((x: any, i: number) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '4px', backgroundColor: 'rgba(0,0,0,0.03)', padding: '2px 4px' }}>
