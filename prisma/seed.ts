@@ -168,9 +168,7 @@ async function main() {
     { key: 'footer_copyright', value: '© 2025 Xerrac!' },
     { key: 'footer_issn', value: 'ISSN 2938-2026 (en tràmit)' },
     { key: 'footer_social_links', value: JSON.stringify([
-      { name: 'Instagram', url: 'https://instagram.com/xerrac' },
-      { name: 'Twitter / X', url: 'https://x.com/xerrac' },
-      { name: 'Bluesky', url: 'https://bsky.app/profile/xerrac.bsky.social' },
+      { name: 'Instagram', url: 'https://instagram.com/laxerrac' },
     ]) },
   ]
 

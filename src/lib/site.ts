@@ -1,4 +1,4 @@
-const DEFAULT_URL = 'https://xerrac.vercel.app'
+const DEFAULT_URL = 'https://laxerrac.cat'
 
 export function getSiteUrl(): string {
   return process.env.NEXT_PUBLIC_URL || DEFAULT_URL

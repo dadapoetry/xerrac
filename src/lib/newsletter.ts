@@ -1,6 +1,6 @@
 import { getSiteUrl } from './site'
 
-const FROM = process.env.NEWSLETTER_FROM || 'Xerrac! <contacte@xerrac.cat>'
+const FROM = process.env.NEWSLETTER_FROM || 'Xerrac! <contacte@laxerrac.cat>'
 const BASE_URL = getSiteUrl().replace(/\/+$/, '')
 const SAW_IMG = `<img src="${BASE_URL}/saw-icon.svg" width="20" height="20" alt="" style="display:inline-block;vertical-align:middle;line-height:0;font-size:0;width:20px;height:20px" />`
 
