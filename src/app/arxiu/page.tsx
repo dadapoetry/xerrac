@@ -3,13 +3,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getPublishedIssues } from '@/lib/actions'
 import { getSiteUrl } from '@/lib/site'
-import { RedRule } from '@/components/RedRule'
 import { Footer } from '@/components/Footer'
 
 export const dynamic = 'force-dynamic'
 
 const SECTION_LABELS: Record<string, string> = {
-  portada: 'Portada',
   editorial: 'Editorial',
   aclariment_cultural: 'Aclariment Cultural',
   fadu_catala: 'Fadu Català',
@@ -36,28 +34,246 @@ export const metadata: Metadata = {
   },
 }
 
-function SectionTags({ sections }: { sections: { type: string }[] }) {
-  const tags = sections
+function CoverImage({ src, alt, priority }: { src: string; alt: string; priority?: boolean }) {
+  return (
+    <div className="absolute inset-0">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover"
+        sizes="100vw"
+        priority={priority}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/5" />
+    </div>
+  )
+}
+
+function IssueNumber({ num, size = 'default' }: { num: number; size?: 'default' | 'hero' }) {
+  const cls = size === 'hero'
+    ? 'text-[min(30vw,16rem)]'
+    : 'text-[min(25vw,10rem)]'
+  return (
+    <span
+      className={`${cls} font-black leading-[0.8] tracking-tighter select-none pointer-events-none`}
+      style={{ color: 'rgba(239, 68, 68, 0.07)' }}
+      aria-hidden="true"
+    >
+      {String(num).padStart(2, '0')}
+    </span>
+  )
+}
+
+function SectionList({ sections }: { sections: { type: string }[] }) {
+  const names = sections
     .filter((s) => s.type !== 'portada')
     .map((s) => SECTION_LABELS[s.type] || s.type)
-    .slice(0, 4)
 
-  if (tags.length === 0) return null
+  if (names.length === 0) return null
 
   return (
-    <div className="flex flex-wrap gap-1.5">
-      {tags.map((tag) => (
-        <span
-          key={tag}
-          className="text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border border-gray-700 text-gray-400"
-        >
-          {tag}
-        </span>
+    <ul className="space-y-1">
+      {names.map((name) => (
+        <li key={name} className="text-[10px] sm:text-[11px] text-gray-500 uppercase tracking-[0.15em] leading-relaxed">
+          {name}
+        </li>
       ))}
-      {sections.filter((s) => s.type !== 'portada').length > 4 && (
-        <span className="text-[9px] text-gray-600 self-center ml-0.5">+{sections.filter((s) => s.type !== 'portada').length - 4}</span>
-      )}
-    </div>
+    </ul>
+  )
+}
+
+interface IssueShape {
+  id: string
+  number: number
+  title: string
+  date: Date
+  sections: { type: string }[]
+  coverBg: string
+}
+
+function shapeIssue(issue: any): IssueShape {
+  const cover = issue.sections?.find((s: any) => s.type === 'portada')
+  return {
+    id: issue.id,
+    number: issue.number,
+    title: issue.title,
+    date: new Date(issue.date),
+    sections: issue.sections || [],
+    coverBg: cover?.backgroundImage || '',
+  }
+}
+
+type Treatment = 'hero' | 'split-left' | 'split-right' | 'typography' | 'gallery'
+
+function getTreatment(index: number, total: number): Treatment {
+  if (index === 0) return 'hero'
+  const t = index % 8
+  if (t === 1 || t === 5) return 'split-left'
+  if (t === 2 || t === 6) return 'split-right'
+  if (t === 3 || t === 7) return 'typography'
+  return 'gallery'
+}
+
+function HeroIssue({ issue }: { issue: IssueShape }) {
+  return (
+    <Link
+      href={`/?issue=${issue.id}`}
+      className="group block relative overflow-hidden border-b border-gray-900"
+    >
+      <div className="aspect-[4/3] sm:aspect-[21/9] md:aspect-[2.6/1] relative">
+        {issue.coverBg ? (
+          <CoverImage src={issue.coverBg} alt={`Portada del número ${issue.number}`} priority />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-900 to-black" />
+        )}
+
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
+
+        <div className="relative h-full flex flex-col justify-end p-5 sm:p-8 md:p-12">
+          <span className="text-[8px] sm:text-[9px] text-gray-500 tracking-[0.3em] uppercase mb-2 sm:mb-3">
+            Últim número
+          </span>
+
+          <div className="flex items-end gap-4 sm:gap-6 md:gap-8">
+            <div className="hidden sm:block -mb-4 -ml-2 sm:-ml-3 md:-ml-4 shrink-0">
+              <IssueNumber num={issue.number} size="hero" />
+            </div>
+            <div className="flex-1 min-w-0 pb-1 sm:pb-2">
+              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[0.95] tracking-tight group-hover:text-red-400 transition-colors duration-300">
+                {issue.title}
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-500 mt-2 sm:mt-3">
+                {issue.date.toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}
+              </p>
+            </div>
+            <span className="hidden sm:inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-gray-500 group-hover:text-white transition-colors duration-300 shrink-0 pb-1 sm:pb-2">
+              Llegir
+              <span className="text-lg leading-none group-hover:translate-x-1 transition-transform duration-300">→</span>
+            </span>
+          </div>
+
+          <div className="sm:hidden absolute bottom-5 right-5">
+            <IssueNumber num={issue.number} size="hero" />
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+function SplitIssue({ issue, reverse }: { issue: IssueShape; reverse?: boolean }) {
+  const imageSide = reverse ? 'md:order-2' : ''
+  const contentSide = reverse ? 'md:order-1' : ''
+
+  return (
+    <Link
+      href={`/?issue=${issue.id}`}
+      className="group block relative overflow-hidden border-b border-gray-900"
+    >
+      <div className="md:grid md:grid-cols-2 md:min-h-[50vh]">
+        <div className={`relative aspect-[4/3] md:aspect-auto ${imageSide}`}>
+          {issue.coverBg ? (
+            <CoverImage src={issue.coverBg} alt={`Portada del número ${issue.number}`} />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black" />
+          )}
+        </div>
+
+        <div className={`relative flex flex-col justify-center p-6 sm:p-8 md:p-10 lg:p-14 ${contentSide}`}>
+          <div className="hidden sm:block absolute -top-6 -right-4 sm:right-0 lg:-top-10">
+            <IssueNumber num={issue.number} />
+          </div>
+
+          <span className="text-[8px] text-gray-600 tracking-[0.3em] uppercase mb-2">
+            Número {String(issue.number).padStart(2, '0')}
+          </span>
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white leading-[0.95] tracking-tight mb-3 sm:mb-4 group-hover:text-red-400 transition-colors duration-300">
+            {issue.title}
+          </h2>
+          <p className="text-xs text-gray-600 mb-4 sm:mb-6">
+            {issue.date.toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}
+          </p>
+          <SectionList sections={issue.sections} />
+
+          <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-gray-600 group-hover:text-gray-400 transition-colors duration-300 mt-4 sm:mt-6">
+            Explorar
+            <span className="text-lg leading-none group-hover:translate-x-1 transition-transform duration-300">→</span>
+          </span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+function TypographyIssue({ issue }: { issue: IssueShape }) {
+  return (
+    <Link
+      href={`/?issue=${issue.id}`}
+      className="group block relative overflow-hidden border-b border-gray-900"
+    >
+      <div className="relative px-6 sm:px-8 md:px-12 lg:px-16 py-12 sm:py-16 md:py-20">
+        <div className="hidden sm:block absolute -top-8 right-4 sm:right-8 lg:-top-12 lg:right-12">
+          <IssueNumber num={issue.number} />
+        </div>
+
+        <div className="max-w-lg">
+          <span className="text-[8px] text-gray-700 tracking-[0.3em] uppercase mb-2 block">
+            Número {String(issue.number).padStart(2, '0')}
+          </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[0.92] tracking-tight mb-4 sm:mb-6 group-hover:text-red-400 transition-colors duration-300">
+            {issue.title}
+          </h2>
+          <p className="text-xs text-gray-600 mb-4">
+            {issue.date.toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}
+          </p>
+          <SectionList sections={issue.sections} />
+
+          <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-gray-700 group-hover:text-gray-500 transition-colors duration-300 mt-4 sm:mt-6">
+            Explorar →)
+          </span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+function GalleryIssue({ issue }: { issue: IssueShape }) {
+  return (
+    <Link
+      href={`/?issue=${issue.id}`}
+      className="group block relative overflow-hidden border-b border-gray-900"
+    >
+      <div className="aspect-[3/2] sm:aspect-[2/1] md:aspect-[3/1] relative">
+        {issue.coverBg ? (
+          <CoverImage src={issue.coverBg} alt={`Portada del número ${issue.number}`} />
+        ) : (
+          <div className="absolute inset-0 bg-gray-950" />
+        )}
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+        <div className="relative h-full flex flex-col justify-end p-5 sm:p-8 md:p-10">
+          <div className="flex items-end gap-4">
+            <span
+              className="text-5xl sm:text-6xl md:text-7xl font-black leading-none tracking-tight shrink-0"
+              style={{ color: 'rgba(239, 68, 68, 0.12)' }}
+            >
+              {String(issue.number).padStart(2, '0')}
+            </span>
+            <div className="flex-1 min-w-0 pb-1">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight group-hover:text-red-400 transition-colors duration-300">
+                {issue.title}
+              </h2>
+              <p className="text-xs text-gray-500 mt-1">
+                {issue.date.toLocaleDateString('ca-ES', { year: 'numeric', month: 'short' })}
+              </p>
+            </div>
+            <span className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors duration-300 shrink-0 self-end pb-1">→</span>
+          </div>
+        </div>
+      </div>
+    </Link>
   )
 }
 
@@ -86,9 +302,6 @@ export default async function ArxiuPage() {
     },
   }
 
-  const latestIssue = issues[0] || null
-  const previousIssues = issues.slice(1)
-
   return (
     <>
       <script
@@ -97,169 +310,64 @@ export default async function ArxiuPage() {
       />
       <div className="min-h-screen flex flex-col">
         <div className="flex-1">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-0">
-            <Link
-              href="/"
-              className="text-[10px] text-gray-500 hover:text-white transition-colors mb-12 inline-block uppercase tracking-[0.3em]"
-            >
-              ← Tornar a la revista
-            </Link>
+          <div className="px-4 sm:px-6 md:px-8 pt-12 sm:pt-16 md:pt-20 pb-0">
+            <div className="max-w-6xl mx-auto">
+              <Link
+                href="/"
+                className="text-[9px] text-gray-600 hover:text-white transition-colors mb-10 sm:mb-14 inline-block uppercase tracking-[0.3em]"
+              >
+                ← Tornar a la revista
+              </Link>
+            </div>
 
-            <header className="mb-16 sm:mb-20">
-              <span className="text-[9px] text-gray-500 tracking-[0.35em] uppercase block mb-3">
-                Biblioteca
+            <header className="max-w-6xl mx-auto mb-14 sm:mb-16 md:mb-20">
+              <span className="text-[8px] text-gray-700 tracking-[0.35em] uppercase block mb-3">
+                Biblioteca d&rsquo;aclariments
               </span>
-              <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white uppercase leading-[0.85] mb-4">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
                 Xerrac<span style={{ color: 'var(--accent, #ef4444)' }}>!</span>
               </h1>
-              <p className="text-sm text-gray-500 max-w-md leading-relaxed">
-                Una col·lecció creixent d&rsquo;aclariments culturals. Cada número és un objecte editorial únic.
+              <p className="text-sm text-gray-600 max-w-lg leading-relaxed">
+                Cada número és un artifacte editorial. Una col·lecció creixent de volums que exploren la cultura contemporània.
               </p>
+              <div className="h-px w-16 sm:w-20 bg-red-900/60 mt-6 sm:mt-8" />
             </header>
           </div>
 
-          {latestIssue && (
-            <>
-              <section className="max-w-6xl mx-auto px-4 sm:px-6 mb-16 sm:mb-20">
-                <Link
-                  href={`/?issue=${latestIssue.id}`}
-                  className="group block relative"
-                >
-                  <div className="relative overflow-hidden border border-gray-800 group-hover:border-gray-600 transition-colors duration-500">
-                    {(() => {
-                      const coverSection = latestIssue.sections?.find((s: any) => s.type === 'portada')
-                      const coverBg = coverSection?.backgroundImage || ''
-                      return coverBg ? (
-                        <>
-                          <div className="aspect-[16/9] sm:aspect-[21/9] relative">
-                            <Image
-                              src={coverBg}
-                              alt=""
-                              fill
-                              className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                              sizes="(max-width: 640px) 100vw, 1200px"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="aspect-[16/9] sm:aspect-[21/9] bg-gray-950" />
-                      )
-                    })()}
-
-                    <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8 md:p-10">
-                      <span className="text-[9px] sm:text-[10px] text-gray-400 tracking-[0.3em] uppercase block mb-2">
-                        Últim número
-                      </span>
-                      <div className="flex items-end gap-4 sm:gap-6">
-                        <span
-                          className="text-5xl sm:text-7xl md:text-8xl font-black leading-none tracking-tight"
-                          style={{ color: 'rgba(239, 68, 68, 0.15)' }}
-                        >
-                          {String(latestIssue.number).padStart(2, '0')}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight group-hover:text-red-400 transition-colors duration-300">
-                            {latestIssue.title}
-                          </h2>
-                          <p className="text-xs sm:text-sm text-gray-500 mt-1.5">
-                            {new Date(latestIssue.date).toLocaleDateString('ca-ES', {
-                              year: 'numeric',
-                              month: 'long',
-                            })}
-                          </p>
-                        </div>
-                        <span className="hidden sm:inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-gray-400 group-hover:text-white transition-colors duration-300 shrink-0">
-                          Llegir
-                          <span className="text-lg leading-none group-hover:translate-x-1 transition-transform duration-300">→</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </section>
-
-              <div className="max-w-6xl mx-auto px-4 sm:px-6">
-                <RedRule className="mb-16 sm:mb-20" />
-              </div>
-            </>
-          )}
-
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20">
-            {issues.length === 0 ? (
-              <div className="text-center py-32">
+          {issues.length === 0 ? (
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-32">
+              <div className="text-center">
                 <span className="text-8xl font-black text-gray-800 select-none">:</span>
                 <p className="text-gray-600 text-sm mt-4">No hi ha números publicats encara.</p>
               </div>
-            ) : (
-              <>
-                {previousIssues.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-                    {previousIssues.map((issue, index) => {
-                      const coverSection = issue.sections?.find((s: any) => s.type === 'portada')
-                      const coverBg = coverSection?.backgroundImage || ''
+            </div>
+          ) : (
+            <div>
+              {issues.map((issue, index) => {
+                const s = shapeIssue(issue)
+                const treatment = getTreatment(index, issues.length)
 
-                      return (
-                        <Link
-                          key={issue.id}
-                          href={`/?issue=${issue.id}`}
-                          className="group block relative border border-gray-800 hover:border-gray-600 transition-all duration-500 overflow-hidden"
-                        >
-                          <div className="aspect-[16/10] relative overflow-hidden">
-                            {coverBg ? (
-                              <>
-                                <Image
-                                  src={coverBg}
-                                  alt=""
-                                  fill
-                                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
-                              </>
-                            ) : (
-                              <div className="absolute inset-0 bg-gray-950" />
-                            )}
-                            <span
-                              className="absolute top-3 left-3 sm:top-4 sm:left-4 text-5xl sm:text-6xl md:text-7xl font-black leading-none select-none pointer-events-none"
-                              style={{ color: 'rgba(239, 68, 68, 0.08)' }}
-                            >
-                              {String(issue.number).padStart(2, '0')}
-                            </span>
-                            <span className="absolute top-3 right-3 sm:top-4 sm:right-4 text-[9px] text-gray-500 font-mono">
-                              {new Date(issue.date).toLocaleDateString('ca-ES', {
-                                year: 'numeric',
-                                month: 'short',
-                              })}
-                            </span>
-                          </div>
+                switch (treatment) {
+                  case 'hero':
+                    return <HeroIssue key={s.id} issue={s} />
+                  case 'split-left':
+                    return <SplitIssue key={s.id} issue={s} />
+                  case 'split-right':
+                    return <SplitIssue key={s.id} issue={s} reverse />
+                  case 'typography':
+                    return <TypographyIssue key={s.id} issue={s} />
+                  case 'gallery':
+                    return <GalleryIssue key={s.id} issue={s} />
+                }
+              })}
 
-                          <div className="p-4 sm:p-5">
-                            <h3 className="text-base sm:text-lg font-bold text-white leading-snug mb-2 group-hover:text-red-400 transition-colors duration-300">
-                              {issue.title}
-                            </h3>
-                            <SectionTags sections={issue.sections} />
-                          </div>
-
-                          <span className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 text-xs text-gray-600 group-hover:text-gray-400 transition-colors duration-300">
-                            →
-                          </span>
-                        </Link>
-                      )
-                    })}
-                  </div>
-                )}
-
-                {issues.length > 0 && (
-                  <div className="mt-16 sm:mt-20 text-center">
-                    <p className="text-[10px] text-gray-700 tracking-[0.3em] uppercase">
-                      {issues.length} {issues.length === 1 ? 'número publicat' : 'números publicats'}
-                    </p>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 text-center">
+                <p className="text-[9px] text-gray-800 tracking-[0.3em] uppercase">
+                  {issues.length} {issues.length === 1 ? 'volum' : 'volums'} a la biblioteca
+                </p>
+              </div>
+            </div>
+          )}
         </div>
         <Footer />
       </div>
