@@ -7,6 +7,7 @@ import { db } from './db'
 import { v4 as uuid } from 'uuid'
 import { safeParse } from '@/lib/utils'
 import { getSiteUrl } from './site'
+import { checkRateLimit } from './rate-limit'
 
 async function checkAuth() {
   const session = await getServerSession(authOptions)
@@ -247,27 +248,14 @@ export async function deleteSection(id: string) {
 
 /* Newsletter */
 
-const subscribeAttempts = new Map<string, { count: number; resetAt: number }>()
-
-function checkSubscribeRateLimit(email: string): boolean {
-  const now = Date.now()
-  const entry = subscribeAttempts.get(email)
-  if (entry && now < entry.resetAt) {
-    entry.count++
-    return entry.count < 3
-  } else {
-    subscribeAttempts.set(email, { count: 1, resetAt: now + 3600000 })
-    return true
-  }
-}
-
 export async function subscribe(email: string) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(email)) {
     throw new Error('Correu no vàlid')
   }
 
-  if (!checkSubscribeRateLimit(email)) {
+  const allowed = await checkRateLimit(`subscribe:${email}`, 3, 3600000)
+  if (!allowed) {
     throw new Error('Massa intents. Prova-ho més tard.')
   }
 

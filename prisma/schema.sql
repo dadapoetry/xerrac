@@ -45,3 +45,9 @@ CREATE TABLE IF NOT EXISTS Subscriber (
   confirmed INTEGER NOT NULL DEFAULT 0,
   createdAt TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS RateLimit (
+  key TEXT PRIMARY KEY,
+  attempts INTEGER NOT NULL DEFAULT 1,
+  window_start INTEGER NOT NULL
+);
