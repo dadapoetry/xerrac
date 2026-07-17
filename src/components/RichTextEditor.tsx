@@ -16,57 +16,46 @@ interface RichTextEditorProps {
 
 export function RichTextEditor({ value, onChange, minimal = false }: RichTextEditorProps) {
   const editorRef = useRef<ReactQuillType | null>(null)
-  const [imageDialog, setImageDialog] = useState(false)
-  const pendingRangeRef = useRef<any>(null)
-
-  const imageHandler = useCallback(() => {
-    const editor = editorRef.current as any
-    if (!editor) return
-    const quill = editor.getEditor?.() || editor
-    const range = quill.getSelection()
-    pendingRangeRef.current = range || { index: quill.getLength() || 0, length: 0 }
-    setImageDialog(true)
-  }, [])
+  const [showImageDialog, setShowImageDialog] = useState(false)
 
   const insertImage = useCallback((url: string, width: string) => {
     const editor = editorRef.current as any
     if (!editor) return
     const quill = editor.getEditor?.() || editor
-    const range = pendingRangeRef.current
-    if (!range) {
-      setImageDialog(false)
-      return
-    }
-    quill.focus()
-    quill.setSelection(range)
+    const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
     quill.clipboard.dangerouslyPasteHTML(
       range.index,
       `<img src="${url}" style="max-width: ${width || '100%'}; height: auto;" />`
     )
-    setImageDialog(false)
-    pendingRangeRef.current = null
+    setShowImageDialog(false)
   }, [])
 
   const modules = useMemo(() => {
     const cfg = minimal
-      ? [['bold', 'italic', 'image'], ['clean']]
+      ? [['bold', 'italic'], ['clean']]
       : [
           [{ header: [1, 2, 3, false] }],
           ['bold', 'italic', 'underline', 'strike'],
           [{ list: 'ordered' }, { list: 'bullet' }],
-          ['blockquote', 'link', 'image'],
+          ['blockquote', 'link'],
           ['clean'],
         ]
-    return {
-      toolbar: {
-        container: cfg,
-        handlers: { image: imageHandler },
-      },
-    }
-  }, [minimal, imageHandler])
+    return { toolbar: cfg }
+  }, [minimal])
 
   return (
     <div>
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
+        <button
+          type="button"
+          onClick={() => setShowImageDialog(true)}
+          className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
+        >
+          + Inserir imatge
+        </button>
+      </div>
+
       <ReactQuill
         ref={(el: any) => { editorRef.current = el }}
         value={value}
@@ -76,10 +65,10 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
         modules={modules}
       />
 
-      {imageDialog && (
+      {showImageDialog && (
         <ImageDialog
           onInsert={insertImage}
-          onClose={() => { setImageDialog(false); pendingRangeRef.current = null }}
+          onClose={() => setShowImageDialog(false)}
         />
       )}
     </div>
