@@ -314,22 +314,19 @@ export default async function ArxiuPage() {
             <div className="max-w-6xl mx-auto">
               <Link
                 href="/"
-                className="text-[9px] text-gray-600 hover:text-white transition-colors mb-10 sm:mb-14 inline-block uppercase tracking-[0.3em]"
+                className="text-[9px] text-gray-300 hover:text-white transition-colors mb-10 sm:mb-14 inline-block uppercase tracking-[0.3em]"
               >
                 ← Tornar a la revista
               </Link>
             </div>
 
             <header className="max-w-6xl mx-auto mb-14 sm:mb-16 md:mb-20">
-              <span className="text-[8px] text-gray-700 tracking-[0.35em] uppercase block mb-3">
+              <span className="text-[8px] text-gray-400 tracking-[0.35em] uppercase block mb-3">
                 Biblioteca d&rsquo;aclariments
               </span>
               <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
                 Xerrac<span style={{ color: 'var(--accent, #ef4444)' }}>!</span>
               </h1>
-              <p className="text-sm text-gray-600 max-w-lg leading-relaxed">
-                Cada número és un artifacte editorial. Una col·lecció creixent de volums que exploren la cultura contemporània.
-              </p>
               <div className="h-px w-16 sm:w-20 bg-red-900/60 mt-6 sm:mt-8" />
             </header>
           </div>
@@ -338,7 +335,7 @@ export default async function ArxiuPage() {
             <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-32">
               <div className="text-center">
                 <span className="text-8xl font-black text-gray-800 select-none">:</span>
-                <p className="text-gray-600 text-sm mt-4">No hi ha números publicats encara.</p>
+                <p className="text-gray-400 text-sm mt-4">No hi ha números publicats encara.</p>
               </div>
             </div>
           ) : (
@@ -362,7 +359,7 @@ export default async function ArxiuPage() {
               })}
 
               <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 text-center">
-                <p className="text-[9px] text-gray-800 tracking-[0.3em] uppercase">
+                <p className="text-[9px] text-gray-500 tracking-[0.3em] uppercase">
                   {issues.length} {issues.length === 1 ? 'volum' : 'volums'} a la biblioteca
                 </p>
               </div>
