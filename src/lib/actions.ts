@@ -5,6 +5,10 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from './auth'
 import { db } from './db'
 import { v4 as uuid } from 'uuid'
+import { computeLayout } from './layoutEngine'
+import { buildPrintHTML } from './printHtml'
+import { mkdir, writeFile } from 'fs/promises'
+import path from 'path'
 
 async function checkAuth() {
   const session = await getServerSession(authOptions)
@@ -25,6 +29,7 @@ function mapIssue(row: any) {
     date: toDate(row.date),
     published: Boolean(row.published),
     accentColor: row.accentColor || '#ef4444',
+    pdfUrl: row.pdfUrl || '',
     createdAt: toDate(row.createdAt),
     updatedAt: toDate(row.updatedAt),
     sections: [] as any[],
@@ -116,8 +121,8 @@ export async function createIssue(data: { number: number; title: string; date: s
   await checkAuth()
   const id = uuid()
   await db.execute({
-    sql: 'INSERT INTO Issue (id, number, title, date, accentColor) VALUES (?, ?, ?, ?, ?)',
-    args: [id, data.number, data.title, data.date, '#ef4444'],
+    sql: 'INSERT INTO Issue (id, number, title, date, accentColor, pdfUrl) VALUES (?, ?, ?, ?, ?, ?)',
+    args: [id, data.number, data.title, data.date, '#ef4444', ''],
   })
   revalidatePath('/admin')
   revalidatePath('/')
@@ -141,11 +146,6 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
       sql: `UPDATE Issue SET ${sets.join(', ')}, updatedAt = datetime('now') WHERE id = ?`,
       args,
     })
-  }
-
-  if (data.published) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'
-    fetch(`${baseUrl}/api/pdf/${id}`).catch(() => {})
   }
 
   revalidatePath('/admin')
@@ -212,6 +212,85 @@ export async function deleteSection(id: string) {
   await checkAuth()
   await db.execute({ sql: 'DELETE FROM Section WHERE id = ?', args: [id] })
   revalidatePath('/admin')
+}
+
+/* PDF */
+
+export async function generateIssuePdf(issueId: string) {
+  await checkAuth()
+
+  const issueResult = await db.execute({
+    sql: 'SELECT * FROM Issue WHERE id = ?',
+    args: [issueId],
+  })
+  if (issueResult.rows.length === 0) throw new Error('Número no trobat')
+  const raw = issueResult.rows[0] as any
+
+  const sectionsResult = await db.execute({
+    sql: 'SELECT * FROM Section WHERE issueId = ? ORDER BY "order" ASC',
+    args: [issueId],
+  })
+  const sections = sectionsResult.rows as any[]
+
+  const issue = {
+    ...raw,
+    date: toDate(raw.date),
+    published: Boolean(raw.published),
+    sections: sections.map((s: any) => ({
+      ...s,
+      content: (() => { try { return JSON.parse(s.content) } catch { return {} } })(),
+    })),
+  }
+
+  const PAGE_W = 1580
+  const PAGE_H = 1120
+  const MASTHEAD_H = 148
+  const FOOTER_H = 32
+  const layout = computeLayout(issue, PAGE_W, PAGE_H, MASTHEAD_H, FOOTER_H)
+
+  const issnResult = await db.execute({
+    sql: "SELECT value FROM Settings WHERE key = 'footer_issn'",
+    args: [],
+  })
+  const issn = (issnResult.rows[0] as any)?.value || ''
+
+  const html = buildPrintHTML(issue, layout.slots, layout.rowFractions, issn)
+
+  const pdfResp = await fetch('https://pdfspark.dev/api/v1/pdf/from-html', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      html,
+      options: {
+        format: 'A3',
+        landscape: true,
+        printBackground: true,
+        margin: { top: '0', right: '0', bottom: '0', left: '0' },
+      },
+    }),
+  })
+
+  if (!pdfResp.ok) {
+    const err = await pdfResp.text()
+    throw new Error(`PDFSpark: ${err}`)
+  }
+
+  const buffer = Buffer.from(await pdfResp.arrayBuffer())
+  const pdfDir = path.join(process.cwd(), 'public', 'pdfs')
+  await mkdir(pdfDir, { recursive: true })
+  const pdfPath = path.join(pdfDir, `${issueId}.pdf`)
+  await writeFile(pdfPath, buffer)
+
+  const pdfUrl = `/pdfs/${issueId}.pdf`
+  await db.execute({
+    sql: 'UPDATE Issue SET pdfUrl = ?, updatedAt = datetime(\'now\') WHERE id = ?',
+    args: [pdfUrl, issueId],
+  })
+
+  revalidatePath('/admin')
+  revalidatePath('/')
+
+  return { ok: true, pdfUrl, message: 'PDF generat correctament' }
 }
 
 /* Newsletter */

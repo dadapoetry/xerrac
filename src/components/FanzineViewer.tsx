@@ -344,7 +344,7 @@ const shareLink = useCallback(async () => {
               </>
             )}
             <div className="relative z-[3] w-full">
-              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} issueId={issue.id} />
+              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} pdfUrl={issue.pdfUrl} />
             </div>
           </div>
         </div>
