@@ -2,7 +2,6 @@ import { getIssue } from '@/lib/actions'
 import { IssueForm } from '@/components/admin/IssueForm'
 import { SectionList } from '@/components/admin/SectionList'
 import { SendNewsletterButton } from '@/components/admin/SendNewsletterButton'
-import { GeneratePdfButton } from '@/components/admin/GeneratePdfButton'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -35,8 +34,6 @@ export default async function EditNumeroPage({ params }: { params: { id: string 
         Número {issue.number} · {new Date(issue.date).toLocaleDateString('ca-ES', {
           year: 'numeric', month: 'long'
         })}
-        <span className="mx-3">·</span>
-        <GeneratePdfButton issueId={issue.id} hasPdf={!!issue.pdfUrl} />
         <span className="mx-3">·</span>
         <SendNewsletterButton issueId={issue.id} />
       </p>

@@ -113,7 +113,6 @@ export interface IssueData {
   date: Date
   published: boolean
   accentColor?: string
-  pdfUrl?: string
   sections: SectionData[]
 }
 
