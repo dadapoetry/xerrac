@@ -76,11 +76,14 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colS
         `<p style="margin:0 0 3px">&ldquo;${p.text}&rdquo; <span style="opacity:0.6">— ${p.author}</span></p>`
       ).join('')}</div>`
       case 'calaix_sastre': {
-        const interviews = c.interviews || []; const reviews = c.reviews || []; const parts: string[] = []
+        const interviews = c.interviews || []; const reviews = c.reviews || []; const investigacio = c.investigacio || []; const parts: string[] = []
         if (interviews.length > 0) parts.push(`<div style="margin-bottom:${fs*0.3}px"><span style="font-size:${fs-1}px;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;display:block;margin-bottom:${fs*0.15}px">Entrevistes</span>${interviews.map((x: any) =>
           `<div style="margin-bottom:${fs*0.25}px"><strong style="font-size:${fs}px">${x.subject}</strong><p style="margin:1px 0 0;line-height:${lh}">${stripHtml(x.body)}</p></div>`
         ).join('')}</div>`)
-        if (reviews.length > 0) parts.push(`<div><span style="font-size:${fs-1}px;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;display:block;margin-bottom:${fs*0.15}px">Ressenyes</span>${reviews.map((x: any) =>
+        if (reviews.length > 0) parts.push(`<div style="margin-bottom:${fs*0.3}px"><span style="font-size:${fs-1}px;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;display:block;margin-bottom:${fs*0.15}px">Ressenyes</span>${reviews.map((x: any) =>
+          `<div style="margin-bottom:${fs*0.25}px"><strong style="font-size:${fs}px">${x.title}</strong><p style="margin:1px 0 0;line-height:${lh}">${stripHtml(x.body)}</p></div>`
+        ).join('')}</div>`)
+        if (investigacio.length > 0) parts.push(`<div><span style="font-size:${fs-1}px;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;display:block;margin-bottom:${fs*0.15}px">Investigació</span>${investigacio.map((x: any) =>
           `<div style="margin-bottom:${fs*0.25}px"><strong style="font-size:${fs}px">${x.title}</strong><p style="margin:1px 0 0;line-height:${lh}">${stripHtml(x.body)}</p></div>`
         ).join('')}</div>`)
         return `<div style="line-height:${lh}">${parts.join('')}</div>`

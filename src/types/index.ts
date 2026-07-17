@@ -36,6 +36,11 @@ export interface ReviewEntry {
   body: string
 }
 
+export interface ResearchEntry {
+  title: string
+  body: string
+}
+
 export interface CollageEntry {
   image: string
   description: string
@@ -70,6 +75,7 @@ export interface PaginesGroquesContent {
 export interface CalaixSastreContent {
   interviews: InterviewEntry[]
   reviews: ReviewEntry[]
+  investigacio: ResearchEntry[]
 }
 
 export interface VisitaContent {

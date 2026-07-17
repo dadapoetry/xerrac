@@ -347,6 +347,27 @@ export async function generatePDF(issueData: PrintIssueData) {
       }
     }
 
+    // ── Investigació ──
+    if (c.investigacio) {
+      y = tinyLabel(doc, 'Investigació', y)
+      for (const item of c.investigacio) {
+        y = brk(doc, y, 8)
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(12)
+        doc.setTextColor(250, 250, 250)
+        const tlines = toLines(doc, item.title, COL_W)
+        for (const l of tlines) {
+          doc.text(l as string, M, y)
+          y += 6
+        }
+        if (item.body) y = prose(doc, item.body, y)
+        doc.setDrawColor(40, 40, 40)
+        doc.setLineWidth(0.2)
+        doc.line(M, y, PW - M, y)
+        y += 6
+      }
+    }
+
     // ── Collages ──
     if (c.collages) {
       const gap = 5

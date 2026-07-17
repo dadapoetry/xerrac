@@ -238,6 +238,37 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
               + Afegir crítica
             </button>
           </div>
+
+          <div>
+            <h4 className="text-xs uppercase text-gray-500 mb-4">Investigació</h4>
+            {(data.investigacio || []).map((item: any, i: number) => (
+              <div key={i} className="p-4 border border-gray-700 mb-4 space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Investigació #{i + 1}</span>
+                  <button type="button" onClick={() => removeArrayItem('investigacio', i)}
+                    className="text-xs text-red-500">Eliminar</button>
+                </div>
+                <input
+                  type="text" value={item.title || ''}
+                  onChange={(e) => updateArrayItem('investigacio', i, 'title', e.target.value)}
+                  placeholder="Títol de la investigació"
+                  className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+                />
+                <RichTextEditor
+                  value={item.body || ''}
+                  onChange={(v) => updateArrayItem('investigacio', i, 'body', v)}
+                  minimal
+                />
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => addArrayItem('investigacio', { title: '', body: '' })}
+              className="text-sm text-red-400 hover:text-red-300 border border-dashed border-red-900 px-4 py-2 w-full"
+            >
+              + Afegir investigació
+            </button>
+          </div>
         </div>
       )
 

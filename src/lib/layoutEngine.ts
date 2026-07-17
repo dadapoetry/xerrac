@@ -71,7 +71,8 @@ function getTextLength(section: SectionData): number {
     case 'calaix_sastre': {
       const i = (c.interviews || []).map((x: any) => x.subject + ' ' + stripHtml(x.body)).join(' ')
       const r = (c.reviews || []).map((x: any) => x.title + ' ' + stripHtml(x.body)).join(' ')
-      return i.length + r.length
+      const inv = (c.investigacio || []).map((x: any) => x.title + ' ' + stripHtml(x.body)).join(' ')
+      return i.length + r.length + inv.length
     }
     case 'full_mural':
       return (c.collages || []).length * 400

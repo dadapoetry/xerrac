@@ -336,6 +336,11 @@ export async function sendIssueNewsletter(issueId: string) {
           .filter((e: any) => e.body)
           .map((e: any) => e.body.replace(/<[^>]+>/g, ''))
           .join(' ').slice(0, 250)
+      } else if (content.investigacio) {
+        summary = content.investigacio
+          .filter((e: any) => e.body)
+          .map((e: any) => e.body.replace(/<[^>]+>/g, ''))
+          .join(' ').slice(0, 250)
       } else if (content.source) {
         summary = `Entrevista a ${content.source}`
       } else if (content.collages) {

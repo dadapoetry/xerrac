@@ -74,7 +74,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number, acce
       ))}
     </div>
     case 'calaix_sastre': {
-      const interviews = c.interviews || []; const reviews = c.reviews || []
+      const interviews = c.interviews || []; const reviews = c.reviews || []; const investigacio = c.investigacio || []
       return <div style={{ lineHeight: lh }}>
         {interviews.length > 0 && <div style={{ marginBottom: `${fs * 0.3}px` }}>
           <span style={{ fontSize: `${fs - 1}px`, textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, display: 'block', marginBottom: `${fs * 0.15}px` }}>Entrevistes</span>
@@ -83,9 +83,16 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number, acce
             <p style={{ margin: '1px 0 0', lineHeight: lh }}>{stripHtml(x.body)}</p>
           </div>)}
         </div>}
-        {reviews.length > 0 && <div>
+        {reviews.length > 0 && <div style={{ marginBottom: `${fs * 0.3}px` }}>
           <span style={{ fontSize: `${fs - 1}px`, textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, display: 'block', marginBottom: `${fs * 0.15}px` }}>Ressenyes</span>
           {reviews.map((x: any, i: number) => <div key={`r${i}`} style={{ marginBottom: `${fs * 0.25}px` }}>
+            <strong style={{ fontSize: `${fs}px` }}>{x.title}</strong>
+            <p style={{ margin: '1px 0 0', lineHeight: lh }}>{stripHtml(x.body)}</p>
+          </div>)}
+        </div>}
+        {investigacio.length > 0 && <div>
+          <span style={{ fontSize: `${fs - 1}px`, textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, display: 'block', marginBottom: `${fs * 0.15}px` }}>Investigació</span>
+          {investigacio.map((x: any, i: number) => <div key={`inv${i}`} style={{ marginBottom: `${fs * 0.25}px` }}>
             <strong style={{ fontSize: `${fs}px` }}>{x.title}</strong>
             <p style={{ margin: '1px 0 0', lineHeight: lh }}>{stripHtml(x.body)}</p>
           </div>)}
