@@ -1,6 +1,7 @@
 import { getIssue } from '@/lib/actions'
 import { safeParse } from '@/lib/utils'
 import { SectionForm } from '@/components/admin/SectionForm'
+import { SectionData } from '@/types'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -18,7 +19,7 @@ export default async function EditSeccioPage({
   const section = issue.sections.find((s: any) => s.id === params.sectionId)
   if (!section) notFound()
 
-  const parsedSection = {
+  const parsedSection: SectionData = {
     ...section,
     content: safeParse(section.content),
   }
@@ -39,7 +40,7 @@ export default async function EditSeccioPage({
 
       <SectionForm
         issueId={issue.id}
-        initial={parsedSection as any}
+        initial={parsedSection}
         nextOrder={issue.sections.length}
       />
     </div>

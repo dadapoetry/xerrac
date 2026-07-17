@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createIssue, updateIssue } from '@/lib/actions'
+import { useToast } from './Toast'
 
 interface IssueFormProps {
   initial?: {
@@ -17,13 +18,39 @@ interface IssueFormProps {
 
 export function IssueForm({ initial }: IssueFormProps) {
   const router = useRouter()
+  const { toast } = useToast()
   const [number, setNumber] = useState(initial?.number || 1)
   const [title, setTitle] = useState(initial?.title || '')
   const [date, setDate] = useState(initial?.date || new Date().toISOString().split('T')[0])
-  const [published, setPublished] = useState(initial?.published ?? true)
+  const [published, setPublished] = useState(initial?.published ?? false)
   const [accentColor, setAccentColor] = useState(initial?.accentColor || '#ef4444')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [dirty, setDirty] = useState(false)
+
+  const markDirty = useCallback(() => setDirty(true), [])
+
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (dirty) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [dirty])
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault()
+        document.getElementById('issue-form-submit')?.click()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,13 +60,18 @@ export function IssueForm({ initial }: IssueFormProps) {
     try {
       if (initial) {
         await updateIssue(initial.id, { number, title, date, published, accentColor })
+        toast('Número actualitzat', 'success')
       } else {
         await createIssue({ number, title, date })
+        toast('Número creat', 'success')
       }
+      setDirty(false)
       router.push('/admin/numeros')
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error en desar el número')
+      const msg = err instanceof Error ? err.message : 'Error en desar el número'
+      setError(msg)
+      toast(msg, 'error')
     } finally {
       setLoading(false)
     }
@@ -54,7 +86,7 @@ export function IssueForm({ initial }: IssueFormProps) {
         <input
           type="number"
           value={number}
-          onChange={(e) => setNumber(parseInt(e.target.value) || 0)}
+          onChange={(e) => { setNumber(parseInt(e.target.value) || 0); markDirty() }}
           className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
             text-sm focus:outline-none focus:border-red-500 transition-colors"
           required
@@ -69,7 +101,7 @@ export function IssueForm({ initial }: IssueFormProps) {
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => { setTitle(e.target.value); markDirty() }}
           className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
             text-sm focus:outline-none focus:border-red-500 transition-colors"
           required
@@ -83,7 +115,7 @@ export function IssueForm({ initial }: IssueFormProps) {
         <input
           type="date"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          onChange={(e) => { setDate(e.target.value); markDirty() }}
           className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
             text-sm focus:outline-none focus:border-red-500 transition-colors"
           required
@@ -100,15 +132,19 @@ export function IssueForm({ initial }: IssueFormProps) {
               <input
                 type="color"
                 value={accentColor}
-                onChange={(e) => setAccentColor(e.target.value)}
+                onChange={(e) => { setAccentColor(e.target.value); markDirty() }}
                 className="w-10 h-10 border border-gray-700 bg-transparent cursor-pointer"
               />
               <input
                 type="text"
                 value={accentColor}
-                onChange={(e) => setAccentColor(e.target.value)}
+                onChange={(e) => { setAccentColor(e.target.value); markDirty() }}
                 className="w-28 bg-gray-900 border border-gray-700 px-3 py-2 text-white
                   text-sm font-mono focus:outline-none focus:border-gray-500 transition-colors"
+              />
+              <span
+                className="w-6 h-6 rounded-full border border-gray-700"
+                style={{ backgroundColor: accentColor }}
               />
             </div>
           </div>
@@ -117,7 +153,7 @@ export function IssueForm({ initial }: IssueFormProps) {
               type="checkbox"
               id="published"
               checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
+              onChange={(e) => { setPublished(e.target.checked); markDirty() }}
               className="accent-red-500"
             />
             <label htmlFor="published" className="text-sm text-gray-400">
@@ -133,6 +169,7 @@ export function IssueForm({ initial }: IssueFormProps) {
 
       <div className="flex gap-3">
         <button
+          id="issue-form-submit"
           type="submit"
           disabled={loading}
           className="px-6 py-3 bg-red-600 text-white text-sm uppercase tracking-wider
@@ -142,7 +179,10 @@ export function IssueForm({ initial }: IssueFormProps) {
         </button>
         <button
           type="button"
-          onClick={() => router.back()}
+          onClick={() => {
+            if (dirty && !confirm('Tens canvis no desats. Vols sortir de totes maneres?')) return
+            router.back()
+          }}
           className="px-6 py-3 border border-gray-700 text-gray-400 text-sm uppercase tracking-wider
             hover:border-gray-500 transition-colors"
         >

@@ -12,6 +12,7 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
   const links = [
     { href: '/admin', label: 'Dashboard' },
     { href: '/admin/numeros', label: 'Números' },
+    { href: '/admin/config', label: 'Configuració' },
   ]
 
   const sidebar = (
@@ -44,8 +45,15 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
         ))}
       </nav>
 
-      <div className="p-4 border-t border-gray-900">
-        <p className="text-xs text-gray-700 mb-2 truncate">{user?.email}</p>
+      <div className="p-4 border-t border-gray-900 space-y-2">
+        <a
+          href={process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}
+          target="_blank"
+          className="block text-[11px] text-gray-600 hover:text-red-400 transition-colors uppercase tracking-wider"
+        >
+          Veure lloc →
+        </a>
+        <p className="text-xs text-gray-700 truncate">{user?.email}</p>
         <button
           onClick={() => signOut({ callbackUrl: '/admin/login' })}
           className="text-[11px] text-gray-600 hover:text-red-400 transition-colors uppercase tracking-wider"
@@ -58,24 +66,30 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
 
   return (
     <>
-      {/* Mobile toggle */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed top-3 left-3 z-50 md:hidden w-8 h-8 bg-black/80 border border-gray-800 text-gray-400 flex items-center justify-center text-sm"
+        className={`fixed top-3 left-3 z-50 md:hidden w-8 h-8 flex items-center justify-center text-sm transition-all ${
+          open ? 'bg-transparent text-white' : 'bg-black/80 border border-gray-800 text-gray-400'
+        }`}
+        aria-label={open ? 'Tancar menú' : 'Obrir menú'}
       >
-        {open ? '✕' : '☰'}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+          {open ? (
+            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+          ) : (
+            <path d="M3 5a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 5Zm0 5a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 10Zm0 5a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 15Z" />
+          )}
+        </svg>
       </button>
 
-      {/* Desktop sidebar */}
-      <div className="hidden md:block fixed left-0 top-0 h-full w-64 z-50">
+      <div className={`hidden md:block fixed left-0 top-0 h-full w-64 z-50 transition-transform duration-200 ${open ? 'translate-x-0' : ''}`}>
         {sidebar}
       </div>
 
-      {/* Mobile overlay */}
       {open && (
         <div className="fixed inset-0 z-40 md:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-0 h-full w-64">
+          <div className="absolute inset-0 bg-black/60 animate-fade-in" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 top-0 h-full w-64 animate-slide-right">
             {sidebar}
           </div>
         </div>

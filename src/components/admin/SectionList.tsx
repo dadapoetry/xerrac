@@ -4,7 +4,9 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { deleteSection, updateSection } from '@/lib/actions'
-import { SECTION_LABELS, SECTION_TYPES, SectionData } from '@/types'
+import { SECTION_LABELS, SectionData } from '@/types'
+import { Modal } from './Modal'
+import { useToast } from './Toast'
 
 interface SectionListProps {
   issueId: string
@@ -13,41 +15,56 @@ interface SectionListProps {
 
 export function SectionList({ issueId, sections }: SectionListProps) {
   const router = useRouter()
-  const sorted = [...sections].sort((a, b) => a.order - b.order)
+  const { toast } = useToast()
+  const [sorted, setSorted] = useState(() => [...sections].sort((a, b) => a.order - b.order))
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Estàs segur?')) return
+  const handleDelete = async () => {
+    if (!deleteTarget) return
     try {
-      await deleteSection(id)
+      await deleteSection(deleteTarget)
+      setSorted((prev) => prev.filter((s) => s.id !== deleteTarget))
+      toast('Secció eliminada', 'success')
       router.refresh()
-    } catch (e) {
-      alert('Error en eliminar la secció')
+    } catch (e: any) {
+      toast(e?.message || 'Error en eliminar la secció', 'error')
     }
+    setDeleteTarget(null)
   }
 
   const moveUp = async (index: number) => {
     if (index <= 0) return
+    const newSorted = [...sorted];
+    [newSorted[index - 1], newSorted[index]] = [newSorted[index], newSorted[index - 1]]
+    setSorted(newSorted)
+
     try {
       const a = sorted[index]
       const b = sorted[index - 1]
       await updateSection(a.id, { order: b.order })
       await updateSection(b.id, { order: a.order })
       router.refresh()
-    } catch (e) {
-      alert('Error en reordenar')
+    } catch (e: any) {
+      setSorted([...sections].sort((a, b) => a.order - b.order))
+      toast(e?.message || 'Error en reordenar', 'error')
     }
   }
 
   const moveDown = async (index: number) => {
     if (index >= sorted.length - 1) return
+    const newSorted = [...sorted];
+    [newSorted[index], newSorted[index + 1]] = [newSorted[index + 1], newSorted[index]]
+    setSorted(newSorted)
+
     try {
       const a = sorted[index]
       const b = sorted[index + 1]
       await updateSection(a.id, { order: b.order })
       await updateSection(b.id, { order: a.order })
       router.refresh()
-    } catch (e) {
-      alert('Error en reordenar')
+    } catch (e: any) {
+      setSorted([...sections].sort((a, b) => a.order - b.order))
+      toast(e?.message || 'Error en reordenar', 'error')
     }
   }
 
@@ -112,7 +129,7 @@ export function SectionList({ issueId, sections }: SectionListProps) {
                 Previsualitzar
               </a>
               <button
-                onClick={() => handleDelete(section.id)}
+                onClick={() => setDeleteTarget(section.id)}
                 className="text-xs text-red-600 hover:text-red-400 transition-colors"
               >
                 Eliminar
@@ -135,6 +152,16 @@ export function SectionList({ issueId, sections }: SectionListProps) {
           Aquest número no té seccions. Afegeix-ne una.
         </p>
       )}
+
+      <Modal
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Eliminar secció"
+        message="Estàs segur? Aquesta acció no es pot desfer."
+        confirmLabel="Eliminar"
+        variant="danger"
+      />
     </div>
   )
 }

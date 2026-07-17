@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from './auth'
 import { db } from './db'
 import { v4 as uuid } from 'uuid'
+import { safeParse } from '@/lib/utils'
 
 async function checkAuth() {
   const session = await getServerSession(authOptions)
@@ -377,23 +378,26 @@ export async function sendIssueNewsletter(issueId: string) {
 
   const { sendNewsletterEmail } = await import('./newsletter')
   let sent = 0
-  for (const sub of subscribers) {
-    try {
-      await sendNewsletterEmail(sub.email, sub.token, {
-        id: issue.id,
-        number: issue.number,
-        title: issue.title,
-        date: new Date(issue.date),
-      }, summaries, coverImage)
-      sent++
-    } catch (err) {
-      console.error(`Failed to send to ${sub.email}:`, err)
+  const CHUNK_SIZE = 20
+  for (let i = 0; i < subscribers.length; i += CHUNK_SIZE) {
+    const chunk = subscribers.slice(i, i + CHUNK_SIZE)
+    const results = await Promise.allSettled(
+      chunk.map((sub) =>
+        sendNewsletterEmail(sub.email, sub.token, {
+          id: issue.id,
+          number: issue.number,
+          title: issue.title,
+          date: new Date(issue.date),
+        }, summaries, coverImage)
+      )
+    )
+    for (const r of results) {
+      if (r.status === 'fulfilled') sent++
+      else console.error('Failed to send newsletter:', r.reason)
     }
   }
 
   return { ok: true, sent, message: `Butlletí enviat a ${sent} subscriptor(s).` }
 }
 
-function safeParse(str: string): any {
-  try { return JSON.parse(str) } catch { return {} }
-}
+

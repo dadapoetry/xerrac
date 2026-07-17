@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { getAllSettings, updateSettings } from '@/lib/settings'
+import { useToast } from '@/components/admin/Toast'
 
 interface SocialLink {
   name: string
@@ -13,9 +14,9 @@ export const dynamic = 'force-dynamic'
 
 export default function ConfigPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState('')
   const [issn, setIssn] = useState('')
   const [copyright, setCopyright] = useState('')
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([])
@@ -52,17 +53,16 @@ export default function ConfigPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    setMessage('')
     try {
       await updateSettings({
         footer_issn: issn,
         footer_copyright: copyright,
         footer_social_links: JSON.stringify(socialLinks.filter(l => l.name || l.url)),
       })
-      setMessage('Guardat!')
+      toast('Configuració guardada', 'success')
       router.refresh()
     } catch (err) {
-      setMessage('Error en guardar')
+      toast('Error en guardar la configuració', 'error')
     }
     setSaving(false)
   }
@@ -77,7 +77,6 @@ export default function ConfigPage() {
       </div>
 
       <form onSubmit={handleSave} className="max-w-xl space-y-6">
-        {/* ISSN */}
         <div>
           <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
             ISSN
@@ -91,7 +90,6 @@ export default function ConfigPage() {
           />
         </div>
 
-        {/* Copyright */}
         <div>
           <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
             Copyright
@@ -105,7 +103,6 @@ export default function ConfigPage() {
           />
         </div>
 
-        {/* Social Links */}
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-xs text-gray-500 uppercase tracking-wider">
@@ -150,12 +147,6 @@ export default function ConfigPage() {
             )}
           </div>
         </div>
-
-        {message && (
-          <p className={`text-xs ${message === 'Guardat!' ? 'text-green-500' : 'text-red-500'}`}>
-            {message}
-          </p>
-        )}
 
         <button
           type="submit"

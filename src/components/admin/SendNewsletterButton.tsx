@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { sendIssueNewsletter } from '@/lib/actions'
+import { useToast } from './Toast'
 
 export function SendNewsletterButton({ issueId }: { issueId: string }) {
+  const { toast } = useToast()
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
   const [msg, setMsg] = useState('')
 
@@ -13,14 +15,17 @@ export function SendNewsletterButton({ issueId }: { issueId: string }) {
       const result = await sendIssueNewsletter(issueId)
       setStatus('done')
       setMsg(result.message)
+      toast(result.message, 'success')
     } catch (err: any) {
       setStatus('error')
-      setMsg(err?.message || 'Error en enviar')
+      const m = err?.message || 'Error en enviar'
+      setMsg(m)
+      toast(m, 'error')
     }
   }
 
   return (
-    <div>
+    <span className="inline-flex items-center gap-2">
       <button
         onClick={handleSend}
         disabled={status === 'sending'}
@@ -28,19 +33,14 @@ export function SendNewsletterButton({ issueId }: { issueId: string }) {
       >
         {status === 'sending' ? 'Enviant...' : status === 'done' ? 'Tornar a enviar' : 'Enviar butlletí'}
       </button>
-      {msg && (
-        <p className={`text-xs mt-2 ${status === 'error' ? 'text-red-400' : 'text-green-400'}`}>
-          {msg}
-        </p>
-      )}
       {(status === 'done' || status === 'error') && (
         <button
           onClick={() => { setStatus('idle'); setMsg('') }}
-          className="text-xs text-gray-500 hover:text-gray-300 ml-2 underline"
+          className="text-xs text-gray-500 hover:text-gray-300 underline"
         >
           D'acord
         </button>
       )}
-    </div>
+    </span>
   )
 }
