@@ -45,20 +45,31 @@ function mapSection(row: any) {
   }
 }
 
+async function attachSections(issues: any[]): Promise<void> {
+  if (issues.length === 0) return
+  const ids = issues.map(i => i.id)
+  const placeholders = ids.map(() => '?').join(',')
+  const secResult = await db.execute({
+    sql: `SELECT * FROM Section WHERE issueId IN (${placeholders}) ORDER BY "order" ASC`,
+    args: ids,
+  })
+  const sections = secResult.rows.map(mapSection)
+  const byIssue = new Map<string, any[]>()
+  for (const s of sections) {
+    if (!byIssue.has(s.issueId)) byIssue.set(s.issueId, [])
+    byIssue.get(s.issueId)!.push(s)
+  }
+  for (const issue of issues) {
+    issue.sections = byIssue.get(issue.id) || []
+  }
+}
+
 export async function getIssues() {
   const result = await db.execute(
     'SELECT * FROM Issue ORDER BY number DESC'
   )
   const issues = result.rows.map(mapIssue)
-
-  for (const issue of issues) {
-    const secResult = await db.execute({
-      sql: 'SELECT * FROM Section WHERE issueId = ? ORDER BY "order" ASC',
-      args: [issue.id],
-    })
-    issue.sections = secResult.rows.map(mapSection)
-  }
-
+  await attachSections(issues)
   return issues as any[]
 }
 
@@ -67,15 +78,7 @@ export async function getPublishedIssues() {
     'SELECT * FROM Issue WHERE published = 1 ORDER BY number DESC'
   )
   const issues = result.rows.map(mapIssue)
-
-  for (const issue of issues) {
-    const secResult = await db.execute({
-      sql: 'SELECT * FROM Section WHERE issueId = ? ORDER BY "order" ASC',
-      args: [issue.id],
-    })
-    issue.sections = secResult.rows.map(mapSection)
-  }
-
+  await attachSections(issues)
   return issues as any[]
 }
 

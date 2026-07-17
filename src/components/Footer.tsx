@@ -75,7 +75,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
           </Link>
         )}
 
-        <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Xerrac! — Revista d'aclariment cultural</p>
+        <Link href="/" className="text-xs text-gray-500 uppercase tracking-widest mb-2 inline-block hover:text-gray-300 transition-colors">Xerrac! — Revista d'aclariment cultural</Link>
         <div className="flex justify-center mb-3">
           <SawIcon className="w-5 h-5 opacity-60" />
         </div>

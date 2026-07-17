@@ -45,7 +45,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId }:
       const blob = await res.blob()
       const disposition = res.headers.get('Content-Disposition')
       const match = disposition?.match(/filename="?(.+?)"?$/)
-      const filename = match ? match[1] : `xerrac-${String(issueNumber ?? '').padStart(2, '0')}.pdf`
+      const filename = match ? match[1] : `xerrac-${String(issueNumber ?? 0).padStart(2, '0')}.pdf`
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url

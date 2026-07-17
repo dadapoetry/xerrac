@@ -2,13 +2,28 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: '**' },
+      { protocol: 'https', hostname: 'xerrac.vercel.app' },
+      { protocol: 'https', hostname: '*.xerrac.vercel.app' },
+      { protocol: 'http', hostname: 'localhost' },
     ],
   },
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
     },
+  },
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        ],
+      },
+    ]
   },
 }
 

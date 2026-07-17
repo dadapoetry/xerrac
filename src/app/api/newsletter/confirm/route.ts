@@ -7,8 +7,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL('/?error=missing-token', req.url))
   }
 
-  const result = await confirmSubscription(token)
-  const dest = new URL('/', req.url)
-  dest.searchParams.set('subscribed', result.ok ? 'ok' : 'error')
-  return NextResponse.redirect(dest)
+  try {
+    const result = await confirmSubscription(token)
+    const dest = new URL('/', req.url)
+    dest.searchParams.set('subscribed', result.ok ? 'ok' : 'error')
+    return NextResponse.redirect(dest)
+  } catch {
+    return NextResponse.redirect(new URL('/?subscribed=error', req.url))
+  }
 }

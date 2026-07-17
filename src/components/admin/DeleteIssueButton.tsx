@@ -8,8 +8,12 @@ export function DeleteIssueButton({ id }: { id: string }) {
 
   const handleDelete = async () => {
     if (!confirm('Estàs segur? Aquesta acció no es pot desfer.')) return
-    await deleteIssue(id)
-    router.refresh()
+    try {
+      await deleteIssue(id)
+      router.refresh()
+    } catch (e) {
+      alert('Error en eliminar el número')
+    }
   }
 
   return (

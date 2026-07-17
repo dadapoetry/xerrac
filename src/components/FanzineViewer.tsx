@@ -11,7 +11,11 @@ import { NewsletterPopUp } from './NewsletterPopUp'
 
 function hexToRgb(hex: string): string {
   const h = hex.replace('#', '')
-  return `${parseInt(h.substring(0,2), 16)}, ${parseInt(h.substring(2,4), 16)}, ${parseInt(h.substring(4,6), 16)}`
+  const r = parseInt(h.substring(0,2), 16)
+  const g = parseInt(h.substring(2,4), 16)
+  const b = parseInt(h.substring(4,6), 16)
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return '220, 38, 38'
+  return `${r}, ${g}, ${b}`
 }
 
 interface FanzineViewerProps {
@@ -242,9 +246,10 @@ const shareLink = useCallback(async () => {
 
           <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
             {sortedSections.map((section, i) => (
-              <button
+              <a
                 key={section.id}
-                onClick={() => scrollToSectionEl(i)}
+                href={`#${sectionSlug(i)}`}
+                onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
                 className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-5 flex items-center leading-none transition-colors shrink-0 ${
                   i === activeSection
                     ? 'active'
@@ -253,7 +258,7 @@ const shareLink = useCallback(async () => {
                 style={i === activeSection ? { color: 'var(--accent)' } : undefined}
               >
                 {section.type === 'portada' ? issue.title : section.title}
-              </button>
+              </a>
             ))}
           </div>
 
@@ -339,6 +344,7 @@ const shareLink = useCallback(async () => {
                 <div
                   className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
                   style={{ backgroundImage: `url("${section.backgroundImage}")` }}
+                  aria-hidden="true"
                 />
                 <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
               </>

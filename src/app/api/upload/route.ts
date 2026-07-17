@@ -1,11 +1,21 @@
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
-const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']
+const ALLOWED_MIME: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+}
 const MAX_SIZE = 5 * 1024 * 1024
 
 export async function POST(request: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session) return Response.json({ error: 'No autoritzat' }, { status: 401 })
+
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
@@ -14,8 +24,8 @@ export async function POST(request: Request) {
       return Response.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    if (!ALLOWED_MIME.includes(file.type)) {
-      return Response.json({ error: 'Format no permès. Usa JPG, PNG, GIF, WebP o SVG.' }, { status: 400 })
+    if (!ALLOWED_MIME[file.type]) {
+      return Response.json({ error: 'Format no permès. Usa JPG, PNG, GIF o WebP.' }, { status: 400 })
     }
 
     if (file.size > MAX_SIZE) {
@@ -25,8 +35,7 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const nameParts = file.name.split('.')
-    const ext = nameParts.length > 1 ? nameParts.pop() : 'jpg'
+    const ext = ALLOWED_MIME[file.type]
     const filename = `${uuidv4()}.${ext}`
     const uploadDir = path.join(process.cwd(), 'public', 'uploads')
 

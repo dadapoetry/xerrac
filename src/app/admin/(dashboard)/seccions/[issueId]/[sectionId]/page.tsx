@@ -1,4 +1,5 @@
 import { getIssue } from '@/lib/actions'
+import { safeParse } from '@/lib/utils'
 import { SectionForm } from '@/components/admin/SectionForm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -19,7 +20,7 @@ export default async function EditSeccioPage({
 
   const parsedSection = {
     ...section,
-    content: JSON.parse(section.content),
+    content: safeParse(section.content),
   }
 
   return (

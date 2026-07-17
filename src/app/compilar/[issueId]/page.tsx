@@ -1,9 +1,16 @@
+import type { Metadata } from 'next'
 import { getIssue } from '@/lib/actions'
+import { safeParse } from '@/lib/utils'
 import { getSetting } from '@/lib/settings'
 import { TabloidPreview } from '@/components/TabloidPreview'
 import { notFound } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Compilar',
+  robots: { index: false, follow: false },
+}
 
 export default async function CompilarPage({
   params,
@@ -22,7 +29,7 @@ export default async function CompilarPage({
     ...issue,
     sections: (issue.sections as any[]).map((s: any) => ({
       ...s,
-      content: typeof s.content === 'string' ? JSON.parse(s.content) : s.content,
+      content: typeof s.content === 'string' ? safeParse(s.content) : s.content,
     })),
   }
 

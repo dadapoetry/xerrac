@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getIssue } from '@/lib/actions'
+import { safeParse } from '@/lib/utils'
 import { computeLayout } from '@/lib/layoutEngine'
 import { buildPrintHTML } from '@/lib/printHtml'
 import { getSetting } from '@/lib/settings'
@@ -15,7 +16,7 @@ function parseIssue(issue: any) {
     ...issue,
     sections: (issue.sections || []).map((s: any) => ({
       ...s,
-      content: typeof s.content === 'string' ? JSON.parse(s.content) : s.content,
+      content: typeof s.content === 'string' ? safeParse(s.content) : s.content,
     })),
   }
 }
@@ -61,7 +62,7 @@ export async function GET(
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${filename}"`,
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': 'public, max-age=3600',
       },
     })
   } catch (err) {

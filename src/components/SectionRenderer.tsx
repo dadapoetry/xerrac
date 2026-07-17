@@ -50,6 +50,7 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
             <div
               className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
               style={{ backgroundImage: `url("${section.backgroundImage}")` }}
+              aria-hidden="true"
             />
             <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
           </>

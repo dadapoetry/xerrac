@@ -17,26 +17,38 @@ export function SectionList({ issueId, sections }: SectionListProps) {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Estàs segur?')) return
-    await deleteSection(id)
-    router.refresh()
+    try {
+      await deleteSection(id)
+      router.refresh()
+    } catch (e) {
+      alert('Error en eliminar la secció')
+    }
   }
 
   const moveUp = async (index: number) => {
     if (index <= 0) return
-    const a = sorted[index]
-    const b = sorted[index - 1]
-    await updateSection(a.id, { order: b.order })
-    await updateSection(b.id, { order: a.order })
-    router.refresh()
+    try {
+      const a = sorted[index]
+      const b = sorted[index - 1]
+      await updateSection(a.id, { order: b.order })
+      await updateSection(b.id, { order: a.order })
+      router.refresh()
+    } catch (e) {
+      alert('Error en reordenar')
+    }
   }
 
   const moveDown = async (index: number) => {
     if (index >= sorted.length - 1) return
-    const a = sorted[index]
-    const b = sorted[index + 1]
-    await updateSection(a.id, { order: b.order })
-    await updateSection(b.id, { order: a.order })
-    router.refresh()
+    try {
+      const a = sorted[index]
+      const b = sorted[index + 1]
+      await updateSection(a.id, { order: b.order })
+      await updateSection(b.id, { order: a.order })
+      router.refresh()
+    } catch (e) {
+      alert('Error en reordenar')
+    }
   }
 
   return (

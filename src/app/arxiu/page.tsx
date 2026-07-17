@@ -1,16 +1,61 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getPublishedIssues } from '@/lib/actions'
+import { getSiteUrl } from '@/lib/site'
 import { RedRule } from '@/components/RedRule'
 import { Footer } from '@/components/Footer'
 
 export const dynamic = 'force-dynamic'
 
+export const metadata: Metadata = {
+  title: 'Arxiu — Xerrac!',
+  description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
+  alternates: { canonical: `${getSiteUrl()}/arxiu` },
+  openGraph: {
+    title: 'Arxiu — Xerrac!',
+    description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
+    url: `${getSiteUrl()}/arxiu`,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Arxiu — Xerrac!',
+    description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
+  },
+}
+
 export default async function ArxiuPage() {
   const issues = await getPublishedIssues()
+  const siteUrl = getSiteUrl()
+
+  const collectionJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Arxiu — Xerrac!',
+    description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
+    url: `${siteUrl}/arxiu`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: issues.map((issue: any, i: number) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${siteUrl}/?issue=${issue.id}`,
+        name: issue.title,
+      })),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Xerrac!',
+    },
+  }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <div className="min-h-screen flex flex-col">
       <div className="flex-1 px-4 pt-20 pb-12">
         <div className="max-w-4xl mx-auto">
           <Link
@@ -96,5 +141,6 @@ export default async function ArxiuPage() {
       </div>
       <Footer />
     </div>
+    </>
   )
 }

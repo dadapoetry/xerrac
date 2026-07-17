@@ -7,8 +7,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url))
   }
 
-  await unsubscribeByToken(token)
-  const dest = new URL('/', req.url)
-  dest.searchParams.set('unsubscribed', 'ok')
-  return NextResponse.redirect(dest)
+  try {
+    await unsubscribeByToken(token)
+    const dest = new URL('/', req.url)
+    dest.searchParams.set('unsubscribed', 'ok')
+    return NextResponse.redirect(dest)
+  } catch {
+    return NextResponse.redirect(new URL('/', req.url))
+  }
 }
