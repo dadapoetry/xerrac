@@ -14,12 +14,13 @@ interface IssueFormProps {
     published: boolean
     accentColor?: string
   }
+  nextNumber?: number
 }
 
-export function IssueForm({ initial }: IssueFormProps) {
+export function IssueForm({ initial, nextNumber }: IssueFormProps) {
   const router = useRouter()
   const { toast } = useToast()
-  const [number, setNumber] = useState(initial?.number || 1)
+  const [number, setNumber] = useState(initial?.number || nextNumber || 1)
   const [title, setTitle] = useState(initial?.title || '')
   const [date, setDate] = useState(initial?.date || new Date().toISOString().split('T')[0])
   const [published, setPublished] = useState(initial?.published ?? false)
