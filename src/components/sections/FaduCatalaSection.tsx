@@ -24,16 +24,9 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
 export function FaduCatalaSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as FaduCatalaContent
 
-  const initial = section.title.charAt(0).toUpperCase()
-
   return (
     <div className="w-full py-12 relative overflow-hidden">
-      <div className="absolute top-0 right-0 text-[400px] md:text-[600px] font-black leading-none select-none pointer-events-none"
-        style={{ color: 'var(--accent)', opacity: 0.03, lineHeight: 0.7 }}
-      >
-        {initial}
-      </div>
-      <div className="max-w-4xl mx-auto relative z-[1]">
+      <div className="max-w-4xl mx-auto">
         <SectionHeader number={index} title={section.title} subtitle="Caricatures i humor negre" />
         <div className="md:columns-2 md:gap-8">
           {content.entries?.map((entry: FaduEntry, i: number) => (
