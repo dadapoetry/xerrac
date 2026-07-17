@@ -19,11 +19,12 @@ async function main() {
   let totalContentSize = 0
 
   for (const s of sections) {
-    const cSize = s.content.length
+    const content = s.content as string
+    const cSize = content.length
     totalContentSize += cSize
-    const hasBase64 = s.content.includes('base64') || s.content.includes('data:image')
-    const hasImgTag = s.content.includes('<img')
-    const hasDataURI = s.content.includes('data:')
+    const hasBase64 = content.includes('base64') || content.includes('data:image')
+    const hasImgTag = content.includes('<img')
+    const hasDataURI = content.includes('data:')
 
     console.log('---')
     console.log(s.type, `"${s.title}":`)
@@ -37,27 +38,27 @@ async function main() {
     }
 
     try {
-      const content = JSON.parse(s.content)
-      if (content.body && content.body.length > 0) {
-        console.log('  body:', (content.body.length / 1024).toFixed(1), 'KB')
-        const imgCount = (content.body.match(/<img/g) || []).length
+      const parsed = JSON.parse(content)
+      if (parsed.body && parsed.body.length > 0) {
+        console.log('  body:', (parsed.body.length / 1024).toFixed(1), 'KB')
+        const imgCount = (parsed.body.match(/<img/g) || []).length
         if (imgCount > 0) console.log('  ⚠️', imgCount, '<img> tags in body')
       }
-      if (content.collages) {
-        const images = content.collages.filter((c: any) => c.image)
-        console.log('  collages:', content.collages.length, 'total,', images.length, 'with images')
+      if (parsed.collages) {
+        const images = parsed.collages.filter((c: any) => c.image)
+        console.log('  collages:', parsed.collages.length, 'total,', images.length, 'with images')
         for (const c of images) {
           const url = c.image
           console.log('    image:', url.substring(0, 120), url.length > 120 ? '...' : '')
         }
       }
-      if (content.interviews) {
-        for (const iv of content.interviews) {
+      if (parsed.interviews) {
+        for (const iv of parsed.interviews) {
           if (iv.body && iv.body.includes('data:')) console.log('  ⚠️ interview body has data URI')
         }
       }
-      if (content.reviews) {
-        for (const rv of content.reviews) {
+      if (parsed.reviews) {
+        for (const rv of parsed.reviews) {
           if (rv.body && rv.body.includes('data:')) console.log('  ⚠️ review body has data URI')
         }
       }
