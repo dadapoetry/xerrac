@@ -16,11 +16,11 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
           <span>
             Participa-hi — envia els teus treballs visuals o textos a{' '}
             <a
-              href="mailto:contacte@xerrac.cat"
+              href="mailto:contacte@laxerrac.cat"
               className="hover:underline decoration-from-font"
               style={{ color: 'var(--accent)' }}
             >
-              contacte@xerrac.cat
+              contacte@laxerrac.cat
             </a>
           </span>
           <span className="h-px w-6 bg-gray-800" />
