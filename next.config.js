@@ -2,9 +2,7 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'xerrac.vercel.app' },
-      { protocol: 'https', hostname: '*.xerrac.vercel.app' },
-      { protocol: 'https', hostname: 'images.pexels.com' },
+      { protocol: 'https', hostname: '**' },
       { protocol: 'http', hostname: 'localhost' },
     ],
   },
