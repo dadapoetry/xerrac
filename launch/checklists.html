@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Checklists</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <script>document.querySelector('.sidebar').innerHTML = `
+    <div class="sidebar-logo"><h1>Xerrac<span>!</span></h1><p>Centre de Control</p></div>
+    <nav>
+      <a href="index.html"><span class="dot" style="background:var(--red)"></span>Panell</a>
+      <a href="timeline.html"><span class="dot" style="background:var(--blue)"></span>Timeline</a>
+      <a href="calendar.html"><span class="dot" style="background:var(--blue)"></span>Calendari</a>
+      <a href="instagram.html"><span class="dot" style="background:#f87171"></span>Instagram</a>
+      <a href="copies.html"><span class="dot" style="background:var(--text2)"></span>Copies</a>
+      <a href="assets.html"><span class="dot" style="background:var(--yellow)"></span>Assets</a>
+      <a href="production.html"><span class="dot" style="background:var(--green)"></span>Producció</a>
+      <a href="press.html"><span class="dot" style="background:var(--yellow)"></span>Premsa</a>
+      <a href="checklists.html" class="active"><span class="dot" style="background:var(--green)"></span>Checklists</a>
+    </nav>`;
+  </script>
+
+  <main class="main">
+    <div class="page-header animate-in">
+      <h1>Checklists <span class="text2" style="font-weight:400;font-size:1rem;">— No oblidar res</span></h1>
+      <p class="text2 text-sm mt-1">Llistes operatives per a cada fase del llançament.</p>
+    </div>
+
+    <div class="tabs animate-in">
+      <a href="#" class="active" onclick="showChecklist('prelaunch');return false;">Pre-llançament</a>
+      <a href="#" onclick="showChecklist('launchday');return false;">Dia de llançament</a>
+      <a href="#" onclick="showChecklist('launchweek');return false;">Setmana de llançament</a>
+      <a href="#" onclick="showChecklist('month1');return false;">Primer mes</a>
+      <a href="#" onclick="showChecklist('issue2');return false;">Fins al nº 2</a>
+    </div>
+
+    <!-- Pre-launch -->
+    <div id="checklist-prelaunch" class="animate-in">
+      <div class="card">
+        <div class="card-header"><h2>Pre-llançament (17 Jul — 17 Set)</h2><span class="badge badge-yellow">En curs</span></div>
+        <ul class="task-list" id="prelaunch-items"></ul>
+      </div>
+    </div>
+
+    <!-- Launch Day -->
+    <div id="checklist-launchday" style="display:none;" class="animate-in">
+      <div class="card">
+        <div class="card-header"><h2>Dia de llançament — 24 Setembre</h2></div>
+        <ul class="task-list" id="launchday-items"></ul>
+      </div>
+    </div>
+
+    <!-- Launch Week -->
+    <div id="checklist-launchweek" style="display:none;" class="animate-in">
+      <div class="card">
+        <div class="card-header"><h2>Setmana de llançament (18 Set — 24 Set)</h2></div>
+        <ul class="task-list" id="launchweek-items"></ul>
+      </div>
+    </div>
+
+    <!-- First Month -->
+    <div id="checklist-month1" style="display:none;" class="animate-in">
+      <div class="card">
+        <div class="card-header"><h2>Primer mes post-llançament (25 Set — 24 Oct)</h2></div>
+        <ul class="task-list" id="month1-items"></ul>
+      </div>
+    </div>
+
+    <!-- Until Issue 2 -->
+    <div id="checklist-issue2" style="display:none;" class="animate-in">
+      <div class="card">
+        <div class="card-header"><h2>Fins al nº 2 (Oct 2026 — Març 2027)</h2></div>
+        <ul class="task-list" id="issue2-items"></ul>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+const checklists = {
+  prelaunch: [
+    { text: '🟢 Configurar domini laxerrac.cat a Vercel', done: true },
+    { text: '🟢 Crear perfil d\'Instagram (@laxerrac)', done: true },
+    { text: '🟢 Pujar foto de perfil (logotip SVG)', done: true },
+    { text: '🟢 Actualitzar bio d\'Instagram', done: true },
+    { text: '🟢 Tancar tots els textos del nº 1', done: true },
+    { text: '🟢 Redactar nota de premsa', done: true },
+    { text: '🟡 Dissenyar la portada del nº 1', done: false },
+    { text: '🟡 Maquetar el nº 1 al web', done: false },
+    { text: '🟡 Preparar dossier de premsa (PDF)', done: false },
+    { text: '🟡 Crear plantilles d\'Instagram', done: false },
+    { text: '🟡 Programar posts pre-llançament', done: false },
+    { text: '🟡 Produir teaser animat 15s', done: false },
+    { text: '🟡 Contactar mitjans culturals', done: false },
+    { text: '⚪ Enviar nota de premsa', done: false },
+    { text: '⚪ Fer tests de càrrega del web', done: false },
+    { text: '⚪ Configurar backup de la BD', done: false },
+    { text: '⚪ Preparar countdown per Stories', done: false },
+    { text: '⚪ Assajar publicació del nº 1 en entorn de prova', done: false },
+  ],
+  launchday: [
+    { text: '🔴 Publicar el nº 1 a laxerrac.cat a les 10:00', done: false },
+    { text: '🔴 Publicar Post 12: "Ja disponible!" a IG', done: false },
+    { text: '🔴 Publicar Stories de llançament', done: false },
+    { text: '🔴 Enviar newsletter de llançament', done: false },
+    { text: '🔴 Enviar correu de premsa de llançament', done: false },
+    { text: '🟡 Actualitzar enllaç de la bio d\'IG a laxerrac.cat', done: false },
+    { text: '🟡 Verificar que tot funciona: web, PDF, enllaços', done: false },
+    { text: '🟡 Respondre comentaris i mencions', done: false },
+    { text: '⚪ Compartir el llançament a grups i comunitats', done: false },
+    { text: '⚪ Monitoritzar mètriques del web', done: false },
+  ],
+  launchweek: [
+    { text: 'Dilluns: Publicar Post 10 (countdown final)', done: false },
+    { text: 'Dilluns: Iniciar Stories de countdown diari', done: false },
+    { text: 'Dimarts: Publicar Post 11 (què trobareu al nº 1)', done: false },
+    { text: 'Dimecres: Últims preparatius tècnics', done: false },
+    { text: 'Dimecres: Enviar recordatori a mitjans', done: false },
+    { text: 'Dijous (24): LLANÇAMENT (veure checklist)', done: false },
+    { text: 'Divendres: Post d\'agraïments i mètriques inicials', done: false },
+    { text: 'Dissabte: Respondre comentaris i emails', done: false },
+    { text: 'Diumenge: Anàlisi de la setmana', done: false },
+  ],
+  month1: [
+    { text: 'Publicar 2 cops per setmana a IG', done: false },
+    { text: 'Recollir mètriques de visites i descàrregues', done: false },
+    { text: 'Enviar correu de seguiment a mitjans', done: false },
+    { text: 'Crear Stories destacades: "El nº 1"', done: false },
+    { text: 'Actualitzar web amb secció "Quant a nosaltres"', done: false },
+    { text: 'Preparar convocatòria oberta per al nº 2', done: false },
+    { text: 'Analitzar què ha funcionat i què no', done: false },
+    { text: 'Recollir feedback de lectors', done: false },
+  ],
+  issue2: [
+    { text: 'Definir tema del nº 2', done: false },
+    { text: 'Obrir convocatòria de textos i col·laboracions', done: false },
+    { text: 'Definir calendari de producció del nº 2', done: false },
+    { text: 'Mantenir 2 posts/setmana a IG', done: false },
+    { text: 'Publicar teasers del nº 2 a partir del mes 3', done: false },
+    { text: 'Ampliar llista de mitjans i contactes', done: false },
+    { text: 'Preparar dossier de premsa del nº 2', done: false },
+    { text: 'Repetir cicle de llançament', done: false },
+  ]
+};
+
+function renderChecklist(id, items) {
+  document.getElementById(id).innerHTML = items.map(item => `
+    <li>
+      <span class="check ${item.done ? 'done' : ''}"></span>
+      <div>
+        <div style="font-size:0.82rem;${item.done ? 'color:var(--text3)' : ''}">${item.text}</div>
+      </div>
+    </li>
+  `).join('');
+}
+
+renderChecklist('prelaunch-items', checklists.prelaunch);
+renderChecklist('launchday-items', checklists.launchday);
+renderChecklist('launchweek-items', checklists.launchweek);
+renderChecklist('month1-items', checklists.month1);
+renderChecklist('issue2-items', checklists.issue2);
+
+function showChecklist(name) {
+  document.querySelectorAll('[id^="checklist-"]').forEach(e => e.style.display = 'none');
+  document.getElementById('checklist-' + name).style.display = 'block';
+  document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

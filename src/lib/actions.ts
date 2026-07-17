@@ -122,7 +122,7 @@ export async function createIssue(data: { number: number; title: string; date: s
   await checkAuth()
   const id = uuid()
   await db.execute({
-    sql: 'INSERT INTO Issue (id, number, title, date, accentColor) VALUES (?, ?, ?, ?, ?)',
+    sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published) VALUES (?, ?, ?, ?, ?, 0)',
     args: [id, data.number, data.title, data.date, '#ef4444'],
   })
   revalidatePath('/admin')

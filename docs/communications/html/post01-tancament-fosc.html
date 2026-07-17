@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post 01 — Tancament fosc «Xerrac!»</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#111;
+    color:#e5e5e5;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:2rem;
+    gap:2.5rem;
+  }
+  .post-preview {
+    width:540px;
+    height:540px;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 0 0 1px rgba(239,68,68,0.15), 0 8px 40px rgba(0,0,0,0.6);
+    background:#0a0a0a;
+  }
+  .post-preview svg { display:block; }
+  .caption-block {
+    max-width:540px;
+    width:100%;
+    background:#0a0a0a;
+    border:1px solid #1e1e1e;
+    border-radius:8px;
+    padding:1.25rem 1.5rem;
+  }
+  .caption-block .username {
+    font-weight:700;
+    font-size:0.85rem;
+    margin-bottom:0.5rem;
+  }
+  .caption-block .username span { color:#ef4444; }
+  .caption-block .text {
+    font-size:0.85rem;
+    color:#a3a3a3;
+    line-height:1.6;
+  }
+  .meta {
+    max-width:540px;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    font-size:0.7rem;
+    color:#555;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+  }
+  .btn {
+    padding:0.6rem 2rem;
+    background:#ef4444;
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    font-size:0.8rem;
+    font-weight:600;
+    cursor:pointer;
+    text-decoration:none;
+    transition:background 0.2s;
+  }
+  .btn:hover { background:#dc2626; }
+  .note {
+    max-width:540px;
+    font-size:0.8rem;
+    color:#666;
+    line-height:1.6;
+    text-align:center;
+  }
+  @media (max-width:600px) {
+    .post-preview { width:100%; height:auto; aspect-ratio:1; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="meta">
+    <span>Post 01 — Pre-llançament</span>
+    <span>Dilluns 3 d'agost · 10:00</span>
+  </div>
+
+  <div class="post-preview">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="540" height="540">
+      <rect width="1080" height="1080" fill="#0a0a0a"/>
+      <text x="540" y="500" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="160" font-weight="700" fill="#ffffff" letter-spacing="-2">
+        Xerrac<tspan fill="#ef4444">!</tspan>
+      </text>
+      <g transform="translate(540,570) scale(1.5) translate(-50,-44)">
+        <path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" fill="#ef4444"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="caption-block">
+    <div class="username">xerrac<span>!</span></div>
+    <div class="text">
+      Xerrac!<br><br>
+      Revista d'aclariment cultural.<br><br>
+      Aviat.
+    </div>
+  </div>
+
+  <a href="post01-tancament-fosc.svg" download class="btn">Baixar SVG (1080×1080)</a>
+
+  <div class="note">
+    Obre el SVG al navegador → clic dret «Desa la imatge com a PNG» → puja a Instagram com a post quadrat.<br>
+    Story de suport: repost del post al feed, sense text afegit.
+  </div>
+
+</body>
+</html>

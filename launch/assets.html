@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Assets</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <script>document.querySelector('.sidebar').innerHTML = `
+    <div class="sidebar-logo"><h1>Xerrac<span>!</span></h1><p>Centre de Control</p></div>
+    <nav>
+      <a href="index.html"><span class="dot" style="background:var(--red)"></span>Panell</a>
+      <a href="timeline.html"><span class="dot" style="background:var(--blue)"></span>Timeline</a>
+      <a href="calendar.html"><span class="dot" style="background:var(--blue)"></span>Calendari</a>
+      <a href="instagram.html"><span class="dot" style="background:#f87171"></span>Instagram</a>
+      <a href="copies.html"><span class="dot" style="background:var(--text2)"></span>Copies</a>
+      <a href="assets.html" class="active"><span class="dot" style="background:var(--yellow)"></span>Assets</a>
+      <a href="production.html"><span class="dot" style="background:var(--green)"></span>Producció</a>
+      <a href="press.html"><span class="dot" style="background:var(--yellow)"></span>Premsa</a>
+      <a href="checklists.html"><span class="dot" style="background:var(--green)"></span>Checklists</a>
+    </nav>`;
+  </script>
+
+  <main class="main">
+    <div class="page-header animate-in">
+      <div class="flex gap-05" style="align-items:center;">
+        <h1>Assets <span class="text2" style="font-weight:400;font-size:1rem;">— Tauler de producció</span></h1>
+        <span class="badge badge-yellow">8 pendents · 1 fet</span>
+      </div>
+      <p class="text2 text-sm mt-1">Cada asset que cal produir. Amb prioritat, termini i estat.</p>
+    </div>
+
+    <div class="mb-1 animate-in" style="animation-delay:0.1s;">
+      <div class="flex gap-05" style="flex-wrap:wrap;">
+        <span class="tag tag-instagram">Instagram</span>
+        <span class="tag tag-web">Website</span>
+        <span class="tag tag-press">Premsa</span>
+        <span class="tag tag-production">Producció</span>
+      </div>
+    </div>
+
+    <div class="card animate-in" style="animation-delay:0.15s;">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Asset</th><th>Propòsit</th><th>Termini</th><th>S'usa a</th><th>Prioritat</th><th>Esforç</th><th>Estat</th></tr>
+          </thead>
+          <tbody>
+            <tr class="critical">
+              <td><strong>Portada del nº 1</strong></td>
+              <td>Identitat visual del llançament. Post IG + Web + Premsa.</td>
+              <td class="mono">13 Ago</td>
+              <td><span class="tag tag-web">web</span> <span class="tag tag-instagram">ig</span> <span class="tag tag-press">press</span></td>
+              <td><span class="badge badge-red">Crítica</span></td>
+              <td class="mono">Alta</td>
+              <td><span class="status status-progress">En producció</span></td>
+            </tr>
+            <tr class="critical">
+              <td><strong>Teaser animat 15s</strong></td>
+              <td>Reel IG per generar expectació pre-llançament.</td>
+              <td class="mono">20 Ago</td>
+              <td><span class="tag tag-instagram">ig</span></td>
+              <td><span class="badge badge-red">Crítica</span></td>
+              <td class="mono">Alta</td>
+              <td><span class="status status-todo">Pendent</span></td>
+            </tr>
+            <tr>
+              <td><strong>Quote cards x5</strong></td>
+              <td>Gràfics tipogràfics per IG. Cites de l'editorial.</td>
+              <td class="mono">20 Ago</td>
+              <td><span class="tag tag-instagram">ig</span> <span class="tag tag-web">web</span></td>
+              <td><span class="badge badge-yellow">Alta</span></td>
+              <td class="mono">Mitjana</td>
+              <td><span class="status status-todo">Pendent</span></td>
+            </tr>
+            <tr>
+              <td><strong>Plantilla Stories countdown</strong></td>
+              <td>7 dies de countdown per Stories. Consistent visualment.</td>
+              <td class="mono">4 Set</td>
+              <td><span class="tag tag-instagram">ig</span></td>
+              <td><span class="badge badge-yellow">Alta</span></td>
+              <td class="mono">Mitjana</td>
+              <td><span class="status status-todo">Pendent</span></td>
+            </tr>
+            <tr>
+              <td><strong>Collage digitalitzat</strong></td>
+              <td>Imatge per Post 5: "Full Mural".</td>
+              <td class="mono">21 Ago</td>
+              <td><span class="tag tag-instagram">ig</span></td>
+              <td><span class="badge badge-blue">Mitjana</span></td>
+              <td class="mono">Baixa</td>
+              <td><span class="status status-todo">Pendent</span></td>
+            </tr>
+            <tr>
+              <td><strong>Carrousel aforismes x5</strong></td>
+              <td>Diapositives per Post 6: "Pàgines Grogues".</td>
+              <td class="mono">24 Ago</td>
+              <td><span class="tag tag-instagram">ig</span></td>
+              <td><span class="badge badge-blue">Mitjana</span></td>
+              <td class="mono">Mitjana</td>
+              <td><span class="status status-todo">Pendent</span></td>
+            </tr>
+            <tr>
+              <td><strong>Imatge d'arxiu manipulada</strong></td>
+              <td>Visual per Post 8: "Fadu Català".</td>
+              <td class="mono">4 Set</td>
+              <td><span class="tag tag-instagram">ig</span></td>
+              <td><span class="badge badge-blue">Mitjana</span></td>
+              <td class="mono">Mitjana</td>
+              <td><span class="status status-todo">Pendent</span></td>
+            </tr>
+            <tr>
+              <td><strong>Pack Stories de llançament</strong></td>
+              <td>Conjunt de Stories per al dia del llançament.</td>
+              <td class="mono">24 Set</td>
+              <td><span class="tag tag-instagram">ig</span></td>
+              <td><span class="badge badge-red">Crítica</span></td>
+              <td class="mono">Alta</td>
+              <td><span class="status status-todo">Pendent</span></td>
+            </tr>
+            <tr>
+              <td><strong>Logotip Xerrac! (alta res)</strong></td>
+              <td>Perfil IG + Web + Identitat gràfica.</td>
+              <td class="mono">—</td>
+              <td><span class="tag tag-web">web</span> <span class="tag tag-instagram">ig</span></td>
+              <td><span class="badge badge-green">Fet</span></td>
+              <td class="mono">—</td>
+              <td><span class="status status-done">Completat</span></td>
+            </tr>
+            <tr>
+              <td><strong>Foto de perfil IG</strong></td>
+              <td>Perfil d'Instagram.</td>
+              <td class="mono">—</td>
+              <td><span class="tag tag-instagram">ig</span></td>
+              <td><span class="badge badge-green">Fet</span></td>
+              <td class="mono">—</td>
+              <td><span class="status status-done">Completat</span></td>
+            </tr>
+            <tr>
+              <td><strong>Dossier de premsa (PDF)</strong></td>
+              <td>Enviar a mitjans. Informació completa de Xerrac!.</td>
+              <td class="mono">30 Jul</td>
+              <td><span class="tag tag-press">press</span></td>
+              <td><span class="badge badge-yellow">Alta</span></td>
+              <td class="mono">Alta</td>
+              <td><span class="status status-progress">En producció</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Asset status breakdown -->
+    <div class="grid-3 mt-2 animate-in" style="animation-delay:0.2s;">
+      <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-family:var(--mono);font-size:1rem;color:var(--green);">2</div>
+        <div class="text-xs text3">Completats</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-family:var(--mono);font-size:1rem;color:var(--yellow);">2</div>
+        <div class="text-xs text3">En producció</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-family:var(--mono);font-size:1rem;color:var(--text3);">7</div>
+        <div class="text-xs text3">Pendents</div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

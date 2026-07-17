@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbook — Xerrac! | Master</title>
+<style>
+:root {
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.1);
+  --bg: #0a0a0a;
+  --card: #111;
+  --card-hover: #1a1a1a;
+  --border: #1e1e1e;
+  --text: #e5e5e5;
+  --dim: #888;
+  --muted: #444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:14px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a { color:inherit; text-decoration:none; }
+
+/* Layout */
+.wrap { max-width:960px; margin:0 auto; padding:3rem 2rem 6rem; }
+
+/* Hero */
+.hero { text-align:center; padding:5rem 2rem 3rem; border-bottom:1px solid var(--border); }
+.hero h1 { font-size:clamp(2rem,5vw,3.5rem); font-weight:900; letter-spacing:-0.03em; line-height:0.9; }
+.hero h1 span { color:var(--red); }
+.hero .sub { color:var(--dim); margin-top:1rem; font-size:0.95rem; }
+.hero .line { width:3rem; height:1px; background:var(--red); opacity:0.4; margin:1.5rem auto; }
+.hero .meta { color:var(--muted); font-size:0.75rem; letter-spacing:0.05em; }
+
+/* Sections */
+.section { margin:4rem 0; }
+.section-header { margin-bottom:2rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+.section-header .num { color:var(--red); font-size:0.65rem; letter-spacing:0.35em; text-transform:uppercase; margin-bottom:0.5rem; }
+.section-header h2 { font-size:1.6rem; font-weight:800; letter-spacing:-0.02em; line-height:1.1; }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; font-size:0.8rem; margin:1rem 0; }
+th { text-align:left; padding:0.6rem 0.8rem; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); font-weight:600; }
+td { padding:0.6rem 0.8rem; border-bottom:1px solid var(--border); color:var(--dim); vertical-align:top; line-height:1.5; }
+td:first-child { color:var(--text); font-weight:500; }
+
+/* Tags */
+.tag { display:inline-block; font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; border:1px solid var(--border); padding:0.15rem 0.5rem; margin:0.1rem; white-space:nowrap; }
+.tag.critical { border-color:var(--red); color:var(--red); }
+.tag.high { border-color:#888; color:#aaa; }
+
+/* Blocks */
+.block { background:var(--card); border:1px solid var(--border); padding:1.5rem; margin:1.5rem 0; }
+.block-title { font-weight:700; font-size:0.9rem; margin-bottom:0.5rem; }
+.copy-block { background:var(--card); border-left:2px solid var(--red); padding:1.25rem 1.5rem; margin:1rem 0; font-size:0.85rem; line-height:1.7; color:var(--dim); }
+.copy-block strong { color:var(--text); }
+
+/* Checklist */
+.cl { list-style:none; padding:0; margin:1rem 0; }
+.cl li { padding:0.5rem 0 0.5rem 2rem; position:relative; font-size:0.85rem; color:var(--dim); border-bottom:1px solid var(--border); }
+.cl li:last-child { border-bottom:none; }
+.cl li::before { content:'\25A1'; position:absolute; left:0; color:var(--red); opacity:0.5; }
+
+/* Nav bottom */
+.nav { max-width:960px; margin:0 auto; padding:2rem; display:flex; justify-content:space-between; border-top:1px solid var(--border); font-size:0.85rem; }
+.nav a:hover { color:var(--red); }
+
+@media (max-width:600px) { .wrap { padding:2rem 1rem; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="line"></div>
+  <h1>Playbook de Comunicació<br>Xerrac<span>!</span></h1>
+  <p class="sub">Document operatiu per al llançament del número 1: «Contra la xerrameca!»</p>
+  <p class="meta">Final de setembre 2026 &nbsp;·&nbsp; Només Instagram &nbsp;·&nbsp; Difusió orgànica</p>
+  <div class="line"></div>
+  <p style="font-size:0.8rem;color:var(--muted);">
+    <a href="01-playbook-prelaunch.html" style="border:1px solid var(--border);padding:0.5rem 1.5rem;margin:0 0.5rem;">← Pre-llançament</a>
+    <a href="02-playbook-launch.html" style="border:1px solid var(--border);padding:0.5rem 1.5rem;margin:0 0.5rem;">Llançament i Post →</a>
+  </p>
+</div>
+
+<div class="wrap">
+
+<!-- ==================== 1. MASTER TIMELINE ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="num">01</div>
+    <h2>Master Timeline</h2>
+  </div>
+
+  <table>
+    <tr><th>Fase</th><th>Data</th><th>Accions clau</th></tr>
+    <tr><td>Pre-llançament</td><td>8 setmanes abans (dilluns 3 d'agost – diumenge 27 de setembre)</td><td>12 posts al feed + stories. Construir l'univers Xerrac! sense revelar el número.</td></tr>
+    <tr><td>Llançament</td><td>Setmana del 28 de setembre (dimarts 29 recomanat)</td><td>7 dies. 6 posts al feed + stories diàries. Publicació del número.</td></tr>
+    <tr><td>Post-llançament mes 1</td><td>Octubre 2026</td><td>8 posts al feed. Cada article destacat individualment.</td></tr>
+    <tr><td>Entre números</td><td>Novembre 2026 – Març 2027</td><td>1 post/setmana. Arxiu viu + recomanacions + teasers número 2.</td></tr>
+  </table>
+
+  <div class="block">
+    <div class="block-title">Fites fixes</div>
+    <ul class="cl">
+      <li><strong>Dilluns 3 d'agost</strong> — Primer post: tancament fosc «Xerrac!».</li>
+      <li><strong>Dilluns 21 de setembre</strong> — Revelació de la portada.</li>
+      <li><strong>Dimarts 29 de setembre (proposat)</strong> — Publicació del número 1.</li>
+      <li><strong>Divendres 2 d'octubre</strong> — Agraïments i tancament de setmana de llançament.</li>
+      <li><strong>Dilluns 1 de febrer</strong> — Primer teaser del número 2.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 2. EDITORIAL TONE ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="num">02</div>
+    <h2>To Editorial — Guia d'Estil per a Comunicació</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Principis</div>
+    <table>
+      <tr><th>Principi</th><th>Què vol dir</th></tr>
+      <tr><td>No som una empresa</td><td>No fem servir paraules com «estratègia de continguts», «engagement», «target audience». Diem «lectors», «articles», «revista».</td></tr>
+      <tr><td>Textos llegibles</td><td>Cada post ha de contenir text que es pugui llegir al feed. No imatges decoratives sense contingut.</td></tr>
+      <tr><td>Català real</td><td>No traduccions literals del castellà. No cal ni «revista catalana» ni «en català» — ja ho som.</td></tr>
+      <tr><td>Ironia permesa</td><td>El to pot ser sec, irònic, fins i tot una mica punyent. Xerrac! no demana disculpes per existir.</td></tr>
+      <tr><td>Sense exclamacions buides</td><td>No «Increïble!», «No t'ho perdis!», «T'esperem!». Millor un punt i seguit.</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Frases que NO farem servir mai</div>
+    <p style="font-size:0.85rem;color:var(--dim);">«Estem d'enhorabona» / «Tenim el plaer d'anunciar» / «No te lo puedes perder» / «Contenido exclusivo» / «Seguimos creciendo» / «Gràcies a tots per el suport».</p>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Frases que SÍ farem servir</div>
+    <p style="font-size:0.85rem;color:var(--dim);">«Neix Xerrac!» / «Ja disponible» / «Contra la xerrameca» / «Llegir» / «PDF descarregable» / «Aclarir allò que continua sense aclarir-se» / «Ens llegim».</p>
+  </div>
+</div>
+
+<!-- ==================== 3. PRODUCTION CHECKLIST ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="num">03</div>
+    <h2>Producció — Checklist d'Actius</h2>
+    <p style="color:var(--dim);font-size:0.85rem;">Cada asset ha d'estar llest 48 h abans de la data de publicació.</p>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin:1.5rem 0 0.5rem;">Pre-llançament</h3>
+  <table>
+    <tr><th>Asset</th><th>Qui</th><th>Format</th><th>Deadline</th><th>Ús</th></tr>
+    <tr><td>Tancament fosc «Xerrac!»</td><td>Disseny</td><td>1080×1080 png</td><td>1 ago</td><td>Post feed + Story</td></tr>
+    <tr><td>Carrousel presentació (5 slides)</td><td>Disseny + Redacció</td><td>1080×1080 png ×5</td><td>2 ago</td><td>Post feed</td></tr>
+    <tr><td>Fotos equip (3-5 persones)</td><td>Fotografia</td><td>Retrat vertical 1080×1350</td><td>5 ago</td><td>Carrousel setm. –7</td></tr>
+    <tr><td>Frases equip (3-5 textos)</td><td>Redacció</td><td>Text 40-60 paraules cadascun</td><td>5 ago</td><td>Carrousel setm. –7</td></tr>
+    <tr><td>Reel identitat visual</td><td>Disseny (animació)</td><td>1080×1920 mp4, 15-20s</td><td>10 ago</td><td>Reel setm. –6</td></tr>
+    <tr><td>Post títol «Contra la xerrameca!»</td><td>Disseny</td><td>1080×1080 png</td><td>15 ago</td><td>Post feed setm. –5</td></tr>
+    <tr><td>Carrousel concepte (4 slides)</td><td>Disseny + Redacció</td><td>1080×1080 png ×4</td><td>16 ago</td><td>Post feed setm. –5</td></tr>
+    <tr><td>Fragment editorial (cita)</td><td>Redacció</td><td>Text + fons de color 1080×1080</td><td>22 ago</td><td>Post feed setm. –4</td></tr>
+    <tr><td>Carrousel fragments seccions (4 slides)</td><td>Disseny + Redacció</td><td>1080×1080 png ×4</td><td>23 ago</td><td>Post feed setm. –4</td></tr>
+    <tr><td>Fotos autors (4-8 persones)</td><td>Fotografia</td><td>Retrat 1080×1080</td><td>28 ago</td><td>Carrousel setm. –3</td></tr>
+    <tr><td>Frases autors (4-8 textos)</td><td>Redactat per cada autor</td><td>Text 30-50 paraules</td><td>28 ago</td><td>Carrousel setm. –3</td></tr>
+    <tr><td>Reel PDF preview</td><td>Disseny (animació)</td><td>1080×1920 mp4, 10-15s</td><td>5 set</td><td>Reel setm. –2</td></tr>
+    <tr><td>Portada número 1</td><td>Disseny</td><td>1080×1080 png</td><td>6 set</td><td>Post feed setm. –2</td></tr>
+    <tr><td>Post CTA newsletter</td><td>Disseny</td><td>1080×1080 png</td><td>6 set</td><td>Post feed setm. –1</td></tr>
+  </table>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin:1.5rem 0 0.5rem;">Llançament</h3>
+  <table>
+    <tr><th>Asset</th><th>Qui</th><th>Format</th><th>Deadline</th><th>Ús</th></tr>
+    <tr><td>Post anunci (portada + disponible)</td><td>Disseny</td><td>1080×1080 png</td><td>26 set</td><td>Dia 1 09:00</td></tr>
+    <tr><td>Carrousel autors + títols articles</td><td>Disseny</td><td>1080×1080 png ×4-6</td><td>26 set</td><td>Dia 1 13:00</td></tr>
+    <tr><td>Post editorial (cita destacada)</td><td>Redacció</td><td>Text + fons 1080×1080</td><td>26 set</td><td>Dia 1 20:00</td></tr>
+    <tr><td>Carrousel secció destacada</td><td>Redacció + Disseny</td><td>1080×1080 png ×4</td><td>27 set</td><td>Dia 2 10:00</td></tr>
+    <tr><td>Post PDF descarregable</td><td>Disseny</td><td>1080×1080 png ×3</td><td>28 set</td><td>Dia 3 10:00</td></tr>
+    <tr><td>Post agraïments</td><td>Redacció</td><td>1080×1080 png ×4</td><td>30 set</td><td>Dia 4 10:00</td></tr>
+    <tr><td>Story vídeo autor (15s)</td><td>Autor + edició</td><td>1080×1920 mp4</td><td>27 set</td><td>Dia 2 13:00</td></tr>
+  </table>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin:1.5rem 0 0.5rem;">Post-llançament (mes 1)</h3>
+  <table>
+    <tr><th>Asset</th><th>Qui</th><th>Format</th><th>Deadline</th><th>Ús</th></tr>
+    <tr><td>Article destacat 1</td><td>Redacció + Disseny</td><td>Carrousel 4 slides</td><td>2 oct</td><td>Setm. +1</td></tr>
+    <tr><td>Article destacat 2</td><td>Redacció + Disseny</td><td>Carrousel 4 slides</td><td>2 oct</td><td>Setm. +1</td></tr>
+    <tr><td>Article destacat 3</td><td>Redacció + Disseny</td><td>Carrousel 4 slides</td><td>2 oct</td><td>Setm. +1</td></tr>
+    <tr><td>Carrousel «Tres idees»</td><td>Redacció</td><td>Carrousel 3 slides</td><td>14 oct</td><td>Setm. +3</td></tr>
+    <tr><td>Guia lectura</td><td>Redacció</td><td>Carrousel 4 slides</td><td>14 oct</td><td>Setm. +3</td></tr>
+    <tr><td>Post tancament</td><td>Redacció + Disseny</td><td>1080×1080</td><td>21 oct</td><td>Setm. +4</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 4. PRESS & EXTERNAL ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="num">04</div>
+    <h2>Press i Comunicació Externa</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Llista de contactes</div>
+    <table>
+      <tr><th>Mitjà/Butlletí</th><th>Contacte tipus</th><th>Valor</th></tr>
+      <tr><td>Núvol</td><td>Redacció</td><td>Audiència lectora principal</td></tr>
+      <tr><td>Catorze</td><td>Redacció</td><td>Tonalitat compatible</td></tr>
+      <tr><td>VilaWeb (cultura)</td><td>Secció cultura</td><td>Abast generalista</td></tr>
+      <tr><td>El Temps</td><td>Redacció</td><td>Perfil assagístic</td></tr>
+      <tr><td>Tresdeu</td><td>Redacció</td><td>Novetats culturals</td></tr>
+      <tr><td>Llegir en Català</td><td>Butlletí</td><td>Lectors habituals</td></tr>
+      <tr><td>Únivers</td><td>Butlletí</td><td>Novetats editorials</td></tr>
+      <tr><td>Posa't en marxeta</td><td>Butlletí</td><td>Públic jove</td></tr>
+      <tr><td>llibres.cat</td><td>Xarxa llibreries</td><td>Prescripció local</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Email pitch — enviar 2 setmanes abans del llançament</div>
+    <p style="font-size:0.85rem;color:var(--dim);margin-bottom:0.5rem;"><strong>Assumpte:</strong> Xerrac! — presentació d'una nova revista cultural</p>
+    <div class="copy-block">
+      <p>Bon dia,</p>
+      <p>Et presentem <strong>Xerrac!</strong>, una nova revista cultural digital que es publicarà per primera vegada a finals de setembre.</p>
+      <p>Xerrac! no és un blog ni un mitjà digital convencional. És una publicació semestral — cada número és un volum amb identitat pròpia — dedicada a l'aclariment cultural: anàlisi, assaig, traducció i crítica sense presses.</p>
+      <p>El primer número es titula <strong>«Contra la xerrameca!»</strong> i funciona com a manifest fundacional del projecte.</p>
+      <p>T'escric per si us pot interessar incloure Xerrac! al vostre butlletí o recomanar-la als vostres lectors. Us podeu descarregar el PDF de premsa aquí: [enllaç].</p>
+      <p>Si voleu més informació, entrevista amb l'equip o un accés anticipat al número, estem a la vostra disposició.</p>
+      <p>Gràcies,</p>
+      <p>[Nom]<br>Xerrac! — Revista d'aclariment cultural</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Follow-up — 3 dies després del llançament</div>
+    <div class="copy-block">
+      <p>Bon dia,</p>
+      <p>Només un recordatori: el primer número de Xerrac! — <strong>«Contra la xerrameca!»</strong> — ja està disponible a xerrac.cat. En PDF, també.</p>
+      <p>Si us interessa, aquí teniu l'enllaç directe: [enllaç]</p>
+      <p>Gràcies per l'atenció,</p>
+      <p>[Nom]</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Estructura de press release (si es necessita)</div>
+    <div class="copy-block">
+      <p><strong>Xerrac!: neix una revista d'aclariment cultural</strong></p>
+      <p>Barcelona, [data] — Xerrac!, una nova revista cultural digital de periodicitat semestral, publica el seu primer número: «Contra la xerrameca!». El projecte neix amb la voluntat d'oferir lectures profundes i anàlisis culturals en un ecosistema digital dominat per la immediatesa.</p>
+      <p>Cada número de Xerrac! és un volum monogràfic amb identitat visual pròpia, disponible en format web i PDF descarregable. La revista inclou seccions fixes d'assaig, traducció, crítica i arxiu.</p>
+      <p>«Contra la xerrameca!» compta amb col·laboracions de [noms]. El número es pot llegir a xerrac.cat.</p>
+      <p><strong>Contacte de premsa:</strong> [email]</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Accions amb llibreries</div>
+    <table>
+      <tr><th>Llibreria</th><th>Acció</th><th>Data</th></tr>
+      <tr><td>Documenta (Bcn)</td><td>Enviar postal / pòster portada + carta</td><td>Setm. –1</td></tr>
+      <tr><td>La Impossible (Bcn)</td><td>Enviar postal / pòster portada + carta</td><td>Setm. –1</td></tr>
+      <tr><td>La Central (Bcn)</td><td>Enviar postal / pòster portada + carta</td><td>Setm. –1</td></tr>
+      <tr><td>Nollegiu (Bcn)</td><td>Enviar postal / pòster portada + carta</td><td>Setm. –1</td></tr>
+      <tr><td>Llibreria 22 (Girona)</td><td>Enviar postal / pòster portada + carta</td><td>Setm. –1</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== 5. KPI TARGETS ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div class="num">05</div>
+    <h2>Objectius del Primer Mes</h2>
+  </div>
+
+  <table>
+    <tr><th>Mètrica</th><th>Objectiu</th><th>Com es mesura</th></tr>
+    <tr><td>Visites úniques a xerrac.cat</td><td>500-1.000</td><td>Analytics</td></tr>
+    <tr><td>Usuaris que llegeixen &gt;1 article</td><td>30% dels visitants</td><td>Analytics (pàgines/sessió)</td></tr>
+    <tr><td>Descàrregues PDF</td><td>100-300</td><td>Comptador al servidor</td></tr>
+    <tr><td>Subscripcions newsletter</td><td>50-150</td><td>Base de dades</td></tr>
+    <tr><td>Seguidors Instagram</td><td>300-600</td><td>Instagram Insights</td></tr>
+    <tr><td>Saves per post</td><td>&gt;5% d'abast</td><td>Instagram Insights</td></tr>
+  </table>
+</div>
+
+</div><!-- /wrap -->
+
+<div class="nav">
+  <a href="#" style="color:var(--muted);">← Master</a>
+  <a href="01-playbook-prelaunch.html">01 — Pre-llançament →</a>
+</div>
+
+</body>
+</html>

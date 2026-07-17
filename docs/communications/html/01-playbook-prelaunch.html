@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbook — Xerrac! | Pre-llançament</title>
+<style>
+:root {
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.1);
+  --bg: #0a0a0a;
+  --card: #111;
+  --border: #1e1e1e;
+  --text: #e5e5e5;
+  --dim: #888;
+  --muted: #444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:14px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a { color:inherit; text-decoration:none; }
+.wrap { max-width:800px; margin:0 auto; padding:2rem 1.5rem 6rem; }
+
+/* Hero */
+.top { display:flex; align-items:center; gap:1rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border); margin-bottom:2rem; }
+.top a { color:var(--dim); font-size:0.8rem; }
+.top a:hover { color:var(--red); }
+.top h1 { font-size:1.3rem; font-weight:800; }
+
+/* Post entry */
+.post { border:1px solid var(--border); margin-bottom:2.5rem; }
+.post-header { background:var(--card); padding:0.8rem 1.25rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; }
+.post-week { font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--red); }
+.post-date { font-size:0.75rem; color:var(--dim); }
+.post-format { font-size:0.6rem; border:1px solid var(--border); padding:0.15rem 0.5rem; text-transform:uppercase; letter-spacing:0.1em; }
+.post-format.reel { border-color:var(--red); color:var(--red); }
+.post-format.carousel { border-color:#888; color:#aaa; }
+.post-body { padding:1.25rem; }
+.post-field { margin-bottom:1rem; }
+.post-field-label { font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:0.3rem; }
+.post-field p { font-size:0.85rem; color:var(--dim); line-height:1.6; }
+.post-field p strong { color:var(--text); }
+
+/* Priority tag */
+.prio { font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; border:1px solid var(--border); padding:0.1rem 0.4rem; }
+.prio.critical { border-color:var(--red); color:var(--red); }
+.prio.high { border-color:#888; color:#aaa; }
+.prio.med { border-color:var(--muted); color:var(--muted); }
+
+/* Copy block */
+.copy { background:var(--card); border-left:2px solid var(--red); padding:1rem 1.25rem; margin:0.5rem 0; font-size:0.85rem; line-height:1.7; color:var(--dim); }
+.copy strong { color:var(--text); }
+
+/* Slides */
+.slide { margin:0.75rem 0; padding:0.75rem; background:var(--card); border-left:2px solid #333; }
+.slide-num { font-size:0.6rem; color:var(--muted); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.25rem; }
+.slide p { font-size:0.8rem; color:var(--dim); }
+
+@media (max-width:600px) { .wrap { padding:1rem; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<div class="top">
+  <a href="00-playbook-master.html">← Master</a>
+  <h1>Pre-llançament · 8 setmanes</h1>
+  <a href="02-playbook-launch.html">Llançament →</a>
+</div>
+
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:2rem;">
+  <strong>Calendari:</strong> Dilluns 3 d'agost – Diumenge 27 de setembre de 2026<br>
+  <strong>Ritme:</strong> 1-2 posts al feed per setmana + stories de suport<br>
+  <strong>Objectiu:</strong> Que el 28 de setembre hi hagi 300-500 persones esperant el número
+</p>
+
+<!-- ============================================================ -->
+<!-- WEEK -8 -->
+<!-- ============================================================ -->
+<div style="margin-bottom:3rem;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Setmana –8 · 3–9 d'agost</h2>
+<p style="font-size:0.8rem;color:var(--dim);">Tema: Anunci d'existència. La gent ha de saber que Xerrac! existeix.</p>
+</div>
+
+<!-- POST 1 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 1</span> <span class="prio critical">Crítica</span></div>
+    <div><span class="post-date">Dilluns 3 d'agost · 10:00</span> <span class="post-format">Post imatge</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Anunciar que Xerrac! existeix. Sense explicacions. Crear curiositat.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Fons negre absolut. Al centre, el logotip «Xerrac!» en blanc, gran. Res més. Text del post (no a la imatge): una sola frase.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>Xerrac!</p>
+        <p>Revista d'aclariment cultural.</p>
+        <p>Aviat.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>No n'hi ha. El post és l'anunci.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p>Repost del post al feed. Sense text afegit.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Resultat esperat</div>
+      <p>50-100 saves. Comentaris preguntant «Què és això?».</p>
+    </div>
+  </div>
+</div>
+
+<!-- POST 2 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 2</span> <span class="prio critical">Crítica</span></div>
+    <div><span class="post-date">Dimecres 5 d'agost · 12:00</span> <span class="post-format carousel">Carrousel 5 slides</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Explicar què és Xerrac! sense mostrar cap contingut del primer número.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Cada slide: fons negre, text blanc en tipografia gran (Georgia bold). El text ha de ser llegible en 2-3 segons. El logotip Xerrac! en accent vermell a la part inferior dreta.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 1</div>
+      <div class="slide">
+        <div class="slide-num">Slide 1</div>
+        <p>«Neix Xerrac!» (gran, centrat)<br>«Revista d'aclariment cultural» (sota, més petit, en accent vermell)</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 2</div>
+      <div class="slide">
+        <div class="slide-num">Slide 2</div>
+        <p>«Cada sis mesos, un volum. Sense presses.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 3</div>
+      <div class="slide">
+        <div class="slide-num">Slide 3</div>
+        <p>«No fem notícies. No fem opinió ràpida. Publiquem anàlisis, lectures, traduccions i artefactes editorials.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 4</div>
+      <div class="slide">
+        <div class="slide-num">Slide 4</div>
+        <p>«Cada número té el seu propi color, la seva identitat, la seva veu.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 5</div>
+      <div class="slide">
+        <div class="slide-num">Slide 5</div>
+        <p>«El primer número es publicarà a finals de setembre.»<br>«Ens llegim.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>Xerrac! — Revista d'aclariment cultural.</p>
+        <p>Cada sis mesos, un volum. Sense presses.</p>
+        <p>El primer número arriba a finals de setembre. Fins aleshores, anirem obrint la porta.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«Segueix-nos per no perdre't el primer número.» (al final del caption)</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p>Dia 1: Stories amb les slides 1, 3 i 5 com a fragments. Link sticker: «Més informació» (porta al post). Enquesta: «Què esperes d'una revista cultural?» Opcions: Assaig / Traducció / Crítica / Reportatge.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Resultat esperat</div>
+      <p>200-400 impressions. 20-30 saves. Primeres respostes a l'enquesta.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STORIES WEEK -8 -->
+<div class="post" style="border-color:var(--muted);">
+  <div class="post-header" style="background:transparent;">
+    <div><span class="post-week">Stories setmana -8</span></div>
+    <div><span class="post-date">Dijous 6 · Divendres 7</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Stories</div>
+      <p><strong>Dijous:</strong> «Sabies que...» amb un slide sobre el significat de «xerrac» (serra, eina que talla). Jugar amb el doble sentit: tallar la xerrameca.</p>
+      <p><strong>Divendres:</strong> «Aquesta setmana hem anunciat que existim.» Story tranquil·la. Sense enllaç.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WEEK -7 -->
+<!-- ============================================================ -->
+<div style="margin:3rem 0;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Setmana –7 · 10–16 d'agost</h2>
+<p style="font-size:0.8rem;color:var(--dim);">Tema: L'equip. Humanitzar el projecte.</p>
+</div>
+
+<!-- POST 3 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 3</span> <span class="prio high">Alta</span></div>
+    <div><span class="post-date">Dilluns 10 d'agost · 12:00</span> <span class="post-format carousel">Carrousel 3-5 slides</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Presentar les persones que fan Xerrac!. Mostrar que és un projecte col·lectiu.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Cada slide: foto de l'autor/membre de l'equip (blanc i negre o tractament editat) + nom + una frase curta (resposta a «Per què fas Xerrac!?»). Fons: negre. Text en blanc. El nom, en accent vermell.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide per persona</div>
+      <div class="slide">
+        <div class="slide-num">Exemple de slide</div>
+        <p>[Foto persona] · «Nom Cognom» (vermell)<br>«Perquè necessitava un lloc on les frases no haguessin de competir amb un tuit.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>Les persones que fan Xerrac!.</p>
+        <p>Quan els vam preguntar per què participaven, van dir això.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«Ben aviat: les veus que escriuen el primer número.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p>Slide 1+2+3 a stories, una rere l'altra. Enquesta: «Quina secció t'agradaria veure?» Opcions: Editorial / Assaig / Traducció / Arxiu.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WEEK -6 -->
+<!-- ============================================================ -->
+<div style="margin:3rem 0;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Setmana –6 · 17–23 d'agost</h2>
+<p style="font-size:0.8rem;color:var(--dim);">Tema: La identitat visual. Ensenyar el sistema gràfic.</p>
+</div>
+
+<!-- POST 4 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 4</span> <span class="prio high">Alta</span></div>
+    <div><span class="post-date">Dimarts 18 d'agost · 12:00</span> <span class="post-format reel">Reel 15-20s</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Mostrar el sistema visual de Xerrac!: el logotip, la serra, els colors, el tractament tipogràfic.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Animació curta: el logotip «Xerrac!» apareix lletra per lletra. La serra (SawIcon) talla la paraula «xerrameca» i la parteix. El color d'accent (vermell) inunda la pantalla. Després, fons negre amb «Revista d'aclariment cultural».</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">So</div>
+      <p>So ambient minimalista o silenci. Veu en off: «Xerrac! es llegeix.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>Xerrac! — Sistema gràfic.</p>
+        <p>Cada número té el seu propi color d'accent. Aquest és el del número 1.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«El número 1 es publica al setembre.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p>«Sabies que cada número tindrà un color diferent?» Mostrar 3 exemples de colors possibles.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WEEK -5 -->
+<!-- ============================================================ -->
+<div style="margin:3rem 0;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Setmana –5 · 24–30 d'agost</h2>
+<p style="font-size:0.8rem;color:var(--dim);">Tema: El títol i el concepte del primer número.</p>
+</div>
+
+<!-- POST 5 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 5</span> <span class="prio critical">Crítica</span></div>
+    <div><span class="post-date">Dilluns 24 d'agost · 10:00</span> <span class="post-format">Post imatge</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Revelar el títol del primer número. Aquest és el post més important del pre-llançament.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Fons: color d'accent del número 1 (vermell #ef4444). Al centre, «CONTRA LA XERRAMECA!» en blanc, tipografia gran, tota la frase. Sota, en negre: «Xerrac! — Número 1». Res més.</p>
+      <p>La imatge ha de ser potent. El text ha d'ocupar >60% de l'espai.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>CONTRA LA XERRAMECA!</p>
+        <p>El primer número de Xerrac! porta un títol que és un programa.</p>
+        <p>Contra la paràlisi, contra el soroll ambiental, contra la cultura d'un sol clic, contra l'opinió que ocupa l'espai de l'anàlisi.</p>
+        <p>Al setembre. Ens llegim.</p>
+        <p style="color:var(--muted);">Xerrac! — Revista d'aclariment cultural. Número 1.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Hashtags</div>
+      <p>#Xerrac #ContraLaXerrameca #RevistaCultural #CulturaCatalana</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«Guarda aquest post per recordar-ho.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p><strong>Dilluns:</strong> Repost del post al feed. Link sticker: «Més informació».</p>
+      <p><strong>Dimarts:</strong> «Per què "Contra la xerrameca!"?» — Story breu amb text: «Perquè hi ha massa soroll i poc aclariment.»</p>
+      <p><strong>Dimecres:</strong> Enquesta: «Què és per tu "xerrameca"?» Opcions: Twitter / Tertúlies / Anuncis / Política.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Resultat esperat</div>
+      <p>Màxim abast del pre-llançament. 100-200 saves. Comentaris debatent el títol.</p>
+    </div>
+  </div>
+</div>
+
+<!-- POST 6 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 6</span> <span class="prio high">Alta</span></div>
+    <div><span class="post-date">Dijous 27 d'agost · 12:00</span> <span class="post-format carousel">Carrousel 4 slides</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Explicar el concepte del número sense donar articles complets.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Cada slide: frase curta sobre fons negre amb detall gràfic mínim (una línia vermella, un cercle, una serra petita). Llegible en 2 segons.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 1</div>
+      <div class="slide">
+        <div class="slide-num">Slide 1</div>
+        <p>«Què vol dir aclarir?»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 2</div>
+      <div class="slide">
+        <div class="slide-num">Slide 2</div>
+        <p>«Separar el soroll del sentit.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 3</div>
+      <div class="slide">
+        <div class="slide-num">Slide 3</div>
+        <p>«Llegir amb calma en un món que va massa ràpid.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 4</div>
+      <div class="slide">
+        <div class="slide-num">Slide 4</div>
+        <p>«Això és "Contra la xerrameca!".»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>«Contra la xerrameca!» no és un tema. És una posició.</p>
+        <p>El primer número de Xerrac! és un manifest en forma de revista. Diverses veus, una direcció.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«Al setembre.»</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WEEK -4 -->
+<!-- ============================================================ -->
+<div style="margin:3rem 0;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Setmana –4 · 31 d'agost – 6 de setembre</h2>
+<p style="font-size:0.8rem;color:var(--dim);">Tema: Fragments. Mostrar la veu de la revista.</p>
+</div>
+
+<!-- POST 7 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 7</span> <span class="prio critical">Crítica</span></div>
+    <div><span class="post-date">Dilluns 31 d'agost · 12:00</span> <span class="post-format">Post cita</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Publicar un fragment de l'editorial del número 1. La gent ha de poder llegir-lo al feed.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Fons: negre. Text del fragment en blanc, tipografia Georgia, mida llegible. El text ha d'ocupar la major part de la imatge. Al final, una línia vermella i «— Editorial, Xerrac! núm. 1».</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Fragment proposat</div>
+      <div class="slide">
+        <p>«Aclarir no és simplificar. Aclarir és distingir: separar el que importa del que ocupa espai. Contra la xerrameca no és un crit contra el desordre — és un exercici d'atenció.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>De l'editorial del número 1.</p>
+        <p>Aclarir no és simplificar.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«El número 1 es publica al setembre.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p>Repost del post. Link sticker: «Llegeix el fragment sencer» (porta al post).</p>
+    </div>
+  </div>
+</div>
+
+<!-- POST 8 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 8</span> <span class="prio high">Alta</span></div>
+    <div><span class="post-date">Dijous 3 de setembre · 12:00</span> <span class="post-format carousel">Carrousel 3-4 slides</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Mostrar la diversitat de veus del número. Tres fragments curts de tres seccions diferents.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Cada slide: fons negre, fragment en blanc. A sota, en accent vermell: el nom de la secció.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 1</div>
+      <div class="slide">
+        <div class="slide-num">Slide 1 — Editorial</div>
+        <p>«Contra la xerrameca no és un crit contra el desordre — és un exercici d'atenció.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 2</div>
+      <div class="slide">
+        <div class="slide-num">Slide 2 — Aclariment Cultural</div>
+        <p>Fragment breu de l'assaig central del número.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 3</div>
+      <div class="slide">
+        <div class="slide-num">Slide 3 — Pàgines Grogues</div>
+        <p>Fragment breu de la secció d'arxiu.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Slide 4 (opcional)</div>
+      <div class="slide">
+        <div class="slide-num">Slide 4</div>
+        <p>«Xerrac! — Número 1. Al setembre.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>Tres fragments del número 1. Tres veus. Una direcció.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«El número complet, al setembre.»</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WEEK -3 -->
+<!-- ============================================================ -->
+<div style="margin:3rem 0;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Setmana –3 · 7–13 de setembre</h2>
+<p style="font-size:0.8rem;color:var(--dim);">Tema: Els autors. Donar veu als col·laboradors.</p>
+</div>
+
+<!-- POST 9 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 9</span> <span class="prio high">Alta</span></div>
+    <div><span class="post-date">Dimarts 8 de setembre · 12:00</span> <span class="post-format carousel">Carrousel 4-6 slides</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Presentar els autors del número 1. La qualitat del projecte es mesura per les veus que el conformen.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Cada slide: foto de l'autor (tractament B/N o editat) + nom en accent vermell + una frase del seu article (no el títol, una línia de pensament). Fons negre.</p>
+      <p>Alternativa: si no hi ha fotos, il·lustració mínima o només text.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Exemple de slide</div>
+      <div class="slide">
+        <div class="slide-num">Slide</div>
+        <p>[Foto autor]<br><strong style="color:var(--red);">Nom Cognom</strong><br>«La cultura no és el que passa sinó el que decidim recordar.»</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>Els autors del número 1 de Xerrac!.</p>
+        <p>Contra la xerrameca! — Al setembre.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«Segueix-los i descobreix què han escrit.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p>Taggejar cada autor a les stories. Demanar als autors que comparteixin el post.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WEEK -2 -->
+<!-- ============================================================ -->
+<div style="margin:3rem 0;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Setmana –2 · 14–20 de setembre</h2>
+<p style="font-size:0.8rem;color:var(--dim);">Tema: L'objecte. Mostrar el PDF i la portada.</p>
+</div>
+
+<!-- POST 10 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 10</span> <span class="prio high">Alta</span></div>
+    <div><span class="post-date">Dimarts 15 de setembre · 12:00</span> <span class="post-format reel">Reel 10-15s</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Mostrar que Xerrac! també existeix en PDF. L'objecte físic digital.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Animació de pàgines del PDF passant. Velocitat lenta. Sense mostrar text complet (es difumina o es veu a mitges). Es veuen els marges, la maquetació, les imatges.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>El número 1 de Xerrac! també existeix en PDF.</p>
+        <p>Descarregable, imprimible, guardable.</p>
+        <p>Contra la xerrameca! — Al setembre.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«Dijous: la portada.»</p>
+    </div>
+  </div>
+</div>
+
+<!-- POST 11 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 11</span> <span class="prio critical">Crítica</span></div>
+    <div><span class="post-date">Dijous 17 de setembre · 10:00</span> <span class="post-format">Post imatge</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>REVELACIÓ DE LA PORTADA del número 1. Aquest és el segon post més important del pre-llançament.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>La portada del número 1, a pantalla completa. Sense text sobre la imatge. Que parli per si sola.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>Contra la xerrameca! — Portada del número 1 de Xerrac!.</p>
+        <p>Dilluns que ve: disponible.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Hashtags</div>
+      <p>#Xerrac #ContraLaXerrameca #Portada #RevistaCultural</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«Dilluns 21: última setmana abans del llançament.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p><strong>Dijous:</strong> Repost de la portada a stories. Link sticker: «Més informació».</p>
+      <p><strong>Divendres:</strong> «T'agrada la portada?» Enquesta: Sí / Molt / Increïble. (Només opcions positives.)</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Resultat esperat</div>
+      <p>200-400 saves. Comentaris sobre el disseny.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WEEK -1 -->
+<!-- ============================================================ -->
+<div style="margin:3rem 0;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Setmana –1 · 21–27 de setembre</h2>
+<p style="font-size:0.8rem;color:var(--dim);">Tema: Expectació final. Tot a punt.</p>
+</div>
+
+<!-- POST 12 -->
+<div class="post">
+  <div class="post-header">
+    <div><span class="post-week">Post 12</span> <span class="prio critical">Crítica</span></div>
+    <div><span class="post-date">Dilluns 21 de setembre · 10:00</span> <span class="post-format">Post imatge</span></div>
+  </div>
+  <div class="post-body">
+    <div class="post-field">
+      <div class="post-field-label">Propòsit</div>
+      <p>Última crida. Anunciar que el número surt aquesta setmana.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Concepte visual</div>
+      <p>Fons negre. Text: «AQUESTA SETMANA» en blanc, gran. Sota: «Contra la xerrameca! — Xerrac! núm. 1» en accent vermell. Mínim.</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Caption exacte</div>
+      <div class="copy">
+        <p>Aquesta setmana.</p>
+        <p>Dimarts 29 de setembre — Xerrac! número 1: «Contra la xerrameca!».</p>
+        <p>Revista d'aclariment cultural. En línia i en PDF.</p>
+        <p>Ens llegim.</p>
+      </div>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">CTA</div>
+      <p>«Activa les notificacions per no perdre-t'ho.» (si s'aplica) / «Dimarts, aquí.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Stories de suport</div>
+      <p><strong>Dilluns:</strong> Comptador: «4 dies.»</p>
+      <p><strong>Dimarts:</strong> «3 dies.» Story amb un fragment de l'editorial.</p>
+      <p><strong>Dimecres:</strong> «2 dies.» Story amb la portada.</p>
+      <p><strong>Dijous:</strong> «1 dia.» Story amb una cita d'un autor.</p>
+      <p><strong>Divendres:</strong> «Demà.» Story fosc: «Demà. Xerrac! número 1.»</p>
+      <p><strong>Dissabte:</strong> «Demà al matí.» Story: «Demà a les 9:00.»</p>
+      <p><strong>Diumenge:</strong> «Matí.» Story: «Demà.»</p>
+    </div>
+    <div class="post-field">
+      <div class="post-field-label">Resultat esperat</div>
+      <p>Que el dimarts al matí hi hagi gent esperant.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SUMMARY TABLE ==================== -->
+<div style="margin:4rem 0;border-top:2px solid var(--border);padding-top:2rem;">
+<h2 style="font-size:1.1rem;font-weight:700;">Resum de publicacions pre-llançament</h2>
+</div>
+
+<table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+  <tr><th>#</th><th>Data</th><th>Format</th><th>Contingut</th><th>Prioritat</th></tr>
+  <tr><td>1</td><td>3 ago</td><td>Post imatge</td><td>Tancament fosc «Xerrac!»</td><td>Crítica</td></tr>
+  <tr><td>2</td><td>5 ago</td><td>Carrousel 5</td><td>Presentació del projecte</td><td>Crítica</td></tr>
+  <tr><td>3</td><td>10 ago</td><td>Carrousel 3-5</td><td>Presentació equip</td><td>Alta</td></tr>
+  <tr><td>4</td><td>18 ago</td><td>Reel 15-20s</td><td>Identitat visual</td><td>Alta</td></tr>
+  <tr><td>5</td><td>24 ago</td><td>Post imatge</td><td>Revelació títol «Contra la xerrameca!»</td><td>Crítica</td></tr>
+  <tr><td>6</td><td>27 ago</td><td>Carrousel 4</td><td>Concepte del número</td><td>Alta</td></tr>
+  <tr><td>7</td><td>31 ago</td><td>Post cita</td><td>Fragment editorial</td><td>Crítica</td></tr>
+  <tr><td>8</td><td>3 set</td><td>Carrousel 3-4</td><td>Fragments de seccions</td><td>Alta</td></tr>
+  <tr><td>9</td><td>8 set</td><td>Carrousel 4-6</td><td>Presentació autors</td><td>Alta</td></tr>
+  <tr><td>10</td><td>15 set</td><td>Reel 10-15s</td><td>Preview PDF</td><td>Alta</td></tr>
+  <tr><td>11</td><td>17 set</td><td>Post imatge</td><td>Revelació portada</td><td>Crítica</td></tr>
+  <tr><td>12</td><td>21 set</td><td>Post imatge</td><td>«Aquesta setmana» + data exacta</td><td>Crítica</td></tr>
+</table>
+
+</div><!-- /wrap -->
+
+</body>
+</html>

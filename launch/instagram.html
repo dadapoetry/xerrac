@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Instagram</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <script>document.querySelector('.sidebar').innerHTML = `
+    <div class="sidebar-logo"><h1>Xerrac<span>!</span></h1><p>Centre de Control</p></div>
+    <nav>
+      <a href="index.html"><span class="dot" style="background:var(--red)"></span>Panell</a>
+      <a href="timeline.html"><span class="dot" style="background:var(--blue)"></span>Timeline</a>
+      <a href="calendar.html"><span class="dot" style="background:var(--blue)"></span>Calendari</a>
+      <a href="instagram.html" class="active"><span class="dot" style="background:#f87171"></span>Instagram</a>
+      <a href="copies.html"><span class="dot" style="background:var(--text2)"></span>Copies</a>
+      <a href="assets.html"><span class="dot" style="background:var(--yellow)"></span>Assets</a>
+      <a href="production.html"><span class="dot" style="background:var(--green)"></span>Producció</a>
+      <a href="press.html"><span class="dot" style="background:var(--yellow)"></span>Premsa</a>
+      <a href="checklists.html"><span class="dot" style="background:var(--green)"></span>Checklists</a>
+    </nav>`;
+  </script>
+
+  <main class="main">
+    <div class="page-header animate-in">
+      <div class="flex gap-05" style="align-items:center;">
+        <h1>Instagram <span class="text2" style="font-weight:400;font-size:1rem;">— Calendari complet</span></h1>
+        <span class="badge badge-yellow">Pre-llançament</span>
+      </div>
+      <p class="text2 text-sm mt-1">Totes les publicacions tenen la còpia escrita. CTA sempre: enllaç al web a la bio.</p>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="grid-4 mb-1 animate-in" style="animation-delay:0.1s;">
+      <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-family:var(--mono);font-size:1.2rem;color:var(--red);">12</div>
+        <div class="text-xs text3">Publicacions</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-family:var(--mono);font-size:1.2rem;color:var(--yellow);">4</div>
+        <div class="text-xs text3">Publicades</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-family:var(--mono);font-size:1.2rem;color:var(--blue);">8</div>
+        <div class="text-xs text3">Programades</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-family:var(--mono);font-size:1.2rem;color:var(--green);">12</div>
+        <div class="text-xs text3">Còpies fetes</div>
+      </div>
+    </div>
+
+    <!-- Phase filters -->
+    <div class="tabs animate-in" style="animation-delay:0.15s;">
+      <a href="#" class="active" onclick="filterIG('all');return false;">Totes</a>
+      <a href="#" onclick="filterIG('pre');return false;">Pre-llançament</a>
+      <a href="#" onclick="filterIG('launch');return false;">Llançament</a>
+      <a href="#" onclick="filterIG('post');return false;">Post-llançament</a>
+    </div>
+
+    <div id="ig-posts" class="animate-in" style="animation-delay:0.2s;"></div>
+  </main>
+</div>
+<script>
+const igPosts = [
+  {
+    id: 1, phase: 'pre', date: '24 Jul 2026', time: '10:00', format: 'Feed · Imatge única',
+    concept: 'Neix Xerrac!',
+    visual: 'Logotip Xerrac! sobre fons negre. SawIcon en vermell sota el text.',
+    done: true,
+    copy: `Benvinguts a Xerrac!, una revista d'aclariment cultural.
+
+Contra la xerrameca, hem decidit serrar.
+
+Cada sis mesos, un volum. Sense presses. Sense soroll. Només allò que val la pena aclarir.
+
+Primer número: "Contra la xerrameca!"
+Disponible al setembre.
+
+📎 Enllaç a la bio.`,
+    stories: 'Poll: "Què necessites aclarir avui?"',
+    cta: 'Enllaç a laxerrac.cat a la bio',
+    assets: 'Logotip en alta resolució',
+    effort: '30 min',
+    priority: 'Alta'
+  },
+  {
+    id: 2, phase: 'pre', date: '31 Jul 2026', time: '10:00', format: 'Feed · Imatge única',
+    concept: 'Contra la xerrameca!',
+    visual: 'Text "Contra la xerrameca!" en blanc sobre negre, tipografia serif, composició editorial.',
+    done: true,
+    copy: `"Contra la xerrameca!"
+
+Aquest és el lema del primer número de Xerrac!.
+
+Perquè vivem temps de soroll, i el silenci s'ha convertit en un luxe.
+
+Al setembre, comencem a serrar.
+
+📎 Enllaç a la bio.`,
+    stories: '"Què és per tu la xerrameca?" — caixa de preguntes',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Gràfic de text tipogràfic',
+    effort: '20 min',
+    priority: 'Alta'
+  },
+  {
+    id: 3, phase: 'pre', date: '7 Ago 2026', time: '10:00', format: 'Feed · Imatge única',
+    concept: 'El soroll del silenci',
+    visual: 'Fons negre amb text "El soroll del silenci" centrat. SawIcon petit a sota. Estil minimalista.',
+    done: false,
+    copy: `"El soroll del silenci"
+
+El tema del primer número de Xerrac!.
+
+Què passa quan ens aturem? Què sentim quan no sentim res?
+
+Explorem el silenci com a espai polític, estètic i personal.
+
+Al setembre, a laxerrac.cat.
+
+📎 Enllaç a la bio.`,
+    stories: 'Música en silenci (vídeo de 5s sense àudio)',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Gràfic de text minimalista',
+    effort: '20 min',
+    priority: 'Alta'
+  },
+  {
+    id: 4, phase: 'pre', date: '14 Ago 2026', time: '10:00', format: 'Feed · Cita gràfica',
+    concept: 'Cita de l\'editorial',
+    visual: 'Cita destacada sobre fons negre. Tipografia gran, espaiada. SawIcon decoratiu.',
+    done: false,
+    copy: `"No venim a explicar el món. Venim a serrar-lo."
+
+— Xerrac!, núm. 1
+
+Això és tot.
+
+📎 Enllaç a la bio.`,
+    stories: 'Quote en Stories (mateix disseny)',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Quote gràfica per feed + stories',
+    effort: '30 min',
+    priority: 'Alta'
+  },
+  {
+    id: 5, phase: 'pre', date: '21 Ago 2026', time: '10:00', format: 'Feed · Collage',
+    concept: 'Full Mural — collage',
+    visual: 'Collage del nº 1 (secció Full Mural). Imatge escanejada/retallada.',
+    done: false,
+    copy: `Full Mural.
+
+La secció de collage de Xerrac! on els lectors contribueixen amb treballs visuals.
+
+Aquest és un dels collages que apareixeran al primer número.
+
+Vols participar? Escriu-nos.
+
+Al setembre, tot a laxerrac.cat.
+
+📎 Enllaç a la bio.`,
+    stories: 'Zoom al collage + "Què hi veus?"',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Collage digitalitzat, retallat i editat',
+    effort: '45 min',
+    priority: 'Mitjana'
+  },
+  {
+    id: 6, phase: 'pre', date: '24 Ago 2026', time: '10:00', format: 'Feed · Carrousel',
+    concept: 'Pàgines Grogues',
+    visual: 'Carrousel de 3-5 diapositives amb proverbis literaris. Fons negre, text blanc, detalls vermells.',
+    done: false,
+    copy: `Pàgines Grogues.
+
+Aforismes, remixes i fragments literaris. Cada número, una col·lecció.
+
+Des d'aquí, cinc mostres del que trobareu al nº 1:
+
+[Llisca cap a l'esquerra]
+
+📎 Enllaç a la bio per llegir-los tots.`,
+    stories: 'El millor aforisme en Stories',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: '5 diapositives d\'aforismes',
+    effort: '60 min',
+    priority: 'Mitjana'
+  },
+  {
+    id: 7, phase: 'pre', date: '28 Ago 2026', time: '10:00', format: 'Feed · Reel 15s',
+    concept: 'Ludita — l\'enigma',
+    visual: 'Animació del crossword. Efecte de serra tallant el grid. So de serra elèctrica.',
+    done: false,
+    copy: `Ludita.
+
+La secció que rebutja les màquines... fent servir una graella.
+
+Cada número inclou un crossword temàtic.
+
+Aquest: Nietzsche, Borges, ironia, utopies i serres.
+
+T'atreveixes?
+
+📎 Enllaç a la bio.`,
+    stories: 'Solució a les Stories 24h després',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Reel animat 15s amb àudio',
+    effort: '90 min',
+    priority: 'Mitjana'
+  },
+  {
+    id: 8, phase: 'pre', date: '4 Set 2026', time: '10:00', format: 'Feed · Imatge única',
+    concept: 'Fadu Català',
+    visual: 'Biurada inventada en blanc sobre negre. Imatge d\'arxiu manipulada.',
+    done: false,
+    copy: `Fadu Català.
+
+Inventors, desinventors i ucronies catalanes. Una secció que podria ser veritat (però no ho és).
+
+Al nº 1: Ernest Fàbregas i Vidal, l'home que va patentar un dispositiu per fer dormir els gats.
+
+Obre el web per descobrir-lo.
+
+📎 Enllaç a la bio.`,
+    stories: 'Detall de la biografia inventada',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Imatge d\'arxiu manipulada + text',
+    effort: '40 min',
+    priority: 'Mitjana'
+  },
+  {
+    id: 9, phase: 'pre', date: '7 Set 2026', time: '10:00', format: 'Feed · Imatge única',
+    concept: 'Per què Xerrac?',
+    visual: 'Text "Per què una revista d\'aclariment cultural?" + SawIcon. Tipografia impactant.',
+    done: false,
+    copy: `Per què Xerrac?
+
+Per què una revista d'aclariment cultural?
+
+Per què ara?
+
+Perquè aclarir no és simplificar. Aclarir és distingir.
+
+Perquè necessitem eines, no ornaments.
+
+Perquè la cultura no és un producte: és un procés.
+
+Al setembre, responem totes les preguntes a laxerrac.cat.
+
+📎 Enllaç a la bio.`,
+    stories: 'La pregunta oberta: "Què necessites aclarir?"',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Gràfic tipogràfic',
+    effort: '25 min',
+    priority: 'Alta'
+  },
+  {
+    id: 10, phase: 'pre', date: '18 Set 2026', time: '10:00', format: 'Stories · Countdown',
+    concept: 'Countdown final',
+    visual: 'Stories amb countdown. SawIcon. "Falten X dies". Progressiu.',
+    done: false,
+    copy: `Falta 1 setmana.
+
+Xerrac! arriba el 24 de setembre.
+
+Prepara't per aclarir coses.
+
+🔔 Activa la notificació per no perdre-te'l.`,
+    stories: 'Countdown progressiu (7 dies). Cada dia un element diferent.',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Plantilla Stories countdown x7',
+    effort: '60 min',
+    priority: 'Alta'
+  },
+  {
+    id: 11, phase: 'launch', date: '21 Set 2026', time: '10:00', format: 'Feed · Carrousel',
+    concept: 'Què trobareu al nº 1',
+    visual: 'Carrousel de presentació del nº 1: portada, seccions, editors.',
+    done: false,
+    copy: `Tres dies.
+
+Dijous 24 de setembre publiquem el primer número de Xerrac!.
+
+"Contra la xerrameca!"
+
+Què hi trobareu?
+· Editorial fundacional
+· Aclariment cultural
+· Fadu Català (inventors ficticis)
+· Pàgines Grogues (aforismes)
+· Calaix de Sastre (entrevistes)
+· Visita (traducció de Perec)
+· Full Mural (collage dels lectors)
+· Ludita (crossword)
+
+Ho teniu tot a punt?
+
+📎 Enllaç a la bio.`,
+    stories: 'Compte enrere final',
+    cta: 'Enllaç a laxerrac.cat',
+    assets: 'Carrousel informatiu',
+    effort: '45 min',
+    priority: 'Crítica'
+  },
+  {
+    id: 12, phase: 'launch', date: '24 Set 2026', time: '10:00', format: 'Feed · Imatge única + Stories',
+    concept: 'Ja disponible!',
+    visual: 'Portada del nº 1. Text: "Ja disponible — laxerrac.cat".',
+    done: false,
+    copy: `Ja disponible.
+
+Xerrac! — Revista d'aclariment cultural
+
+Número 1: "Contra la xerrameca!"
+
+Llegiu-lo, compartiu-lo, serreu-lo.
+
+👉 laxerrac.cat
+
+📎 Enllaç a la bio.`,
+    stories: 'Cobertura completa del llançament. Stories cada hora. Enllaç directe.',
+    cta: 'laxerrac.cat directe',
+    assets: 'Portada del nº 1 + Stories pack',
+    effort: '120 min',
+    priority: 'Crítica'
+  },
+  {
+    id: 13, phase: 'post', date: '28 Set 2026', time: '10:00', format: 'Feed · Imatge única',
+    concept: 'Agraïments',
+    visual: 'Text "Gràcies" sobre fons negre. Llista de contributors. SawIcon.',
+    done: false,
+    copy: `Gràcies.
+
+El primer número de Xerrac! ja és al món gràcies a tots els que ho han fet possible.
+
+I gràcies a tu, per llegir-nos.
+
+Si t'ha agradat, comparteix-ho. Si no, escriu-nos.
+
+Ens llegim al nº 2.
+
+📎 laxerrac.cat`,
+    stories: 'Compartir mètriques (visites, descàrregues)',
+    cta: 'laxerrac.cat',
+    assets: 'Gràfic d\'agraïment',
+    effort: '20 min',
+    priority: 'Mitjana'
+  }
+];
+
+document.getElementById('ig-posts').innerHTML = igPosts.map(p => `
+  <div class="post-card" data-phase="${p.phase}">
+    <div class="flex-between mb-1">
+      <div class="meta">
+        <span class="date">${p.date}</span>
+        <span class="text3">·</span>
+        <span>${p.time}</span>
+        <span class="text3">·</span>
+        <span>${p.format}</span>
+        ${p.done ? '<span class="status status-done">Publicat</span>' : '<span class="status status-todo">Pendent</span>'}
+      </div>
+      <span class="badge ${p.priority === 'Crítica' ? 'badge-red' : p.priority === 'Alta' ? 'badge-yellow' : 'badge-blue'}">${p.priority}</span>
+    </div>
+    <h4>${p.concept}</h4>
+    <p style="font-size:0.75rem;color:var(--text3);margin-bottom:0.5rem;">🎨 ${p.visual}</p>
+    <div class="copy-preview" id="ig-copy-${p.id}">${p.copy}</div>
+    <div class="footer">
+      <div class="flex gap-05" style="flex-wrap:wrap;">
+        <span class="text-xs text3">🎭 ${p.stories}</span>
+        <span class="text-xs text3">·</span>
+        <span class="text-xs text3">📎 ${p.cta}</span>
+        <span class="text-xs text3">·</span>
+        <span class="text-xs text3">📦 ${p.assets}</span>
+        <span class="text-xs text3">·</span>
+        <span class="text-xs text3">⏱ ${p.effort}</span>
+      </div>
+      <button class="copy-btn" data-copy="ig-copy-${p.id}">Copiar còpia</button>
+    </div>
+  </div>
+`).join('');
+
+function filterIG(phase) {
+  document.querySelectorAll('.post-card').forEach(c => {
+    if (phase === 'all') c.style.display = 'block';
+    else c.style.display = c.dataset.phase === phase ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

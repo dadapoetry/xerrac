@@ -12,13 +12,13 @@ async function main() {
 
   const existingUser = await db.execute({
     sql: 'SELECT id FROM User WHERE email = ?',
-    args: ['admin@xerrac.cat'],
+    args: ['admin@laxerrac.cat'],
   })
 
   if (existingUser.rows.length === 0) {
     await db.execute({
       sql: 'INSERT INTO User (id, name, email, password) VALUES (?, ?, ?, ?)',
-      args: [uuid(), 'Admin', 'admin@xerrac.cat', hashed],
+      args: [uuid(), 'Admin', 'admin@laxerrac.cat', hashed],
     })
   }
 

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Perfil Instagram</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#111;
+    color:#e5e5e5;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:2rem;
+    gap:2.5rem;
+  }
+  h1 {
+    font-weight:700;
+    font-size:1.5rem;
+    letter-spacing:-0.02em;
+  }
+  h1 span { color:#ef4444; }
+  .preview-wrap {
+    display:flex;
+    gap:3rem;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+  }
+  .preview-item {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.75rem;
+  }
+  .preview-item .label {
+    font-size:0.65rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:#666;
+  }
+  .avatar {
+    border-radius:50%;
+    background:#0a0a0a;
+    box-shadow:0 0 0 1px rgba(239,68,68,0.2), 0 4px 24px rgba(0,0,0,0.5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .avatar svg { display:block; }
+  .avatar-256 { width:256px; height:256px; }
+  .avatar-110 { width:110px; height:110px; }
+  .instructions {
+    max-width:500px;
+    font-size:0.85rem;
+    color:#888;
+    line-height:1.7;
+    text-align:center;
+  }
+  .instructions strong { color:#e5e5e5; }
+  .btn {
+    display:inline-block;
+    padding:0.6rem 2rem;
+    background:#ef4444;
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    font-size:0.8rem;
+    font-weight:600;
+    cursor:pointer;
+    text-decoration:none;
+    transition:background 0.2s;
+  }
+  .btn:hover { background:#dc2626; }
+</style>
+</head>
+<body>
+  <h1>Perfil Instagram — Xerrac<span>!</span></h1>
+
+  <div class="preview-wrap">
+    <div class="preview-item">
+      <span class="label">256px</span>
+      <div class="avatar avatar-256">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="256" height="256">
+          <rect width="512" height="512" fill="#0a0a0a"/>
+          <text x="256" y="240" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="72" font-weight="700" fill="#ffffff" letter-spacing="-1">
+            Xerrac<tspan fill="#ef4444">!</tspan>
+          </text>
+          <g transform="translate(256,282) scale(0.7) translate(-50,-44)">
+            <path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" fill="#ef4444"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="preview-item">
+      <span class="label">110px (Instagram)</span>
+      <div class="avatar avatar-110">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="110" height="110">
+          <rect width="512" height="512" fill="#0a0a0a"/>
+          <text x="256" y="240" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="72" font-weight="700" fill="#ffffff" letter-spacing="-1">
+            Xerrac<tspan fill="#ef4444">!</tspan>
+          </text>
+          <g transform="translate(256,282) scale(0.7) translate(-50,-44)">
+            <path d="M8,20 L92,20 L92,32 L88,32 L76,68 L64,32 L58,32 L46,68 L34,32 L28,32 L18,68 L8,32 Z" fill="#ef4444"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <a href="xerrac-profile.svg" download class="btn">Baixar SVG</a>
+
+  <div class="instructions">
+    Obre <strong>xerrac-profile.svg</strong> al navegador, fes clic dret i desa la imatge, o fes una captura de pantalla.
+  </div>
+</body>
+</html>

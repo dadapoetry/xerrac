@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Timeline</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"> <!-- same sidebar --> </aside>
+  <script>document.querySelector('.sidebar').innerHTML = `
+    <div class="sidebar-logo">
+      <h1>Xerrac<span>!</span></h1>
+      <p>Centre de Control</p>
+    </div>
+    <nav>
+      <a href="index.html"><span class="dot" style="background:var(--red)"></span>Panell</a>
+      <a href="timeline.html" class="active"><span class="dot" style="background:var(--blue)"></span>Timeline</a>
+      <a href="calendar.html"><span class="dot" style="background:var(--blue)"></span>Calendari</a>
+      <a href="instagram.html"><span class="dot" style="background:#f87171"></span>Instagram</a>
+      <a href="copies.html"><span class="dot" style="background:var(--text2)"></span>Copies</a>
+      <a href="assets.html"><span class="dot" style="background:var(--yellow)"></span>Assets</a>
+      <a href="production.html"><span class="dot" style="background:var(--green)"></span>Producció</a>
+      <a href="press.html"><span class="dot" style="background:var(--yellow)"></span>Premsa</a>
+      <a href="checklists.html"><span class="dot" style="background:var(--green)"></span>Checklists</a>
+    </nav>
+  `;</script>
+
+  <main class="main">
+    <div class="page-header animate-in">
+      <h1>Timeline <span class="text2" style="font-weight:400;font-size:1rem;">— Full roadmap setmana a setmana</span></h1>
+      <p class="text2 text-sm mt-1">Del 17 de juliol al 31 de desembre de 2026. 12 setmanes operatives.</p>
+    </div>
+
+    <div class="card animate-in" style="animation-delay:0.1s;">
+      <div class="card-header">
+        <h2>Roadmap setmanal</h2>
+        <div class="flex gap-05">
+          <span class="tag tag-instagram">Instagram</span>
+          <span class="tag tag-web">Website</span>
+          <span class="tag tag-press">Premsa</span>
+          <span class="tag tag-production">Producció</span>
+        </div>
+      </div>
+
+      <div id="timeline-weeks"></div>
+      <script>
+        const timelineWeeks = [
+          { num: 1, dates: '17 Jul — 23 Jul', phase: 'Fonaments', status: 'done',
+            objectives: 'Setup del projecte. Domini, hosting, eines. Definir identitat visual d\'Instagram.',
+            deliverables: 'Perfil d\'Instagram creat. Foto de perfil pujada. Bio actualitzada. Domini laxerrac.cat operatiu.',
+            instagram: 'Crear perfil. Foto de perfil. Bio.', website: 'Configuració Vercel + Turso. DNS.', press: 'Llista de mitjans culturals.', production: 'Scripts de backup. Automatitzacions.' },
+          { num: 2, dates: '24 Jul — 30 Jul', phase: 'Fonaments', status: 'done',
+            objectives: 'Tancar contingut editorial del nº 1. Primera ronda de premsa.',
+            deliverables: 'Editorial finalitzat. Seccions tancades. Dossier de premsa preparat.',
+            instagram: 'Post 1: "Neix Xerrac!" — presentació.', website: 'Penjar contingut del nº 1 en privat.', press: 'Preparar dossier de premsa.', production: 'Correcció estilística.' },
+          { num: 3, dates: '31 Jul — 6 Ago', phase: 'Producció de contingut', status: 'now',
+            objectives: 'Enllestir tots els textos del nº 1. Iniciar calendari IG.',
+            deliverables: 'Totes les seccions revisades. Calendari IG complet. 3 posts preparats.',
+            instagram: 'Post 2: "Contra la xerrameca!" — lema.', website: 'Ajustos de disseny responsive.', press: '—', production: 'Maquetació del nº 1.' },
+          { num: 4, dates: '7 Ago — 13 Ago', phase: 'Producció de contingut', status: 'todo',
+            objectives: 'Disseny gràfic del nº 1. Creació d\'assets gràfics.',
+            deliverables: 'Portada dissenyada. Interior maquetat. Plantilles IG creades.',
+            instagram: 'Post 3: "El soroll del silenci" — tema.', website: 'Previsualització privada del nº 1.', press: '—', production: 'Disseny de portada.' },
+          { num: 5, dates: '14 Ago — 20 Ago', phase: 'Producció de contingut', status: 'todo',
+            objectives: 'Producció d\'assets visuals. Gravació/edició de vídeo teaser.',
+            deliverables: 'Teaser animat 15s. Quotes gràfiques x5. Fotos d\'autors (si escau).',
+            instagram: 'Post 4: Cita de l\'editorial — gràfic.', website: '—', press: '—', production: 'Teaser animat 15s.' },
+          { num: 6, dates: '21 Ago — 27 Ago', phase: 'Creació d\'assets', status: 'todo',
+            objectives: 'Ramp-up d\'Instagram. Enganxar audiència.',
+            deliverables: '5 posts programats. Stories diàries.',
+            instagram: 'Post 5: "Full Mural" collage. Post 6: "Pàgines Grogues".', website: '—', press: '—', production: 'Assets per xarxes.' },
+          { num: 7, dates: '28 Ago — 3 Set', phase: 'Creació d\'assets', status: 'todo',
+            objectives: 'Preparar materials de premsa definitius. Segona ronda de contactes.',
+            deliverables: 'Nota de premsa final. Llista de mitjans actualitzada.',
+            instagram: 'Post 7: "Ludita" — enigma.', website: '—', press: 'Enviar nota de premsa final.', production: 'Dossier de premsa complet.' },
+          { num: 8, dates: '4 Set — 10 Set', phase: 'Prellançament', status: 'todo',
+            objectives: 'Campanya de prellançament. Generar expectació.',
+            deliverables: 'Countdown actiu. 3 posts pre-llançament.',
+            instagram: 'Post 8: "Fadu Català". Post 9: "Per què Xerrac?"', website: 'Countdown al site.', press: 'Follow-up trucades.', production: 'Countdown visual.' },
+          { num: 9, dates: '11 Set — 17 Set', phase: 'Prellançament', status: 'todo',
+            objectives: 'Últims preparatius. Assajos tècnics.',
+            deliverables: 'Tests de càrrega. URL definitives. Backup del site.',
+            instagram: 'Post 10: Countdown final. Post 11: "Què trobareu al nº 1"', website: 'Test de producció.', press: 'Recordatori mitjans.', production: 'Tests i backups.' },
+          { num: 10, dates: '18 Set — 24 Set', phase: 'Setmana de llançament', status: 'todo',
+            objectives: 'LLANÇAMENT. Publicar el nº 1. Comunicar a tothom.',
+            deliverables: 'Nº 1 publicat al site. Posts d\'Instagram. Newsletter de llançament.',
+            instagram: 'Post 12: "Ja disponible!" Stories de llançament.', website: 'PUBLICAR el nº 1.', press: 'Llançament oficial.', production: 'Monitorització 24h.' },
+          { num: 11, dates: '25 Set — 1 Oct', phase: 'Postllançament', status: 'todo',
+            objectives: 'Consolidar. Recollir feedback. Primeres mètriques.',
+            deliverables: 'Post de celebració. Agraïments. Anàlisi de visites.',
+            instagram: 'Post 13: Agraïments + Mencions.', website: 'Penjar novetats post-llançament.', press: 'Nota de seguiment.', production: 'Mètriques i anàlisi.' },
+          { num: 12, dates: '2 Oct — 31 Des', phase: 'Postllançament', status: 'todo',
+            objectives: 'Mantenir ritme. Preparar convocatòria nº 2.',
+            deliverables: 'Calendari IG fins desembre. Convocatòria oberta de textos.',
+            instagram: '2 posts/setmana. Manteniment + teasers nº 2.', website: 'Secció "Obert" per recepció.', press: 'Relacions continues.', production: 'Preproducció nº 2.' },
+        ];
+        document.getElementById('timeline-weeks').innerHTML = timelineWeeks.map((w, i) => `
+          <div class="week ${w.status === 'now' ? 'week-now' : ''}">
+            <div class="week-side">
+              <div class="week-num">Setm. ${w.num}</div>
+              <div class="week-dates">${w.dates}</div>
+              <div style="margin-top:0.3rem;">
+                ${w.status === 'done' ? '<span class="status status-done">Fet</span>' : ''}
+                ${w.status === 'now' ? '<span class="status status-progress">En curs</span>' : ''}
+                ${w.status === 'todo' ? '<span class="status status-todo">Pendent</span>' : ''}
+              </div>
+            </div>
+            <div class="week-main">
+              <h3>${w.phase} — ${w.objectives}</h3>
+              <p><strong>Deliverables:</strong> ${w.deliverables}</p>
+              <p style="margin-top:0.25rem;color:var(--text3);font-size:0.7rem;">
+                IG: ${w.instagram} · Web: ${w.website} · Premsa: ${w.press} · Producció: ${w.production}
+              </p>
+              <div class="tags">
+                ${w.instagram !== '—' && w.instagram ? '<span class="tag tag-instagram">ig</span>' : ''}
+                ${w.website !== '—' && w.website ? '<span class="tag tag-web">web</span>' : ''}
+                ${w.press !== '—' && w.press ? '<span class="tag tag-press">press</span>' : ''}
+                ${w.production !== '—' && w.production ? '<span class="tag tag-production">prod</span>' : ''}
+              </div>
+            </div>
+          </div>
+        `).join('');
+      </script>
+    </div>
+  </main>
+</div>
+</body>
+</html>

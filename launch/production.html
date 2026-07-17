@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Producció</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <script>document.querySelector('.sidebar').innerHTML = `
+    <div class="sidebar-logo"><h1>Xerrac<span>!</span></h1><p>Centre de Control</p></div>
+    <nav>
+      <a href="index.html"><span class="dot" style="background:var(--red)"></span>Panell</a>
+      <a href="timeline.html"><span class="dot" style="background:var(--blue)"></span>Timeline</a>
+      <a href="calendar.html"><span class="dot" style="background:var(--blue)"></span>Calendari</a>
+      <a href="instagram.html"><span class="dot" style="background:#f87171"></span>Instagram</a>
+      <a href="copies.html"><span class="dot" style="background:var(--text2)"></span>Copies</a>
+      <a href="assets.html"><span class="dot" style="background:var(--yellow)"></span>Assets</a>
+      <a href="production.html" class="active"><span class="dot" style="background:var(--green)"></span>Producció</a>
+      <a href="press.html"><span class="dot" style="background:var(--yellow)"></span>Premsa</a>
+      <a href="checklists.html"><span class="dot" style="background:var(--green)"></span>Checklists</a>
+    </nav>`;
+  </script>
+
+  <main class="main">
+    <div class="page-header animate-in">
+      <h1>Producció <span class="text2" style="font-weight:400;font-size:1rem;">— Estat del nº 1</span></h1>
+      <p class="text2 text-sm mt-1">Progrés detallat de cada àrea de producció del primer número.</p>
+    </div>
+
+    <!-- Overall progress -->
+    <div class="card mb-15 animate-in" style="animation-delay:0.1s;">
+      <div class="card-header">
+        <h2>Progrés global del nº 1</h2>
+        <span class="mono" style="font-size:0.7rem;color:var(--text3);">58% complet</span>
+      </div>
+      <div class="progress-bar" style="height:8px;">
+        <div class="progress-fill yellow" style="width:58%"></div>
+      </div>
+      <div class="grid-4 mt-1" style="gap:0.75rem;">
+        <div><div class="text-xs text3">Contingut</div><div class="mono" style="font-size:1rem;color:var(--green);">80%</div></div>
+        <div><div class="text-xs text3">Disseny</div><div class="mono" style="font-size:1rem;color:var(--yellow);">45%</div></div>
+        <div><div class="text-xs text3">Assets</div><div class="mono" style="font-size:1rem;color:var(--blue);">20%</div></div>
+        <div><div class="text-xs text3">Premsa</div><div class="mono" style="font-size:1rem;color:var(--yellow);">60%</div></div>
+      </div>
+    </div>
+
+    <!-- Content sections -->
+    <div class="card mb-1 animate-in" style="animation-delay:0.15s;">
+      <div class="card-header">
+        <h2>Seccions del nº 1 — Estat del contingut</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Secció</th><th>Autor</th><th>Estat</th><th>Revisió</th><th>Llest per publicar</th></tr></thead>
+          <tbody>
+            <tr class="done"><td>Portada</td><td>—</td><td><span class="status status-done">Completat</span></td><td>—</td><td>✅</td></tr>
+            <tr class="done"><td>Editorial</td><td>Editors</td><td><span class="status status-done">Completat</span></td><td>1a revisió</td><td>✅</td></tr>
+            <tr><td>Aclariment Cultural</td><td>Editors</td><td><span class="status status-progress">En revisió</span></td><td>Pendent</td><td>—</td></tr>
+            <tr><td>Fadu Català</td><td>Editors</td><td><span class="status status-progress">En curs</span></td><td>—</td><td>—</td></tr>
+            <tr class="done"><td>Pàgines Grogues</td><td>Editors</td><td><span class="status status-done">Completat</span></td><td>1a revisió</td><td>✅</td></tr>
+            <tr><td>Calaix de Sastre</td><td>Editors</td><td><span class="status status-progress">En curs</span></td><td>—</td><td>—</td></tr>
+            <tr><td>Visita</td><td>Traductors</td><td><span class="status status-todo">Pendent</span></td><td>—</td><td>—</td></tr>
+            <tr><td>Full Mural</td><td>Lectores</td><td><span class="status status-progress">En curs</span></td><td>—</td><td>—</td></tr>
+            <tr><td>Ludita</td><td>Editors</td><td><span class="status status-todo">Pendent</span></td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Production areas -->
+    <div class="grid-2 animate-in" style="animation-delay:0.2s;">
+      <div class="card">
+        <div class="card-header"><h2>Disseny i Maquetació</h2></div>
+        <div style="font-size:0.78rem;">
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Portada</span><span class="status status-progress">Esborrany</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Maquetació web</span><span class="status status-progress">En curs</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Versió PDF</span><span class="status status-todo">Pendent</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;">
+            <span>Plantilles IG</span><span class="status status-todo">Pendent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h2>Premsa i Comunicació</h2></div>
+        <div style="font-size:0.78rem;">
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Dossier de premsa</span><span class="status status-progress">En curs</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Nota de premsa</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Llista de mitjans</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;">
+            <span>Campanya d'email</span><span class="status status-todo">Pendent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h2>Instagram</h2></div>
+        <div style="font-size:0.78rem;">
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Perfil creat</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Foto de perfil</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Bio actualitzada</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Calendari de posts</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>12 còpies escrites</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;">
+            <span>Assets gràfics</span><span class="status status-todo">Pendent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h2>Tècnic</h2></div>
+        <div style="font-size:0.78rem;">
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Domini laxerrac.cat</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Vercel + Turso</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>HTTPS + HSTS</span><span class="status status-done">Fet</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
+            <span>Tests de càrrega</span><span class="status status-todo">Pendent</span>
+          </div>
+          <div class="flex-between" style="padding:0.35rem 0;">
+            <span>Backup BD</span><span class="status status-todo">Pendent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

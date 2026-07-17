@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Premsa</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <script>document.querySelector('.sidebar').innerHTML = `
+    <div class="sidebar-logo"><h1>Xerrac<span>!</span></h1><p>Centre de Control</p></div>
+    <nav>
+      <a href="index.html"><span class="dot" style="background:var(--red)"></span>Panell</a>
+      <a href="timeline.html"><span class="dot" style="background:var(--blue)"></span>Timeline</a>
+      <a href="calendar.html"><span class="dot" style="background:var(--blue)"></span>Calendari</a>
+      <a href="instagram.html"><span class="dot" style="background:#f87171"></span>Instagram</a>
+      <a href="copies.html"><span class="dot" style="background:var(--text2)"></span>Copies</a>
+      <a href="assets.html"><span class="dot" style="background:var(--yellow)"></span>Assets</a>
+      <a href="production.html"><span class="dot" style="background:var(--green)"></span>Producció</a>
+      <a href="press.html" class="active"><span class="dot" style="background:var(--yellow)"></span>Premsa</a>
+      <a href="checklists.html"><span class="dot" style="background:var(--green)"></span>Checklists</a>
+    </nav>`;
+  </script>
+
+  <main class="main">
+    <div class="page-header animate-in">
+      <h1>Premsa <span class="text2" style="font-weight:400;font-size:1rem;">— Kit de comunicació per a mitjans</span></h1>
+      <p class="text2 text-sm mt-1">Tots els materials preparats per contactar amb mitjans culturals catalans.</p>
+    </div>
+
+    <div class="grid-2 animate-in" style="animation-delay:0.1s;">
+      <!-- Press Release -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Nota de premsa</h2>
+          <button class="copy-btn" data-copy="press-release">Copiar</button>
+        </div>
+        <div class="copy-block" id="press-release">
+          <div class="content">DATA: 24 de setembre de 2026
+
+XERRAC! — REVISTA D'ACLARIMENT CULTURAL
+Neix una nova revista digital semestral en català
+
+Barcelona, 24 de setembre de 2026 — Neix Xerrac!, una revista digital d'aclariment cultural que es publicarà cada sis mesos a laxerrac.cat. El primer número, titulat "Contra la xerrameca!", ja és disponible.
+
+"Xerrac!" significa "serra" en català, i la revista pren el nom com a metàfora: una eina que talla, que desmunta, que aclareix. "No venim a explicar el món. Venim a serrar-lo", diu l'editorial fundacional.
+
+Cada número de Xerrac! és un volum monogràfic que aborda un concepte clau de la cultura contemporània des de múltiples perspectives. El núm. 1 explora "El soroll del silenci" a través de vuit seccions que van de l'assaig (Aclariment Cultural) al collage (Full Mural), passant per la ficció especulativa (Fadu Català), la literatura fragmentària (Pàgines Grogues), l'entrevista (Calaix de Sastre), la traducció (Visita) i el joc (Ludita).
+
+Xerrac! es publica exclusivament en català, digitalment i en format PDF descarregable. Sense publicitat. Sense registre. Sense algoritmes.
+
+Per a més informació o sol·licituds d'entrevista: contacte@laxerrac.cat</div>
+        </div>
+      </div>
+
+      <!-- Media Pitch -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Pitch per a mitjans</h2>
+          <button class="copy-btn" data-copy="press-pitch">Copiar</button>
+        </div>
+        <div class="copy-block" id="press-pitch">
+          <div class="content">Assumpte: Xerrac! — una nova revista cultural catalana
+
+Bon dia [NOM],
+
+Et presentem Xerrac!, una revista d'aclariment cultural que publiquem cada sis mesos.
+
+El primer número, "Contra la xerrameca!", surt el 24 de setembre. El tema: el silenci. Vuit seccions, cap publicitat, cap algoritme. Només cultura en català.
+
+T'agradaria fer-ne ressò? Podem enviar-te material avançat o concertar una conversa.
+
+Gràcies,
+Xerrac!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Media list -->
+    <div class="card mt-1 animate-in" style="animation-delay:0.15s;">
+      <div class="card-header">
+        <h2>Mitjans culturals catalans — Llista de contactes</h2>
+        <span class="badge badge-blue">Prioritzats</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Mitjà</th><th>Tipus</th><th>Per què contactar</th><th>Estat</th><th>Contacte</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Núvol</strong></td>
+              <td>Digital cultural</td>
+              <td>Principal referent de crítica cultural catalana. Ressenya o article.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">redaccio@nuvoldigital.cat</td>
+            </tr>
+            <tr>
+              <td><strong>Catorze</strong></td>
+              <td>Digital cultural</td>
+              <td>Revista cultural amb perfil similar. Col·laboració o menció.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">info@catorze.cat</td>
+            </tr>
+            <tr>
+              <td><strong>VilaWeb</strong></td>
+              <td>Diari digital</td>
+              <td>Secció de cultura. Audiència àmplia.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">cultura@vilaweb.cat</td>
+            </tr>
+            <tr>
+              <td><strong>El País (Catalunya)</strong></td>
+              <td>Diari</td>
+              <td>Secció Quadern (català) o Cultura.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">cultura@elpais.es</td>
+            </tr>
+            <tr>
+              <td><strong>La Vanguardia</strong></td>
+              <td>Diari</td>
+              <td>Cultura. Audiència general.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">cultura@lavanguardia.es</td>
+            </tr>
+            <tr>
+              <td><strong>Ara</strong></td>
+              <td>Diari</td>
+              <td>Secció Cultura. Públic jove-adult.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">cultura@ara.cat</td>
+            </tr>
+            <tr>
+              <td><strong>Catarsi Magazín</strong></td>
+              <td>Digital cultural</td>
+              <td>Revista cultural jove. Afinitat generacional.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">info@catarsimagazin.cat</td>
+            </tr>
+            <tr>
+              <td><strong>Ràdio Catalunya</strong></td>
+              <td>Ràdio</td>
+              <td>Programes culturals. Entrevista ràpida.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">—</td>
+            </tr>
+            <tr>
+              <td><strong>TV3 (Culturacat)</strong></td>
+              <td>TV</td>
+              <td>Programa cultural. Possible reportatge.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">—</td>
+            </tr>
+            <tr>
+              <td><strong>Llegir en català</strong></td>
+              <td>Blog/Xarxa</td>
+              <td>Prescriptors de lectura en català.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">—</td>
+            </tr>
+            <tr>
+              <td><strong>Males Herbes (editorial)</strong></td>
+              <td>Editorial</td>
+              <td>Partner natural. Públic compartit.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">—</td>
+            </tr>
+            <tr>
+              <td><strong>Club Editor</strong></td>
+              <td>Editorial</td>
+              <td>Referent literari català. Possible col·laboració.</td>
+              <td><span class="status status-todo">Pendent</span></td>
+              <td class="mono" style="font-size:0.65rem;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Email templates -->
+    <div class="grid-2 mt-1 animate-in" style="animation-delay:0.2s;">
+      <div class="card">
+        <div class="card-header">
+          <h2>Correu de seguiment</h2>
+          <button class="copy-btn" data-copy="press-followup">Copiar</button>
+        </div>
+        <div class="copy-block" id="press-followup">
+          <div class="content">Assumpte: Xerrac! — recordatori i material
+
+Bon dia,
+
+Fa uns dies us vam presentar Xerrac!, la nova revista d'aclariment cultural.
+
+Us escrivim per recordar-vos que el primer número, "Contra la xerrameca!", es publica aquest dijous 24 de setembre a laxerrac.cat.
+
+Si us interessa, podem enviar-vos material avançat o posar-vos en contacte amb els editors.
+
+Gràcies,
+Xerrac!</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Correu post-llançament</h2>
+          <button class="copy-btn" data-copy="press-post">Copiar</button>
+        </div>
+        <div class="copy-block" id="press-post">
+          <div class="content">Assumpte: Xerrac! — ja disponible
+
+Bon dia,
+
+El primer número de Xerrac! ja és disponible a laxerrac.cat.
+
+"Contra la xerrameca!" — 8 seccions, 0 anuncis, 1 serra.
+
+Si el voleu consultar o fer-ne difusió, aquí teniu l'enllaç:
+
+👉 laxerrac.cat
+
+Gràcies per l'atenció,
+Xerrac!</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

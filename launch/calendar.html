@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Calendari</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <script>fetch('sidebar.html').then(r=>r.text()).then(h=>document.querySelector('.sidebar').innerHTML=h)</script>
+  <script>
+    document.querySelector('.sidebar').innerHTML = `
+    <div class="sidebar-logo"><h1>Xerrac<span>!</span></h1><p>Centre de Control</p></div>
+    <nav>
+      <a href="index.html"><span class="dot" style="background:var(--red)"></span>Panell</a>
+      <a href="timeline.html"><span class="dot" style="background:var(--blue)"></span>Timeline</a>
+      <a href="calendar.html" class="active"><span class="dot" style="background:var(--blue)"></span>Calendari</a>
+      <a href="instagram.html"><span class="dot" style="background:#f87171"></span>Instagram</a>
+      <a href="copies.html"><span class="dot" style="background:var(--text2)"></span>Copies</a>
+      <a href="assets.html"><span class="dot" style="background:var(--yellow)"></span>Assets</a>
+      <a href="production.html"><span class="dot" style="background:var(--green)"></span>Producció</a>
+      <a href="press.html"><span class="dot" style="background:var(--yellow)"></span>Premsa</a>
+      <a href="checklists.html"><span class="dot" style="background:var(--green)"></span>Checklists</a>
+    </nav>`;
+  </script>
+
+  <main class="main">
+    <div class="page-header animate-in">
+      <h1>Calendari <span class="text2" style="font-weight:400;font-size:1rem;">— Dia a dia operatiu</span></h1>
+      <p class="text2 text-sm mt-1">Visió detallada de les pròximes 4 setmanes. Més enllà, visió setmanal.</p>
+    </div>
+
+    <div class="tabs animate-in">
+      <a href="#" class="active" onclick="showTab('proximes');return false;">Pròximes 4 setmanes</a>
+      <a href="#" onclick="showTab('mensual');return false;">Visió mensual</a>
+    </div>
+
+    <div id="proximes" class="animate-in">
+      <!-- Week 3 -->
+      <div class="card mb-1">
+        <div class="card-header">
+          <h2>Setmana 3 · 31 Jul — 6 Ago <span class="badge badge-yellow" style="margin-left:0.5rem;">En curs</span></h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Data</th><th>Hora</th><th>Què</th><th>Tipus</th><th>Estat</th></tr></thead>
+            <tbody>
+              <tr class="critical"><td>31 Jul</td><td>10:00</td><td>Revisió final textos seccions</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-critical">Avui</span></td></tr>
+              <tr><td>31 Jul</td><td>12:00</td><td>Publicar Post 2: "Contra la xerrameca!"</td><td><span class="tag tag-instagram">instagram</span></td><td><span class="status status-progress">Programat</span></td></tr>
+              <tr><td>1 Ago</td><td>—</td><td>Preparar calendari IG complet</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>3 Ago</td><td>18:00</td><td>Reunió d'equip: estat del nº 1</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>4 Ago</td><td>—</td><td>Inici maquetació del nº 1</td><td><span class="tag tag-web">web</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>6 Ago</td><td>—</td><td>Tancament setmana: revisió d'objectius</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Week 4 -->
+      <div class="card mb-1">
+        <div class="card-header">
+          <h2>Setmana 4 · 7 Ago — 13 Ago</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Data</th><th>Hora</th><th>Què</th><th>Tipus</th><th>Estat</th></tr></thead>
+            <tbody>
+              <tr><td>7 Ago</td><td>10:00</td><td>Publicar Post 3: "El soroll del silenci"</td><td><span class="tag tag-instagram">instagram</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>7 Ago</td><td>—</td><td>Lliurament portada nº 1</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>10 Ago</td><td>—</td><td>Inici plantilles IG</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>11 Ago</td><td>—</td><td>Revisió maquetació</td><td><span class="tag tag-web">web</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>13 Ago</td><td>—</td><td>Tancament setmana. Lliuraments marcats.</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Week 5 -->
+      <div class="card mb-1">
+        <div class="card-header"><h2>Setmana 5 · 14 Ago — 20 Ago</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Data</th><th>Hora</th><th>Què</th><th>Tipus</th><th>Estat</th></tr></thead>
+            <tbody>
+              <tr><td>14 Ago</td><td>10:00</td><td>Publicar Post 4: Cita editorial</td><td><span class="tag tag-instagram">instagram</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>14 Ago</td><td>—</td><td>Inici teaser animat 15s</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>17 Ago</td><td>—</td><td>Producció quotes gràfiques x5</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>18 Ago</td><td>—</td><td>Previsualització privada del nº 1</td><td><span class="tag tag-web">web</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>20 Ago</td><td>—</td><td>Tancament setmana. Lliurar teaser.</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Week 6 -->
+      <div class="card mb-1">
+        <div class="card-header"><h2>Setmana 6 · 21 Ago — 27 Ago</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Data</th><th>Hora</th><th>Què</th><th>Tipus</th><th>Estat</th></tr></thead>
+            <tbody>
+              <tr><td>21 Ago</td><td>10:00</td><td>Publicar Post 5: "Full Mural" collage</td><td><span class="tag tag-instagram">instagram</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>24 Ago</td><td>10:00</td><td>Publicar Post 6: "Pàgines Grogues"</td><td><span class="tag tag-instagram">instagram</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>25 Ago</td><td>—</td><td>Inici Stories diàries</td><td><span class="tag tag-instagram">instagram</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+              <tr><td>27 Ago</td><td>—</td><td>Tancament setmana. Revisar mètriques IG.</td><td><span class="tag tag-production">producció</span></td><td><span class="status status-todo">Pendent</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="mensual" style="display:none;" class="animate-in">
+      <div class="card">
+        <div class="card-header"><h2>Visió mensual — Juliol a Desembre 2026</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Mes</th><th>Fase</th><th>Posts IG</th><th>Web</th><th>Premsa</th><th>Producció</th></tr></thead>
+            <tbody>
+              <tr class="done"><td>Juliol</td><td>Fonaments</td><td>2</td><td>Configuració</td><td>Contactes inicials</td><td>Scripts</td></tr>
+              <tr><td>Agost</td><td>Contingut + Assets</td><td>5</td><td>Maquetació</td><td>—</td><td>Disseny + Teaser</td></tr>
+              <tr class="soon"><td>Setembre</td><td>Prellançament + LLANÇAMENT</td><td>6</td><td>Publicació nº 1</td><td>Campanya</td><td>Tests + Monitoratge</td></tr>
+              <tr><td>Octubre</td><td>Postllançament</td><td>8</td><td>Manteniment</td><td>Seguiment</td><td>Mètriques</td></tr>
+              <tr><td>Novembre</td><td>Postllançament</td><td>8</td><td>—</td><td>—</td><td>Preproducció nº 2</td></tr>
+              <tr><td>Desembre</td><td>Postllançament</td><td>8</td><td>—</td><td>—</td><td>Convocatòria nº 2</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+function showTab(name) {
+  document.querySelectorAll('#proximes, #mensual').forEach(e => e.style.display = 'none');
+  document.getElementById(name).style.display = 'block';
+  document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

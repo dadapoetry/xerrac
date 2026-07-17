@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xerrac! — Còpies</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <script>document.querySelector('.sidebar').innerHTML = `
+    <div class="sidebar-logo"><h1>Xerrac<span>!</span></h1><p>Centre de Control</p></div>
+    <nav>
+      <a href="index.html"><span class="dot" style="background:var(--red)"></span>Panell</a>
+      <a href="timeline.html"><span class="dot" style="background:var(--blue)"></span>Timeline</a>
+      <a href="calendar.html"><span class="dot" style="background:var(--blue)"></span>Calendari</a>
+      <a href="instagram.html"><span class="dot" style="background:#f87171"></span>Instagram</a>
+      <a href="copies.html" class="active"><span class="dot" style="background:var(--text2)"></span>Copies</a>
+      <a href="assets.html"><span class="dot" style="background:var(--yellow)"></span>Assets</a>
+      <a href="production.html"><span class="dot" style="background:var(--green)"></span>Producció</a>
+      <a href="press.html"><span class="dot" style="background:var(--yellow)"></span>Premsa</a>
+      <a href="checklists.html"><span class="dot" style="background:var(--green)"></span>Checklists</a>
+    </nav>`;
+  </script>
+
+  <main class="main">
+    <div class="page-header animate-in">
+      <h1>Còpies <span class="text2" style="font-weight:400;font-size:1rem;">— Textos complets i llestos per usar</span></h1>
+      <p class="text2 text-sm mt-1">Totes les còpies estan escrites. Clica "Copiar" per portar-les al porta-retalls.</p>
+    </div>
+
+    <div class="tabs animate-in">
+      <a href="#" class="active" onclick="showCopy('instagram');return false;">Instagram</a>
+      <a href="#" onclick="showCopy('web');return false;">Web</a>
+      <a href="#" onclick="showCopy('email');return false;">Email</a>
+      <a href="#" onclick="showCopy('bio');return false;">Bio / Perfil</a>
+    </div>
+
+    <!-- INSTAGRAM -->
+    <div id="copy-instagram" class="animate-in">
+      <div class="card mb-1">
+        <div class="card-header"><h2>Post de presentació</h2><button class="copy-btn" data-copy="copy-presentacio">Copiar</button></div>
+        <div class="copy-block" id="copy-presentacio"><div class="content">Benvinguts a Xerrac!, una revista d'aclariment cultural.
+
+Contra la xerrameca, hem decidit serrar.
+
+Cada sis mesos, un volum. Sense presses. Sense soroll. Només allò que val la pena aclarir.
+
+Primer número: "Contra la xerrameca!"
+Disponible al setembre.
+
+📎 Enllaç a la bio.</div></div>
+      </div>
+
+      <div class="card mb-1">
+        <div class="card-header"><h2>Post "Contra la xerrameca!"</h2><button class="copy-btn" data-copy="copy-lema">Copiar</button></div>
+        <div class="copy-block" id="copy-lema"><div class="content">"Contra la xerrameca!"
+
+Aquest és el lema del primer número de Xerrac!.
+
+Perquè vivim temps de soroll, i el silenci s'ha convertit en un luxe.
+
+Al setembre, comencem a serrar.
+
+📎 Enllaç a la bio.</div></div>
+      </div>
+
+      <div class="card mb-1">
+        <div class="card-header"><h2>Post "El soroll del silenci"</h2><button class="copy-btn" data-copy="copy-soroll">Copiar</button></div>
+        <div class="copy-block" id="copy-soroll"><div class="content">"El soroll del silenci"
+
+El tema del primer número de Xerrac!.
+
+Què passa quan ens aturem? Què sentim quan no sentim res?
+
+Explorem el silenci com a espai polític, estètic i personal.
+
+Al setembre, a laxerrac.cat.
+
+📎 Enllaç a la bio.</div></div>
+      </div>
+
+      <div class="card mb-1">
+        <div class="card-header"><h2>Post de llançament</h2><button class="copy-btn" data-copy="copy-launch">Copiar</button></div>
+        <div class="copy-block" id="copy-launch"><div class="content">Ja disponible.
+
+Xerrac! — Revista d'aclariment cultural
+
+Número 1: "Contra la xerrameca!"
+
+Llegiu-lo, compartiu-lo, serreu-lo.
+
+👉 laxerrac.cat
+
+📎 Enllaç a la bio.</div></div>
+      </div>
+    </div>
+
+    <!-- WEB -->
+    <div id="copy-web" style="display:none;" class="animate-in">
+      <div class="card mb-1">
+        <div class="card-header"><h2>Anunci al web (home)</h2><button class="copy-btn" data-copy="copy-web-home">Copiar</button></div>
+        <div class="copy-block" id="copy-web-home"><div class="content">Xerrac! — Revista d'aclariment cultural
+
+Número 1: "Contra la xerrameca!"
+Disponible en PDF i lectura web.
+
+"Aclarir no és simplificar. Aclarir és distingir."
+
+— Xerrac!, núm. 1</div></div>
+      </div>
+
+      <div class="card mb-1">
+        <div class="card-header"><h2>Pàgina "Quant a nosaltres"</h2><button class="copy-btn" data-copy="copy-about">Copiar</button></div>
+        <div class="copy-block" id="copy-about"><div class="content">Xerrac! és una revista d'aclariment cultural.
+
+No venim a explicar el món. Venim a serrar-lo.
+
+Cada sis mesos, un volum. En català — no com a reivindicació sinó com a naturalitat.
+
+Aclarir no és simplificar. Aclarir és distingir.
+
+No busquem ser virals. Busquem ser recordats.</div></div>
+      </div>
+
+      <div class="card mb-1">
+        <div class="card-header"><h2>Newsletter de llançament</h2><button class="copy-btn" data-copy="copy-newsletter">Copiar</button></div>
+        <div class="copy-block" id="copy-newsletter"><div class="content">Assumpte: Ja és aquí — Xerrac! núm. 1
+
+--
+
+Ja disponible el primer número de Xerrac!.
+
+"Contra la xerrameca!"
+
+Llegiu-lo, compartiu-lo, serreu-lo.
+
+👉 laxerrac.cat
+
+Ens llegim.</div></div>
+      </div>
+    </div>
+
+    <!-- EMAIL -->
+    <div id="copy-email" style="display:none;" class="animate-in">
+      <div class="card mb-1">
+        <div class="card-header"><h2>Correu de premsa</h2><button class="copy-btn" data-copy="copy-press-email">Copiar</button></div>
+        <div class="copy-block" id="copy-press-email"><div class="content">Assumpte: Xerrac! — nova revista d'aclariment cultural
+
+Bon dia,
+
+Us presentem Xerrac!, una nova revista digital d'aclariment cultural que es publica cada sis mesos en català.
+
+El primer número, "Contra la xerrameca!", es publica el 24 de setembre a laxerrac.cat.
+
+Xerrac! neix amb la voluntat de ser una eina, no un ornament. Cada número és un volum temàtic que explora, des de diverses seccions, un concepte clau de la cultura contemporània.
+
+Seccions del nº 1:
+· Aclariment cultural
+· Fadu Català (ucronies i invents ficticis)
+· Pàgines Grogues (aforismes literaris)
+· Calaix de Sastre (entrevistes i crítiques)
+· Visita (traduccions)
+· Full Mural (collage)
+· Ludita (crossword)
+
+Si voleu més informació, material gràfic o concertar una entrevista, no dubteu a respondre aquest correu.
+
+Ens llegim,
+Xerrac!</div></div>
+      </div>
+
+      <div class="card mb-1">
+        <div class="card-header"><h2>Correu de seguiment</h2><button class="copy-btn" data-copy="copy-followup">Copiar</button></div>
+        <div class="copy-block" id="copy-followup"><div class="content">Assumpte: Recordatori — Xerrac! es publica aquesta setmana
+
+Bon dia,
+
+Us escrivim per recordar-vos que aquest dijous 24 de setembre publiquem el primer número de Xerrac!.
+
+Hi ha disponibilitat per entrevistar els editors o obtenir material avançat si us és d'interès.
+
+Trobareu tot el material a laxerrac.cat a partir de les 10:00.
+
+Gràcies per l'atenció,
+Xerrac!</div></div>
+      </div>
+    </div>
+
+    <!-- BIO -->
+    <div id="copy-bio" style="display:none;" class="animate-in">
+      <div class="card mb-1">
+        <div class="card-header"><h2>Instagram — Bio</h2><button class="copy-btn" data-copy="copy-bio-ig">Copiar</button></div>
+        <div class="copy-block" id="copy-bio-ig">
+          <div class="label">Nom del compte</div>
+          <div class="content" style="margin-bottom:0.75rem;">Xerrac! — Revista d'aclariment cultural</div>
+          <div class="label">Bio</div>
+          <div class="content">Ha quedat clar? 👇
+laxerrac.cat</div>
+        </div>
+      </div>
+
+      <div class="card mb-1">
+        <div class="card-header"><h2>Instagram — Stories destacades</h2></div>
+        <div style="font-size:0.82rem;color:var(--text2);line-height:1.7;">
+          <p><strong>EL Nº 1</strong> — Enllaç directe al web</p>
+          <p><strong>CONTRA LA XERRAMECA</strong> — Cita de l'editorial i presentació</p>
+          <p><strong>FULL MURAL</strong> — Collages dels lectors</p>
+          <p><strong>FAQ</strong> — Preguntes freqüents sobre la revista</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+function showCopy(section) {
+  document.querySelectorAll('[id^="copy-"]').forEach(e => {
+    if (e.id === 'copy-' + section || e.id.startsWith('copy-' + section + '-')) e.style.display = 'block';
+    else if (e.classList.contains('copy-block') || e.classList.contains('card') || e.id.startsWith('copy-')) {
+      const parent = e.closest('[id^="copy-"]');
+      if (parent && parent.id !== 'copy-' + section && !parent.id.startsWith('copy-' + section + '-')) {
+        if (parent.closest('[id^="copy-"]') === null) {}
+      }
+    }
+  });
+  document.querySelectorAll('#copy-instagram, #copy-web, #copy-email, #copy-bio').forEach(e => e.style.display = 'none');
+  document.getElementById('copy-' + section).style.display = 'block';
+  document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
