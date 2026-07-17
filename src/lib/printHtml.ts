@@ -1,6 +1,11 @@
 import { IssueData, SectionData, CrosswordData, CrosswordClue } from '@/types'
 import { LayoutSlot } from '@/lib/layoutEngine'
 
+function optimizeImageUrl(url: string, baseUrl?: string): string {
+  if (!url || !baseUrl) return url
+  return `${baseUrl}/_next/image?url=${encodeURIComponent(url)}&w=64&q=60`
+}
+
 export function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
 }
@@ -51,7 +56,7 @@ export function buildGrid(cw: CrosswordData, showSolution = true): { grid: strin
   return { grid: g, numbers: nums }
 }
 
-function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colSpan: number, accentColor: string): string {
+function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colSpan: number, accentColor: string, baseUrl?: string): string {
   const lh = 1.35; const label = sectionLabel(s.type)
   const titleSize = (() => { 
     const base = colSpan >= 5 ? 17 : colSpan >= 3 ? 15 : colSpan >= 2 ? 13 : 12
@@ -85,7 +90,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colS
         if (!collages.length) return ''
         const dc = Math.min(collages.length, colSpan >= 3 ? 3 : 2); const thumb = colSpan >= 3 ? 45 : 36
         return `<div style="display:flex;flex-direction:column;gap:${fs*0.3}px">${collages.slice(0, dc).map((x: any) =>
-          `<div style="display:flex;align-items:center;gap:4px;background-color:rgba(0,0,0,0.03);padding:2px 4px">${x.image ? `<div style="width:${thumb}px;height:${thumb}px;background-image:url('${x.image}');background-size:cover;background-position:center;flex-shrink:0;border:1px solid rgba(0,0,0,0.08)"></div>` : ''}<p style="font-size:${fs-0.5}px;line-height:${lh};margin:0">${x.description}</p></div>`
+          `<div style="display:flex;align-items:center;gap:4px;background-color:rgba(0,0,0,0.03);padding:2px 4px">${x.image ? `<div style="width:${thumb}px;height:${thumb}px;background-image:url('${optimizeImageUrl(x.image, baseUrl)}');background-size:cover;background-position:center;flex-shrink:0;border:1px solid rgba(0,0,0,0.08)"></div>` : ''}<p style="font-size:${fs-0.5}px;line-height:${lh};margin:0">${x.description}</p></div>`
         ).join('')}${collages.length > dc ? `<p style="font-size:${fs-1}px;font-style:italic;opacity:0.6;margin:0">+${collages.length-dc} col·latges m&eacute;s</p>` : ''}</div>`
       }
       case 'ludita': {
@@ -117,12 +122,12 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colS
   </div>`
 }
 
-export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: number[], issn?: string): string {
+export function buildPrintHTML(issue: IssueData, placed: LayoutSlot[], rowFractions: number[], issn?: string, baseUrl?: string): string {
   const accentColor = issue.accentColor || '#ef4444'
   const portada = issue.sections.find(s => s.type === 'portada')
   const pc = portada?.content as any
   const portadaTopic = pc?.topic || ''
-  const cells = placed.map(p => renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.col, p.colSpan, accentColor)).join('')
+  const cells = placed.map(p => renderSectionHTML(p.section, p.section.content as any, p.fontSize, p.col, p.colSpan, accentColor, baseUrl)).join('')
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8">

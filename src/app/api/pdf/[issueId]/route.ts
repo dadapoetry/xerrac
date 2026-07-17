@@ -21,7 +21,7 @@ function parseIssue(issue: any) {
 }
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: { issueId: string } }
 ) {
   const rawIssue = await getIssue(params.issueId)
@@ -31,7 +31,8 @@ export async function GET(
     const issue = parseIssue(rawIssue)
     const issn = await getSetting('footer_issn')
     const layout = computeLayout(issue, PAGE_W, PAGE_H, MASTHEAD_H, FOOTER_H)
-    const html = buildPrintHTML(issue, layout.slots, layout.rowFractions, issn)
+    const baseUrl = `${request.nextUrl.protocol}//${request.nextUrl.host}`
+    const html = buildPrintHTML(issue, layout.slots, layout.rowFractions, issn, baseUrl)
 
     const response = await fetch(PDFSPARK_URL, {
       method: 'POST',

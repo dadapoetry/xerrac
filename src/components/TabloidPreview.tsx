@@ -152,7 +152,8 @@ export function TabloidPreview({ issue, issn, autoPrint }: { issue: IssueData; i
 
   function handlePrint() {
     setPrinting(true)
-    const html = buildPrintHTML(issue, layout.placed, layout.norm, issn)
+    const baseUrl = window.location.origin
+    const html = buildPrintHTML(issue, layout.placed, layout.norm, issn, baseUrl)
     const win = window.open('', Math.random().toString(36).slice(2))
     if (!win) { setPrinting(false); alert('Permet les finestres emergents per exportar el PDF.'); return }
     win.document.write(html)
