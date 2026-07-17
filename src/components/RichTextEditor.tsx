@@ -18,14 +18,14 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   const editorRef = useRef<ReactQuillType | null>(null)
   const [showImageDialog, setShowImageDialog] = useState(false)
 
-  const insertImage = useCallback((url: string, width: string) => {
+  const insertImage = useCallback((url: string, width: string, alt: string) => {
     const editor = editorRef.current as any
     if (!editor) return
     const quill = editor.getEditor?.() || editor
     const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
     quill.clipboard.dangerouslyPasteHTML(
       range.index,
-      `<img src="${url}" style="max-width: ${width || '100%'}; height: auto;" />`
+      `<img src="${url}" alt="${alt}" loading="lazy" style="max-width: ${width || '100%'}; height: auto;" />`
     )
     setShowImageDialog(false)
   }, [])
@@ -75,14 +75,15 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   )
 }
 
-function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: string) => void; onClose: () => void }) {
+function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: string, alt: string) => void; onClose: () => void }) {
   const [url, setUrl] = useState('')
+  const [alt, setAlt] = useState('')
   const [width, setWidth] = useState('100%')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!url) return
-    onInsert(url, width)
+    onInsert(url, width, alt)
   }
 
   return (
@@ -105,6 +106,16 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
               placeholder="https://exemple.cat/imatge.jpg"
               autoFocus
               required
+            />
+          </div>
+          <div>
+            <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">Descripció (alt)</label>
+            <input
+              type="text"
+              value={alt}
+              onChange={(e) => setAlt(e.target.value)}
+              className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
+              placeholder="Descripció de la imatge per a accessibilitat"
             />
           </div>
           <div>

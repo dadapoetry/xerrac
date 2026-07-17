@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { deleteSection, updateSection } from '@/lib/actions'
+import { deleteSection, reorderSections } from '@/lib/actions'
 import { SECTION_LABELS, SectionData } from '@/types'
 import { Modal } from './Modal'
 import { useToast } from './Toast'
@@ -41,8 +41,10 @@ export function SectionList({ issueId, sections }: SectionListProps) {
     try {
       const a = sorted[index]
       const b = sorted[index - 1]
-      await updateSection(a.id, { order: b.order })
-      await updateSection(b.id, { order: a.order })
+      await reorderSections([
+        { id: a.id, order: b.order },
+        { id: b.id, order: a.order },
+      ])
       router.refresh()
     } catch (e: any) {
       setSorted([...sections].sort((a, b) => a.order - b.order))
@@ -59,8 +61,10 @@ export function SectionList({ issueId, sections }: SectionListProps) {
     try {
       const a = sorted[index]
       const b = sorted[index + 1]
-      await updateSection(a.id, { order: b.order })
-      await updateSection(b.id, { order: a.order })
+      await reorderSections([
+        { id: a.id, order: b.order },
+        { id: b.id, order: a.order },
+      ])
       router.refresh()
     } catch (e: any) {
       setSorted([...sections].sort((a, b) => a.order - b.order))

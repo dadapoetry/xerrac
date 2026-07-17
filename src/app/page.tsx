@@ -3,18 +3,19 @@ import { getLatestIssue, getIssue } from '@/lib/actions'
 import { safeParse } from '@/lib/utils'
 import { getSiteUrl } from '@/lib/site'
 
-export const dynamic = 'force-dynamic'
 import { FanzineViewer } from '@/components/FanzineViewer'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Footer } from '@/components/Footer'
 import { Afterthought } from '@/components/Afterthought'
 
-export async function generateMetadata({ searchParams }: { searchParams: { issue?: string } }): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: { searchParams: { issue?: string; preview?: string } }): Promise<Metadata> {
+  const previewToken = process.env.PREVIEW_TOKEN
+  const isPreview = searchParams.preview === previewToken
   const issueId = searchParams.issue
-  const issue = issueId ? await getIssue(issueId) : await getLatestIssue()
+  const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
   const siteUrl = getSiteUrl()
 
-  if (!issue) {
+  if (!issue || (!issue.published && !isPreview)) {
     return {
       title: 'Xerrac! — Revista d\'aclariment cultural',
       description: 'Revista d\'aclariment cultural',
@@ -31,6 +32,7 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
     title: `${issue.title} — Xerrac!`,
     description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}. ${sectionNames.join(', ')}.`,
     alternates: { canonical: issueUrl },
+    robots: isPreview ? { index: false, follow: false } : undefined,
     openGraph: {
       title: `${issue.title} — Xerrac!`,
       description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}.`,
@@ -53,10 +55,23 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: { issue?: string }
+  searchParams: { issue?: string; preview?: string }
 }) {
+  const previewToken = process.env.PREVIEW_TOKEN
+  const isPreview = searchParams.preview === previewToken
   const issueId = searchParams.issue
-  const issue = issueId ? await getIssue(issueId) : await getLatestIssue()
+  const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
+
+  if (issue && !issue.published && !isPreview) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-red-500 mb-4">XERRAC!</h1>
+          <p className="text-gray-500">Aquest número encara no està publicat.</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!issue) {
     return (

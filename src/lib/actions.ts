@@ -6,6 +6,7 @@ import { authOptions } from './auth'
 import { db } from './db'
 import { v4 as uuid } from 'uuid'
 import { safeParse } from '@/lib/utils'
+import { getSiteUrl } from './site'
 
 async function checkAuth() {
   const session = await getServerSession(authOptions)
@@ -148,8 +149,10 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
   }
 
   if (data.published) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'
-    fetch(`${baseUrl}/api/pdf/${id}`).catch(() => {})
+    const baseUrl = getSiteUrl()
+    fetch(`${baseUrl}/api/pdf/${id}`).catch((err) => {
+      console.error('[actions] PDF generation failed for', id, err)
+    })
   }
 
   revalidatePath('/admin')
@@ -160,6 +163,18 @@ export async function deleteIssue(id: string) {
   await checkAuth()
   await db.execute({ sql: 'DELETE FROM Section WHERE issueId = ?', args: [id] })
   await db.execute({ sql: 'DELETE FROM Issue WHERE id = ?', args: [id] })
+  revalidatePath('/admin')
+  revalidatePath('/')
+}
+
+export async function batchUpdateIssues(updates: { id: string; published: boolean }[]) {
+  await checkAuth()
+  for (const u of updates) {
+    await db.execute({
+      sql: 'UPDATE Issue SET published = ?, updatedAt = datetime(\'now\') WHERE id = ?',
+      args: [u.published ? 1 : 0, u.id],
+    })
+  }
   revalidatePath('/admin')
   revalidatePath('/')
 }
@@ -212,6 +227,18 @@ export async function updateSection(id: string, data: {
   revalidatePath('/')
 }
 
+export async function reorderSections(swaps: { id: string; order: number }[]) {
+  await checkAuth()
+  for (const s of swaps) {
+    await db.execute({
+      sql: 'UPDATE Section SET "order" = ?, updatedAt = datetime(\'now\') WHERE id = ?',
+      args: [s.order, s.id],
+    })
+  }
+  revalidatePath('/admin')
+  revalidatePath('/')
+}
+
 export async function deleteSection(id: string) {
   await checkAuth()
   await db.execute({ sql: 'DELETE FROM Section WHERE id = ?', args: [id] })
@@ -220,10 +247,27 @@ export async function deleteSection(id: string) {
 
 /* Newsletter */
 
+const subscribeAttempts = new Map<string, { count: number; resetAt: number }>()
+
+function checkSubscribeRateLimit(email: string): boolean {
+  const now = Date.now()
+  const entry = subscribeAttempts.get(email)
+  if (entry && now < entry.resetAt) {
+    return entry.count < 3
+  } else {
+    subscribeAttempts.set(email, { count: 1, resetAt: now + 3600000 })
+    return true
+  }
+}
+
 export async function subscribe(email: string) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(email)) {
     throw new Error('Correu no vàlid')
+  }
+
+  if (!checkSubscribeRateLimit(email)) {
+    throw new Error('Massa intents. Prova-ho més tard.')
   }
 
   const existing = await db.execute({
@@ -251,6 +295,7 @@ export async function subscribe(email: string) {
       sql: 'DELETE FROM Subscriber WHERE id = ?',
       args: [id],
     })
+    console.error('[actions] Failed to send confirmation email to', email, err)
     throw new Error('No s\'ha pogut enviar el correu de confirmació. Prova-ho més tard.')
   }
 
@@ -393,11 +438,9 @@ export async function sendIssueNewsletter(issueId: string) {
     )
     for (const r of results) {
       if (r.status === 'fulfilled') sent++
-      else console.error('Failed to send newsletter:', r.reason)
+      else console.error('[actions] Newsletter send failed:', r.reason)
     }
   }
 
   return { ok: true, sent, message: `Butlletí enviat a ${sent} subscriptor(s).` }
 }
-
-

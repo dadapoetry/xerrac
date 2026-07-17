@@ -109,6 +109,25 @@
   box-sizing: border-box;
 }
 
+:focus-visible {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+
+.section-container :focus-visible {
+  outline: 2px solid var(--accent, #ef4444);
+  outline-offset: 2px;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -169,6 +188,14 @@ body::before {
   );
   pointer-events: none;
   filter: drop-shadow(0 0 1px rgba(var(--accent-rgb), 0.25));
+}
+
+/* Ensure minimum contrast on dark backgrounds */
+.bg-black .text-gray-600,
+.bg-gray-950 .text-gray-600,
+.bg-gray-900 .text-gray-600,
+.bg-gray-800 .text-gray-600 {
+  color: #a3a3a3 !important;
 }
 
 /* Prose overrides for consistent editorial body text */

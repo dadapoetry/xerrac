@@ -1,6 +1,20 @@
+import { getSiteUrl } from './site'
+
 const FROM = process.env.NEWSLETTER_FROM || 'Xerrac! <contacte@xerrac.cat>'
-const BASE_URL = process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'
+const BASE_URL = getSiteUrl().replace(/\/+$/, '')
 const SAW_IMG = `<img src="${BASE_URL}/saw-icon.svg" width="20" height="20" alt="" style="display:inline-block;vertical-align:middle;line-height:0;font-size:0;width:20px;height:20px" />`
+
+async function fetchWithTimeout(url: string, options: RequestInit & { timeout?: number } = {}) {
+  const { timeout = 15000, ...fetchOptions } = options
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeout)
+  try {
+    const res = await fetch(url, { ...fetchOptions, signal: controller.signal })
+    return res
+  } finally {
+    clearTimeout(timer)
+  }
+}
 
 async function sendEmail({
   to, subject, html,
@@ -9,13 +23,14 @@ async function sendEmail({
   if (!apiKey) {
     throw new Error('RESEND_API_KEY no configurada')
   }
-  const res = await fetch('https://api.resend.com/emails', {
+  const res = await fetchWithTimeout('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ from: FROM, to, subject, html }),
+    timeout: 20000,
   })
   if (!res.ok) {
     const body = await res.text()
@@ -24,7 +39,7 @@ async function sendEmail({
 }
 
 export async function sendConfirmation(email: string, token: string) {
-  const url = `${process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'}/api/newsletter/confirm?token=${token}`
+  const url = `${BASE_URL}/api/newsletter/confirm?token=${token}`
   await sendEmail({
     to: email,
     subject: 'Xerrac! — Confirma la teva subscripció',
@@ -86,8 +101,8 @@ export async function sendNewsletterEmail(
   sections: { title: string; summary: string; image?: string; origIndex: number }[],
   coverImage?: string,
 ) {
-  const issueUrl = `${process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'}/?issue=${issue.id}`
-  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_URL || 'https://xerrac.vercel.app'}/api/newsletter/baixa?token=${token}`
+  const issueUrl = `${BASE_URL}/?issue=${issue.id}`
+  const unsubscribeUrl = `${BASE_URL}/api/newsletter/baixa?token=${token}`
 
   const sectionsHtml = sections.map((s) => `
     <tr>
@@ -144,14 +159,8 @@ export async function sendNewsletterEmail(
           <td style="padding:40px 16px">
             <table style="max-width:540px;margin:0 auto;width:100%;border-collapse:collapse">
 
-               <!-- Hero with cover background -->
               <tr>
                 <td ${coverImage ? `background="${coverImage}"` : ''} bgcolor="#000000" style="${heroBg};border:1px solid #222">
-                  <!--[if gte mso 9]>
-                  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:540px">
-                    <v:fill type="frame" src="${coverImage}" color="#000000" />
-                    <v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0">
-                  <![endif]-->
                   <div style="background:rgba(0,0,0,0.55);padding:40px 24px;text-align:center">
                     <h1 style="font-size:28px;font-weight:900;color:#fff;margin:0;letter-spacing:-1px">
                       XERRAC<span style="color:#ef4444">!</span>
@@ -168,19 +177,13 @@ export async function sendNewsletterEmail(
                       Llegir el número sencer
                     </a>
                   </div>
-                  <!--[if gte mso 9]>
-                    </v:textbox>
-                  </v:rect>
-                  <![endif]-->
                 </td>
               </tr>
 
               <tr><td style="height:32px"></td></tr>
 
-              <!-- Sections -->
               ${sectionsHtml}
 
-              <!-- Footer -->
               <tr>
                 <td style="padding:20px 0 0;border-top:1px solid #222">
                   <p style="font-size:11px;color:#555;margin:0 0 4px;text-align:center">
