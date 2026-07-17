@@ -8,9 +8,13 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Footer } from '@/components/Footer'
 import { Afterthought } from '@/components/Afterthought'
 
+function getPreviewStatus(preview?: string): boolean {
+  const token = process.env.PREVIEW_TOKEN
+  return token ? preview === token : false
+}
+
 export async function generateMetadata({ searchParams }: { searchParams: { issue?: string; preview?: string } }): Promise<Metadata> {
-  const previewToken = process.env.PREVIEW_TOKEN
-  const isPreview = searchParams.preview === previewToken
+  const isPreview = getPreviewStatus(searchParams.preview)
   const issueId = searchParams.issue
   const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
   const siteUrl = getSiteUrl()
@@ -57,8 +61,7 @@ export default async function HomePage({
 }: {
   searchParams: { issue?: string; preview?: string }
 }) {
-  const previewToken = process.env.PREVIEW_TOKEN
-  const isPreview = searchParams.preview === previewToken
+  const isPreview = getPreviewStatus(searchParams.preview)
   const issueId = searchParams.issue
   const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
 
