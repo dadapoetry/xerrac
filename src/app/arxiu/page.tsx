@@ -57,7 +57,7 @@ function IssueNumber({ num, size = 'default' }: { num: number; size?: 'default' 
   return (
     <span
       className={`${cls} font-black leading-[0.8] tracking-tighter select-none pointer-events-none`}
-      style={{ color: 'rgba(239, 68, 68, 0.07)' }}
+      style={{ color: 'var(--issue-accent, #ef4444)', opacity: 0.07 }}
       aria-hidden="true"
     >
       {String(num).padStart(2, '0')}
@@ -90,6 +90,7 @@ interface IssueShape {
   date: Date
   sections: { type: string }[]
   coverBg: string
+  accentColor: string
 }
 
 function shapeIssue(issue: any): IssueShape {
@@ -101,6 +102,7 @@ function shapeIssue(issue: any): IssueShape {
     date: new Date(issue.date),
     sections: issue.sections || [],
     coverBg: cover?.backgroundImage || '',
+    accentColor: issue.accentColor || '#ef4444',
   }
 }
 
@@ -120,6 +122,7 @@ function HeroIssue({ issue }: { issue: IssueShape }) {
     <Link
       href={`/?issue=${issue.id}`}
       className="group block relative overflow-hidden border-b border-gray-900"
+      style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
       <div className="aspect-[4/3] sm:aspect-[21/9] md:aspect-[2.6/1] relative">
         {issue.coverBg ? (
@@ -140,7 +143,7 @@ function HeroIssue({ issue }: { issue: IssueShape }) {
               <IssueNumber num={issue.number} size="hero" />
             </div>
             <div className="flex-1 min-w-0 pb-1 sm:pb-2">
-              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[0.95] tracking-tight group-hover:text-red-400 transition-colors duration-300">
+              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[0.95] tracking-tight group-hover:text-[var(--issue-accent)] transition-colors duration-300">
                 {issue.title}
               </h2>
               <p className="text-xs sm:text-sm text-gray-500 mt-2 sm:mt-3">
@@ -170,6 +173,7 @@ function SplitIssue({ issue, reverse }: { issue: IssueShape; reverse?: boolean }
     <Link
       href={`/?issue=${issue.id}`}
       className="group block relative overflow-hidden border-b border-gray-900"
+      style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
       <div className="md:grid md:grid-cols-2 md:min-h-[50vh]">
         <div className={`relative aspect-[4/3] md:aspect-auto ${imageSide}`}>
@@ -188,7 +192,7 @@ function SplitIssue({ issue, reverse }: { issue: IssueShape; reverse?: boolean }
           <span className="text-[8px] text-gray-600 tracking-[0.3em] uppercase mb-2">
             Número {String(issue.number).padStart(2, '0')}
           </span>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white leading-[0.95] tracking-tight mb-3 sm:mb-4 group-hover:text-red-400 transition-colors duration-300">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white leading-[0.95] tracking-tight mb-3 sm:mb-4 group-hover:text-[var(--issue-accent)] transition-colors duration-300">
             {issue.title}
           </h2>
           <p className="text-xs text-gray-600 mb-4 sm:mb-6">
@@ -211,6 +215,7 @@ function TypographyIssue({ issue }: { issue: IssueShape }) {
     <Link
       href={`/?issue=${issue.id}`}
       className="group block relative overflow-hidden border-b border-gray-900"
+      style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
       <div className="relative px-6 sm:px-8 md:px-12 lg:px-16 py-12 sm:py-16 md:py-20">
         <div className="hidden sm:block absolute -top-8 right-4 sm:right-8 lg:-top-12 lg:right-12">
@@ -221,7 +226,7 @@ function TypographyIssue({ issue }: { issue: IssueShape }) {
           <span className="text-[8px] text-gray-700 tracking-[0.3em] uppercase mb-2 block">
             Número {String(issue.number).padStart(2, '0')}
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[0.92] tracking-tight mb-4 sm:mb-6 group-hover:text-red-400 transition-colors duration-300">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[0.92] tracking-tight mb-4 sm:mb-6 group-hover:text-[var(--issue-accent)] transition-colors duration-300">
             {issue.title}
           </h2>
           <p className="text-xs text-gray-600 mb-4">
