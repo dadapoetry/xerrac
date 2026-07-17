@@ -35,7 +35,7 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
   }
 
   const removeArrayItem = (field: string, index: number) => {
-    const arr = data[field].filter((_: any, i: number) => i !== index)
+    const arr = (data[field] || []).filter((_: any, i: number) => i !== index)
     onChange(JSON.stringify({ ...data, [field]: arr }))
   }
 

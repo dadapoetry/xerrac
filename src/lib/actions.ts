@@ -253,6 +253,7 @@ function checkSubscribeRateLimit(email: string): boolean {
   const now = Date.now()
   const entry = subscribeAttempts.get(email)
   if (entry && now < entry.resetAt) {
+    entry.count++
     return entry.count < 3
   } else {
     subscribeAttempts.set(email, { count: 1, resetAt: now + 3600000 })

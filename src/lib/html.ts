@@ -1,4 +1,5 @@
 export function styleBlockquotes(html: string): string {
+  if (!html) return ''
   return html.replace(
     /<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g,
     (_, inner: string) => {
@@ -25,6 +26,7 @@ export function styleBlockquotes(html: string): string {
 }
 
 export function readingTime(html: string, wordsPerMinute = 200): number {
+  if (!html) return 1
   const text = html.replace(/<[^>]*>/g, '').trim()
   const words = text.split(/\s+/).filter(Boolean).length
   return Math.max(1, Math.round(words / wordsPerMinute))
