@@ -11,9 +11,10 @@ import { useToast } from './Toast'
 interface SectionListProps {
   issueId: string
   sections: SectionData[]
+  previewUrl?: string
 }
 
-export function SectionList({ issueId, sections }: SectionListProps) {
+export function SectionList({ issueId, sections, previewUrl }: SectionListProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [sorted, setSorted] = useState(() => [...sections].sort((a, b) => a.order - b.order))
@@ -125,7 +126,7 @@ export function SectionList({ issueId, sections }: SectionListProps) {
                 Editar
               </Link>
               <a
-                href={`/?issue=${issueId}#s-${i}`}
+                href={`${previewUrl || `/?issue=${issueId}`}#s-${i}`}
                 target="_blank"
                 className="text-xs text-gray-500 hover:text-red-400 transition-colors"
                 title="Vista prèvia"

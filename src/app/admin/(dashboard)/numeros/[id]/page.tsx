@@ -2,12 +2,17 @@ import { getIssue } from '@/lib/actions'
 import { IssueForm } from '@/components/admin/IssueForm'
 import { SectionList } from '@/components/admin/SectionList'
 import { SendNewsletterButton } from '@/components/admin/SendNewsletterButton'
+import { getSiteUrl } from '@/lib/site'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default async function EditNumeroPage({ params }: { params: { id: string } }) {
   const issue = await getIssue(params.id)
+  const previewToken = process.env.PREVIEW_TOKEN
+  const previewUrl = previewToken
+    ? `${getSiteUrl()}/?issue=${params.id}&preview=${previewToken}`
+    : `${getSiteUrl()}/?issue=${params.id}`
 
   if (!issue) {
     return (
@@ -57,7 +62,7 @@ export default async function EditNumeroPage({ params }: { params: { id: string 
 
         <div>
           <h2 className="text-sm uppercase tracking-wider text-gray-400 mb-4">Seccions</h2>
-          <SectionList issueId={issue.id} sections={issue.sections as any} />
+          <SectionList issueId={issue.id} sections={issue.sections as any} previewUrl={previewUrl} />
         </div>
       </div>
     </div>
