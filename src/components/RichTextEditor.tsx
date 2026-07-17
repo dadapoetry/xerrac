@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useCallback, useState } from 'react'
+import { useRef, useCallback, useState, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import type ReactQuillType from 'react-quill'
 
@@ -16,7 +16,7 @@ interface RichTextEditorProps {
 
 export function RichTextEditor({ value, onChange, minimal = false }: RichTextEditorProps) {
   const editorRef = useRef<ReactQuillType | null>(null)
-  const [imageDialog, setImageDialog] = useState<{ open: boolean } | null>(null)
+  const [imageDialog, setImageDialog] = useState(false)
   const pendingRangeRef = useRef<any>(null)
 
   const imageHandler = useCallback(() => {
@@ -24,48 +24,49 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     if (!editor) return
     const quill = editor.getEditor?.() || editor
     const range = quill.getSelection()
-    if (!range) return
-    pendingRangeRef.current = range
-    setImageDialog({ open: true })
+    pendingRangeRef.current = range || { index: quill.getLength() || 0, length: 0 }
+    setImageDialog(true)
   }, [])
 
-  const insertImage = (url: string, width: string) => {
+  const insertImage = useCallback((url: string, width: string) => {
     const editor = editorRef.current as any
     if (!editor) return
     const quill = editor.getEditor?.() || editor
     const range = pendingRangeRef.current
-    if (!range) return
+    if (!range) {
+      setImageDialog(false)
+      return
+    }
+    quill.focus()
     quill.setSelection(range)
     quill.clipboard.dangerouslyPasteHTML(
       range.index,
       `<img src="${url}" style="max-width: ${width || '100%'}; height: auto;" />`
     )
-    setImageDialog(null)
+    setImageDialog(false)
     pendingRangeRef.current = null
-  }
+  }, [])
 
-  const modules = minimal
-    ? {
-        toolbar: {
-          container: [['bold', 'italic', 'image'], ['clean']],
-          handlers: { image: imageHandler },
-        },
-      }
-    : {
-        toolbar: {
-          container: [
-            [{ header: [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['blockquote', 'link', 'image'],
-            ['clean'],
-          ],
-          handlers: { image: imageHandler },
-        },
-      }
+  const modules = useMemo(() => {
+    const cfg = minimal
+      ? [['bold', 'italic', 'image'], ['clean']]
+      : [
+          [{ header: [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['blockquote', 'link', 'image'],
+          ['clean'],
+        ]
+    return {
+      toolbar: {
+        container: cfg,
+        handlers: { image: imageHandler },
+      },
+    }
+  }, [minimal, imageHandler])
 
   return (
-    <>
+    <div>
       <ReactQuill
         ref={(el: any) => { editorRef.current = el }}
         value={value}
@@ -78,10 +79,10 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
       {imageDialog && (
         <ImageDialog
           onInsert={insertImage}
-          onClose={() => { setImageDialog(null); pendingRangeRef.current = null }}
+          onClose={() => { setImageDialog(false); pendingRangeRef.current = null }}
         />
       )}
-    </>
+    </div>
   )
 }
 
@@ -96,9 +97,13 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
   }
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-      <form onSubmit={handleSubmit} className="relative bg-gray-950 border border-gray-800 p-6 max-w-md w-full mx-4 shadow-2xl">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/70" />
+      <form
+        onSubmit={handleSubmit}
+        onClick={(e) => e.stopPropagation()}
+        className="relative bg-gray-950 border border-gray-800 p-6 max-w-md w-full mx-4 shadow-2xl"
+      >
         <h3 className="text-white font-bold text-lg mb-4">Inserir imatge</h3>
         <div className="space-y-4">
           <div>

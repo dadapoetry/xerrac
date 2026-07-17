@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
+import { getSiteUrl } from '@/lib/site'
 
 export function AdminSidebar({ user }: { user: { name?: string | null; email?: string | null } }) {
   const pathname = usePathname()
@@ -47,7 +48,7 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
 
       <div className="p-4 border-t border-gray-900 space-y-2">
         <a
-          href={process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}
+          href={getSiteUrl()}
           target="_blank"
           className="block text-[11px] text-gray-600 hover:text-red-400 transition-colors uppercase tracking-wider"
         >
