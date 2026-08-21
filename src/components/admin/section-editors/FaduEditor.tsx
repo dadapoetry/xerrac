@@ -38,7 +38,7 @@ export function FaduEditor({ entries, onUpdateArrayItem, onAddArrayItem, onRemov
           >
             <option value="biography">Biografia apòcrifa</option>
             <option value="ucronia">Ucronia</option>
-            <option value="character">Personatge inventat</option>
+            <option value="artefacte">Artefacte de futur</option>
           </select>
           <input
             type="text"

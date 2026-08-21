@@ -8,7 +8,7 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
     <div className="mb-6 pb-6 last:border-0">
       <div className="flex items-center gap-3 mb-3">
         <span className="text-[10px] uppercase tracking-widest drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" style={{ color: 'rgba(var(--accent-rgb), 0.7)' }}>
-          {entry.type === 'biography' ? 'Biografia apòcrifa' : entry.type === 'ucronia' ? 'Ucronia' : 'Personatge inventat'}
+          {entry.type === 'biography' ? 'Biografia apòcrifa' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte de futur' : 'Personatge inventat'}
         </span>
         <span className="text-xs text-gray-500 font-mono drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">#{String(index + 1).padStart(2, '0')}</span>
       </div>

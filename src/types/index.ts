@@ -47,7 +47,7 @@ export interface CollageEntry {
 }
 
 export interface FaduEntry {
-  type: 'biography' | 'ucronia' | 'character'
+  type: 'biography' | 'ucronia' | 'artefacte'
   title: string
   body: string
 }
