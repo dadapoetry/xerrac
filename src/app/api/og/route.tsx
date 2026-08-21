@@ -11,6 +11,7 @@ const typeLabels: Record<string, string> = {
   full_mural: 'Full Mural',
   ludita: 'Ludita',
   scrolly: 'Assaig visual',
+  necrologiques: 'Necrològiques',
 }
 
 function stripHtml(html: string): string {

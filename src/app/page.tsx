@@ -24,6 +24,7 @@ const sectionLabels: Record<string, string> = {
   full_mural: 'Full Mural',
   ludita: 'Ludita',
   scrolly: 'Assaig visual',
+  necrologiques: 'Necrològiques',
 }
 
 function extractExcerpt(content: any): string {

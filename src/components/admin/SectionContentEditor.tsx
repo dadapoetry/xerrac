@@ -9,6 +9,7 @@ import { CalaixSastreEditor } from './section-editors/CalaixSastreEditor'
 import { FullMuralEditor } from './section-editors/FullMuralEditor'
 import { CrosswordEditor } from './section-editors/CrosswordEditor'
 import { ScrollyEditor } from './section-editors/ScrollyEditor'
+import { NecrologiquesEditor } from './section-editors/NecrologiquesEditor'
 
 interface SectionContentEditorProps {
   type: string
@@ -98,6 +99,16 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
       return (
         <ScrollyEditor
           steps={data.steps || []}
+          onUpdateArrayItem={updateArrayItem}
+          onAddArrayItem={addArrayItem}
+          onRemoveArrayItem={removeArrayItem}
+        />
+      )
+
+    case 'necrologiques':
+      return (
+        <NecrologiquesEditor
+          entries={data.entries || []}
           onUpdateArrayItem={updateArrayItem}
           onAddArrayItem={addArrayItem}
           onRemoveArrayItem={removeArrayItem}

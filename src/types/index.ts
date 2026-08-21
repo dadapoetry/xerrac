@@ -102,6 +102,7 @@ export type SectionContent =
   | FullMuralContent
   | LuditaContent
   | ScrollyContent
+  | NecrologiquesContent
 
 export interface ScrollyStep {
   media?: string
@@ -111,6 +112,16 @@ export interface ScrollyStep {
 
 export interface ScrollyContent {
   steps: ScrollyStep[]
+}
+
+export interface NecrologicaEntry {
+  name: string
+  years?: string
+  epitaph: string
+}
+
+export interface NecrologiquesContent {
+  entries: NecrologicaEntry[]
 }
 
 export interface SectionData {
@@ -144,6 +155,7 @@ export const SECTION_LABELS: Record<string, string> = {
   full_mural: 'Full Mural',
   ludita: 'Ludita',
   scrolly: 'Assaig visual',
+  necrologiques: 'Necrològiques',
 }
 
 export const SECTION_TYPES = [
@@ -157,4 +169,5 @@ export const SECTION_TYPES = [
   'full_mural',
   'ludita',
   'scrolly',
+  'necrologiques',
 ] as const
