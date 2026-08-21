@@ -46,7 +46,7 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
     return null
   }
 
-  if (section.type === 'scrolly') {
+  if (section.type === 'scrolly' || section.type === 'necrologiques') {
     return <Component section={section} index={index} />
   }
 

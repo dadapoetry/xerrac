@@ -2,50 +2,49 @@
 
 import { SectionData, NecrologiquesContent } from '@/types'
 
-function Hairline() {
-  return <div className="w-6 h-px bg-white/10 mx-auto" aria-hidden="true" />
-}
-
 export function NecrologiquesSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as NecrologiquesContent
   const entries = content.entries || []
 
   return (
-    <div className="w-full h-full flex items-center justify-center py-16">
-      <div className="max-w-md mx-auto px-6 text-center">
-        <Hairline />
-        <p className="font-mono text-[10px] tracking-[0.35em] uppercase text-gray-500 mt-5">
-          {section.title}
-        </p>
-        <p className="text-xs text-gray-500 mt-1.5">Conceptes que ens han deixat</p>
+    <div className="w-full bg-black">
+      <div className="max-w-xl mx-auto px-6 py-16 md:py-20">
+        <header className="mb-10">
+          <p
+            className="font-mono text-[10px] tracking-[0.35em] uppercase"
+            style={{ color: 'rgba(var(--accent-rgb), 0.6)' }}
+          >
+            {section.title}
+          </p>
+          <p className="text-xs text-gray-500 mt-1.5">Conceptes que ens han deixat</p>
+        </header>
 
         {entries.length === 0 ? (
-          <p className="text-gray-600 text-xs italic mt-10">Cap defunció que declarar, aquest semestre.</p>
+          <p className="text-gray-600 text-xs italic">Cap defunció que declarar, aquest semestre.</p>
         ) : (
-          <div className="mt-12 space-y-10">
+          <div className="divide-y divide-white/10">
             {entries.map((entry, i) => (
-              <div key={i}>
-                {entry.name && (
-                  <h3 className="text-sm md:text-base font-semibold uppercase tracking-[0.15em] text-gray-200">
+              <article key={i} className="py-7 first:pt-0 last:pb-0">
+                <div className="flex items-baseline justify-between gap-4">
+                  <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-gray-200">
                     {entry.name}
                   </h3>
-                )}
-                {entry.years && (
-                  <p
-                    className="font-mono text-[10px] tracking-[0.25em] mt-1.5"
-                    style={{ color: 'rgba(var(--accent-rgb), 0.55)' }}
-                  >
-                    {entry.years}
-                  </p>
-                )}
+                  {entry.years && (
+                    <span
+                      className="font-mono text-[10px] tracking-[0.2em] shrink-0"
+                      style={{ color: 'rgba(var(--accent-rgb), 0.55)' }}
+                    >
+                      {entry.years}
+                    </span>
+                  )}
+                </div>
                 {entry.epitaph && (
                   <div
-                    className="italic text-sm text-gray-400 leading-relaxed mt-2.5"
+                    className="italic text-sm text-gray-400 leading-relaxed mt-2"
                     dangerouslySetInnerHTML={{ __html: entry.epitaph }}
                   />
                 )}
-                {i < entries.length - 1 && <div className="mt-10"><Hairline /></div>}
-              </div>
+              </article>
             ))}
           </div>
         )}
