@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   icons: { icon: '/favicon.svg' },
   manifest: '/api/manifest',
+  alternates: {
+    types: {
+      'application/rss+xml': `${siteUrl}/api/feed`,
+    },
+  },
   robots: {
     index: true,
     follow: true,
