@@ -21,46 +21,49 @@ export function NecrologiquesSection({ section }: { section: SectionData }) {
             style={{ backgroundImage: `url("${section.backgroundImage}")` }}
             aria-hidden="true"
           />
-          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/88 via-black/78 to-black/92" />
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/85 via-black/72 to-black/90" />
           <div className="absolute inset-x-0 top-0 h-24 z-[2] bg-gradient-to-b from-black/60 to-transparent" />
         </>
       )}
 
-      <div className="relative z-[3] border-t border-white/10">
-        <div className="max-w-5xl mx-auto px-6 py-12 md:py-16">
-          <p className="font-mono text-[9px] tracking-[0.35em] uppercase mb-9">
-            <span style={{ color: 'rgba(var(--accent-rgb), 0.7)' }}>{section.title}</span>
-            <span className="text-gray-600">&nbsp;&nbsp;·&nbsp;&nbsp;Conceptes que ens han deixat</span>
-          </p>
+      <div className="relative z-[3] max-w-prose w-full mx-auto px-6 py-14 md:py-20">
+        <div className="w-12 h-[2px] opacity-60 mb-4" style={{ backgroundColor: 'var(--accent)' }} />
 
-          {entries.length === 0 ? (
-            <p className="text-gray-600 text-xs italic">Cap defunció que declarar, aquest semestre.</p>
-          ) : (
-            <div className="flex flex-wrap gap-x-12 gap-y-7">
-              {entries.map((entry, i) => (
-                <article key={i} className="max-w-[250px]">
-                  <h4 className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-300 leading-snug">
-                    {entry.name}
-                  </h4>
-                  {entry.years && (
-                    <p
-                      className="mt-1 font-mono text-[10px] tracking-[0.22em]"
-                      style={{ color: 'rgba(var(--accent-rgb), 0.55)' }}
+        <p className="font-mono text-[10px] tracking-[0.3em] uppercase mb-10">
+          <span style={{ color: 'rgba(var(--accent-rgb), 0.7)' }}>{section.title}</span>
+          <span className="text-gray-500">&nbsp;&nbsp;·&nbsp;&nbsp;Conceptes que ens han deixat</span>
+        </p>
+
+        {entries.length === 0 ? (
+          <p className="editorial-body text-gray-400 italic">Cap defunció que declarar, aquest semestre.</p>
+        ) : (
+          entries.map((entry, i) => (
+            <article key={i} className={`editorial-body text-gray-300 ${i < entries.length - 1 ? 'mb-9' : ''}`}>
+              <p>
+                <span className="font-semibold uppercase tracking-[0.06em] text-gray-100">
+                  {entry.name}
+                </span>
+                {entry.years && (
+                  <>
+                    {' '}
+                    <span
+                      className="font-mono"
+                      style={{ color: 'rgba(var(--accent-rgb), 0.75)', fontSize: '0.85em', letterSpacing: '0.08em' }}
                     >
-                      †&nbsp;&nbsp;{entry.years}
-                    </p>
-                  )}
-                  {entry.epitaph && (
-                    <div
-                      className="mt-1.5 italic text-xs leading-relaxed text-gray-400 [&>p]:mt-1"
-                      dangerouslySetInnerHTML={{ __html: entry.epitaph }}
-                    />
-                  )}
-                </article>
-              ))}
-            </div>
-          )}
-        </div>
+                      †&thinsp;{entry.years}
+                    </span>
+                  </>
+                )}
+                {entry.epitaph && (
+                  <>
+                    {'. '}
+                    <span dangerouslySetInnerHTML={{ __html: entry.epitaph }} />
+                  </>
+                )}
+              </p>
+            </article>
+          ))
+        )}
       </div>
     </div>
   )
