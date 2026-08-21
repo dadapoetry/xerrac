@@ -6,6 +6,7 @@ interface NecrologicaEntry {
   name: string
   years?: string
   epitaph: string
+  mourners?: string
 }
 
 interface Props {
@@ -19,7 +20,8 @@ export function NecrologiquesEditor({ entries, onUpdateArrayItem, onAddArrayItem
   return (
     <div className="space-y-6">
       <p className="text-xs text-gray-500">
-        Necrològiques de conceptes. Recomanat: col·locar aquesta secció en darrera posició del número.
+        La primera necrològica es mostra destacada (obituari principal); la resta, com a esquelles emmarcades.
+        Recomanat: col·locar aquesta secció en darrera posició del número.
       </p>
       {(entries || []).map((entry, i) => (
         <div key={i} className="p-4 border border-gray-700 space-y-3">
@@ -55,11 +57,18 @@ export function NecrologiquesEditor({ entries, onUpdateArrayItem, onAddArrayItem
               minimal
             />
           </div>
+          <input
+            type="text"
+            value={entry.mourners || ''}
+            onChange={(e) => onUpdateArrayItem('entries', i, 'mourners', e.target.value)}
+            placeholder="Avisen (opcional) — ex.: el sentit de l'humor i la paciència"
+            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm font-mono"
+          />
         </div>
       ))}
       <button
         type="button"
-        onClick={() => onAddArrayItem('entries', { name: '', years: '', epitaph: '' })}
+        onClick={() => onAddArrayItem('entries', { name: '', years: '', epitaph: '', mourners: '' })}
         className="text-sm text-red-400 hover:text-red-300 border border-dashed border-red-900 px-4 py-2 w-full"
       >
         + Afegir necrològica

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { SectionData, NecrologiquesContent } from '@/types'
 
-export function NecrologiquesSection({ section, index }: { section: SectionData; index: number }) {
+export function NecrologiquesSection({ section }: { section: SectionData }) {
   const content = section.content as unknown as NecrologiquesContent
   const entries = content.entries || []
   const [bgReady, setBgReady] = useState(false)
@@ -11,6 +11,8 @@ export function NecrologiquesSection({ section, index }: { section: SectionData;
   useEffect(() => {
     setBgReady(true)
   }, [])
+
+  const [lead, ...rest] = entries
 
   return (
     <div className="relative w-full overflow-hidden">
@@ -25,8 +27,9 @@ export function NecrologiquesSection({ section, index }: { section: SectionData;
           <div className="absolute inset-x-0 top-0 h-24 z-[2] bg-gradient-to-b from-black/60 to-transparent" />
         </>
       )}
-      <div className="relative z-[3] max-w-xl mx-auto px-6 py-16 md:py-20">
-        <header className="mb-10">
+
+      <div className="relative z-[3] max-w-5xl mx-auto px-6 py-16 md:py-24">
+        <header className="mb-12 md:mb-16">
           <p
             className="font-mono text-[10px] tracking-[0.35em] uppercase"
             style={{ color: 'rgba(var(--accent-rgb), 0.6)' }}
@@ -39,31 +42,71 @@ export function NecrologiquesSection({ section, index }: { section: SectionData;
         {entries.length === 0 ? (
           <p className="text-gray-600 text-xs italic">Cap defunció que declarar, aquest semestre.</p>
         ) : (
-          <div className="divide-y divide-white/10">
-            {entries.map((entry, i) => (
-              <article key={i} className="py-7 first:pt-0 last:pb-0">
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-gray-200">
-                    {entry.name}
-                  </h3>
-                  {entry.years && (
-                    <span
-                      className="font-mono text-[10px] tracking-[0.2em] shrink-0"
-                      style={{ color: 'rgba(var(--accent-rgb), 0.55)' }}
-                    >
-                      {entry.years}
-                    </span>
-                  )}
-                </div>
-                {entry.epitaph && (
+          <>
+            {lead && (
+              <article className="max-w-2xl pb-12 md:pb-16">
+                <h3 className="text-xl md:text-2xl font-semibold uppercase tracking-[0.1em] text-gray-100">
+                  {lead.name}
+                </h3>
+                {lead.years && (
+                  <p
+                    className="mt-3 font-mono text-[10px] tracking-[0.3em]"
+                    style={{ color: 'rgba(var(--accent-rgb), 0.6)' }}
+                  >
+                    †&nbsp;&nbsp;{lead.years}
+                  </p>
+                )}
+                {lead.epitaph && (
                   <div
-                    className="italic text-sm text-gray-400 leading-relaxed mt-2"
-                    dangerouslySetInnerHTML={{ __html: entry.epitaph }}
+                    className="mt-5 italic text-sm md:text-base text-gray-300 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: lead.epitaph }}
                   />
                 )}
+                {lead.mourners && (
+                  <p className="mt-4 font-mono text-[10px] tracking-wide text-gray-600">
+                    Avisen: {lead.mourners}
+                  </p>
+                )}
               </article>
-            ))}
-          </div>
+            )}
+
+            {rest.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px border border-white/10 bg-white/10">
+                {rest.map((entry, i) => (
+                  <article
+                    key={i}
+                    className="flex flex-col items-center px-6 py-8 text-center bg-[#0a0a0a]/90 backdrop-blur-sm"
+                  >
+                    <span
+                      className="text-base leading-none"
+                      style={{ color: 'rgba(var(--accent-rgb), 0.65)' }}
+                    >
+                      †
+                    </span>
+                    <h4 className="mt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-200">
+                      {entry.name}
+                    </h4>
+                    {entry.years && (
+                      <p className="mt-1.5 font-mono text-[9px] tracking-[0.25em] text-gray-500">
+                        {entry.years}
+                      </p>
+                    )}
+                    {entry.epitaph && (
+                      <div
+                        className="mt-3 mb-4 italic text-[11px] leading-relaxed text-gray-400 [&>p]:mt-1"
+                        dangerouslySetInnerHTML={{ __html: entry.epitaph }}
+                      />
+                    )}
+                    {entry.mourners && (
+                      <p className="mt-auto w-full border-t border-white/5 pt-3 font-mono text-[9px] tracking-wide text-gray-600">
+                        Avisen: {entry.mourners}
+                      </p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

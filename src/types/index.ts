@@ -119,6 +119,7 @@ export interface NecrologicaEntry {
   name: string
   years?: string
   epitaph: string
+  mourners?: string
 }
 
 export interface NecrologiquesContent {
