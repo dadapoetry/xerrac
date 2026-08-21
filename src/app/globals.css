@@ -190,18 +190,6 @@ body::before {
   filter: drop-shadow(0 0 1px rgba(var(--accent-rgb), 0.25));
 }
 
-/* Drop cap for necrologiques lead epitaph */
-.necro-dropcap::first-letter {
-  float: left;
-  font-size: 3.4em;
-  line-height: 0.8;
-  font-weight: 900;
-  font-style: normal;
-  margin-right: 0.12em;
-  margin-top: 0.08em;
-  color: var(--accent);
-}
-
 /* Ensure minimum contrast on dark backgrounds */
 .bg-black .text-gray-600,
 .bg-gray-950 .text-gray-600,
