@@ -46,6 +46,10 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
     return null
   }
 
+  if (section.type === 'scrolly') {
+    return <Component section={section} index={index} />
+  }
+
   return (
     <>
       <div className="section-container">
