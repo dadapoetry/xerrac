@@ -151,7 +151,7 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
     })
   }
 
-  if (data.published) {
+  if (data.published && data.showPdfButton !== false) {
     const baseUrl = getSiteUrl()
     fetch(`${baseUrl}/api/pdf/${id}`).catch((err) => {
       console.error('[actions] PDF generation failed for', id, err)
