@@ -13,7 +13,7 @@ export function NecrologiquesSection({ section, index }: { section: SectionData;
   }, [])
 
   return (
-    <div className="relative w-full bg-black overflow-hidden">
+    <div className="relative w-full overflow-hidden">
       {section.backgroundImage && (
         <>
           <div
