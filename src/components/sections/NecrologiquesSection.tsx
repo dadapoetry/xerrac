@@ -1,29 +1,9 @@
 'use client'
 
-import { SectionData, NecrologiquesContent, NecrologicaEntry } from '@/types'
-import { SectionHeader } from '@/components/SectionHeader'
+import { SectionData, NecrologiquesContent } from '@/types'
 
-function NecrologicaCard({ entry }: { entry: NecrologicaEntry }) {
-  return (
-    <div className="mb-8 pb-8 border-b border-gray-800 last:border-0 last:mb-0 last:pb-0 break-inside-avoid">
-      <div className="w-6 h-[2px] mb-4" style={{ backgroundColor: 'var(--accent)' }} aria-hidden="true" />
-      <h3 className="text-xl md:text-2xl font-bold text-white uppercase tracking-wide leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-        {entry.name}
-      </h3>
-      {entry.years && (
-        <p
-          className="font-mono text-xs tracking-widest mt-2 mb-3"
-          style={{ color: 'rgba(var(--accent-rgb), 0.85)' }}
-        >
-          {entry.years}
-        </p>
-      )}
-      <div
-        className="italic text-gray-300 leading-relaxed text-[15px] md:text-base drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-        dangerouslySetInnerHTML={{ __html: entry.epitaph }}
-      />
-    </div>
-  )
+function Hairline() {
+  return <div className="w-6 h-px bg-white/10 mx-auto" aria-hidden="true" />
 }
 
 export function NecrologiquesSection({ section, index }: { section: SectionData; index: number }) {
@@ -31,17 +11,43 @@ export function NecrologiquesSection({ section, index }: { section: SectionData;
   const entries = content.entries || []
 
   return (
-    <div className="w-full py-12 relative overflow-hidden">
-      <div className="max-w-4xl mx-auto">
-        <SectionHeader number={index} title={section.title} subtitle="Conceptes que ens han deixat" />
-        {entries.length > 0 ? (
-          <div className="md:columns-2 md:gap-8">
+    <div className="w-full h-full flex items-center justify-center py-16">
+      <div className="max-w-md mx-auto px-6 text-center">
+        <Hairline />
+        <p className="font-mono text-[10px] tracking-[0.35em] uppercase text-gray-500 mt-5">
+          {section.title}
+        </p>
+        <p className="text-xs text-gray-500 mt-1.5">Conceptes que ens han deixat</p>
+
+        {entries.length === 0 ? (
+          <p className="text-gray-600 text-xs italic mt-10">Cap defunció que declarar, aquest semestre.</p>
+        ) : (
+          <div className="mt-12 space-y-10">
             {entries.map((entry, i) => (
-              <NecrologicaCard key={i} entry={entry} />
+              <div key={i}>
+                {entry.name && (
+                  <h3 className="text-sm md:text-base font-semibold uppercase tracking-[0.15em] text-gray-200">
+                    {entry.name}
+                  </h3>
+                )}
+                {entry.years && (
+                  <p
+                    className="font-mono text-[10px] tracking-[0.25em] mt-1.5"
+                    style={{ color: 'rgba(var(--accent-rgb), 0.55)' }}
+                  >
+                    {entry.years}
+                  </p>
+                )}
+                {entry.epitaph && (
+                  <div
+                    className="italic text-sm text-gray-400 leading-relaxed mt-2.5"
+                    dangerouslySetInnerHTML={{ __html: entry.epitaph }}
+                  />
+                )}
+                {i < entries.length - 1 && <div className="mt-10"><Hairline /></div>}
+              </div>
             ))}
           </div>
-        ) : (
-          <p className="text-gray-600 text-sm">Cap defunció que declarar, aquest semestre.</p>
         )}
       </div>
     </div>
