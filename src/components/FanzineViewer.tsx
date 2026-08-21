@@ -204,7 +204,7 @@ const shareLink = useCallback(async () => {
 
   const year = new Date(issue.date).getFullYear()
   const sectionTitle = section.type === 'portada' ? issue.title : section.title
-  const url = `${window.location.origin}${window.location.pathname}?issue=${issue.id}#${sectionSlug(activeSection)}`
+  const url = `${window.location.origin}${window.location.pathname}?issue=${issue.id}&section=${activeSection}#${sectionSlug(activeSection)}`
   const citation = `${sectionTitle}. (${year}). Xerrac!: Revista d'aclariment cultural, (No. ${String(issue.number).padStart(2, '0')}). ${url}`
 
   const copied = await copyToClipboard(citation)

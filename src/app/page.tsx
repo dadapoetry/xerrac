@@ -13,7 +13,32 @@ function getPreviewStatus(preview?: string): boolean {
   return token ? preview === token : false
 }
 
-export async function generateMetadata({ searchParams }: { searchParams: { issue?: string; preview?: string } }): Promise<Metadata> {
+const sectionLabels: Record<string, string> = {
+  portada: 'Portada',
+  editorial: 'Editorial',
+  aclariment_cultural: 'Aclariment Cultural',
+  fadu_catala: 'Fadu Català',
+  pagines_grogues: 'Pàgines Grogues',
+  calaix_sastre: 'Calaix de Sastre',
+  visita: 'Visita',
+  full_mural: 'Full Mural',
+  ludita: 'Ludita',
+}
+
+function extractExcerpt(content: any): string {
+  if (!content || typeof content !== 'object') return ''
+  if (content.topic) return content.topic
+  if (content.source) return `Entrevista a ${content.source}`
+  if (content.body) return content.body.replace(/<[^>]+>/g, '').slice(0, 200)
+  if (content.proverbs) return content.proverbs.map((e: any) => e.text).filter(Boolean).join(' · ').slice(0, 200)
+  if (content.interviews) return content.interviews.map((e: any) => e.subject).filter(Boolean).join(', ').slice(0, 200)
+  if (content.reviews) return content.reviews.map((e: any) => e.title).filter(Boolean).join(', ').slice(0, 200)
+  if (content.investigacio) return content.investigacio.map((e: any) => e.title).filter(Boolean).join(', ').slice(0, 200)
+  if (content.collages) return content.collages.map((e: any) => e.description).filter(Boolean).join(' ').slice(0, 200)
+  return ''
+}
+
+export async function generateMetadata({ searchParams }: { searchParams: { issue?: string; section?: string; preview?: string } }): Promise<Metadata> {
   const isPreview = getPreviewStatus(searchParams.preview)
   const issueId = searchParams.issue
   const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
@@ -32,26 +57,41 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
 
   const issueUrl = `${siteUrl}/?issue=${issue.id}`
 
+  let ogTitle = `${issue.title} — Xerrac!`
+  let ogDescription = `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}.`
+  let ogImagePath = `/api/og?issue=${issue.id}`
+
+  const secIdx = searchParams.section !== undefined ? parseInt(searchParams.section, 10) : NaN
+  const allSections = (issue.sections as any[]).sort((a: any, b: any) => a.order - b.order)
+  if (!isNaN(secIdx) && secIdx > 0 && secIdx < allSections.length) {
+    const s = allSections[secIdx]
+    const label = s.title || sectionLabels[s.type] || s.type
+    const excerpt = extractExcerpt(typeof s.content === 'string' ? safeParse(s.content) : s.content)
+    ogTitle = `${label} — Xerrac!`
+    if (excerpt) ogDescription = excerpt
+    ogImagePath = `/api/og?issue=${issue.id}&section=${secIdx}`
+  }
+
   return {
     title: `${issue.title} — Xerrac!`,
     description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}. ${sectionNames.join(', ')}.`,
     alternates: { canonical: issueUrl },
     robots: isPreview ? { index: false, follow: false } : undefined,
     openGraph: {
-      title: `${issue.title} — Xerrac!`,
-      description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}.`,
+      title: ogTitle,
+      description: ogDescription,
       type: 'article',
       publishedTime: new Date(issue.date).toISOString(),
       modifiedTime: new Date(issue.date).toISOString(),
       section: 'Revista',
       url: issueUrl,
-      images: [{ url: `${siteUrl}/api/og?issue=${issue.id}`, width: 1200, height: 630 }],
+      images: [{ url: `${siteUrl}${ogImagePath}`, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${issue.title} — Xerrac!`,
-      description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}.`,
-      images: [`${siteUrl}/api/og?issue=${issue.id}`],
+      title: ogTitle,
+      description: ogDescription,
+      images: [`${siteUrl}${ogImagePath}`],
     },
   }
 }
@@ -60,8 +100,7 @@ export default async function HomePage({
   searchParams,
 }: {
   searchParams: { issue?: string; preview?: string }
-}) {
-  const isPreview = getPreviewStatus(searchParams.preview)
+}) {  const isPreview = getPreviewStatus(searchParams.preview)
   const issueId = searchParams.issue
   const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
 
@@ -98,31 +137,6 @@ export default async function HomePage({
 
   const siteUrl = getSiteUrl()
   const issueUrl = `${siteUrl}/?issue=${issue.id}`
-
-  const sectionLabels: Record<string, string> = {
-    portada: 'Portada',
-    editorial: 'Editorial',
-    aclariment_cultural: 'Aclariment Cultural',
-    fadu_catala: 'Fadu Català',
-    pagines_grogues: 'Pàgines Grogues',
-    calaix_sastre: 'Calaix de Sastre',
-    visita: 'Visita',
-    full_mural: 'Full Mural',
-    ludita: 'Ludita',
-  }
-
-  function extractExcerpt(content: any): string {
-    if (!content || typeof content !== 'object') return ''
-    if (content.topic) return content.topic
-    if (content.source) return `Entrevista a ${content.source}`
-    if (content.body) return content.body.replace(/<[^>]+>/g, '').slice(0, 200)
-    if (content.proverbs) return content.proverbs.map((e: any) => e.text).filter(Boolean).join(' · ').slice(0, 200)
-    if (content.interviews) return content.interviews.map((e: any) => e.subject).filter(Boolean).join(', ').slice(0, 200)
-    if (content.reviews) return content.reviews.map((e: any) => e.title).filter(Boolean).join(', ').slice(0, 200)
-    if (content.investigacio) return content.investigacio.map((e: any) => e.title).filter(Boolean).join(', ').slice(0, 200)
-    if (content.collages) return content.collages.map((e: any) => e.description).filter(Boolean).join(' ').slice(0, 200)
-    return ''
-  }
 
   const contentSections = parsedIssue.sections.filter((s: any) => s.type !== 'portada')
   const hasPart = contentSections.map((s: any) => ({
