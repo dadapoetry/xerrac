@@ -1,14 +1,30 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { SectionData, NecrologiquesContent } from '@/types'
 
 export function NecrologiquesSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as NecrologiquesContent
   const entries = content.entries || []
+  const [bgReady, setBgReady] = useState(false)
+
+  useEffect(() => {
+    setBgReady(true)
+  }, [])
 
   return (
-    <div className="w-full bg-black">
-      <div className="max-w-xl mx-auto px-6 py-16 md:py-20">
+    <div className="relative w-full bg-black overflow-hidden">
+      {section.backgroundImage && (
+        <>
+          <div
+            className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
+            style={{ backgroundImage: `url("${section.backgroundImage}")` }}
+            aria-hidden="true"
+          />
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/85 via-black/70 to-black/90" />
+        </>
+      )}
+      <div className="relative z-[3] max-w-xl mx-auto px-6 py-16 md:py-20">
         <header className="mb-10">
           <p
             className="font-mono text-[10px] tracking-[0.35em] uppercase"
