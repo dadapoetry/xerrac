@@ -13,6 +13,7 @@ interface IssueFormProps {
     date: string
     published: boolean
     accentColor?: string
+    showPdfButton?: boolean
   }
   nextNumber?: number
 }
@@ -25,6 +26,7 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
   const [date, setDate] = useState(initial?.date || new Date().toISOString().split('T')[0])
   const [published, setPublished] = useState(initial?.published ?? false)
   const [accentColor, setAccentColor] = useState(initial?.accentColor || '#ef4444')
+  const [showPdfButton, setShowPdfButton] = useState(initial?.showPdfButton ?? true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [dirty, setDirty] = useState(false)
@@ -60,7 +62,7 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
 
     try {
       if (initial) {
-        await updateIssue(initial.id, { number, title, date, published, accentColor })
+        await updateIssue(initial.id, { number, title, date, published, accentColor, showPdfButton })
         toast('Número actualitzat', 'success')
       } else {
         await createIssue({ number, title, date })
@@ -159,6 +161,21 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
             />
             <label htmlFor="published" className="text-sm text-gray-400">
               Publicat (visible al web)
+            </label>
+          </div>
+          <div className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="showPdfButton"
+              checked={showPdfButton}
+              onChange={(e) => { setShowPdfButton(e.target.checked); markDirty() }}
+              className="mt-1 accent-red-500"
+            />
+            <label htmlFor="showPdfButton" className="text-sm text-gray-400">
+              Mostrar el botó «Llegeix en PDF» a la portada
+              <span className="block text-xs text-gray-600 mt-0.5">
+                Desactiva'l si el número conté formats no compilables (p. ex. assaig visual)
+              </span>
             </label>
           </div>
         </>

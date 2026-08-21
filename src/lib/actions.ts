@@ -27,6 +27,7 @@ function mapIssue(row: any) {
     title: row.title,
     date: toDate(row.date),
     published: Boolean(row.published),
+    showPdfButton: row.showPdfButton === undefined ? true : Boolean(row.showPdfButton),
     accentColor: row.accentColor || '#ef4444',
     createdAt: toDate(row.createdAt),
     updatedAt: toDate(row.updatedAt),
@@ -130,7 +131,7 @@ export async function createIssue(data: { number: number; title: string; date: s
   return { id, ...data }
 }
 
-export async function updateIssue(id: string, data: { title?: string; number?: number; date?: string; published?: boolean; accentColor?: string }) {
+export async function updateIssue(id: string, data: { title?: string; number?: number; date?: string; published?: boolean; accentColor?: string; showPdfButton?: boolean }) {
   await checkAuth()
   const sets: string[] = []
   const args: any[] = []
@@ -140,6 +141,7 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
   if (data.date !== undefined) { sets.push('date = ?'); args.push(data.date) }
   if (data.published !== undefined) { sets.push('published = ?'); args.push(data.published ? 1 : 0) }
   if (data.accentColor !== undefined) { sets.push('accentColor = ?'); args.push(data.accentColor) }
+  if (data.showPdfButton !== undefined) { sets.push('showPdfButton = ?'); args.push(data.showPdfButton ? 1 : 0) }
 
   if (sets.length > 0) {
     args.push(id)

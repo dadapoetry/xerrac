@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS Issue (
   date TEXT NOT NULL DEFAULT (datetime('now')),
   published INTEGER NOT NULL DEFAULT 0,
   accentColor TEXT NOT NULL DEFAULT '#ef4444',
+  showPdfButton INTEGER NOT NULL DEFAULT 1,
   createdAt TEXT NOT NULL DEFAULT (datetime('now')),
   updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
 );

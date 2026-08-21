@@ -32,7 +32,7 @@ interface SumariEntry {
   title: string
 }
 
-export function PortadaSection({ section, sumariEntries, issueNumber, issueId }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number; issueId?: string }) {
+export function PortadaSection({ section, sumariEntries, issueNumber, issueId, showPdfButton = true }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number; issueId?: string; showPdfButton?: boolean }) {
   const content = section.content as unknown as PortadaContent
   const [downloading, setDownloading] = useState(false)
 
@@ -84,7 +84,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId }:
             ))}
           </div>
         )}
-        {issueId && (
+        {issueId && showPdfButton && (
           <button
   onClick={handleDownload}
   disabled={downloading}
