@@ -98,12 +98,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
   const [activeSection, setActiveSection] = useState(() => {
     if (typeof window === 'undefined') return 0
-    const hash = window.location.hash.slice(1)
-    if (!hash) return 0
-    const match = hash.match(/^s-(\d+)$/)
-    if (!match) return 0
-    const idx = parseInt(match[1], 10)
-    return idx >= 0 && idx < sortedSections.length ? idx : 0
+    const v = new URLSearchParams(window.location.search).get('section')
+    const idx = v !== null ? parseInt(v, 10) : NaN
+    return !isNaN(idx) && idx >= 0 && idx < sortedSections.length ? idx : 0
   })
   const [copied, setCopied] = useState(false)
   const [snip, setSnip] = useState(false)
@@ -143,7 +140,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           setActiveSection(idx)
           if (idx >= 2) setShowNewsletter(true)
           try {
-            history.replaceState(null, '', `#${sectionSlug(idx)}`)
+            const u = new URL(window.location.href)
+            u.searchParams.set('section', String(idx))
+            history.replaceState(null, '', u.pathname + u.search)
           } catch {}
         } catch {}
       })
@@ -165,15 +164,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [activeSection])
 
   useEffect(() => {
-    const hash = window.location.hash.slice(1)
-    if (hash) {
-      const match = hash.match(/^s-(\d+)$/)
-      if (match) {
-        const idx = parseInt(match[1], 10)
-        if (idx >= 0 && idx < sortedSections.length) {
-          setTimeout(() => scrollToSectionEl(idx), 150)
-        }
-      }
+    const v = new URLSearchParams(window.location.search).get('section')
+    if (v === null) return
+    const idx = parseInt(v, 10)
+    if (!isNaN(idx) && idx >= 0 && idx < sortedSections.length) {
+      setTimeout(() => scrollToSectionEl(idx), 150)
     }
   }, [sortedSections.length])
 
@@ -204,7 +199,7 @@ const shareLink = useCallback(async () => {
 
   const year = new Date(issue.date).getFullYear()
   const sectionTitle = section.type === 'portada' ? issue.title : section.title
-  const url = `${window.location.origin}${window.location.pathname}?issue=${issue.id}&section=${activeSection}#${sectionSlug(activeSection)}`
+  const url = `${window.location.origin}${window.location.pathname}?issue=${issue.id}&section=${activeSection}`
   const citation = `${sectionTitle}. (${year}). Xerrac!: Revista d'aclariment cultural, (No. ${String(issue.number).padStart(2, '0')}). ${url}`
 
   const copied = await copyToClipboard(citation)
