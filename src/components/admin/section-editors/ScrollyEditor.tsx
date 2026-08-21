@@ -10,14 +10,23 @@ interface ScrollyStep {
 
 interface Props {
   steps: ScrollyStep[]
+  subtitle: string
+  onSubtitleChange: (value: string) => void
   onUpdateArrayItem: (field: string, index: number, key: string, value: any) => void
   onAddArrayItem: (field: string, template: Record<string, any>) => void
   onRemoveArrayItem: (field: string, index: number) => void
 }
 
-export function ScrollyEditor({ steps, onUpdateArrayItem, onAddArrayItem, onRemoveArrayItem }: Props) {
+export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArrayItem, onAddArrayItem, onRemoveArrayItem }: Props) {
   return (
     <div className="space-y-4">
+      <input
+        type="text"
+        value={subtitle || ''}
+        onChange={(e) => onSubtitleChange(e.target.value)}
+        placeholder="Subtítol de la secció (opcional, ex.: Una història per llegir rodant)"
+        className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+      />
       <p className="text-xs text-gray-500">
         Escenes de l&apos;assaig visual. A l&apos;escriptori la imatge es queda fixa mentre el text passa;
         cada escena activa canvia la imatge. Si una escena no té imatge, es manté l&apos;anterior.

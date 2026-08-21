@@ -8,9 +8,10 @@ interface SectionHeaderProps {
   title: string
   subtitle?: string | null
   readingTime?: number
+  bright?: boolean
 }
 
-export function SectionHeader({ number, title, subtitle, readingTime }: SectionHeaderProps) {
+export function SectionHeader({ number, title, subtitle, readingTime, bright }: SectionHeaderProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [entered, setEntered] = useState(false)
 
@@ -40,7 +41,7 @@ export function SectionHeader({ number, title, subtitle, readingTime }: SectionH
           <span style={{ color: 'var(--accent)' }}>
             <SawIcon className="w-4 h-4" />
           </span>
-          <span className="text-[10px] text-gray-400 tracking-[0.3em] uppercase font-mono drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+          <span className={`text-[10px] tracking-[0.3em] uppercase font-mono drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-200' : 'text-gray-400'}`}>
             {String(number).padStart(2, '0')}
           </span>
         </div>
@@ -48,7 +49,7 @@ export function SectionHeader({ number, title, subtitle, readingTime }: SectionH
           {title}
         </h2>
         {subtitle && (
-          <p className="stagger-item delay-3 text-sm text-gray-300 tracking-wider uppercase mb-4 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
+          <p className={`stagger-item delay-3 text-sm tracking-wider uppercase mb-4 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-100' : 'text-gray-300'}`}>
             {subtitle}
           </p>
         )}
