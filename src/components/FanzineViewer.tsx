@@ -227,6 +227,8 @@ const shareLink = useCallback(async () => {
 
   const accentColor = issue.accentColor || '#ef4444'
 
+  const edgeTypes = new Set(['scrolly', 'necrologiques'])
+
   return (
     <div style={{ '--accent': accentColor, '--accent-rgb': hexToRgb(accentColor) } as React.CSSProperties}>
       {/* Header — sticky at top, accompanies reader */}
@@ -355,7 +357,7 @@ const shareLink = useCallback(async () => {
         </div>
       )}
 
-          {i < sortedSections.length - 1 && <SectionCut />}
+          {i < sortedSections.length - 1 && !(edgeTypes.has(sortedSections[i].type) || edgeTypes.has(sortedSections[i + 1].type)) && <SectionCut />}
         </Fragment>
       ))}
     </div>

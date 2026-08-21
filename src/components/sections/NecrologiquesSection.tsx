@@ -22,6 +22,7 @@ export function NecrologiquesSection({ section, index }: { section: SectionData;
             aria-hidden="true"
           />
           <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/85 via-black/70 to-black/90" />
+          <div className="absolute inset-x-0 top-0 h-24 z-[2] bg-gradient-to-b from-black/60 to-transparent" />
         </>
       )}
       <div className="relative z-[3] max-w-xl mx-auto px-6 py-16 md:py-20">
