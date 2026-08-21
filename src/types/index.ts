@@ -101,6 +101,17 @@ export type SectionContent =
   | VisitaContent
   | FullMuralContent
   | LuditaContent
+  | ScrollyContent
+
+export interface ScrollyStep {
+  media?: string
+  caption?: string
+  text: string
+}
+
+export interface ScrollyContent {
+  steps: ScrollyStep[]
+}
 
 export interface SectionData {
   id: string
@@ -132,6 +143,7 @@ export const SECTION_LABELS: Record<string, string> = {
   visita: 'Visita',
   full_mural: 'Full Mural',
   ludita: 'Ludita',
+  scrolly: 'Assaig visual',
 }
 
 export const SECTION_TYPES = [
@@ -144,4 +156,5 @@ export const SECTION_TYPES = [
   'visita',
   'full_mural',
   'ludita',
+  'scrolly',
 ] as const

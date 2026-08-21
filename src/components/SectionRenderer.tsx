@@ -15,6 +15,7 @@ const CalaixSastreSection = dynamic<SectionProps>(() => import('./sections/Calai
 const VisitaSection = dynamic<SectionProps>(() => import('./sections/VisitaSection').then(m => m.VisitaSection))
 const FullMuralSection = dynamic<SectionProps>(() => import('./sections/FullMuralSection').then(m => m.FullMuralSection))
 const LuditaSection = dynamic<SectionProps>(() => import('./sections/LuditaSection').then(m => m.LuditaSection))
+const ScrollySection = dynamic<SectionProps>(() => import('./sections/ScrollySection').then(m => m.ScrollySection))
 
 const sectionMap: Record<string, React.ComponentType<SectionProps>> = {
   portada: PortadaSection,
@@ -26,6 +27,7 @@ const sectionMap: Record<string, React.ComponentType<SectionProps>> = {
   visita: VisitaSection,
   full_mural: FullMuralSection,
   ludita: LuditaSection,
+  scrolly: ScrollySection,
 }
 
 export function SectionRenderer({ section, index }: { section: SectionData; index: number }) {

@@ -8,6 +8,7 @@ import { PaginesGroguesEditor } from './section-editors/PaginesGroguesEditor'
 import { CalaixSastreEditor } from './section-editors/CalaixSastreEditor'
 import { FullMuralEditor } from './section-editors/FullMuralEditor'
 import { CrosswordEditor } from './section-editors/CrosswordEditor'
+import { ScrollyEditor } from './section-editors/ScrollyEditor'
 
 interface SectionContentEditorProps {
   type: string
@@ -92,6 +93,16 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
 
     case 'ludita':
       return <CrosswordEditor data={data} onChange={onChange} />
+
+    case 'scrolly':
+      return (
+        <ScrollyEditor
+          steps={data.steps || []}
+          onUpdateArrayItem={updateArrayItem}
+          onAddArrayItem={addArrayItem}
+          onRemoveArrayItem={removeArrayItem}
+        />
+      )
 
     default:
       return (
