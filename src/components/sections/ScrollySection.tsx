@@ -155,11 +155,6 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                     : 'mr-auto ml-[12%]'
               }`}
             >
-              {i === 0 && content.subtitle && (
-                <p className="mb-6 text-sm md:text-base tracking-wider uppercase text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
-                  {content.subtitle}
-                </p>
-              )}
               {step.title && (
                 <h4
                   className={`mb-6 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${
@@ -168,6 +163,11 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                 >
                   {step.title}
                 </h4>
+              )}
+              {i === 0 && content.subtitle && (
+                <p className="-mt-4 mb-6 text-sm md:text-base tracking-wider uppercase text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+                  {content.subtitle}
+                </p>
               )}
               {step.text && (
                 <div

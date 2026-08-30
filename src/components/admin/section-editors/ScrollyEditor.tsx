@@ -22,17 +22,27 @@ interface Props {
 
 export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArrayItem, onAddArrayItem, onRemoveArrayItem }: Props) {
   return (
-    <div className="space-y-4">
-      <input
-        type="text"
-        value={subtitle || ''}
-        onChange={(e) => onSubtitleChange(e.target.value)}
-        placeholder="Subtítol de la secció (opcional, ex.: Una història per llegir rodant)"
-        className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
-      />
-      <p className="text-xs text-gray-500">
-        Escenes de l&apos;assaig visual. A l&apos;escriptori la imatge es queda fixa mentre el text passa;
-        cada escena activa canvia la imatge. Si una escena no té imatge, es manté l&apos;anterior.
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <label className="block text-xs uppercase tracking-wide text-gray-500">
+          Subtítol de la secció
+        </label>
+        <input
+          type="text"
+          value={subtitle || ''}
+          onChange={(e) => onSubtitleChange(e.target.value)}
+          placeholder="Opcional. Ex.: Una història per llegir rodant"
+          className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+        />
+      </div>
+
+      <div className="flex items-baseline justify-between">
+        <h3 className="text-xs uppercase tracking-wide text-gray-400">Escenes de l&apos;assaig</h3>
+        <span className="text-xs text-gray-600">{steps?.length ?? 0}</span>
+      </div>
+      <p className="text-xs text-gray-500 -mt-4">
+        A l&apos;escriptori la imatge es queda fixa mentre el text passa; cada escena activa canvia la
+        imatge. Si una escena no té imatge, es manté l&apos;anterior.
       </p>
       {(steps || []).map((step, i) => (
         <div key={i} className="p-4 border border-gray-700 space-y-3">
@@ -46,27 +56,36 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
               Eliminar
             </button>
           </div>
-          <input
-            type="text"
-            value={step.title || ''}
-            onChange={(e) => onUpdateArrayItem('steps', i, 'title', e.target.value)}
-            placeholder="Títol de l'escena (opcional)"
-            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
-          />
-          <input
-            type="text"
-            value={step.media || ''}
-            onChange={(e) => onUpdateArrayItem('steps', i, 'media', e.target.value)}
-            placeholder="URL de la imatge (opcional)"
-            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
-          />
-          <input
-            type="text"
-            value={step.caption || ''}
-            onChange={(e) => onUpdateArrayItem('steps', i, 'caption', e.target.value)}
-            placeholder="Peu de foto (opcional)"
-            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
-          />
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Títol de l&apos;escena</label>
+            <input
+              type="text"
+              value={step.title || ''}
+              onChange={(e) => onUpdateArrayItem('steps', i, 'title', e.target.value)}
+              placeholder="Opcional. Nota: el de l'escena 0 actua de portada de l'assaig."
+              className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Imatge (URL)</label>
+            <input
+              type="text"
+              value={step.media || ''}
+              onChange={(e) => onUpdateArrayItem('steps', i, 'media', e.target.value)}
+              placeholder="Opcional"
+              className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Peu de foto</label>
+            <input
+              type="text"
+              value={step.caption || ''}
+              onChange={(e) => onUpdateArrayItem('steps', i, 'caption', e.target.value)}
+              placeholder="Opcional"
+              className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+            />
+          </div>
           <div className="flex items-center gap-6">
             <div className="flex-1">
               <label className="block text-xs text-gray-500 mb-1">Posició del text</label>
