@@ -134,7 +134,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
               )}
               {step.title && (
                 <h4
-                  className={`mb-4 font-display text-4xl md:text-6xl uppercase leading-none text-white tracking-tight drop-shadow-[0_3px_8px_rgba(0,0,0,0.9)] ${
+                  className={`mb-4 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] text-2xl md:text-4xl ${
                     step.position === 'right' ? 'text-right' : ''
                   }`}
                 >

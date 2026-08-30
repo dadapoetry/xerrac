@@ -50,8 +50,8 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
             type="text"
             value={step.title || ''}
             onChange={(e) => onUpdateArrayItem('steps', i, 'title', e.target.value)}
-            placeholder="Títol de l'escena (opcional, en lletra Impact)"
-            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm font-display"
+            placeholder="Títol de l'escena (opcional)"
+            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
           />
           <input
             type="text"
