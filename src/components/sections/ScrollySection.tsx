@@ -18,12 +18,12 @@ function RevealText({ html, active, right }: { html: string; active: boolean; ri
       {paras.map((p, i) => (
         <div
           key={i}
-          className={`text-gray-100 leading-relaxed md:leading-loose font-serif text-[15px] md:text-lg prose-invert transition-all duration-[900ms] ease-out ${
+          className={`text-gray-100 leading-loose font-serif text-[15px] md:text-lg prose-invert transition-all duration-[900ms] ease-out ${
             active
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-6'
           } ${i > 0 ? 'mt-6 md:mt-8' : ''}`}
-          style={{ transitionDelay: `${i * 220}ms` }}
+          style={{ transitionDelay: `${300 + i * 220}ms` }}
           dangerouslySetInnerHTML={{ __html: p }}
         />
       ))}
@@ -155,6 +155,11 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                     : 'mr-auto ml-[12%]'
               }`}
             >
+              {i === 0 && (
+                <p className="mb-6 font-mono text-[11px] md:text-xs uppercase tracking-[0.25em] text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+                  {String(index).padStart(2, '0')} · Assaig visual
+                </p>
+              )}
               {step.title && (
                 <h4
                   className={`mb-6 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${
@@ -182,6 +187,19 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                     active={i === active}
                     right={step.position === 'right'}
                   />
+                </div>
+              )}
+              {i === steps.length - 1 && (
+                <div
+                  className={`mt-10 flex items-center gap-3 transition-all duration-[900ms] ease-out ${
+                    i === active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                  } ${step.position === 'right' ? 'justify-end' : ''}`}
+                  style={{ transitionDelay: `${400 + (splitParagraphs(step.text || '').length) * 220}ms` }}
+                >
+                  <span className="h-px w-8 bg-white/40" />
+                  <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+                    Continua llegint ↓
+                  </span>
                 </div>
               )}
             </div>
