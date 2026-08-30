@@ -155,11 +155,6 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                     : 'mr-auto ml-[12%]'
               }`}
             >
-              {i === 0 && (
-                <p className="mb-6 font-mono text-[11px] md:text-xs uppercase tracking-[0.25em] text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
-                  {String(index).padStart(2, '0')} · Assaig visual
-                </p>
-              )}
               {step.title && (
                 <h4
                   className={`mb-6 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${
