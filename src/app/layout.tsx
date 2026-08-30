@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, EB_Garamond } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/Providers'
 import { getSiteUrl } from '@/lib/site'
 import { JsonLd } from '@/components/JsonLd'
 
 const inter = Inter({ subsets: ['latin'] })
+const garamond = EB_Garamond({ subsets: ['latin'], style: ['normal', 'italic'] })
 
 const siteUrl = getSiteUrl()
 
