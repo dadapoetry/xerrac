@@ -131,7 +131,9 @@ export function ScrollySection({ section, index }: { section: SectionData; index
               )}
               {step.title && (
                 <h4
-                  className="mb-4 font-display text-4xl md:text-6xl uppercase leading-none text-white tracking-tight drop-shadow-[0_3px_8px_rgba(0,0,0,0.9)]"
+                  className={`mb-4 font-display text-4xl md:text-6xl uppercase leading-none text-white tracking-tight drop-shadow-[0_3px_8px_rgba(0,0,0,0.9)] ${
+                    step.position === 'right' ? 'text-right' : ''
+                  }`}
                 >
                   {step.title}
                 </h4>
@@ -145,7 +147,9 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                   }
                 >
                   <div
-                    className="text-gray-100 leading-relaxed font-serif text-[15px] md:text-lg prose-invert [&>p]:mb-4 [&>p:last-child]:mb-0"
+                    className={`text-gray-100 leading-relaxed font-serif text-[15px] md:text-lg prose-invert [&>p]:mb-4 [&>p:last-child]:mb-0 ${
+                      step.position === 'right' ? 'text-right' : ''
+                    }`}
                     dangerouslySetInnerHTML={{ __html: step.text }}
                   />
                 </div>
