@@ -313,22 +313,6 @@ const shareLink = useCallback(async () => {
         />
       )}
 
-      {/* Blade's Memory — progress trace on right edge */}
-      {sortedSections.length > 1 && (
-        <div
-          className="fixed right-0 top-0 h-full w-[2px] z-[9999] pointer-events-none opacity-25"
-          aria-hidden="true"
-        >
-          <div
-            className="absolute bottom-0 right-0 w-full transition-all duration-500 ease-out"
-            style={{
-              height: `${(activeSection / (sortedSections.length - 1)) * 100}%`,
-              background: `repeating-linear-gradient(to bottom, var(--accent) 0px, var(--accent) 2px, transparent 2px, transparent 6px)`,
-            }}
-          />
-        </div>
-      )}
-
       {/* Sections */}
       {sortedSections.map((section, i) => (
         <Fragment key={section.id}>
