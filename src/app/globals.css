@@ -269,11 +269,11 @@ body::before {
 .xerrac-quote-mark {
   display: inline-block;
   font-family: inherit;
-  font-size: 2rem;
-  line-height: 1;
+  font-size: 2.5rem;
+  line-height: 0.8;
   color: var(--accent);
   vertical-align: baseline;
-  margin-right: 0.2rem;
+  margin-right: 0.75rem;
   user-select: none;
 }
 .xerrac-quote-text {
