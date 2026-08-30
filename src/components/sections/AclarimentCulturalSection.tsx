@@ -13,7 +13,7 @@ export function AclarimentCulturalSection({ section, index }: { section: Section
       <div className="relative pl-6 border-l" style={{ borderColor: 'rgba(var(--accent-rgb), 0.3)' }}>
         <div
           className="editorial-body text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-          dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body) }}
+          dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body, 'quoted') }}
         />
       </div>
     </div>

@@ -287,6 +287,23 @@ body::before {
   margin-top: 0.75rem !important;
 }
 
+/* Xerrac! quoted citations (aclariment cultural) */
+.xerrac-quote-quoted {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: #b9b9b9;
+  margin: 2.5rem 0 !important;
+  padding: 0 0.5rem;
+}
+.xerrac-quote-quoted strong,
+.xerrac-quote-quoted b {
+  font-weight: 700;
+  color: var(--accent);
+}
+
 @media (max-width: 768px) {
   .editorial-body {
     font-size: 1rem;
