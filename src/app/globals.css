@@ -264,11 +264,11 @@ body::before {
 
 /* Xerrac! citations */
 .xerrac-quote {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: inherit;
 }
 .xerrac-quote-mark {
   display: block;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: inherit;
   font-size: 3.5rem;
   line-height: 0.8;
   color: var(--accent);
@@ -276,7 +276,7 @@ body::before {
   user-select: none;
 }
 .xerrac-quote-text {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: inherit;
   font-style: italic;
   font-weight: 400;
   font-size: 1.25rem;
