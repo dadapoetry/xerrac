@@ -81,6 +81,9 @@ export function ScrollySection({ section, index }: { section: SectionData; index
           </div>
         )}
 
+        {/* Fosquitud subtil sobre les imatges */}
+        <div className="pointer-events-none absolute inset-0 bg-black/15" />
+
         {/* Peu de foto de l'escena activa */}
         {current?.caption && (
           <p
