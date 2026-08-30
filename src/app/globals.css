@@ -272,9 +272,9 @@ body::before {
   font-family: inherit;
   font-style: italic;
   font-weight: 400;
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   line-height: 1.6;
-  color: #cfcfcf;
+  color: #b9b9b9;
   margin-bottom: 0;
 }
 .xerrac-quote p + p {
