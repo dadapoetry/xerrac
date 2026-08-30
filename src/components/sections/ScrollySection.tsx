@@ -81,15 +81,11 @@ export function ScrollySection({ section, index }: { section: SectionData; index
           </div>
         )}
 
-        {/* Degradats de llegibilitat */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/70 to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-
         {/* Peu de foto de l'escena activa */}
         {current?.caption && (
           <p
             key={mediaIdx}
-            className="absolute bottom-6 left-6 md:left-12 max-w-md font-mono text-[11px] leading-relaxed tracking-wide text-gray-300 animate-fade-in"
+            className="absolute bottom-6 left-6 md:left-12 max-w-md font-mono text-[11px] leading-relaxed tracking-wide text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] animate-fade-in"
           >
             {current.caption}
           </p>
@@ -121,9 +117,15 @@ export function ScrollySection({ section, index }: { section: SectionData; index
       {/* Escenes de text que passen per sobre */}
       <div className="absolute inset-0 pointer-events-none">
         {steps.map((step, i) => (
-          <div key={i} data-scene={i} className="h-[100svh] flex items-center justify-center px-4 md:px-8">
+          <div
+            key={i}
+            data-scene={i}
+            className={`h-[100svh] flex items-center px-4 md:px-8 ${
+              step.position === 'right' ? 'justify-end' : step.position === 'center' ? 'justify-center' : 'justify-start'
+            }`}
+          >
             <div
-              className={`max-w-xl pointer-events-auto transition-all duration-700 ease-out ${
+              className={`max-w-2xl pointer-events-auto transition-all duration-700 ease-out ${
                 i === active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
@@ -133,9 +135,15 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                 </div>
               )}
               {step.text && (
-                <div className="border border-white/10 bg-black/60 backdrop-blur-sm p-6 md:p-8 shadow-2xl">
+                <div
+                  className={
+                    step.readable
+                      ? 'drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]'
+                      : 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]'
+                  }
+                >
                   <div
-                    className="text-gray-100 leading-relaxed text-[15px] md:text-lg"
+                    className="text-gray-100 leading-relaxed font-serif text-[15px] md:text-lg prose-invert [&>p]:mb-4 [&>p:last-child]:mb-0"
                     dangerouslySetInnerHTML={{ __html: step.text }}
                   />
                 </div>

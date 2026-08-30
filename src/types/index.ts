@@ -108,6 +108,8 @@ export interface ScrollyStep {
   media?: string
   caption?: string
   text: string
+  position?: 'left' | 'center' | 'right'
+  readable?: boolean
 }
 
 export interface ScrollyContent {

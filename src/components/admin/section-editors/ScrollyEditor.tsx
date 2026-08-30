@@ -6,6 +6,8 @@ interface ScrollyStep {
   media?: string
   caption?: string
   text: string
+  position?: 'left' | 'center' | 'right'
+  readable?: boolean
 }
 
 interface Props {
@@ -57,6 +59,35 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
             placeholder="Peu de foto (opcional)"
             className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
           />
+          <div className="flex items-center gap-6">
+            <div className="flex-1">
+              <label className="block text-xs text-gray-500 mb-1">Posició del text</label>
+              <select
+                value={step.position || 'left'}
+                onChange={(e) => onUpdateArrayItem('steps', i, 'position', e.target.value)}
+                className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+              >
+                <option value="left">Esquerra</option>
+                <option value="center">Centre</option>
+                <option value="right">Dreta</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2 pt-5">
+              <input
+                type="checkbox"
+                id={`readable-${i}`}
+                checked={step.readable !== false}
+                onChange={(e) => onUpdateArrayItem('steps', i, 'readable', e.target.checked)}
+                className="accent-red-500"
+              />
+              <label htmlFor={`readable-${i}`} className="text-sm text-gray-400 leading-tight">
+                Llegibilitat
+                <span className="block text-xs text-gray-600">
+                  ombra de text per sobre zones clares
+                </span>
+              </label>
+            </div>
+          </div>
           <div>
             <label className="block text-xs text-gray-500 mb-1">Text (HTML)</label>
             <RichTextEditor
@@ -69,7 +100,7 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
       ))}
       <button
         type="button"
-        onClick={() => onAddArrayItem('steps', { media: '', caption: '', text: '' })}
+        onClick={() => onAddArrayItem('steps', { media: '', caption: '', text: '', position: 'left', readable: true })}
         className="text-sm text-red-400 hover:text-red-300 border border-dashed border-red-900 px-4 py-2 w-full"
       >
         + Afegir escena
