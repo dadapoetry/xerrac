@@ -6,6 +6,7 @@ interface ScrollyStep {
   media?: string
   caption?: string
   text: string
+  title?: string
   position?: 'left' | 'center' | 'right'
   readable?: boolean
 }
@@ -45,6 +46,13 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
               Eliminar
             </button>
           </div>
+          <input
+            type="text"
+            value={step.title || ''}
+            onChange={(e) => onUpdateArrayItem('steps', i, 'title', e.target.value)}
+            placeholder="Títol de l'escena (opcional, en lletra Impact)"
+            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm font-display"
+          />
           <input
             type="text"
             value={step.media || ''}
@@ -100,7 +108,7 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
       ))}
       <button
         type="button"
-        onClick={() => onAddArrayItem('steps', { media: '', caption: '', text: '', position: 'left', readable: true })}
+        onClick={() => onAddArrayItem('steps', { media: '', caption: '', text: '', title: '', position: 'left', readable: true })}
         className="text-sm text-red-400 hover:text-red-300 border border-dashed border-red-900 px-4 py-2 w-full"
       >
         + Afegir escena

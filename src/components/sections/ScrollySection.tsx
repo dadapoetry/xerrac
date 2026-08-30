@@ -117,22 +117,29 @@ export function ScrollySection({ section, index }: { section: SectionData; index
       {/* Escenes de text que passen per sobre */}
       <div className="absolute inset-0 pointer-events-none">
         {steps.map((step, i) => (
-          <div
-            key={i}
-            data-scene={i}
-            className={`h-[100svh] flex items-center px-4 md:px-8 ${
-              step.position === 'right' ? 'justify-end' : step.position === 'center' ? 'justify-center' : 'justify-start'
-            }`}
-          >
+          <div key={i} data-scene={i} className="h-[100svh] flex items-center px-4 md:px-8">
             <div
               className={`max-w-2xl pointer-events-auto transition-all duration-700 ease-out ${
                 i === active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              } ${
+                step.position === 'center'
+                  ? 'mx-auto'
+                  : step.position === 'right'
+                    ? 'ml-auto mr-8 md:mr-16'
+                    : 'mr-auto ml-8 md:ml-16'
               }`}
             >
               {i === 0 && (
                 <div className="mb-8 pointer-events-none">
                   <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} bright />
                 </div>
+              )}
+              {step.title && (
+                <h4
+                  className="mb-4 font-display text-4xl md:text-6xl uppercase leading-none text-white tracking-tight drop-shadow-[0_3px_8px_rgba(0,0,0,0.9)]"
+                >
+                  {step.title}
+                </h4>
               )}
               {step.text && (
                 <div
