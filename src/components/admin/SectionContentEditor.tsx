@@ -46,6 +46,8 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
       return <PortadaEditor topic={data.topic || ''} onChange={updateField} />
 
     case 'editorial':
+      return <BodyEditor body={data.body || ''} showSubtitle subtitle={data.subtitle || ''} onFieldChange={updateField} />
+
     case 'aclariment_cultural':
       return <BodyEditor body={data.body || ''} onFieldChange={updateField} />
 

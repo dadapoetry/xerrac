@@ -58,6 +58,7 @@ export interface PortadaContent {
 
 export interface EditorialContent {
   body: string
+  subtitle?: string
 }
 
 export interface AclarimentCulturalContent {

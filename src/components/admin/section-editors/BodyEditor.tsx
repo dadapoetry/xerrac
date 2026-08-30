@@ -6,10 +6,12 @@ interface Props {
   body: string
   source?: string
   showSource?: boolean
+  subtitle?: string
+  showSubtitle?: boolean
   onFieldChange: (field: string, value: any) => void
 }
 
-export function BodyEditor({ body, source, showSource, onFieldChange }: Props) {
+export function BodyEditor({ body, source, showSource, subtitle, showSubtitle, onFieldChange }: Props) {
   return (
     <div className="space-y-4">
       {showSource && (
@@ -19,6 +21,18 @@ export function BodyEditor({ body, source, showSource, onFieldChange }: Props) {
             type="text"
             value={source || ''}
             onChange={(e) => onFieldChange('source', e.target.value)}
+            className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+          />
+        </div>
+      )}
+      {showSubtitle && (
+        <div>
+          <label className="block text-xs uppercase text-gray-500 mb-1">Subtítol</label>
+          <input
+            type="text"
+            value={subtitle || ''}
+            onChange={(e) => onFieldChange('subtitle', e.target.value)}
+            placeholder="Subtítol de la secció (opcional)"
             className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
           />
         </div>
