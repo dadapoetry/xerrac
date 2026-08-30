@@ -264,11 +264,11 @@ body::before {
 
 /* Xerrac! citations */
 .xerrac-quote {
-  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  font-family: Georgia, 'Times New Roman', serif;
 }
 .xerrac-quote-mark {
   display: block;
-  font-family: 'EB Garamond', Georgia, serif;
+  font-family: Georgia, 'Times New Roman', serif;
   font-size: 3.5rem;
   line-height: 0.8;
   color: var(--accent);
@@ -276,10 +276,10 @@ body::before {
   user-select: none;
 }
 .xerrac-quote-text {
-  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  font-family: Georgia, 'Times New Roman', serif;
   font-style: italic;
   font-weight: 400;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   line-height: 1.6;
   color: #f5f5f5;
 }
