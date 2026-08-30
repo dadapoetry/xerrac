@@ -96,7 +96,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
               loading={i === 0 ? 'eager' : 'lazy'}
               decoding="async"
               className={`absolute inset-0 w-full h-full object-cover transition-all ease-out ${
-                i === active
+                i === mediaIdx
                   ? 'opacity-100 duration-[1600ms] motion-safe:scale-100'
                   : 'opacity-0 duration-[900ms] motion-safe:scale-[1.08]'
               }`}
