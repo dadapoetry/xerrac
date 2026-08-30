@@ -13,13 +13,10 @@ export function styleBlockquotes(html: string): string {
         attribution = trimmed.substring(split).trim()
       }
       return [
-        '<div class="-mx-4 md:-mx-12 px-4 md:px-12 border-l-2 my-10" style="border-color: rgba(var(--accent-rgb), 0.15);">',
-        '<span class="text-8xl font-serif leading-none block -mb-10 -ml-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]" style="color: rgba(var(--accent-rgb), 0.15);">&ldquo;</span>',
-        '<div class="pl-8 md:pl-12 pr-4 relative">',
-        '<div class="text-gray-100 leading-relaxed text-lg md:text-xl font-light italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">' + quoteText + '</div>',
-        attribution ? '<p class="text-xs text-gray-500 text-right mt-4 mr-2 font-mono tracking-wide">' + attribution + '</p>' : '',
-        '</div>',
-        '</div>'
+        '<blockquote class="my-10" style="border-left: 3px solid var(--accent); padding-left: 1.5rem;">',
+        '<div class="italic font-light text-xl md:text-2xl leading-relaxed text-gray-100 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">&ldquo;' + quoteText + '&rdquo;</div>',
+        attribution ? '<p class="mt-4 font-mono text-xs tracking-wide" style="color: var(--accent);">&mdash; ' + attribution.replace(/^—\s*/, '') + '</p>' : '',
+        '</blockquote>'
       ].join('')
     }
   )
