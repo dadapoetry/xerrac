@@ -220,7 +220,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                   }`}
                   style={{ transitionDelay: `${400 + (splitParagraphs(step.text || '').length) * 220}ms` }}
                 >
-                  <span className="animate-bounce text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                  <span className="animate-bounce text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,1)] drop-shadow-[0_0_14px_rgba(0,0,0,0.9)]">
                     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path
                         d="M19 9l-7 7-7-7"
@@ -231,7 +231,10 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                       />
                     </svg>
                   </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+                  <span
+                    className="font-mono text-[11px] uppercase tracking-[0.25em] text-gray-200"
+                    style={{ textShadow: '0 2px 6px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.9)' }}
+                  >
                     Continua llegint
                   </span>
                 </div>
