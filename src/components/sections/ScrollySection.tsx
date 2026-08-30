@@ -1,8 +1,36 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { SectionData, ScrollyContent } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
+
+function splitParagraphs(html: string): string[] {
+  const m = html.match(/<p[\s\S]*?<\/p>/gi)
+  if (!m || m.length === 0) return html.trim() ? [html] : []
+  const leftover = html.replace(/<p[\s\S]*?<\/p>/gi, '').trim()
+  const parts = leftover ? [...m, `<p>${leftover}</p>`] : m
+  return parts.filter((p) => p.trim())
+}
+
+function RevealText({ html, active, right }: { html: string; active: boolean; right: boolean }) {
+  const paras = useMemo(() => splitParagraphs(html), [html])
+  return (
+    <div className={right ? 'text-right' : ''}>
+      {paras.map((p, i) => (
+        <div
+          key={i}
+          className={`text-gray-100 leading-relaxed md:leading-loose font-serif text-[15px] md:text-lg prose-invert transition-all duration-[900ms] ease-out ${
+            active
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-6'
+          } ${i > 0 ? 'mt-6 md:mt-8' : ''}`}
+          style={{ transitionDelay: `${i * 220}ms` }}
+          dangerouslySetInnerHTML={{ __html: p }}
+        />
+      ))}
+    </div>
+  )
+}
 
 export function ScrollySection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as ScrollyContent
@@ -134,7 +162,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
               )}
               {step.title && (
                 <h4
-                  className={`mb-4 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] text-2xl md:text-4xl ${
+                  className={`mb-6 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] text-3xl md:text-5xl ${
                     step.position === 'right' ? 'text-right' : ''
                   }`}
                 >
@@ -149,11 +177,10 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                       : 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]'
                   }
                 >
-                  <div
-                    className={`text-gray-100 leading-relaxed font-serif text-[15px] md:text-lg prose-invert [&>p]:mb-4 [&>p:last-child]:mb-0 ${
-                      step.position === 'right' ? 'text-right' : ''
-                    }`}
-                    dangerouslySetInnerHTML={{ __html: step.text }}
+                  <RevealText
+                    html={step.text}
+                    active={i === active}
+                    right={step.position === 'right'}
                   />
                 </div>
               )}
