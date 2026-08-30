@@ -215,14 +215,24 @@ export function ScrollySection({ section, index }: { section: SectionData; index
               )}
               {i === steps.length - 1 && (
                 <div
-                  className={`mt-10 flex max-w-xl items-center gap-3 transition-all duration-[900ms] ease-out ${
+                  className={`mt-12 flex max-w-xl flex-col items-center gap-4 transition-all duration-[900ms] ease-out ${
                     i === active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  } ${step.position === 'right' ? 'justify-end' : ''}`}
+                  }`}
                   style={{ transitionDelay: `${400 + (splitParagraphs(step.text || '').length) * 220}ms` }}
                 >
-                  <span className="h-px w-8 bg-white/40" />
+                  <span className="animate-bounce text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M19 9l-7 7-7-7"
+                        stroke="var(--accent)"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
                   <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
-                    Continua llegint ↓
+                    Continua llegint
                   </span>
                 </div>
               )}
