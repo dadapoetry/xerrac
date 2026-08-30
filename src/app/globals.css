@@ -273,10 +273,15 @@ body::before {
 .xerrac-quote,
 .xerrac-quote * {
   font-style: italic !important;
-  font-weight: 400 !important;
+  font-weight: 400;
   font-size: 1.0625rem !important;
   line-height: 1.6 !important;
   color: #b9b9b9 !important;
+}
+.xerrac-quote strong,
+.xerrac-quote b {
+  font-weight: 700 !important;
+  color: var(--accent) !important;
 }
 .xerrac-quote p + p {
   margin-top: 0.75rem !important;
