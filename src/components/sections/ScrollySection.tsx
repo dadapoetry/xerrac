@@ -34,7 +34,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
     return (
       <div className="section-container">
         <div className="max-w-4xl mx-auto">
-          <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} bright noNumber />
+          <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} bright />
           <p className="text-gray-600 text-sm">Aquest assaig encara no té escenes.</p>
         </div>
       </div>
@@ -91,11 +91,6 @@ export function ScrollySection({ section, index }: { section: SectionData; index
           </p>
         )}
 
-        {/* Comptador */}
-        <div className="absolute bottom-6 right-6 md:right-14 font-mono text-[11px] tracking-widest text-gray-400">
-          {String(active + 1).padStart(2, '0')} / {String(steps.length).padStart(2, '0')}
-        </div>
-
         {/* Punts de progrés navegables */}
         <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5 z-[5]">
           {steps.map((_, i) => (
@@ -131,7 +126,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
             >
               {i === 0 && (
                 <div className="mb-8 pointer-events-none">
-          <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} bright noNumber />
+          <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} bright />
                 </div>
               )}
               {step.title && (
