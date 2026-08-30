@@ -254,6 +254,13 @@ body::before {
 .editorial-body a:hover {
   text-decoration-color: var(--accent);
 }
+.editorial-body strong,
+.editorial-body b,
+.prose-invert strong,
+.prose-invert b {
+  color: var(--accent);
+  font-weight: 700;
+}
 
 @media (max-width: 768px) {
   .editorial-body {
