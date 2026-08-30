@@ -114,14 +114,14 @@ export function ScrollySection({ section, index }: { section: SectionData; index
         {steps.map((step, i) => (
           <div key={i} data-scene={i} className="h-[100svh] flex items-center px-4 md:px-8">
             <div
-              className={`max-w-2xl pointer-events-auto transition-all duration-700 ease-out ${
+              className={`max-w-xl pointer-events-auto transition-all duration-700 ease-out ${
                 i === active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               } ${
                 step.position === 'center'
                   ? 'mx-auto'
                   : step.position === 'right'
-                    ? 'ml-auto mr-8 md:mr-16'
-                    : 'mr-auto ml-8 md:ml-16'
+                    ? 'ml-auto mr-[12%]'
+                    : 'mr-auto ml-[12%]'
               }`}
             >
               {i === 0 && (
