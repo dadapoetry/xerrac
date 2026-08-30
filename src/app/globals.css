@@ -267,20 +267,16 @@ body::before {
   border-left: 3px solid var(--accent);
   margin: 1.75rem 0 !important;
   padding: 0.35rem 0 0.35rem 1.25rem !important;
+  font-family: inherit !important;
 }
 .editorial-body .xerrac-quote,
-.xerrac-quote {
-  font-family: inherit !important;
-}
-.editorial-body .xerrac-quote p,
-.xerrac-quote p {
-  font-family: inherit !important;
+.xerrac-quote,
+.xerrac-quote * {
   font-style: italic !important;
   font-weight: 400 !important;
   font-size: 1.0625rem !important;
   line-height: 1.6 !important;
   color: #b9b9b9 !important;
-  margin-bottom: 0 !important;
 }
 .xerrac-quote p + p {
   margin-top: 0.75rem !important;
