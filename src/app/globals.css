@@ -264,41 +264,21 @@ body::before {
 
 /* Xerrac! citations */
 .xerrac-quote {
-  position: relative;
-  border-left: 2px solid var(--accent);
-  margin: 2rem 0 2rem 0.5rem;
-  padding: 1.5rem 1.25rem 1.5rem 2rem;
-}
-.xerrac-quote::before {
-  content: '\201C';
-  position: absolute;
-  top: 0;
-  left: 0.25rem;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 3rem;
-  line-height: 1;
-  color: var(--accent);
-  opacity: 0.35;
+  border-left: 3px solid var(--accent);
+  margin: 1.75rem 0;
+  padding: 0.35rem 0 0.35rem 1.25rem;
 }
 .xerrac-quote p {
   font-family: inherit;
   font-style: italic;
   font-weight: 400;
-  font-size: 1.3rem;
-  line-height: 1.65;
-  color: #f0f0f0;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #cfcfcf;
   margin-bottom: 0;
 }
 .xerrac-quote p + p {
-  margin-top: 0.9rem;
-}
-.xerrac-quote-attribution {
-  margin-top: 1rem;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--accent);
+  margin-top: 0.75rem;
 }
 
 @media (max-width: 768px) {
