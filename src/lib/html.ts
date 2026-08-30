@@ -3,8 +3,22 @@ export function styleBlockquotes(html: string): string {
   return html.replace(
     /<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g,
     (_, inner: string) => {
-      const content = inner.trim()
-      return '<div class="xerrac-quote">' + content + '</div>'
+      const trimmed = inner.trim()
+      const hasAttribution = /—\s+\S/.test(trimmed)
+      if (!hasAttribution) {
+        return '<div class="xerrac-quote">' + trimmed + '</div>'
+      }
+      const split = trimmed.lastIndexOf('—')
+      const quoteText = trimmed.substring(0, split).trim()
+      const attribution = trimmed.substring(split).trim().replace(/^—\s*/, '')
+      return (
+        '<div class="xerrac-quote">' +
+        quoteText +
+        '<p class="xerrac-quote-attribution">&mdash; ' +
+        attribution +
+        '</p>' +
+        '</div>'
+      )
     }
   )
 }
