@@ -13,10 +13,12 @@ export function styleBlockquotes(html: string): string {
         attribution = trimmed.substring(split).trim()
       }
       return [
-        '<blockquote class="xerrac-quote my-8" style="border-left: 2px solid var(--accent); padding-left: 1.25rem;">',
-        '<div class="xerrac-quote-text"><span class="xerrac-quote-mark" aria-hidden="true">&ldquo;</span>' + quoteText + '</div>',
-        attribution ? '<p class="xerrac-quote-attribution">&mdash; ' + attribution.replace(/^—\s*/, '') + '</p>' : '',
-        '</blockquote>'
+        '<div class="xerrac-quote -mx-4 md:-mx-12 px-4 md:px-12 border-l-2 my-10" style="border-color: rgba(var(--accent-rgb), 0.15);">',
+        '<span class="xerrac-quote-mark" aria-hidden="true">&ldquo;</span>',
+        '<div class="pl-8 md:pl-12 pr-4 xerrac-quote-text">' + quoteText + '</div>',
+        '<span class="xerrac-quote-mark xerrac-quote-mark-end" aria-hidden="true">&rdquo;</span>',
+        attribution ? '<p class="xerrac-quote-attribution pl-8 md:pl-12">&mdash; ' + attribution.replace(/^—\s*/, '') + '</p>' : '',
+        '</div>'
       ].join('')
     }
   )

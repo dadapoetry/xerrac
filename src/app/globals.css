@@ -263,29 +263,30 @@ body::before {
 }
 
 /* Xerrac! citations */
-.xerrac-quote {
-  font-family: inherit;
-}
 .xerrac-quote-mark {
-  display: inline-block;
-  font-family: inherit;
-  font-size: 2.5rem;
-  line-height: 0.8;
-  color: var(--accent);
-  vertical-align: baseline;
-  margin-right: 0.75rem;
+  display: block;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 3.5rem;
+  line-height: 0;
+  color: rgba(var(--accent-rgb), 0.45);
+  margin-bottom: -0.8rem;
   user-select: none;
+}
+.xerrac-quote-mark-end {
+  text-align: right;
+  margin-top: -0.6rem;
+  margin-bottom: 0;
 }
 .xerrac-quote-text {
   font-family: inherit;
   font-style: italic;
   font-weight: 400;
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   line-height: 1.6;
-  color: #e8e8e8;
+  color: #ececec;
 }
 .xerrac-quote-attribution {
-  margin-top: 0.75rem;
+  margin-top: 1.25rem;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.6875rem;
   text-transform: uppercase;
