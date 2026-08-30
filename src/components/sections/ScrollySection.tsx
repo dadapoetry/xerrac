@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { SectionData, ScrollyContent } from '@/types'
-import { SectionHeader } from '@/components/SectionHeader'
 
 function splitParagraphs(html: string): string[] {
   const m = html.match(/<p[\s\S]*?<\/p>/gi)
@@ -61,9 +60,10 @@ export function ScrollySection({ section, index }: { section: SectionData; index
   if (steps.length === 0) {
     return (
       <div className="section-container">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} bright />
-          <p className="text-gray-600 text-sm">Aquest assaig encara no té escenes.</p>
+        <div className="max-w-4xl mx-auto py-12">
+          <h2 className="font-black uppercase tracking-tight text-white text-3xl md:text-5xl leading-none">{section.title}</h2>
+          {content.subtitle && <p className="mt-4 text-sm tracking-wider uppercase text-gray-300">{content.subtitle}</p>}
+          <p className="mt-8 text-gray-600 text-sm">Aquest assaig encara no té escenes.</p>
         </div>
       </div>
     )
@@ -155,16 +155,16 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                     : 'mr-auto ml-[12%]'
               }`}
             >
-              {i === 0 && (
-                <div className="mb-8 pointer-events-none">
-          <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} bright />
-                </div>
+              {i === 0 && content.subtitle && (
+                <p className="mb-6 text-sm md:text-base tracking-wider uppercase text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+                  {content.subtitle}
+                </p>
               )}
               {step.title && (
                 <h4
-                  className={`mb-6 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] text-3xl md:text-5xl ${
-                    step.position === 'right' ? 'text-right' : ''
-                  }`}
+                  className={`mb-6 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${
+                    i === 0 ? 'text-5xl md:text-7xl' : 'text-3xl md:text-5xl'
+                  } ${step.position === 'right' ? 'text-right' : ''}`}
                 >
                   {step.title}
                 </h4>
