@@ -14,8 +14,7 @@ export function styleBlockquotes(html: string): string {
       }
       return [
         '<blockquote class="xerrac-quote my-8" style="border-left: 2px solid var(--accent); padding-left: 1.25rem;">',
-        '<span class="xerrac-quote-mark" aria-hidden="true">&ldquo;</span>',
-        '<div class="xerrac-quote-text">' + quoteText + '</div>',
+        '<div class="xerrac-quote-text"><span class="xerrac-quote-mark" aria-hidden="true">&ldquo;</span>' + quoteText + '</div>',
         attribution ? '<p class="xerrac-quote-attribution">&mdash; ' + attribution.replace(/^—\s*/, '') + '</p>' : '',
         '</blockquote>'
       ].join('')
