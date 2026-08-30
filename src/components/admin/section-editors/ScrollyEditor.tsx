@@ -9,6 +9,7 @@ interface ScrollyStep {
   title?: string
   position?: 'left' | 'center' | 'right'
   readable?: boolean
+  kick?: boolean
 }
 
 interface Props {
@@ -114,6 +115,21 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
                 </span>
               </label>
             </div>
+            <div className="flex items-center gap-2 pt-5">
+              <input
+                type="checkbox"
+                id={`kick-${i}`}
+                checked={step.kick === true}
+                onChange={(e) => onUpdateArrayItem('steps', i, 'kick', e.target.checked)}
+                className="accent-red-500"
+              />
+              <label htmlFor={`kick-${i}`} className="text-sm text-gray-400 leading-tight">
+                Frase-llamp
+                <span className="block text-xs text-gray-600">
+                  text com a dada gegant a pantalla sencera
+                </span>
+              </label>
+            </div>
           </div>
           <div>
             <label className="block text-xs text-gray-500 mb-1">Text (HTML)</label>
@@ -127,7 +143,7 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
       ))}
       <button
         type="button"
-        onClick={() => onAddArrayItem('steps', { media: '', caption: '', text: '', title: '', position: 'left', readable: true })}
+        onClick={() => onAddArrayItem('steps', { media: '', caption: '', text: '', title: '', position: 'left', readable: true, kick: false })}
         className="text-sm text-red-400 hover:text-red-300 border border-dashed border-red-900 px-4 py-2 w-full"
       >
         + Afegir escena

@@ -112,6 +112,7 @@ export interface ScrollyStep {
   title?: string
   position?: 'left' | 'center' | 'right'
   readable?: boolean
+  kick?: boolean
 }
 
 export interface ScrollyContent {

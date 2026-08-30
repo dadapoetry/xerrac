@@ -11,8 +11,24 @@ function splitParagraphs(html: string): string[] {
   return parts.filter((p) => p.trim())
 }
 
-function RevealText({ html, active, right }: { html: string; active: boolean; right: boolean }) {
+function RevealText({ html, active, right, kick }: { html: string; active: boolean; right?: boolean; kick?: boolean }) {
   const paras = useMemo(() => splitParagraphs(html), [html])
+  if (kick) {
+    return (
+      <div className={right ? 'text-right' : ''}>
+        {paras.map((p, i) => (
+          <p
+            key={i}
+            className={`text-center font-black uppercase leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] text-4xl md:text-6xl lg:text-7xl transition-all duration-[1200ms] ease-out ${
+              active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+            style={{ transitionDelay: `${i * 120}ms` }}
+            dangerouslySetInnerHTML={{ __html: p }}
+          />
+        ))}
+      </div>
+    )
+  }
   return (
     <div className={right ? 'text-right' : ''}>
       {paras.map((p, i) => (
@@ -142,22 +158,35 @@ export function ScrollySection({ section, index }: { section: SectionData; index
 
       {/* Escenes de text que passen per sobre */}
       <div className="absolute inset-0 pointer-events-none">
-        {steps.map((step, i) => (
+        {steps.map((step, i) => {
+          const dist = i - active
+          const parallax = dist * 40
+          return (
           <div key={i} data-scene={i} className="h-[100svh] flex items-center px-4 md:px-8">
             <div
-              className={`max-w-xl pointer-events-auto transition-all duration-700 ease-out ${
-                i === active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              } ${
-                step.position === 'center'
-                  ? 'mx-auto'
-                  : step.position === 'right'
-                    ? 'ml-auto mr-[12%]'
-                    : 'mr-auto ml-[12%]'
-              }`}
+              className={`pointer-events-auto transition-all duration-700 ease-out ${
+                i === active ? 'opacity-100' : 'opacity-0'
+              } ${step.position === 'center' ? 'mx-auto' : step.position === 'right' ? 'ml-auto mr-[12%]' : 'mr-auto ml-[12%]'}`}
+              style={{ transform: `translateY(${parallax}px)` }}
             >
+              {step.kick ? (
+                <div
+                  className={`max-w-4xl transition-all duration-[900ms] ease-out ${
+                    i === active ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  <RevealText
+                    kick
+                    html={step.text}
+                    active={i === active}
+                    right={step.position === 'right'}
+                  />
+                </div>
+              ) : (
+              <>
               {step.title && (
                 <h4
-                  className={`mb-6 font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${
+                  className={`mb-6 max-w-xl font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${
                     i === 0 ? 'text-5xl md:text-7xl' : 'text-3xl md:text-5xl'
                   } ${step.position === 'right' ? 'text-right' : ''}`}
                 >
@@ -165,17 +194,17 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                 </h4>
               )}
               {i === 0 && content.subtitle && (
-                <p className="-mt-4 mb-6 text-sm md:text-base tracking-wider uppercase text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+                <p className="-mt-4 mb-6 max-w-xl text-sm md:text-base tracking-wider uppercase text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
                   {content.subtitle}
                 </p>
               )}
               {step.text && (
                 <div
-                  className={
+                  className={`max-w-xl ${
                     step.readable
                       ? 'drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]'
                       : 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]'
-                  }
+                  }`}
                 >
                   <RevealText
                     html={step.text}
@@ -186,7 +215,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
               )}
               {i === steps.length - 1 && (
                 <div
-                  className={`mt-10 flex items-center gap-3 transition-all duration-[900ms] ease-out ${
+                  className={`mt-10 flex max-w-xl items-center gap-3 transition-all duration-[900ms] ease-out ${
                     i === active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   } ${step.position === 'right' ? 'justify-end' : ''}`}
                   style={{ transitionDelay: `${400 + (splitParagraphs(step.text || '').length) * 220}ms` }}
@@ -197,9 +226,12 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                   </span>
                 </div>
               )}
+              </>
+              )}
             </div>
           </div>
-        ))}
+          )
+        })}
       </div>
     </section>
   )
