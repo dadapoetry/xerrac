@@ -270,7 +270,8 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                 className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-gray-300 transition-all duration-[900ms] ease-out"
                 style={{ transitionDelay: '450ms', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}
               >
-                {String(index).padStart(2, '0')} · Assaig visual
+                {section.title}
+                {content.subtitle ? <span> · {content.subtitle}</span> : null}
               </div>
             </div>
           </div>
