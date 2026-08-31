@@ -73,6 +73,9 @@ export function ScrollySection({ section, index }: { section: SectionData; index
     return () => observer.disconnect()
   }, [steps.length])
 
+  const hasOutro = !!content.outro
+  const totalScenes = steps.length + (hasOutro ? 1 : 0)
+
   if (steps.length === 0) {
     return (
       <div className="section-container">
@@ -100,7 +103,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
   }
 
   return (
-    <section ref={rootRef} className="relative w-full bg-black" style={{ height: `${steps.length * 100}svh` }}>
+    <section ref={rootRef} className="relative w-full bg-black" style={{ height: `${totalScenes * 100}svh` }}>
       {/* Capa visual clavada a pantalla sencera */}
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
         {steps.map((step, i) =>
@@ -140,7 +143,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
 
         {/* Punts de progrés navegables */}
         <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5 z-[5]">
-          {steps.map((_, i) => (
+          {Array.from({ length: totalScenes }).map((_, i) => (
             <button
               key={i}
               type="button"
@@ -245,6 +248,33 @@ export function ScrollySection({ section, index }: { section: SectionData; index
           </div>
           )
         })}
+        {hasOutro && (
+          <div key="outro" data-scene={steps.length} className="h-[100svh] flex items-center justify-center px-6">
+            <div className={`max-w-2xl text-center transition-all duration-[1200ms] ease-out ${
+              active === steps.length ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            }`}>
+              <div className="mx-auto mb-8 h-px w-16 bg-white/40" />
+              <div
+                className="font-mono text-[11px] uppercase tracking-[0.3em] text-gray-300 transition-all duration-[900ms] ease-out"
+                style={{ transitionDelay: '150ms', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}
+              >
+                · Fi ·
+              </div>
+              <h3
+                className="mt-5 font-black uppercase leading-tight tracking-tight text-white text-3xl md:text-4xl transition-all duration-[900ms] ease-out"
+                style={{ transitionDelay: '300ms', textShadow: '0 2px 10px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.85)' }}
+              >
+                {content.outro}
+              </h3>
+              <div
+                className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-gray-300 transition-all duration-[900ms] ease-out"
+                style={{ transitionDelay: '450ms', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}
+              >
+                {String(index).padStart(2, '0')} · Assaig visual
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )

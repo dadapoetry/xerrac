@@ -15,13 +15,15 @@ interface ScrollyStep {
 interface Props {
   steps: ScrollyStep[]
   subtitle: string
+  outro?: string
   onSubtitleChange: (value: string) => void
+  onOutroChange: (value: string) => void
   onUpdateArrayItem: (field: string, index: number, key: string, value: any) => void
   onAddArrayItem: (field: string, template: Record<string, any>) => void
   onRemoveArrayItem: (field: string, index: number) => void
 }
 
-export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArrayItem, onAddArrayItem, onRemoveArrayItem }: Props) {
+export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutroChange, onUpdateArrayItem, onAddArrayItem, onRemoveArrayItem }: Props) {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -35,6 +37,22 @@ export function ScrollyEditor({ steps, subtitle, onSubtitleChange, onUpdateArray
           placeholder="Opcional. Ex.: Una història per llegir rodant"
           className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
         />
+      </div>
+
+      <div className="space-y-2">
+        <label className="block text-xs uppercase tracking-wide text-gray-500">
+          Colofó final (frase de tancament)
+        </label>
+        <input
+          type="text"
+          value={outro || ''}
+          onChange={(e) => onOutroChange(e.target.value)}
+          placeholder="Opcional. Ex.: Fi."
+          className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
+        />
+        <p className="text-xs text-gray-600">
+          Es mostra a la darrera escena del l'assaig, sobre l'última imatge.
+        </p>
       </div>
 
       <div className="flex items-baseline justify-between">

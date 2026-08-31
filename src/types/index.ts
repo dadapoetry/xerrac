@@ -117,6 +117,7 @@ export interface ScrollyStep {
 
 export interface ScrollyContent {
   subtitle?: string
+  outro?: string
   steps: ScrollyStep[]
 }
 

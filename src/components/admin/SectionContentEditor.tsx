@@ -102,7 +102,9 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
         <ScrollyEditor
           steps={data.steps || []}
           subtitle={data.subtitle || ''}
+          outro={data.outro || ''}
           onSubtitleChange={(v) => updateField('subtitle', v)}
+          onOutroChange={(v) => updateField('outro', v)}
           onUpdateArrayItem={updateArrayItem}
           onAddArrayItem={addArrayItem}
           onRemoveArrayItem={removeArrayItem}
