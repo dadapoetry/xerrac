@@ -19,7 +19,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
         {paras.map((p, i) => (
           <p
             key={i}
-            className={`text-center font-black uppercase leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] text-4xl md:text-6xl lg:text-7xl transition-all duration-[1200ms] ease-out ${
+            className={`text-center font-black uppercase leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] text-4xl md:text-5xl lg:text-6xl transition-all duration-[1200ms] ease-out ${
               active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
             style={{ transitionDelay: `${i * 120}ms` }}
