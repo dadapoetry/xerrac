@@ -9,7 +9,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto">
-        <SectionHeader number={index} title={section.title} subtitle="Parlem amb algú quan toca" />
+        <SectionHeader number={index} title={section.title} subtitle="Parlem amb i d'algú quan toca" />
 
         {content.interviews?.length > 0 && (
           <div className="mb-12">
