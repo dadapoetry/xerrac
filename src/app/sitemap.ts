@@ -1,4 +1,4 @@
-import { getPublishedIssues } from '@/lib/actions'
+import { getPublishedIssues } from '@/lib/data'
 import { getSiteUrl } from '@/lib/site'
 
 export default async function sitemap() {

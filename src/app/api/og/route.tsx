@@ -45,7 +45,7 @@ export async function GET(request: Request) {
 
   if (issueId) {
     try {
-      const { getIssue } = await import('@/lib/actions')
+      const { getIssue } = await import('@/lib/data')
       const issue = await getIssue(issueId)
       if (issue) {
         number = String(issue.number).padStart(2, '0')

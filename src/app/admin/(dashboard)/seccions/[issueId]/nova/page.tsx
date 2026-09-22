@@ -1,4 +1,4 @@
-import { getIssue } from '@/lib/actions'
+import { getIssue } from '@/lib/data'
 import { db } from '@/lib/db'
 import { SectionForm } from '@/components/admin/SectionForm'
 import Link from 'next/link'

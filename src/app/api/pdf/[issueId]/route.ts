@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getIssue } from '@/lib/actions'
+import { getIssue } from '@/lib/data'
 import { safeParse } from '@/lib/utils'
 import { computeLayout } from '@/lib/layoutEngine'
 import { buildPrintHTML } from '@/lib/printHtml'

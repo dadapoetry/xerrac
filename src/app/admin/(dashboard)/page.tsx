@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getIssues } from '@/lib/actions'
+import { getIssues } from '@/lib/data'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,7 +35,7 @@ export default async function AdminDashboard() {
         </div>
         <div className="p-6 border border-gray-800 radical-border">
           <p className="text-3xl font-bold text-white">
-            {issues.reduce((acc, i) => acc + i.sections.length, 0)}
+            {issues.reduce((acc, i) => acc + (i.sectionCount || 0), 0)}
           </p>
           <p className="text-sm text-gray-500 mt-1">Seccions totals</p>
         </div>

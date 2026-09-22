@@ -1,4 +1,4 @@
-import { getIssue } from '@/lib/actions'
+import { getIssue } from '@/lib/data'
 import { safeParse } from '@/lib/utils'
 import { SectionForm } from '@/components/admin/SectionForm'
 import { SectionData } from '@/types'

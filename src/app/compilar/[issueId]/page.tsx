@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getIssue } from '@/lib/actions'
+import { getIssue } from '@/lib/data'
 import { safeParse } from '@/lib/utils'
 import { getSetting } from '@/lib/settings'
 import { TabloidPreview } from '@/components/TabloidPreview'

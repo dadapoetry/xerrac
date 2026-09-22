@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
-import { getPublishedIssues } from '@/lib/actions'
+import { getPublishedIssues } from '@/lib/data'
 import { SawIcon } from '@/components/SawIcon'
 
 interface SocialLink {

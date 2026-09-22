@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getIssues } from '@/lib/actions'
+import { getIssues } from '@/lib/data'
 import { DeleteIssueButton } from '@/components/admin/DeleteIssueButton'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { IssueSearch } from './IssueSearch'

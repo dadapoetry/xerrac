@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getPublishedIssues } from '@/lib/actions'
+import { getPublishedIssues } from '@/lib/data'
 import { getSiteUrl } from '@/lib/site'
 import { Footer } from '@/components/Footer'
 

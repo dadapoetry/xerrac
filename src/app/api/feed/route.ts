@@ -1,4 +1,4 @@
-import { getPublishedIssues } from '@/lib/actions'
+import { getPublishedIssues } from '@/lib/data'
 import { getAllSettings } from '@/lib/settings'
 import { escapeXml } from '@/lib/utils'
 import { getSiteUrl } from '@/lib/site'

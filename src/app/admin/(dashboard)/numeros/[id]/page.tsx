@@ -1,4 +1,4 @@
-import { getIssue } from '@/lib/actions'
+import { getIssue } from '@/lib/data'
 import { IssueForm } from '@/components/admin/IssueForm'
 import { SectionList } from '@/components/admin/SectionList'
 import { SendNewsletterButton } from '@/components/admin/SendNewsletterButton'

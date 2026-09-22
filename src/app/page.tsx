@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getLatestIssue, getIssue } from '@/lib/actions'
+import { getLatestIssue, getIssue } from '@/lib/data'
 import { safeParse } from '@/lib/utils'
 import { getSiteUrl } from '@/lib/site'
 
