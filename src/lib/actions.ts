@@ -328,24 +328,26 @@ export async function sendIssueNewsletter(issueId: string) {
     }
   })
 
-  const { sendNewsletterEmail } = await import('./newsletter')
+  const { sendNewsletterBatch } = await import('./newsletter')
+  const recipients = subscribers.map((sub) => ({
+    email: sub.email,
+    token: sub.token,
+  }))
+  const issueMeta = {
+    id: issue.id,
+    number: issue.number,
+    title: issue.title,
+    date: new Date(issue.date),
+  }
   let sent = 0
-  const CHUNK_SIZE = 20
-  for (let i = 0; i < subscribers.length; i += CHUNK_SIZE) {
-    const chunk = subscribers.slice(i, i + CHUNK_SIZE)
-    const results = await Promise.allSettled(
-      chunk.map((sub) =>
-        sendNewsletterEmail(sub.email, sub.token, {
-          id: issue.id,
-          number: issue.number,
-          title: issue.title,
-          date: new Date(issue.date),
-        }, summaries, coverImage)
-      )
-    )
-    for (const r of results) {
-      if (r.status === 'fulfilled') sent++
-      else console.error('[actions] Newsletter send failed:', r.reason)
+  const CHUNK = 100
+  for (let i = 0; i < recipients.length; i += CHUNK) {
+    const chunk = recipients.slice(i, i + CHUNK)
+    try {
+      const n = await sendNewsletterBatch(chunk, issueMeta, summaries, coverImage)
+      sent += n
+    } catch (err) {
+      console.error('[actions] Newsletter batch failed:', err)
     }
   }
 

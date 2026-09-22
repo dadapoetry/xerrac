@@ -94,7 +94,37 @@ export async function sendConfirmation(email: string, token: string) {
   })
 }
 
-export async function sendNewsletterEmail(
+export interface NewsletterRecipient {
+  email: string
+  token: string
+}
+
+async function sendEmailsBatch(
+  payloads: { from: string; to: string; subject: string; html: string }[],
+): Promise<any[]> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY no configurada')
+  }
+  const res = await fetchWithTimeout('https://api.resend.com/emails/batch', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payloads),
+    timeout: 30000,
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Resend error ${res.status}: ${body}`)
+  }
+  const data = await res.json().catch(() => null)
+  const items = data?.data
+  return Array.isArray(items) ? items : []
+}
+
+function buildNewsletterHtml(
   email: string,
   token: string,
   issue: { id: string; number: number; title: string; date: Date },
@@ -150,10 +180,7 @@ export async function sendNewsletterEmail(
     ? `background-image:url('${coverImage}');background-size:cover;background-position:center;background-repeat:no-repeat`
     : ''
 
-  await sendEmail({
-    to: email,
-    subject: `Xerrac! — ${issue.title}`,
-    html: `
+  return `
       <table style="width:100%;background:#0a0a0a;font-family:Arial,sans-serif">
         <tr>
           <td style="padding:40px 16px">
@@ -199,6 +226,34 @@ export async function sendNewsletterEmail(
           </td>
         </tr>
       </table>
-    `,
-  })
+    `
+}
+
+export async function sendNewsletterBatch(
+  recipients: NewsletterRecipient[],
+  issue: { id: string; number: number; title: string; date: Date },
+  sections: { title: string; summary: string; image?: string; origIndex: number }[],
+  coverImage?: string,
+) {
+  if (recipients.length === 0) return 0
+
+  const payloads = recipients.map((r) => ({
+    from: FROM,
+    to: r.email,
+    subject: `Xerrac! — ${issue.title}`,
+    html: buildNewsletterHtml(r.email, r.token, issue, sections, coverImage),
+  }))
+
+  let sent = 0
+  const CHUNK = 100
+  for (let i = 0; i < payloads.length; i += CHUNK) {
+    const chunk = payloads.slice(i, i + CHUNK)
+    const items = await sendEmailsBatch(chunk)
+    const failed = items.filter((x) => !x || !x.id)
+    if (failed.length > 0) {
+      console.error('[newsletter] Resend batch items failed:', failed)
+    }
+    sent += items.filter((x) => x && x.id).length
+  }
+  return sent
 }
