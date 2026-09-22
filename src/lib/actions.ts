@@ -172,12 +172,12 @@ export async function deleteIssue(id: string) {
 
 export async function batchUpdateIssues(updates: { id: string; published: boolean }[]) {
   await checkAuth()
-  for (const u of updates) {
-    await db.execute({
+  await db.batch(
+    updates.map((u) => ({
       sql: 'UPDATE Issue SET published = ?, updatedAt = datetime(\'now\') WHERE id = ?',
       args: [u.published ? 1 : 0, u.id],
-    })
-  }
+    })),
+  )
   revalidatePath('/admin')
   revalidatePath('/')
 }
@@ -232,19 +232,40 @@ export async function updateSection(id: string, data: {
 
 export async function reorderSections(swaps: { id: string; order: number }[]) {
   await checkAuth()
-  for (const s of swaps) {
-    await db.execute({
+  await db.batch(
+    swaps.map((s) => ({
       sql: 'UPDATE Section SET "order" = ?, updatedAt = datetime(\'now\') WHERE id = ?',
       args: [s.order, s.id],
-    })
-  }
+    })),
+  )
   revalidatePath('/admin')
   revalidatePath('/')
 }
 
 export async function deleteSection(id: string) {
   await checkAuth()
-  await db.execute({ sql: 'DELETE FROM Section WHERE id = ?', args: [id] })
+  const secResult = await db.execute({
+    sql: 'SELECT issueId FROM Section WHERE id = ?',
+    args: [id],
+  })
+  const row = secResult.rows[0]
+  if (!row) return
+
+  const issueId = row.issueId as string
+  const remaining = await db.execute({
+    sql: 'SELECT id FROM Section WHERE issueId = ? AND id <> ? ORDER BY "order" ASC, rowid ASC',
+    args: [issueId, id],
+  })
+
+  const statements: any[] = [{ sql: 'DELETE FROM Section WHERE id = ?', args: [id] }]
+  remaining.rows.forEach((r, i) => {
+    statements.push({
+      sql: 'UPDATE Section SET "order" = ?, updatedAt = datetime(\'now\') WHERE id = ?',
+      args: [i, r.id],
+    })
+  })
+
+  await db.batch(statements)
   revalidatePath('/admin')
 }
 
