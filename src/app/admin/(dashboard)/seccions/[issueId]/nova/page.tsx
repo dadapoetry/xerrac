@@ -1,4 +1,5 @@
 import { getIssue } from '@/lib/actions'
+import { db } from '@/lib/db'
 import { SectionForm } from '@/components/admin/SectionForm'
 import Link from 'next/link'
 
@@ -10,6 +11,12 @@ export default async function NovaSeccioPage({ params }: { params: { issueId: st
   if (!issue) {
     return <div className="text-center py-16 text-gray-500">Número no trobat</div>
   }
+
+  const nextOrderResult = await db.execute({
+    sql: 'SELECT COALESCE(MAX("order"), 0) + 1 AS next FROM Section WHERE issueId = ?',
+    args: [issue.id],
+  })
+  const nextOrder = Number(nextOrderResult.rows[0]?.next) || 0
 
   return (
     <div>
@@ -25,7 +32,7 @@ export default async function NovaSeccioPage({ params }: { params: { issueId: st
 
       <SectionForm
         issueId={issue.id}
-        nextOrder={issue.sections.length}
+        nextOrder={nextOrder}
       />
     </div>
   )

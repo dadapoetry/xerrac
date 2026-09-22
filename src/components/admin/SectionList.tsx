@@ -40,12 +40,9 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
     setSorted(newSorted)
 
     try {
-      const a = sorted[index]
-      const b = sorted[index - 1]
-      await reorderSections([
-        { id: a.id, order: b.order },
-        { id: b.id, order: a.order },
-      ])
+      await reorderSections(
+        newSorted.map((s, i) => ({ id: s.id, order: i })),
+      )
       router.refresh()
     } catch (e: any) {
       setSorted([...sections].sort((a, b) => a.order - b.order))
@@ -60,12 +57,9 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
     setSorted(newSorted)
 
     try {
-      const a = sorted[index]
-      const b = sorted[index + 1]
-      await reorderSections([
-        { id: a.id, order: b.order },
-        { id: b.id, order: a.order },
-      ])
+      await reorderSections(
+        newSorted.map((s, i) => ({ id: s.id, order: i })),
+      )
       router.refresh()
     } catch (e: any) {
       setSorted([...sections].sort((a, b) => a.order - b.order))
