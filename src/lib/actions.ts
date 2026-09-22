@@ -14,6 +14,13 @@ async function checkAuth() {
   if (!session) throw new Error('No autoritzat')
 }
 
+function revalidatePublic() {
+  revalidatePath('/')
+  revalidatePath('/arxiu')
+  revalidatePath('/api/feed')
+  revalidatePath('/sitemap.xml')
+}
+
 export async function createIssue(data: { number: number; title: string; date: string }) {
   await checkAuth()
   const id = uuid()
@@ -21,8 +28,7 @@ export async function createIssue(data: { number: number; title: string; date: s
     sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published) VALUES (?, ?, ?, ?, ?, 0)',
     args: [id, data.number, data.title, data.date, '#ef4444'],
   })
-  revalidatePath('/admin')
-  revalidatePath('/')
+  revalidatePublic()
   return { id, ...data }
 }
 
@@ -53,16 +59,14 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
     })
   }
 
-  revalidatePath('/admin')
-  revalidatePath('/')
+  revalidatePublic()
 }
 
 export async function deleteIssue(id: string) {
   await checkAuth()
   await db.execute({ sql: 'DELETE FROM Section WHERE issueId = ?', args: [id] })
   await db.execute({ sql: 'DELETE FROM Issue WHERE id = ?', args: [id] })
-  revalidatePath('/admin')
-  revalidatePath('/')
+  revalidatePublic()
 }
 
 export async function batchUpdateIssues(updates: { id: string; published: boolean }[]) {
@@ -73,8 +77,7 @@ export async function batchUpdateIssues(updates: { id: string; published: boolea
       args: [u.published ? 1 : 0, u.id],
     })),
   )
-  revalidatePath('/admin')
-  revalidatePath('/')
+  revalidatePublic()
 }
 
 export async function createSection(data: {
@@ -91,8 +94,7 @@ export async function createSection(data: {
     sql: 'INSERT INTO Section (id, issueId, type, "order", title, content, backgroundImage) VALUES (?, ?, ?, ?, ?, ?, ?)',
     args: [id, data.issueId, data.type, data.order, data.title, data.content, data.backgroundImage || ''],
   })
-  revalidatePath('/admin')
-  revalidatePath('/')
+  revalidatePublic()
   return { id, ...data }
 }
 
@@ -121,8 +123,7 @@ export async function updateSection(id: string, data: {
     })
   }
 
-  revalidatePath('/admin')
-  revalidatePath('/')
+  revalidatePublic()
 }
 
 export async function reorderSections(swaps: { id: string; order: number }[]) {
@@ -133,8 +134,7 @@ export async function reorderSections(swaps: { id: string; order: number }[]) {
       args: [s.order, s.id],
     })),
   )
-  revalidatePath('/admin')
-  revalidatePath('/')
+  revalidatePublic()
 }
 
 export async function deleteSection(id: string) {
@@ -161,7 +161,7 @@ export async function deleteSection(id: string) {
   })
 
   await db.batch(statements)
-  revalidatePath('/admin')
+  revalidatePublic()
 }
 
 /* Newsletter */

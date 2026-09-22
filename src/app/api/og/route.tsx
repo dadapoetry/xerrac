@@ -73,7 +73,7 @@ export async function GET(request: Request) {
 
   const titleSize = excerpt ? 52 : number ? 72 : 160
 
-  return new ImageResponse(
+  const response = new ImageResponse(
     (
       <div
         style={{
@@ -159,4 +159,7 @@ export async function GET(request: Request) {
     ),
     { width: 1200, height: 630 },
   )
+
+  response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')
+  return response
 }

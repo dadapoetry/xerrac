@@ -5,7 +5,7 @@ import { getPublishedIssues } from '@/lib/data'
 import { getSiteUrl } from '@/lib/site'
 import { Footer } from '@/components/Footer'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 const SECTION_LABELS: Record<string, string> = {
   editorial: 'Editorial',

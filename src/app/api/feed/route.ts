@@ -45,6 +45,8 @@ const typeLabels: Record<string, string> = {
   ludita: 'Ludita',
 }
 
+export const revalidate = 3600
+
 export async function GET() {
   const issues = await getPublishedIssues()
   const settings = await getAllSettings()
