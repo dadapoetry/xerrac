@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useCallback, useState, useMemo } from 'react'
+import { useRef, useCallback, useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import type ReactQuillType from 'react-quill'
 
@@ -17,6 +17,21 @@ interface RichTextEditorProps {
 export function RichTextEditor({ value, onChange, minimal = false }: RichTextEditorProps) {
   const editorRef = useRef<ReactQuillType | null>(null)
   const [showImageDialog, setShowImageDialog] = useState(false)
+  const [current, setCurrent] = useState(value)
+  const lastEmittedRef = useRef(value)
+
+  const handleChange = useCallback((html: string) => {
+    lastEmittedRef.current = html
+    setCurrent(html)
+    onChange(html)
+  }, [onChange])
+
+  useEffect(() => {
+    if (value !== lastEmittedRef.current) {
+      lastEmittedRef.current = value
+      setCurrent(value)
+    }
+  }, [value])
 
   const insertImage = useCallback((url: string, width: string, alt: string) => {
     const editor = editorRef.current as any
@@ -58,8 +73,8 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
 
       <ReactQuill
         ref={(el: any) => { editorRef.current = el }}
-        value={value}
-        onChange={onChange}
+        value={current}
+        onChange={handleChange}
         className="bg-white text-black rounded text-sm"
         theme="snow"
         modules={modules}
