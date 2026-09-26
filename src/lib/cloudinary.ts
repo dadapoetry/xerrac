@@ -28,7 +28,7 @@ export function sanitizePublicId(name: string): string {
   )
 }
 
-export async function uploadImageToCloudinary(file: File, transforms = 'f_auto,q_auto'): Promise<string> {
+export async function uploadImageToCloudinary(file: File, transforms = 'f_auto,q_auto,w_1600'): Promise<string> {
   if (!file.type.startsWith('image/')) {
     throw new Error('El fitxer no és una imatge (JPG, PNG, WebP o GIF).')
   }
