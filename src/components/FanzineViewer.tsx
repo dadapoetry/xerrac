@@ -107,10 +107,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
   const [bgReady, setBgReady] = useState(false)
-  const ticking = useRef(false)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
-  const navScrollIntent = useRef(false)
   useEffect(() => {
     const onActivity = () => {
       setIdle(false)
@@ -128,16 +126,14 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [])
 
   useEffect(() => {
-    let prevIdx = -1
-    const onScroll = () => {
-      if (ticking.current) return
-      ticking.current = true
-      requestAnimationFrame(() => {
-        ticking.current = false
-        try {
-          const idx = getCurrentSectionIndex()
-          if (idx === prevIdx) return
-          prevIdx = idx
+    const els = Array.from(document.querySelectorAll('[data-section-index]'))
+    if (els.length === 0) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          const idx = parseInt(entry.target.getAttribute('data-section-index') || '0', 10)
+          if (isNaN(idx)) continue
           setActiveSection(idx)
           if (idx >= 2) setShowNewsletter(true)
           try {
@@ -145,16 +141,15 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             u.searchParams.set('section', String(idx))
             history.replaceState(null, '', u.pathname + u.search)
           } catch {}
-        } catch {}
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [sortedSections])
+        }
+      },
+      { threshold: 0, rootMargin: '-20% 0px -75% 0px' }
+    )
+    els.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [sortedSections.length])
 
-   useLayoutEffect(() => {
-    if (!navScrollIntent.current) return
-    navScrollIntent.current = false
+  useLayoutEffect(() => {
     const container = navRef.current
     if (!container) return
     if (activeSection === 0) {
@@ -163,7 +158,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     }
     const btn = container.children[activeSection] as HTMLElement | undefined
     if (!btn) return
-    btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+    const containerRect = container.getBoundingClientRect()
+    const btnRect = btn.getBoundingClientRect()
+    const relativeLeft = btnRect.left - containerRect.left + container.scrollLeft
+    const targetLeft = relativeLeft - (containerRect.width - btnRect.width) / 2
+    container.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' })
   }, [activeSection])
 
   useEffect(() => {
@@ -171,7 +170,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     if (v === null) return
     const idx = parseInt(v, 10)
     if (!isNaN(idx) && idx >= 0 && idx < sortedSections.length) {
-      navScrollIntent.current = true
       setTimeout(() => scrollToSectionEl(idx), 150)
     }
   }, [sortedSections.length])
@@ -186,10 +184,10 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         const cur = getCurrentSectionIndex()
         if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
           e.preventDefault()
-          if (cur > 0) { navScrollIntent.current = true; scrollToSectionEl(cur - 1) }
+          if (cur > 0) scrollToSectionEl(cur - 1)
         } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
           e.preventDefault()
-          if (cur < sortedSections.length - 1) { navScrollIntent.current = true; scrollToSectionEl(cur + 1) }
+          if (cur < sortedSections.length - 1) scrollToSectionEl(cur + 1)
         }
       } catch {}
     }
@@ -250,7 +248,7 @@ const shareLink = useCallback(async () => {
               <a
                 key={section.id}
                 href={`#${sectionSlug(i)}`}
-                onClick={(e) => { e.preventDefault(); navScrollIntent.current = true; scrollToSectionEl(i) }}
+                onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
                 className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-5 flex items-center leading-none transition-colors shrink-0 ${
                   i === activeSection
                     ? 'active'
