@@ -132,7 +132,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId, s
       </div>
 
       {issueNumber !== undefined && (
-        <span className="absolute bottom-4 right-4 text-[10px] text-gray-600 font-mono pointer-events-none z-10">Nº&nbsp;{String(issueNumber).padStart(2, '0')}</span>
+        <span className="absolute bottom-4 right-4 text-[10px] text-gray-100 font-mono pointer-events-none z-10">Nº&nbsp;{String(issueNumber).padStart(2, '0')}</span>
       )}
       <ScrollHint />
     </div>
