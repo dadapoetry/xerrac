@@ -322,7 +322,7 @@ const shareLink = useCallback(async () => {
             {section.backgroundImage && (
               <>
                 <div
-                  className={`absolute inset-0 z-0 bg-center bg-contain md:bg-cover transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
+                  className={`absolute inset-0 z-0 bg-no-repeat bg-center bg-contain md:bg-cover transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
                   style={{ backgroundImage: `url("${section.backgroundImage}")` }}
                   aria-hidden="true"
                 />
