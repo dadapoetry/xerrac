@@ -8,6 +8,24 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false }) as any
 
 import 'react-quill/dist/quill.snow.css'
 
+const CLOUDINARY_CLOUD = 'lqdzlah5'
+const CLOUDINARY_PRESET = 'xerrac'
+const CLOUDINARY_FOLDER = 'xerrac-imatges'
+const MAX_UPLOAD_MB = 8
+
+function sanitizePublicId(name: string): string {
+  const base = name.replace(/\.[^/.]+$/, '')
+  return (
+    base
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 120) || 'imatge'
+  )
+}
+
 interface RichTextEditorProps {
   value: string
   onChange: (value: string) => void
@@ -91,9 +109,13 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
 }
 
 function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: string, alt: string) => void; onClose: () => void }) {
+  const [tab, setTab] = useState<'url' | 'file'>('file')
   const [url, setUrl] = useState('')
   const [alt, setAlt] = useState('')
   const [width, setWidth] = useState('100%')
+  const [file, setFile] = useState<File | null>(null)
+  const [status, setStatus] = useState<'idle' | 'uploading' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -101,65 +123,192 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
     onInsert(url, width, alt)
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]
+    if (!f) return
+    if (!f.type.startsWith('image/')) {
+      setFile(null)
+      setStatus('error')
+      setErrorMsg('El fitxer no és una imatge (JPG, PNG, WebP o GIF).')
+      return
+    }
+    if (f.size > MAX_UPLOAD_MB * 1024 * 1024) {
+      setFile(null)
+      setStatus('error')
+      setErrorMsg(`La imatge supera els ${MAX_UPLOAD_MB} MB. Restringeix-la abans.`)
+      return
+    }
+    setFile(f)
+    setStatus('idle')
+    setErrorMsg('')
+  }
+
+  const handleUpload = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!file) return
+    setStatus('uploading')
+    setErrorMsg('')
+    const fd = new FormData()
+    fd.append('file', file)
+    fd.append('upload_preset', CLOUDINARY_PRESET)
+    fd.append('public_id', sanitizePublicId(file.name))
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`,
+        { method: 'POST', body: fd }
+      )
+      const data = await res.json()
+      if (!res.ok || data.error) {
+        setStatus('error')
+        setErrorMsg(data?.error?.message || "No s'ha pogut pujar la imatge. Torna-ho a provar.")
+        return
+      }
+      let inserted = (data.secure_url as string) || ''
+      inserted = inserted.replace(/\/v\d+\//, '/')
+      inserted = inserted.replace('/image/upload/', '/image/upload/f_auto,q_auto/')
+      inserted = inserted.replace(/\.[^.]+$/, '')
+      if (!inserted.startsWith('https://')) {
+        setStatus('error')
+        setErrorMsg("No s'ha pogut generar la URL de la imatge.")
+        return
+      }
+      onInsert(inserted, width, alt)
+    } catch {
+      setStatus('error')
+      setErrorMsg('Error de connexió amb Cloudinary. Torna-ho a provar.')
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/70" />
-      <form
-        onSubmit={handleSubmit}
+      <div
         onClick={(e) => e.stopPropagation()}
         className="relative bg-gray-950 border border-gray-800 p-6 max-w-md w-full mx-4 shadow-2xl"
       >
         <h3 className="text-white font-bold text-lg mb-4">Inserir imatge</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">URL de la imatge</label>
-            <input
-              type="text"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
-              placeholder="https://exemple.cat/imatge.jpg"
-              autoFocus
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">Descripció (alt)</label>
-            <input
-              type="text"
-              value={alt}
-              onChange={(e) => setAlt(e.target.value)}
-              className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
-              placeholder="Descripció de la imatge per a accessibilitat"
-            />
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">Amplada màxima</label>
-            <input
-              type="text"
-              value={width}
-              onChange={(e) => setWidth(e.target.value)}
-              className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
-              placeholder="100%, 400px, 50%"
-            />
-          </div>
+        <div className="flex gap-2 mb-4">
+          {(['file', 'url'] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTab(t)}
+              className={`px-3 py-1 text-xs uppercase tracking-wider transition-colors ${
+                tab === t
+                  ? 'bg-red-600 text-white'
+                  : 'text-gray-400 border border-gray-700 hover:border-gray-500'
+              }`}
+            >
+              {t === 'file' ? 'Pujar arxiu' : 'URL externa'}
+            </button>
+          ))}
         </div>
-        <div className="flex gap-3 justify-end mt-6">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-700 text-gray-400 text-sm hover:border-gray-500 transition-colors"
-          >
-            Cancel·lar
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-red-600 text-white text-sm hover:bg-red-700 transition-colors"
-          >
-            Inserir
-          </button>
-        </div>
-      </form>
+        {tab === 'file' ? (
+          <form onSubmit={handleUpload} className="space-y-4">
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+                Arxiu (JPG, PNG, WebP o GIF — fins a {MAX_UPLOAD_MB} MB)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full text-sm text-gray-300 file:mr-4 file:px-4 file:py-2 file:bg-gray-800 file:text-gray-200 file:border file:border-gray-700 file:text-sm hover:file:border-gray-500 file:transition-colors"
+              />
+              <p className="text-[11px] text-gray-500 mt-1">
+                Si repuges un arxiu amb el mateix nom d'un borrador, la imatge anterior se substitueix amb la mateixa URL.
+              </p>
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">Descripció (alt)</label>
+              <input
+                type="text"
+                value={alt}
+                onChange={(e) => setAlt(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
+                placeholder="Descripció de la imatge per a accessibilitat"
+              />
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">Amplada màxima</label>
+              <input
+                type="text"
+                value={width}
+                onChange={(e) => setWidth(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
+                placeholder="100%, 400px, 50%"
+              />
+            </div>
+            {status === 'error' && <p className="text-red-400 text-sm">{errorMsg}</p>}
+            <div className="flex gap-3 justify-end mt-6">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 border border-gray-700 text-gray-400 text-sm hover:border-gray-500 transition-colors"
+              >
+                Cancel·lar
+              </button>
+              <button
+                type="submit"
+                disabled={!file || status === 'uploading'}
+                className="px-4 py-2 bg-red-600 text-white text-sm hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {status === 'uploading' ? 'Pujant...' : 'Pujar i inserir'}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">URL de la imatge</label>
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
+                placeholder="https://exemple.cat/imatge.jpg"
+                autoFocus
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">Descripció (alt)</label>
+              <input
+                type="text"
+                value={alt}
+                onChange={(e) => setAlt(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
+                placeholder="Descripció de la imatge per a accessibilitat"
+              />
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">Amplada màxima</label>
+              <input
+                type="text"
+                value={width}
+                onChange={(e) => setWidth(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
+                placeholder="100%, 400px, 50%"
+              />
+            </div>
+            <div className="flex gap-3 justify-end mt-6">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 border border-gray-700 text-gray-400 text-sm hover:border-gray-500 transition-colors"
+              >
+                Cancel·lar
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-red-600 text-white text-sm hover:bg-red-700 transition-colors"
+              >
+                Inserir
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   )
 }
