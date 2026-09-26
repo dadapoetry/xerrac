@@ -23,10 +23,25 @@ export async function uploadImageToCloudinary(file: File, transforms = 'f_auto,q
   if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
     throw new Error(`La imatge supera els ${MAX_UPLOAD_MB} MB. Restringeix-la abans.`)
   }
+  const publicId = sanitizePublicId(file.name)
+  const sigRes = await fetch('/api/cloudinary/signature', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ publicId }),
+  })
+  const sig = await sigRes.json().catch(() => ({}))
+  if (!sigRes.ok || !sig.signature) {
+    throw new Error(sig?.error || "No s'ha pogut preparar la pujada.")
+  }
   const fd = new FormData()
   fd.append('file', file)
-  fd.append('upload_preset', CLOUDINARY_PRESET)
-  fd.append('public_id', sanitizePublicId(file.name))
+  fd.append('api_key', sig.apiKey)
+  fd.append('timestamp', sig.timestamp)
+  fd.append('signature', sig.signature)
+  fd.append('public_id', publicId)
+  fd.append('folder', CLOUDINARY_FOLDER)
+  fd.append('overwrite', 'true')
+  fd.append('invalidate', 'true')
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
     method: 'POST',
     body: fd,
