@@ -3,6 +3,18 @@ export const CLOUDINARY_PRESET = 'xerrac'
 export const CLOUDINARY_FOLDER = 'xerrac-imatges'
 export const MAX_UPLOAD_MB = 8
 
+export function cloudinaryMobileUrl(url: string, transform = 'f_auto,q_auto,w_1080,h_1920,c_fill,g_auto'): string | null {
+  const marker = '/image/upload/'
+  const idx = url.indexOf(marker)
+  if (idx === -1) return null
+  const base = url.slice(0, idx + marker.length)
+  const rest = url.slice(idx + marker.length)
+  const folderIdx = rest.indexOf(CLOUDINARY_FOLDER)
+  if (folderIdx === -1) return null
+  const pid = rest.slice(folderIdx)
+  return `${base}${transform}/${pid}`
+}
+
 export function sanitizePublicId(name: string): string {
   const base = name.replace(/\.[^/.]+$/, '')
   return (

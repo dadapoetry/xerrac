@@ -7,6 +7,7 @@ import { PortadaSection } from './sections/PortadaSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
 import { NewsletterPopUp } from './NewsletterPopUp'
+import { cloudinaryMobileUrl } from '@/lib/cloudinary'
 
 function hexToRgb(hex: string): string {
   const h = hex.replace('#', '')
@@ -319,16 +320,27 @@ const shareLink = useCallback(async () => {
       {i === 0 ? (
         <div data-section-index={i} id={sectionSlug(i)}>
           <div className="section-container">
-            {section.backgroundImage && (
-              <>
-                <div
-                  className={`absolute inset-0 z-0 bg-no-repeat bg-center bg-contain md:bg-cover transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
-                  style={{ backgroundImage: `url("${section.backgroundImage}")` }}
-                  aria-hidden="true"
-                />
-                <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
-              </>
-            )}
+            {section.backgroundImage && (() => {
+              const mobileBg = cloudinaryMobileUrl(section.backgroundImage)
+              return (
+                <>
+                  <img
+                    src={mobileBg || section.backgroundImage}
+                    className={`absolute inset-0 z-0 w-full h-full object-cover object-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  {mobileBg && (
+                    <div
+                      className={`absolute inset-0 z-0 hidden md:block bg-no-repeat bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
+                      style={{ backgroundImage: `url("${section.backgroundImage}")` }}
+                      aria-hidden="true"
+                    />
+                  )}
+                  <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
+                </>
+              )
+            })()}
             <div className="relative z-[3] w-full">
               <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} issueId={issue.id} showPdfButton={issue.showPdfButton !== false} />
             </div>
