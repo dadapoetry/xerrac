@@ -318,11 +318,11 @@ const shareLink = useCallback(async () => {
 
       {i === 0 ? (
         <div data-section-index={i} id={sectionSlug(i)}>
-          <div className="relative w-full bg-black overflow-hidden md:min-h-[100dvh]">
+          <div className="section-container">
             {section.backgroundImage && (
               <>
                 <div
-                  className={`relative w-full aspect-[16/9] md:absolute md:inset-0 md:aspect-auto md:h-full bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
+                  className={`absolute inset-0 z-0 bg-center bg-contain md:bg-cover transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
                   style={{ backgroundImage: `url("${section.backgroundImage}")` }}
                   aria-hidden="true"
                 />
