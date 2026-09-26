@@ -8,23 +8,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false }) as any
 
 import 'react-quill/dist/quill.snow.css'
 
-const CLOUDINARY_CLOUD = 'lqdzlah5'
-const CLOUDINARY_PRESET = 'xerrac'
-const CLOUDINARY_FOLDER = 'xerrac-imatges'
-const MAX_UPLOAD_MB = 8
-
-function sanitizePublicId(name: string): string {
-  const base = name.replace(/\.[^/.]+$/, '')
-  return (
-    base
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .slice(0, 120) || 'imatge'
-  )
-}
+import { MAX_UPLOAD_MB, uploadImageToCloudinary } from '@/lib/cloudinary'
 
 interface RichTextEditorProps {
   value: string
@@ -148,34 +132,12 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
     if (!file) return
     setStatus('uploading')
     setErrorMsg('')
-    const fd = new FormData()
-    fd.append('file', file)
-    fd.append('upload_preset', CLOUDINARY_PRESET)
-    fd.append('public_id', sanitizePublicId(file.name))
     try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`,
-        { method: 'POST', body: fd }
-      )
-      const data = await res.json()
-      if (!res.ok || data.error) {
-        setStatus('error')
-        setErrorMsg(data?.error?.message || "No s'ha pogut pujar la imatge. Torna-ho a provar.")
-        return
-      }
-      let inserted = (data.secure_url as string) || ''
-      inserted = inserted.replace(/\/v\d+\//, '/')
-      inserted = inserted.replace('/image/upload/', '/image/upload/f_auto,q_auto/')
-      inserted = inserted.replace(/\.[^.]+$/, '')
-      if (!inserted.startsWith('https://')) {
-        setStatus('error')
-        setErrorMsg("No s'ha pogut generar la URL de la imatge.")
-        return
-      }
+      const inserted = await uploadImageToCloudinary(file)
       onInsert(inserted, width, alt)
-    } catch {
+    } catch (err) {
       setStatus('error')
-      setErrorMsg('Error de connexió amb Cloudinary. Torna-ho a provar.')
+      setErrorMsg(err instanceof Error ? err.message : "No s'ha pogut pujar la imatge. Torna-ho a provar.")
     }
   }
 

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createSection, updateSection } from '@/lib/actions'
 import { SECTION_TYPES, SECTION_LABELS, SectionData } from '@/types'
 import { SectionContentEditor } from './SectionContentEditor'
+import { CloudinaryUploadButton } from './CloudinaryUploadButton'
 import { useToast } from './Toast'
 
 interface SectionFormProps {
@@ -140,9 +141,16 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
-          URL de la imatge de fons
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+            URL de la imatge de fons
+          </label>
+          <CloudinaryUploadButton
+            onUploaded={(url) => { setBgImage(url); markDirty() }}
+            label="pujar"
+            transforms="f_auto,q_auto,w_1600"
+          />
+        </div>
         <input
           type="text"
           value={bgImage}
