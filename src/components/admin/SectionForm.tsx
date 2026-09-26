@@ -151,7 +151,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           <CloudinaryUploadButton
             onUploaded={(url) => { setBgImage(url); markDirty() }}
             label="pujar"
-            transforms="f_auto,q_auto,w_auto:100:2560"
+            transforms="f_auto,q_auto,w_2560"
           />
         </div>
         <input
