@@ -63,7 +63,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId, s
   }, [downloading, issueId, issueNumber])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] w-full text-center px-4 relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-[0] md:min-h-[100dvh] w-full text-center px-4 py-12 md:py-0 relative overflow-hidden">
       <div className="max-w-lg w-full relative">
         <Logo className="mb-5" />
 
