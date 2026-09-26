@@ -32,6 +32,7 @@ function mapSection(row: any) {
     title: row.title,
     content: row.content,
     backgroundImage: row.backgroundImage,
+    backgroundImageMobile: row.backgroundImageMobile || '',
     createdAt: toDate(row.createdAt),
     updatedAt: toDate(row.updatedAt),
   }

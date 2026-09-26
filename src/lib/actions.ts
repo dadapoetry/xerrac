@@ -87,12 +87,13 @@ export async function createSection(data: {
   title: string
   content: string
   backgroundImage?: string
+  backgroundImageMobile?: string
 }) {
   await checkAuth()
   const id = uuid()
   await db.execute({
-    sql: 'INSERT INTO Section (id, issueId, type, "order", title, content, backgroundImage) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    args: [id, data.issueId, data.type, data.order, data.title, data.content, data.backgroundImage || ''],
+    sql: 'INSERT INTO Section (id, issueId, type, "order", title, content, backgroundImage, backgroundImageMobile) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    args: [id, data.issueId, data.type, data.order, data.title, data.content, data.backgroundImage || '', data.backgroundImageMobile || ''],
   })
   revalidatePublic()
   return { id, ...data }
@@ -102,6 +103,7 @@ export async function updateSection(id: string, data: {
   title?: string
   content?: string
   backgroundImage?: string
+  backgroundImageMobile?: string
   order?: number
   type?: string
 }) {
@@ -112,6 +114,7 @@ export async function updateSection(id: string, data: {
   if (data.title !== undefined) { sets.push('title = ?'); args.push(data.title) }
   if (data.content !== undefined) { sets.push('content = ?'); args.push(data.content) }
   if (data.backgroundImage !== undefined) { sets.push('backgroundImage = ?'); args.push(data.backgroundImage) }
+  if (data.backgroundImageMobile !== undefined) { sets.push('backgroundImageMobile = ?'); args.push(data.backgroundImageMobile) }
   if (data.order !== undefined) { sets.push('"order" = ?'); args.push(data.order) }
   if (data.type !== undefined) { sets.push('type = ?'); args.push(data.type) }
 

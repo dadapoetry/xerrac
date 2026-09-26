@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS Section (
   title TEXT NOT NULL DEFAULT '',
   content TEXT NOT NULL DEFAULT '{}',
   backgroundImage TEXT NOT NULL DEFAULT '',
+  backgroundImageMobile TEXT NOT NULL DEFAULT '',
   createdAt TEXT NOT NULL DEFAULT (datetime('now')),
   updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
   FOREIGN KEY (issueId) REFERENCES Issue(id) ON DELETE CASCADE

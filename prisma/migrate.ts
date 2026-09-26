@@ -17,6 +17,7 @@ async function migrate() {
   const alterStatements = [
     `ALTER TABLE Issue ADD COLUMN accentColor TEXT NOT NULL DEFAULT '#ef4444'`,
     `ALTER TABLE Issue ADD COLUMN showPdfButton INTEGER NOT NULL DEFAULT 1`,
+    `ALTER TABLE Section ADD COLUMN backgroundImageMobile TEXT NOT NULL DEFAULT ''`,
   ]
 
   for (const stmt of alterStatements) {

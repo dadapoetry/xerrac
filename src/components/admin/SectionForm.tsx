@@ -21,6 +21,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
   const [title, setTitle] = useState(initial?.title || '')
   const [order] = useState(initial?.order ?? nextOrder)
   const [bgImage, setBgImage] = useState(initial?.backgroundImage || '')
+  const [bgImageMobile, setBgImageMobile] = useState(initial?.backgroundImageMobile || '')
   const [content, setContent] = useState<string>(
     initial ? JSON.stringify(initial.content) : '{}'
   )
@@ -65,6 +66,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           order,
           content,
           backgroundImage: bgImage,
+          backgroundImageMobile: bgImageMobile,
         })
         toast('Secció actualitzada', 'success')
       } else {
@@ -75,6 +77,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           title,
           content,
           backgroundImage: bgImage,
+          backgroundImageMobile: bgImageMobile,
         })
         toast('Secció creada', 'success')
       }
@@ -164,6 +167,35 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             <img src={bgImage} alt="Preview" className="w-full h-full object-cover" />
           </div>
         )}
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between">
+          <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+            Imatge de fons en mòbil (opcional) · 1080×2400
+          </label>
+          <CloudinaryUploadButton
+            onUploaded={(url) => { setBgImageMobile(url); markDirty() }}
+            label="pujar"
+            transforms="f_auto,q_auto"
+          />
+        </div>
+        <input
+          type="text"
+          value={bgImageMobile}
+          onChange={(e) => { setBgImageMobile(e.target.value); markDirty() }}
+          placeholder="Deixa-ho buit per reutilitzar la imatge d'escriptori"
+          className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
+            text-sm focus:outline-none focus:border-red-500 transition-colors"
+        />
+        {bgImageMobile && (
+          <div className="mt-2 w-20 h-32 bg-gray-900 rounded overflow-hidden border border-gray-700">
+            <img src={bgImageMobile} alt="Preview mòbil" className="w-full h-full object-cover" />
+          </div>
+        )}
+        <p className="text-[10px] text-gray-600 mt-1">
+          Recomanat 1080×2400 px (20:9). Si es deixa buit, el mòbil retalla la imatge d'escriptori.
+        </p>
       </div>
 
       <div>

@@ -139,6 +139,7 @@ export interface SectionData {
   title: string
   content: SectionContent
   backgroundImage: string
+  backgroundImageMobile: string
 }
 
 export interface IssueData {
