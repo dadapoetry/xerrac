@@ -360,7 +360,7 @@ body::before {
     page-break-after: always;
     padding: 1.5cm 2cm !important;
   }
-  .section-container img {
+.section-container img:not([class~="absolute"]) {
     max-width: 60% !important;
     margin: 1cm auto !important;
   }
