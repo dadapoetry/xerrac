@@ -152,6 +152,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             onUploaded={(url) => { setBgImage(url); markDirty() }}
             label="pujar"
             transforms="f_auto,q_auto,w_2560"
+            overwriteFrom={bgImage}
           />
         </div>
         <input
@@ -178,6 +179,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             onUploaded={(url) => { setBgImageMobile(url); markDirty() }}
             label="pujar"
             transforms="f_auto,q_auto,w_1080"
+            overwriteFrom={bgImageMobile}
           />
         </div>
         <input

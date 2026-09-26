@@ -7,9 +7,10 @@ interface Props {
   onUploaded: (url: string) => void
   label?: string
   transforms?: string
+  overwriteFrom?: string
 }
 
-export function CloudinaryUploadButton({ onUploaded, label = 'Pujar', transforms }: Props) {
+export function CloudinaryUploadButton({ onUploaded, label = 'Pujar', transforms, overwriteFrom }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'error'>('idle')
   const [msg, setMsg] = useState('')
@@ -20,7 +21,7 @@ export function CloudinaryUploadButton({ onUploaded, label = 'Pujar', transforms
     setStatus('uploading')
     setMsg('')
     try {
-      const url = await uploadImageToCloudinary(f, transforms)
+      const url = await uploadImageToCloudinary(f, transforms, overwriteFrom)
       onUploaded(url)
       setStatus('idle')
     } catch (err) {

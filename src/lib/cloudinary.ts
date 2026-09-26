@@ -28,14 +28,29 @@ export function sanitizePublicId(name: string): string {
   )
 }
 
-export async function uploadImageToCloudinary(file: File, transforms = 'f_auto,q_auto,w_1600'): Promise<string> {
+export function publicIdFromUrl(url: string): string | null {
+  const marker = '/image/upload/'
+  const idx = url.indexOf(marker)
+  if (idx === -1) return null
+  const rest = url.slice(idx + marker.length)
+  const folderIdx = rest.indexOf(CLOUDINARY_FOLDER + '/')
+  if (folderIdx === -1) return null
+  const pid = rest.slice(folderIdx + CLOUDINARY_FOLDER.length + 1).split('?')[0]
+  return pid || null
+}
+
+export async function uploadImageToCloudinary(
+  file: File,
+  transforms = 'f_auto,q_auto,w_1600',
+  overwriteFrom?: string
+): Promise<string> {
   if (!file.type.startsWith('image/')) {
     throw new Error('El fitxer no és una imatge (JPG, PNG, WebP o GIF).')
   }
   if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
     throw new Error(`La imatge supera els ${MAX_UPLOAD_MB} MB. Restringeix-la abans.`)
   }
-  const publicId = sanitizePublicId(file.name)
+  const publicId = (overwriteFrom && publicIdFromUrl(overwriteFrom)) || sanitizePublicId(file.name)
   const sigRes = await fetch('/api/cloudinary/signature', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -69,5 +84,6 @@ export async function uploadImageToCloudinary(file: File, transforms = 'f_auto,q
   if (!url.startsWith('https://')) {
     throw new Error("No s'ha pogut generar la URL de la imatge.")
   }
-  return url
+  const version = data?.version ? `?v=${data.version}` : ''
+  return url + version
 }
