@@ -319,7 +319,7 @@ const shareLink = useCallback(async () => {
 
       {i === 0 ? (
         <div data-section-index={i} id={sectionSlug(i)}>
-          <div className="section-container">
+          <div className="section-container min-h-[100dvh]">
             {section.backgroundImage && (() => {
               const mobileBg =
                 section.backgroundImageMobile ||
