@@ -110,6 +110,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const ticking = useRef(false)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
+  const navScrollIntent = useRef(false)
   useEffect(() => {
     const onActivity = () => {
       setIdle(false)
@@ -152,6 +153,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [sortedSections])
 
    useLayoutEffect(() => {
+    if (!navScrollIntent.current) return
+    navScrollIntent.current = false
     const container = navRef.current
     if (!container) return
     if (activeSection === 0) {
@@ -168,6 +171,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     if (v === null) return
     const idx = parseInt(v, 10)
     if (!isNaN(idx) && idx >= 0 && idx < sortedSections.length) {
+      navScrollIntent.current = true
       setTimeout(() => scrollToSectionEl(idx), 150)
     }
   }, [sortedSections.length])
@@ -182,10 +186,10 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
         const cur = getCurrentSectionIndex()
         if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
           e.preventDefault()
-          if (cur > 0) scrollToSectionEl(cur - 1)
+          if (cur > 0) { navScrollIntent.current = true; scrollToSectionEl(cur - 1) }
         } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
           e.preventDefault()
-          if (cur < sortedSections.length - 1) scrollToSectionEl(cur + 1)
+          if (cur < sortedSections.length - 1) { navScrollIntent.current = true; scrollToSectionEl(cur + 1) }
         }
       } catch {}
     }
@@ -246,7 +250,7 @@ const shareLink = useCallback(async () => {
               <a
                 key={section.id}
                 href={`#${sectionSlug(i)}`}
-                onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
+                onClick={(e) => { e.preventDefault(); navScrollIntent.current = true; scrollToSectionEl(i) }}
                 className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-5 flex items-center leading-none transition-colors shrink-0 ${
                   i === activeSection
                     ? 'active'
