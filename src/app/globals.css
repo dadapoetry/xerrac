@@ -62,7 +62,7 @@
   clip-path: inset(0 0 0 0);
 }
 
-.section-container img {
+.section-container img:not([class~="absolute"]) {
   max-width: 100%;
   height: auto;
   border-radius: 4px;
