@@ -76,7 +76,13 @@
 }
 @media (max-width: 480px) {
   .crossword-grid {
-    --cw-cell: 2rem;
+    width: 100% !important;
+    grid-template-columns: repeat(var(--cw-col, 1), minmax(0, 1fr)) !important;
+  }
+  .crossword-grid > div {
+    width: auto !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
   }
   .crossword-grid input {
     font-size: 0.875rem !important;

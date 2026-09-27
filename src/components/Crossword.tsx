@@ -173,6 +173,7 @@ export function Crossword({ data }: CrosswordProps) {
         <div
           className="crossword-grid inline-grid border-2 border-gray-600"
           style={{
+            ['--cw-col' as any]: numCols,
             gridTemplateColumns: `repeat(${numCols}, var(--cw-cell, 2.5rem))`,
             width: `calc(${numCols} * var(--cw-cell, 2.5rem))`,
           }}
@@ -215,7 +216,7 @@ export function Crossword({ data }: CrosswordProps) {
                     onClick={() => handleCellClick(row, col)}
                     onFocus={() => setActivePos({ row, col })}
                     className={`w-full h-full bg-transparent text-center text-white
-                      font-mono text-lg uppercase outline-none
+                      font-mono text-base md:text-lg uppercase outline-none
                       ${isActive ? 'bg-red-900/30' : ''}
                       ${revealed && grid[row][col] ? 'text-green-400' : ''}`}
                     autoComplete="off"
