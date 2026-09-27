@@ -143,7 +143,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           } catch {}
         }
       },
-      { threshold: 0, rootMargin: '-20% 0px -75% 0px' }
+      { threshold: 0, rootMargin: '-50% 0px -50% 0px' }
     )
     els.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
@@ -152,17 +152,20 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   useLayoutEffect(() => {
     const container = navRef.current
     if (!container) return
-    if (activeSection === 0) {
-      container.scrollTo({ left: 0, behavior: 'smooth' })
-      return
-    }
-    const btn = container.children[activeSection] as HTMLElement | undefined
-    if (!btn) return
-    const containerRect = container.getBoundingClientRect()
-    const btnRect = btn.getBoundingClientRect()
-    const relativeLeft = btnRect.left - containerRect.left + container.scrollLeft
-    const targetLeft = relativeLeft - (containerRect.width - btnRect.width) / 2
-    container.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' })
+    const t = setTimeout(() => {
+      if (activeSection === 0) {
+        container.scrollTo({ left: 0, behavior: 'smooth' })
+        return
+      }
+      const btn = container.children[activeSection] as HTMLElement | undefined
+      if (!btn) return
+      const containerRect = container.getBoundingClientRect()
+      const btnRect = btn.getBoundingClientRect()
+      const relativeLeft = btnRect.left - containerRect.left + container.scrollLeft
+      const targetLeft = relativeLeft - (containerRect.width - btnRect.width) / 2
+      container.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' })
+    }, 150)
+    return () => clearTimeout(t)
   }, [activeSection])
 
   useEffect(() => {

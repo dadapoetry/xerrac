@@ -149,6 +149,10 @@ body::before {
   background-size: 256px 256px;
 }
 
+[data-section-index] {
+  scroll-margin-top: 3rem;
+}
+
 .section-container {
   min-height: 0;
   width: 100%;
