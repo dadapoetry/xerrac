@@ -1,6 +1,7 @@
 'use client'
 
 import { RichTextEditor } from '@/components/RichTextEditor'
+import { CloudinaryUploadButton } from '@/components/admin/CloudinaryUploadButton'
 
 interface ScrollyStep {
   media?: string
@@ -86,12 +87,20 @@ export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutr
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Imatge (URL)</label>
+            <div className="flex items-center justify-between">
+              <label className="block text-xs text-gray-500 mb-1">Imatge</label>
+              <CloudinaryUploadButton
+                onUploaded={(url) => onUpdateArrayItem('steps', i, 'media', url)}
+                label="pujar"
+                transforms="f_auto,q_auto,w_1920"
+                overwriteFrom={step.media}
+              />
+            </div>
             <input
               type="text"
               value={step.media || ''}
               onChange={(e) => onUpdateArrayItem('steps', i, 'media', e.target.value)}
-              placeholder="Opcional"
+              placeholder="URL (opcional, es pot pujar)"
               className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
             />
           </div>

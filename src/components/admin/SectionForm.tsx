@@ -143,6 +143,8 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         />
       </div>
 
+      {type !== 'scrolly' && (
+        <>
       <div>
         <div className="flex items-center justify-between">
           <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
@@ -199,6 +201,8 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           Recomanat 1080×2400 px (20:9). Si es deixa buit, el mòbil retalla la imatge d'escriptori.
         </p>
       </div>
+      </>
+      )}
 
       <div>
         <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
