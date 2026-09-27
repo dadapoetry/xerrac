@@ -174,8 +174,9 @@ export function Crossword({ data }: CrosswordProps) {
           className="crossword-grid inline-grid border-2 border-gray-600"
           style={{
             ['--cw-col' as any]: numCols,
-            gridTemplateColumns: `repeat(${numCols}, var(--cw-cell, 2.5rem))`,
-            width: `calc(${numCols} * var(--cw-cell, 2.5rem))`,
+            gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`,
+            width: '100%',
+            maxWidth: `calc(${numCols} * var(--cw-cell, 2.5rem))`,
           }}
         >
           {Array.from({ length: numRows * numCols }).map((_, idx) => {
@@ -190,8 +191,8 @@ export function Crossword({ data }: CrosswordProps) {
                 key={idx}
                 className="crossword-cell relative"
                 style={{
-                  width: 'var(--cw-cell, 2.5rem)',
-                  height: 'var(--cw-cell, 2.5rem)',
+                  width: '100%',
+                  aspectRatio: '1 / 1',
                   backgroundColor: black ? '#1a1a1a' : isActive ? '#1a1a1a' : '#0a0a0a',
                   border: '1px solid #333',
                 }}
