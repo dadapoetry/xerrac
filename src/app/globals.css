@@ -71,20 +71,12 @@
 }
 
 .crossword-grid {
-  width: 100%;
+  --cw-cell: 2.5rem;
   max-width: 100%;
-}
-.crossword-grid > div {
-  width: 2.5rem !important;
-  height: 2.5rem !important;
 }
 @media (max-width: 480px) {
   .crossword-grid {
-    width: auto !important;
-  }
-  .crossword-grid > div {
-    width: 2rem !important;
-    height: 2rem !important;
+    --cw-cell: 2rem;
   }
   .crossword-grid input {
     font-size: 0.875rem !important;

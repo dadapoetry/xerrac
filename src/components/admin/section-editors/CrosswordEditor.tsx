@@ -237,6 +237,30 @@ export function CrosswordEditor({ data, onChange }: Props) {
           <p>ℹ️ La graella, l'orientació i les coordenades s'estan generant <strong>automàticament</strong> en temps real. El motor visual rebrà la graella perfectament ajustada.</p>
         </div>
       )}
+
+      {(() => {
+        const seen = new Map<string, number[]>()
+        words.forEach((w, i) => {
+          const ans = (w.answer || '').toUpperCase().replace(/\s+/g, '')
+          if (ans.length > 1) {
+            if (!seen.has(ans)) seen.set(ans, [])
+            seen.get(ans)!.push(i + 1)
+          }
+        })
+        const dups = Array.from(seen.entries()).filter(([, idxs]) => idxs.length > 1)
+        if (dups.length === 0) return null
+        return (
+          <div className="p-3 mt-2 border border-amber-700 bg-amber-950/20 text-xs text-amber-300">
+            <p className="font-bold mb-1">Respostes duplicades</p>
+            {dups.map(([ans, idxs]) => (
+              <p key={ans}>
+                «{ans}» es repeteix a les paraules #{idxs.join(', #')}. La darrera pista pica a sobre de
+                l'anterior i a la revista només se'n veu una. Elimina'n una.
+              </p>
+            ))}
+          </div>
+        )
+      })()}
     </div>
   )
 }
