@@ -244,7 +244,7 @@ const shareLink = useCallback(async () => {
             color={accentColor}
           />
 
-          <div ref={navRef} className="flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
+          <div ref={navRef} className="nav-scroll flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
             {sortedSections.map((section, i) => (
               <a
                 key={section.id}
