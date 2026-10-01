@@ -165,12 +165,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
             text-sm focus:outline-none focus:border-red-500 transition-colors"
         />
-        {bgImage && (
-          <div className="mt-2 w-32 h-20 bg-gray-900 rounded overflow-hidden border border-gray-700">
-            <img src={bgImage} alt="Preview" className="w-full h-full object-cover" />
-          </div>
-        )}
-      </div>
+        </div>
 
       <div>
         <div className="flex items-center justify-between">
@@ -192,11 +187,6 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
             text-sm focus:outline-none focus:border-red-500 transition-colors"
         />
-        {bgImageMobile && (
-          <div className="mt-2 w-20 h-32 bg-gray-900 rounded overflow-hidden border border-gray-700">
-            <img src={bgImageMobile} alt="Preview mòbil" className="w-full h-full object-cover" />
-          </div>
-        )}
         <p className="text-[10px] text-gray-600 mt-1">
           Recomanat 1080×2400 px (20:9). Si es deixa buit, el mòbil retalla la imatge d'escriptori.
         </p>
