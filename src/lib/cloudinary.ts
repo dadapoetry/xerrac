@@ -58,7 +58,7 @@ export async function uploadImageToCloudinary(
   })
   const sig = await sigRes.json().catch(() => ({}))
   if (!sigRes.ok || !sig.signature) {
-    throw new Error(sig?.error || "No s'ha pogut preparar la pujada.")
+    throw new Error(`${sig?.error || 'No s\u2019ha pogut preparar la pujada'} (sig ${sigRes.status})`)
   }
   const fd = new FormData()
   fd.append('file', file)
@@ -75,7 +75,8 @@ export async function uploadImageToCloudinary(
   })
   const data = await res.json()
   if (!res.ok || data.error) {
-    throw new Error(data?.error?.message || "No s'ha pogut pujar la imatge. Torna-ho a provar.")
+    const err = data?.error?.message || 'Sense resposta de Cloudinary'
+    throw new Error(`Cloudinary (${res.status}): ${err}`)
   }
   let url = (data.secure_url as string) || ''
   url = url.replace(/\/v\d+\//, '/')
@@ -83,6 +84,12 @@ export async function uploadImageToCloudinary(
   url = url.replace(/\.[^.]+$/, '')
   if (!url.startsWith('https://')) {
     throw new Error("No s'ha pogut generar la URL de la imatge.")
+  }
+  const expectedPid = publicId.startsWith(`${CLOUDINARY_FOLDER}/`) ? publicId : `${CLOUDINARY_FOLDER}/${publicId}`
+  if (data.public_id && data.public_id !== expectedPid) {
+    throw new Error(
+      `Cloudinary ha guardat «${data.public_id}» en lloc de «${expectedPid}» — per això no es substitueix. Revisa el mode de carpetes i el public_id que s'envia.`
+    )
   }
   const version = data?.version ? `?v=${data.version}` : ''
   return url + version
