@@ -1,7 +1,5 @@
 import { createHash } from 'crypto'
 
-const CLOUDINARY_FOLDER = 'xerrac-imatges'
-
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
   const publicId: unknown = (body as { publicId?: unknown }).publicId
@@ -11,7 +9,7 @@ export async function POST(req: Request) {
   if (
     !cloud || !apiKey || !apiSecret ||
     typeof publicId !== 'string' ||
-    !/^[a-zA-Z0-9_-]+$/.test(publicId)
+    !/^[a-zA-Z0-9_/-]+$/.test(publicId)
   ) {
     return Response.json(
       { error: 'Configuració de Cloudinary no disponible o public ID no admès.' },
@@ -21,7 +19,6 @@ export async function POST(req: Request) {
 
   const timestamp = Math.floor(Date.now() / 1000).toString()
   const params: Record<string, string> = {
-    folder: CLOUDINARY_FOLDER,
     invalidate: 'true',
     overwrite: 'true',
     public_id: publicId,

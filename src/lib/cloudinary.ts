@@ -35,7 +35,7 @@ export function publicIdFromUrl(url: string): string | null {
   const rest = url.slice(idx + marker.length)
   const folderIdx = rest.indexOf(CLOUDINARY_FOLDER + '/')
   if (folderIdx === -1) return null
-  const pid = rest.slice(folderIdx + CLOUDINARY_FOLDER.length + 1).split('?')[0]
+  const pid = rest.slice(folderIdx).split('?')[0]
   return pid || null
 }
 
@@ -50,7 +50,7 @@ export async function uploadImageToCloudinary(
   if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
     throw new Error(`La imatge supera els ${MAX_UPLOAD_MB} MB. Restringeix-la abans.`)
   }
-  const publicId = (overwriteFrom && publicIdFromUrl(overwriteFrom)) || sanitizePublicId(file.name)
+  const publicId = (overwriteFrom && publicIdFromUrl(overwriteFrom)) || `${CLOUDINARY_FOLDER}/${sanitizePublicId(file.name)}`
   const sigRes = await fetch('/api/cloudinary/signature', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -66,7 +66,6 @@ export async function uploadImageToCloudinary(
   fd.append('timestamp', sig.timestamp)
   fd.append('signature', sig.signature)
   fd.append('public_id', publicId)
-  fd.append('folder', CLOUDINARY_FOLDER)
   fd.append('overwrite', 'true')
   fd.append('invalidate', 'true')
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
