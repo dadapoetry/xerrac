@@ -2,14 +2,21 @@
 
 import { SectionData, CalaixSastreContent } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
+import { readingTime } from '@/lib/html'
 
 export function CalaixSastreSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as CalaixSastreContent
 
+  const body = [
+    ...(content.interviews || []).map((i) => i.body),
+    ...(content.reviews || []).map((r) => r.body),
+    ...(content.investigacio || []).map((i) => i.body),
+  ].join(' ')
+
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto">
-        <SectionHeader number={index} title={section.title} subtitle="Parlem amb i d'algú quan toca" />
+        <SectionHeader number={index} title={section.title} subtitle="Parlem amb i d'algú quan toca" readingTime={readingTime(body)} />
 
         {content.interviews?.length > 0 && (
           <div className="mb-12">
