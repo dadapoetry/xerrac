@@ -351,6 +351,7 @@ La publicació es fa **un dia laborable, a primera hora del matí**. Recomanat: 
 
 - **Paleta cromàtica dominant:** Negre, blanc, grisos, i el color d'accent del número actiu.
 - **Tipografia:** La mateixa que a la revista (per coherència de marca). Si no és possible, una tipografia de pal sec similar.
+- **Tipografia per a carrusels i posts d'Instagram: «Segoe UI»** (pes 700, majúscules/normal, tracking tancat). És la font que es fa servir als posts i carrusels actuals (ex. `docs/communications/html/post01-tancament-fosc.html`). NO fer servir Inter als posts.
 - **Estil fotogràfic:** Si hi ha imatges dels autors: blanc i negre o tractament editat, no fotografia directa.
 - **Sense plantilles genèriques:** Cada post és una peça gràfica. Millor menys posts, més curada cada publicació.
 - **No a les portades d'Stockphoto:** Cap imatge genèrica. Text sobre fons de color, detall gràfic, fotografia pròpia.

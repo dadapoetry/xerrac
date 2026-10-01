@@ -91,6 +91,5 @@ export async function uploadImageToCloudinary(
       `Cloudinary ha guardat «${data.public_id}» en lloc de «${expectedPid}» — per això no es substitueix. Revisa el mode de carpetes i el public_id que s'envia.`
     )
   }
-  const version = data?.version ? `?v=${data.version}` : ''
-  return url + version
+  return `${url}?v=${Date.now()}`
 }
