@@ -21,6 +21,13 @@ function revalidatePublic() {
   revalidatePath('/sitemap.xml')
 }
 
+function maskEmail(email: string): string {
+  const [name = '', ...rest] = email.split('@')
+  const domain = rest.join('@')
+  if (!domain) return '***'
+  return `${name.slice(0, 1)}***@${domain}`
+}
+
 export async function createIssue(data: { number: number; title: string; date: string }) {
   await checkAuth()
   const id = uuid()
@@ -205,7 +212,7 @@ export async function subscribe(email: string) {
       sql: 'DELETE FROM Subscriber WHERE id = ?',
       args: [id],
     })
-    console.error('[actions] Failed to send confirmation email to', email, err)
+    console.error('[actions] Failed to send confirmation email to', maskEmail(email), err)
     throw new Error('No s\'ha pogut enviar el correu de confirmació. Prova-ho més tard.')
   }
 
