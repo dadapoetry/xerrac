@@ -65,8 +65,8 @@ export default async function PrivacyPage() {
           <span className="text-white">Xerrac!</span> (en endavant, «la revista»), amb quina
           finalitat la fem servir, qui hi té accés i quins drets podeu exercir. L’apliquem d’acord
           amb el Reglament (UE) 2016/679 del Parlament Europeu i del Consell, de 27 d’abril,
-          relatiu a la protecció de les persones física en el tractament de dades personals i a
-          la lliure circulació d’aquestes dades (RGPD), i amb la Llei orgànica 3/2018, de 5 de
+          relatiu a la protecció de les persones físiques en el tractament de dades personals i
+          a la lliure circulació d’aquestes dades (RGPD), i amb la Llei orgànica 3/2018, de 5 de
           desembre, de protecció de dades i garantia dels drets digitals (LOPDGDD).
         </P>
 
@@ -91,7 +91,7 @@ export default async function PrivacyPage() {
         </P>
 
         <H>2. Quina informació personal tractem</H>
-        <P>Només tractem la informació que vosaltres decideixu-nos lliurar:</P>
+        <P>Només tractem la informació que vosaltres decidiu lliurar:</P>
         <ul className="mb-4">
           <Li>
             <span className="text-white">L’adreça de correu electrònic</span>, quan escriviu el
@@ -130,10 +130,10 @@ export default async function PrivacyPage() {
           retirar en qualsevol moment.
         </P>
         <P>
-          El consentiment es formalitza en dos passos, per-nos d’assegurar que la subscripció és
-          genuïna i que el correu és vostre: primer, introduïu l’adreça al formulari i premeu
-          «Subscriure’m»; segonament, obriu l’enllaç del correu de confirmació que us enviem i
-          premeu el botó de confirmació (la{' '}
+          El consentiment es formalitza en dos passos, per tal d’assegurar-nos que la
+          subscripció és genuïna i que el correu és vostre: primer, introduïu l’adreça al formulari
+          i premeu «Subscriure’m»; segonament, obriu l’enllaç del correu de confirmació que us
+          enviem i premeu el botó de confirmació (la{' '}
           <span className="text-white">doble confirmació</span>). Aquest segon pas ens permet,
           entre d’altres coses, descartar subscripcions automatitzades i errors de transcripció.
         </P>
@@ -232,10 +232,9 @@ export default async function PrivacyPage() {
 
         <H>7. Com protegim les dades</H>
         <P>
-          El web es serveix sobre HTTPS, amb xifratge del trànsit. L’accés a la base de dades i a
+          El web es serveix sobre HTTPS, amb xifratge de trànsit. L’accés a la base de dades i a
           l’àrea d’administració de la revista està restringit a l’equip editorial, les
-          contrasenyes s’emmagatzemen xifrades i els missatges s’envien sense capfitx ni
-          seguiment.
+          contrasenyes s’emmagatzemen xifrades i els missatges s’envien sense capfitx ni seguiment.
         </P>
         <P>
           Cap mesura de seguretat ofereix una garantia absoluta, però apliquem les mesures
