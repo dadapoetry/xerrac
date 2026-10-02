@@ -105,15 +105,16 @@ export default async function PrivacyPage() {
             <Link href="/subscriu" className="underline hover:text-white">/subscriu</Link>).
           </Li>
           <Li>
-            <span className="text-white">Les dades de la inscripció</span>: la data i l’hora de
-            l’alta i si la subscripció s’ha confirmat.
+            <span className="text-white">L’estat de la inscripció</span>: si la subscripció
+            s’ha confirmat o encara està pendent.
           </Li>
         </ul>
         <P>
-          No demanem, i per tant no tractem, cap altra dada personal: ni nom ni cognoms, ni
-          adreça postal, ni telèfon, ni targetes de pagament, ni documents d’identitat. No
-          fem segmentació d’audiència ni publicitat personalitzada, i no traquem la vostra
-          activitat amb eines de mesurament.
+          No emmagatzemem cap data ni hora de la inscripció, ni cap dada que permeti saber quan
+          o des d&apos;on heu subscrit. No demanem, i per tant no tractem, cap altra dada
+          personal: ni nom ni cognoms, ni adreça postal, ni telèfon, ni targetes de pagament, ni
+          documents d&apos;identitat. No fem segmentació d&apos;audiència ni publicitat
+          personalitzada, i no traquem la vostra activitat amb eines de mesurament.
         </P>
 
         <H>3. Per a què la fem servir i amb quina base legal</H>
@@ -151,7 +152,9 @@ export default async function PrivacyPage() {
           </Li>
         </ul>
         <P>
-          No reutilitzem l’adreça per a cap altra finalitat, no la cedim i no la venem a tercers.
+          No reutilitzem l’adreça per a cap altra finalitat, no la cedim i no la venem a
+          tercers. Com que no registrem la data de la inscripció, el termini de conservació
+          s’ha de fer servir com a criteri general, no com un compte pendent exacte.
         </P>
 
         <H>5. Qui hi té accés: proveïdors i transferències internacionals</H>

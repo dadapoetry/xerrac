@@ -4,7 +4,6 @@ export interface SubscriberRow {
   id: string
   email: string
   confirmed: boolean
-  createdAt: Date
 }
 
 export interface SubscriberStats {
@@ -33,7 +32,7 @@ export async function getSubscribers(
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : ''
 
   const result = await db.execute({
-    sql: `SELECT id, email, confirmed, createdAt FROM Subscriber ${where} ORDER BY createdAt DESC`,
+    sql: `SELECT id, email, confirmed FROM Subscriber ${where} ORDER BY email ASC`,
     args,
   })
 
@@ -41,7 +40,6 @@ export async function getSubscribers(
     id: String(row.id),
     email: String(row.email),
     confirmed: Boolean(row.confirmed),
-    createdAt: new Date(String(row.createdAt).replace(' ', 'T') + (String(row.createdAt).endsWith('Z') ? '' : 'Z')),
   }))
 }
 
@@ -63,13 +61,9 @@ function csvCell(value: string): string {
 }
 
 export function subscribersToCsv(rows: SubscriberRow[]): string {
-  const header = ['email', 'estat', 'alta']
+  const header = ['email', 'estat']
   const lines = rows.map((r) =>
-    [
-      csvCell(r.email),
-      csvCell(r.confirmed ? 'confirmat' : 'pendent'),
-      csvCell(r.createdAt.toISOString()),
-    ].join(',')
+    [csvCell(r.email), csvCell(r.confirmed ? 'confirmat' : 'pendent')].join(',')
   )
   return [header.join(','), ...lines].join('\r\n')
 }

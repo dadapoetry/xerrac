@@ -53,5 +53,4 @@ model Subscriber {
   email     String   @unique
   token     String
   confirmed Boolean  @default(false)
-  createdAt DateTime @default(now())
 }

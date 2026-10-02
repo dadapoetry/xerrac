@@ -44,8 +44,7 @@ CREATE TABLE IF NOT EXISTS Subscriber (
   id TEXT PRIMARY KEY,
   email TEXT NOT NULL UNIQUE,
   token TEXT NOT NULL,
-  confirmed INTEGER NOT NULL DEFAULT 0,
-  createdAt TEXT NOT NULL DEFAULT (datetime('now'))
+  confirmed INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS RateLimit (

@@ -28,6 +28,24 @@ async function migrate() {
     }
   }
 
+  // Subscriber: no emmagatzemem cap data ni hora d'alta (minimització de dades).
+  // Reconstrueix la taula només si encara hi ha la columna createdAt.
+  const subCols = await db.execute('PRAGMA table_info(Subscriber)')
+  if (subCols.rows.some((r: any) => r.name === 'createdAt')) {
+    await db.execute(`CREATE TABLE Subscriber_new (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      token TEXT NOT NULL,
+      confirmed INTEGER NOT NULL DEFAULT 0
+    )`)
+    await db.execute(
+      'INSERT INTO Subscriber_new (id, email, token, confirmed) SELECT id, email, token, confirmed FROM Subscriber'
+    )
+    await db.execute('DROP TABLE Subscriber')
+    await db.execute('ALTER TABLE Subscriber_new RENAME TO Subscriber')
+    console.log('Subscriber: columna createdAt eliminada')
+  }
+
   console.log('Migration completed!')
   db.close()
 }

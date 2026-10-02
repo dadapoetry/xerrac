@@ -3,14 +3,6 @@ import { SubscriberFilters } from '@/components/admin/SubscriberFilters'
 
 export const dynamic = 'force-dynamic'
 
-const dateFmt = new Intl.DateTimeFormat('ca-ES', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-})
-
 export default async function SubscribersPage({
   searchParams,
 }: {
@@ -50,9 +42,6 @@ export default async function SubscribersPage({
               <th className="px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-normal w-32">
                 Estat
               </th>
-              <th className="px-4 py-3 text-xs uppercase tracking-wider text-gray-500 font-normal w-40">
-                Alta
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -70,14 +59,11 @@ export default async function SubscribersPage({
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-gray-500 text-xs">
-                  {dateFmt.format(r.createdAt)}
-                </td>
               </tr>
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={3} className="px-4 py-12 text-center text-gray-600 text-sm italic">
+                <td colSpan={2} className="px-4 py-12 text-center text-gray-600 text-sm italic">
                   {query ? 'Cap resultat per a aquesta cerca.' : 'Encara no hi ha subscriptors.'}
                 </td>
               </tr>
