@@ -3,12 +3,13 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { db } from './db'
 import { checkRateLimit, resetRateLimit } from './rate-limit'
+import { authSecretWarning, isAuthSecretSecure } from './auth-secret'
 
-const DEV_SECRET = 'xerrac-secret-change-in-production'
 const DUMMY_HASH = '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'
 
-if (process.env.NEXTAUTH_SECRET === DEV_SECRET) {
-  console.error('CRITICAL: NEXTAUTH_SECRET is the weak default value. Set a strong random value in environment variables.')
+const secretWarning = authSecretWarning()
+if (secretWarning) {
+  console.error(secretWarning)
 }
 
 function clientIp(req: unknown): string {
@@ -27,6 +28,10 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Contrasenya', type: 'password' },
       },
       async authorize(credentials, req) {
+        if (!isAuthSecretSecure()) {
+          throw new Error('Configuració de seguretat incorrecta. Consulta el registre del servidor.')
+        }
+
         if (!credentials?.email || !credentials.password) return null
 
         const email = credentials.email.toLowerCase().trim()

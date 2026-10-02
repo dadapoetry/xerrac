@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
@@ -10,6 +10,8 @@ export function LoginForm() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const configError = searchParams.get('error') === 'config'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,7 +25,11 @@ export function LoginForm() {
     })
 
     if (result?.error) {
-      setError('Credencials incorrectes')
+      setError(
+        configError
+          ? 'Configuració de seguretat incorrecta: el secret de la sessió no és vàlid. Consulta el registre del servidor.'
+          : 'Credencials incorrectes',
+      )
       setLoading(false)
     } else {
       router.push('/admin')
@@ -38,6 +44,13 @@ export function LoginForm() {
         </h1>
         <div className="h-px w-12 bg-red-500/50 mb-6" />
         <p className="text-sm text-gray-600 mb-8">Panel d&apos;administració</p>
+
+        {configError && (
+          <p className="mb-6 border border-red-900/60 bg-red-950/20 p-3 text-xs leading-relaxed text-red-300">
+            Configuració de seguretat incorrecta: el secret de la sessió ({'NEXTAUTH_SECRET'}) no
+            està definit o és massa feble. L&apos;administració queda tancada fins que es configuri.
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
