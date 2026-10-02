@@ -183,17 +183,17 @@ export default async function PrivacyPage() {
         </P>
         <ul className="mb-4">
           <Li>
-            <span className="text-white">Turso</span> (estats Units): allotjament de la base de
+            <span className="text-white">Turso</span> (Estats Units): allotjament de la base de
             dades on es desa la llista de subscriptors. És l’únic lloc on la vostra adreça es
             conserva de manera permanent.
           </Li>
           <Li>
-            <span className="text-white">Resend</span> (estats Units): enviament dels correus
+            <span className="text-white">Resend</span> (Estats Units): enviament dels correus
             electrònics, tant el missatge de confirmació com el butlletí. Rep i conserva
             temporalment les dades necessàries per enviar-los.
           </Li>
           <Li>
-            <span className="text-white">Vercel</span> (estats Units): allotjament i execució del
+            <span className="text-white">Vercel</span> (Estats Units): allotjament i execució del
             web. Pot processar dades de manera transitòria com a part de la infraestructura del
             servidor —per exemple, en els registres d’accés i en els dels processos del
             servidor—, sense utilitzar-les per a cap finalitat pròpia.
