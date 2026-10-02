@@ -101,8 +101,11 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
   const [status, setStatus] = useState<'idle' | 'uploading' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  // Sense <form>: aquest diàleg viu dins del <form> de SectionForm i els
+  // <form> anidats no són HTML vàlid, de manera que el navegador descartava el
+  // formulari intern i el botó acabava enviant el formulari de la secció, amb
+  // recàrrega de la pàgina i sense pujar res.
+  const handleSubmit = () => {
     if (!url) return
     onInsert(url, width, alt)
   }
@@ -127,8 +130,7 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
     setErrorMsg('')
   }
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleUpload = async () => {
     if (!file) return
     setStatus('uploading')
     setErrorMsg('')
@@ -166,7 +168,7 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
           ))}
         </div>
         {tab === 'file' ? (
-          <form onSubmit={handleUpload} className="space-y-4">
+          <div className="space-y-4">
             <div>
               <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
                 Arxiu (JPG, PNG, WebP o GIF — fins a {MAX_UPLOAD_MB} MB)
@@ -211,22 +213,29 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
                 Cancel·lar
               </button>
               <button
-                type="submit"
+                type="button"
+                onClick={handleUpload}
                 disabled={!file || status === 'uploading'}
                 className="px-4 py-2 bg-red-600 text-white text-sm hover:bg-red-700 transition-colors disabled:opacity-50"
               >
                 {status === 'uploading' ? 'Pujant...' : 'Pujar i inserir'}
               </button>
             </div>
-          </form>
+          </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-4">
             <div>
               <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">URL de la imatge</label>
               <input
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleSubmit()
+                  }
+                }}
                 className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors"
                 placeholder="https://exemple.cat/imatge.jpg"
                 autoFocus
@@ -262,13 +271,14 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
                 Cancel·lar
               </button>
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 className="px-4 py-2 bg-red-600 text-white text-sm hover:bg-red-700 transition-colors"
               >
                 Inserir
               </button>
             </div>
-          </form>
+          </div>
         )}
       </div>
     </div>
