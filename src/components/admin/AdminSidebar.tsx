@@ -13,6 +13,7 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
   const links = [
     { href: '/admin', label: 'Dashboard' },
     { href: '/admin/numeros', label: 'Números' },
+    { href: '/admin/subscriptors', label: 'Subscriptors' },
     { href: '/admin/config', label: 'Configuració' },
   ]
 
