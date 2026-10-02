@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { getAllSettings, updateSettings } from '@/lib/settings'
+import { DEFAULT_CONTACT_EMAIL } from '@/lib/site'
 import { useToast } from '@/components/admin/Toast'
 
 interface SocialLink {
@@ -26,7 +27,7 @@ export default function ConfigPage() {
     setLoading(true)
     const settings = await getAllSettings()
     setIssn(settings.footer_issn || '')
-    setContactEmail(settings.contact_email || '')
+    setContactEmail(settings.contact_email || DEFAULT_CONTACT_EMAIL)
     setCopyright(settings.footer_copyright || '')
     try {
       setSocialLinks(JSON.parse(settings.footer_social_links || '[]'))

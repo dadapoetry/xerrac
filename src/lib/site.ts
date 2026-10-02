@@ -1,5 +1,7 @@
 const DEFAULT_URL = 'https://laxerrac.cat'
 
+export const DEFAULT_CONTACT_EMAIL = 'contacte@laxerrac.cat'
+
 export function getSiteUrl(): string {
   return process.env.NEXT_PUBLIC_URL || DEFAULT_URL
 }

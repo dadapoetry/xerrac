@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
+import { DEFAULT_CONTACT_EMAIL } from '@/lib/site'
 import { SawIcon } from '@/components/SawIcon'
 
 export const dynamic = 'force-dynamic'
 
 const UPDATED = '2 d’octubre de 2026'
-const FALLBACK_EMAIL = 'contacte@laxerrac.cat'
 
 export const metadata: Metadata = {
   title: 'Política de privacitat',
@@ -37,7 +37,7 @@ function Li({ children }: { children: React.ReactNode }) {
 
 export default async function PrivacyPage() {
   const settings = await getAllSettings()
-  const email = settings.contact_email?.trim() || FALLBACK_EMAIL
+  const email = settings.contact_email?.trim() || DEFAULT_CONTACT_EMAIL
   const issn = settings.footer_issn?.trim() || ''
 
   return (
