@@ -16,8 +16,17 @@ interface RichTextEditorProps {
   minimal?: boolean
 }
 
+function escapeAttr(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
 export function RichTextEditor({ value, onChange, minimal = false }: RichTextEditorProps) {
   const editorRef = useRef<ReactQuillType | null>(null)
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const [showImageDialog, setShowImageDialog] = useState(false)
   const [current, setCurrent] = useState(value)
   const lastEmittedRef = useRef(value)
@@ -35,15 +44,31 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     }
   }, [value])
 
+  // Aquest insert no pot retorna silenciosament: el ref travessa next/dynamic
+  // (asíncron) i pot arribar buit, i aleshores el diàleg es quedava obert en
+  // estat "Pujant..." amb la imatge ja pujada i sense inserir.
   const insertImage = useCallback((url: string, width: string, alt: string) => {
-    const editor = editorRef.current as any
-    if (!editor) return
-    const quill = editor.getEditor?.() || editor
-    const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
-    quill.clipboard.dangerouslyPasteHTML(
-      range.index,
-      `<img src="${url}" alt="${alt}" loading="lazy" style="max-width: ${width || '100%'}; height: auto;" />`
-    )
+    const ref = editorRef.current as any
+    const quill = ref?.getEditor?.() || ref
+    const maxWidth = width || '100%'
+    if (quill?.clipboard?.dangerouslyPasteHTML) {
+      const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
+      quill.clipboard.dangerouslyPasteHTML(
+        range.index,
+        `<img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}" loading="lazy" style="max-width: ${escapeAttr(maxWidth)}; height: auto;" />`
+      )
+    } else {
+      const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
+      if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
+      const img = document.createElement('img')
+      img.src = url
+      img.alt = alt
+      img.loading = 'lazy'
+      img.style.maxWidth = maxWidth
+      img.style.height = 'auto'
+      editorEl.appendChild(img)
+      editorEl.dispatchEvent(new Event('input', { bubbles: true }))
+    }
     setShowImageDialog(false)
   }, [])
 
@@ -61,7 +86,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   }, [minimal])
 
   return (
-    <div>
+    <div ref={rootRef}>
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
         <button
@@ -137,14 +162,28 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
     setErrorMsg('')
     const ctrl = new AbortController()
     abortRef.current = ctrl
+    let inserted: string
     try {
-      const inserted = await uploadImageToCloudinary(file, undefined, undefined, ctrl.signal)
-      onInsert(inserted, width, alt)
+      inserted = await uploadImageToCloudinary(file, undefined, undefined, ctrl.signal)
     } catch (err) {
       setStatus('error')
       setErrorMsg(err instanceof Error ? err.message : "No s'ha pogut pujar la imatge. Torna-ho a provar.")
+      return
     } finally {
       abortRef.current = null
+    }
+    // La pujada ja ha anat bé: en sortir de 'uploading' sempre, passi el que
+    // passi amb la inserció, perquè el diàleg no es quedi penjat.
+    setStatus('idle')
+    try {
+      onInsert(inserted, width, alt)
+    } catch (err) {
+      setStatus('error')
+      setErrorMsg(
+        err instanceof Error
+          ? `${err.message} La imatge sí que s'ha pujat: ${inserted}`
+          : `La imatge s'ha pujat però no s'ha inserit: ${inserted}`
+      )
     }
   }
 
