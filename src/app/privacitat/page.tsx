@@ -62,20 +62,16 @@ export default async function PrivacyPage() {
 
         <P>
           Aquesta política explica quina informació personal tracta{' '}
-          <span className="text-white">Xerrac! — Revista d’aclariment cultural</span>{' '}
-          (en endavant, «Xerrac!» o «la revista»), amb quina finalitat la fem servir, qui hi té
-          accés i quins drets podeu exercir. L’apliquem d’acord amb el Reglament (UE) 2016/679
-          del Parlament Europeu i del Consell, de 27 d’abril, relatiu a la protecció de les
-          persones física en el tractament de dades personals i a la lliure circulació
-          d’aquestes dades (RGPD), i amb la Llei orgànica 3/2018, de 5 de desembre, de protecció
-          de dades i garantia dels drets digitals (LOPDGDD).
+          <span className="text-white">Xerrac!</span> (en endavant, «la revista»), amb quina
+          finalitat la fem servir, qui hi té accés i quins drets podeu exercir. L’apliquem d’acord
+          amb el Reglament (UE) 2016/679 del Parlament Europeu i del Consell, de 27 d’abril,
+          relatiu a la protecció de les persones física en el tractament de dades personals i a
+          la lliure circulació d’aquestes dades (RGPD), i amb la Llei orgànica 3/2018, de 5 de
+          desembre, de protecció de dades i garantia dels drets digitals (LOPDGDD).
         </P>
 
         <H>1. Responsable del tractament</H>
-        <P>
-          El responsable del tractament és l’equip editorial de Xerrac! — Revista
-          d’aclariment cultural.
-        </P>
+        <P>El responsable del tractament és l’equip editorial de la revista.</P>
         <ul className="mb-4 text-[15px] leading-relaxed text-gray-300">
           <li className="mb-1">
             <span className="text-gray-500">Correu de contacte:</span>{' '}
@@ -98,45 +94,44 @@ export default async function PrivacyPage() {
         <P>Només tractem la informació que vosaltres decideixu-nos lliurar:</P>
         <ul className="mb-4">
           <Li>
-            <span className="text-white">L’adreça de correu electrònic</span>, quan l’escriu al
-            formulari de subscripció al butlletí (a la revista o a la pàgina{' '}
+            <span className="text-white">L’adreça de correu electrònic</span>, quan escriviu el
+            vostre correu al formulari de subscripció al butlletí (a la revista o a la pàgina{' '}
             <Link href="/subscriu" className="underline hover:text-white">/subscriu</Link>).
           </Li>
           <Li>
-            <span className="text-white">L’estat de la subscripció</span>: si s’ha confirmat o si
-            continua pendent.
+            <span className="text-white">L’estat de la subscripció</span>: si la subscripció s’ha
+            confirmat o si continua pendent.
           </Li>
           <Li>
             <span className="text-white">Un codi intern de verificació</span>, generat de manera
-            aleatòria i associat només a la vostra adreça. Ens permet confirmar la subscripció i
-            oferir-vos la baixa amb un sol clic. No conté cap informació personal i el
-            substituïm quan confirmeu la subscripció.
+            aleatòria i associat només a la vostra adreça. El codi ens permet confirmar la
+            subscripció i oferir-vos la baixa amb un sol clic. No conté cap informació personal i
+            el substituïm quan confirmeu la subscripció.
           </Li>
         </ul>
         <P>
           Mentre la subscripció està pendent de confirmar, conservem també{' '}
-          <span className="text-white">la data i l’hora de la vostra petició</span>, i només
-          per poder esborrar-la quan caduqui (vegeu l’apartat 4). En confirmar la subscripció, la
-          eliminem. Per tant, mai no sabrem quan es va subscriure cap persona que tingui la
-          subscripció activa.
+          <span className="text-white">la data i l’hora de la vostra petició</span>, però només
+          per poder esborrar-les quan caduqui (vegeu l’apartat 4). En confirmar la subscripció, les
+          eliminem. Per tant, d’una subscripció activa no sabrem mai quan es va fer.
         </P>
         <P>
           No demanem, i per tant no tractem, cap altra dada personal: ni nom ni cognoms, ni
-          adreça postal, ni telèfon, ni targetes de pagament, ni documents d&apos;identitat. No
-          fem segmentació d&apos;audiència ni publicitat personalitzada, i no mesurem la vostra
-          activitat amb eines de mesurament d&apos;audiència.
+          adreça postal, ni telèfon, ni targetes de pagament, ni documents d’identitat. No fem
+          segmentació d’audiència ni publicitat personalitzada, i no mesurem la vostra activitat
+          amb eines de tercers.
         </P>
 
         <H>3. Per a què la fem servir i amb quina base legal</H>
         <P>
           La finalitat és única: enviar-vos el butlletí de la revista per correu electrònic. La
           base legal és el <span className="text-white">vostre consentiment</span> (article 6.1.a
-          del RGPD), demanat de manera separada i específica per a aquesta finalitat, que podeu
+          del RGPD): el demanem de manera separada i específica per a aquesta finalitat i el podeu
           retirar en qualsevol moment.
         </P>
         <P>
-          El consentiment es formalitza en dos passos, per confirmar que la subscripció és real i
-          que el correu és vostre: primer, introduïu l’adreça al formulari i premeu
+          El consentiment es formalitza en dos passos, per-nos d’assegurar que la subscripció és
+          genuïna i que el correu és vostre: primer, introduïu l’adreça al formulari i premeu
           «Subscriure’m»; segonament, obriu l’enllaç del correu de confirmació que us enviem i
           premeu el botó de confirmació (la{' '}
           <span className="text-white">doble confirmació</span>). Aquest segon pas ens permet,
@@ -148,15 +143,14 @@ export default async function PrivacyPage() {
           <Li>
             <span className="text-white">Subscripcions confirmades:</span> conservem l’adreça
             mentre la subscripció estigui activa, és a dir, fins que premeu l’enllaç de baixa del
-            butlletí o ens demaneu que l’eliminem. A partir d’aquell moment, el registre s’esborra
-            de la nostra base de dades.
+            butlletí o ens demaneu que l’eliminem. A partir d’aquell moment, l’esborrem de la
+            nostra base de dades.
           </Li>
           <Li>
             <span className="text-white">Subscripcions sense confirmar:</span> l’adreça només
             serveix per enviar-vos el missatge de confirmació. Si no la confirmeu en{' '}
-            {PENDING_TTL_DAYS} dies, l’eliminem automàticament, sense cap altre avís. Si ja sabeu
-            que no voleu subscriure-us, no cal que espereu: podeu demanar-nos que l’eliminem
-            quan vulgueu, escrivint-nos.
+            {PENDING_TTL_DAYS} dies, l’eliminem automàticament, sense cap altre avís. Si sabeu
+            que no voleu subscriure-us, no cal que espereu: escriviu-nos i l’eliminem.
           </Li>
         </ul>
         <P>
@@ -166,23 +160,23 @@ export default async function PrivacyPage() {
           l’enllaç de baixa o per correu electrònic.
         </P>
         <P>
-          Per protegir els formularis contra l’abús automatitzat, quan escriviu una adreça hi desem
-          temporalment un registre amb aquesta adreça i l’instant de l’intent. Aquest registre
-          s’elimina automàticament en menys de 24 hores i també s’esborra immediatament si
-          premeu l’enllaç de baixa.
+          Per protegir els formularis contra l’abús automatitzat, quan escriviu una adreça hi
+          registrem temporalment aquesta adreça i l’instant de l’intent. Aquest registre s’elimina
+          automàticament en menys de 24 hores i també s’esborra immediatament si premeu l’enllaç
+          de baixa.
         </P>
 
         <H>5. Qui hi té accés: proveïdors i transferències internacionals</H>
         <P>
-          Per operar el web i enviar-vos el butlletí ens servim de proveïdors externs que actuen
-          com acessorsors, és a dir, que tracten les dades en nom nostre i només per a les
-          finalitats descrites en aquesta política:
+          Per operar el web i enviar-vos el butlletí ens servim de proveïdors externs. Tots ells
+          actuen per compte nostre: tracten les dades en nom de la revista i només per a les
+          finalitats descrites en aquesta política.
         </P>
         <ul className="mb-4">
           <Li>
             <span className="text-white">Turso</span> (estats Units): allotjament de la base de
-            dades on consta permanentment la llista de subscriptors. És l’únic lloc on la vostra
-            adreça es desa de manera permanent.
+            dades on es desa la llista de subscriptors. És l’únic lloc on la vostra adreça es
+            conserva de manera permanent.
           </Li>
           <Li>
             <span className="text-white">Resend</span> (estats Units): enviament dels correus
@@ -192,21 +186,21 @@ export default async function PrivacyPage() {
           <Li>
             <span className="text-white">Vercel</span> (estats Units): allotjament i execució del
             web. Pot processar dades de manera transitòria com a part de la infraestructura del
-            servidor —per exemple, en els registres d’accés i de les funcions—, sense
-            utilitzar-les per a cap finalitat pròpia.
+            servidor —per exemple, en els registres d’accés i en els dels processos del
+            servidor—, sense utilitzar-les per a cap finalitat pròpia.
           </Li>
         </ul>
         <P>
-          No incloem la vostra adreça en cap adreça web (URL) ni la retornem al navegador de les
-          persones subscrites: només viatja dins de la petició que processa el servidor. La llista
-          de subscriptors només és accessible per l’equip editorial.
+          No incloem la vostra adreça dins de cap adreça web (URL) ni la retornem al navegador de
+          qui subscriu: només viatja dins de la petició que processa el servidor. La llista de
+          subscriptors només és accessible per l’equip editorial.
         </P>
         <P>
           Aquestes entitats estan situades fora de l’Espai Econòmic Europeu, de manera que el
           tractament implica una transferència internacional de dades. Els acords que mantenim
-          amb cada proveïdor recullen les garanties que preveu el Capítol V del RGPD —concretament,
-          les clàusules contractuals tipus aprovades per la Comissió Europea—, juntament amb
-          mesures tècniques i organitzatives adeqüades.
+          amb cada proveïdor incorporen les garanties que preveu el Capítol V del RGPD
+          —concretament, les clàusules contractuals tipus aprovades per la Comissió Europea— i
+          s’hi afegeixen mesures tècniques i organitzatives adeqüades.
         </P>
 
         <H>6. Els vostres drets</H>
@@ -241,30 +235,31 @@ export default async function PrivacyPage() {
           El web es serveix sobre HTTPS, amb xifratge del trànsit. L’accés a la base de dades i a
           l’àrea d’administració de la revista està restringit a l’equip editorial, les
           contrasenyes s’emmagatzemen xifrades i els missatges s’envien sense capfitx ni
-          seguiment. Cap mesura de seguretat no ofereix una garantia absoluta, però apliquem les
-          mesures raonables que corresponen a la naturalesa i al risc del tractament i en revisem
+          seguiment.
+        </P>
+        <P>
+          Cap mesura de seguretat ofereix una garantia absoluta, però apliquem les mesures
+          raonables que corresponen a la naturalesa i al risc del tractament i en revisem
           l’efectivitat.
         </P>
 
         <H>8. Galetes (cookies)</H>
         <P>
           Aquest web no utilitza galetes publicitàries, de perfilat ni de mesurament
-          d&apos;audiència, de manera que no cal cap galeta de consentiment. Les úniques galetes
-          són les estrictament necessàries per fer funcionar el lloc: la galeta de sessió de
-          l’àrea privada d’administració, que només utilitza l’equip editorial. Quan tanqueu el
-          formulari del butlletí sense subscriure-us, el navegador recorda aquesta decisió
-          únicament dins de la sessió oberta (memòria del navegador, sense enviar res al
-          servidor).
+          d’audiència, de manera que no cal cap galeta de consentiment. Les úniques galetes són
+          les estrictament necessàries per fer funcionar el lloc: la galeta de sessió de l’àrea
+          privada d’administració, que només utilitza l’equip editorial.
         </P>
         <P>
-          Si en el futur hi afegíem analítica, publicitat o altres eines de perfilat,
-          actualitzarem aquesta pàgina i, quan calgui, us demanarem el consentiment
-          corresponent.
+          Quan tanqueu el formulari del butlletí sense subscriure-us, el navegador recorda
+          aquesta decisió només mentre duri la sessió oberta, sense enviar res al servidor. Si en
+          el futur hi afegíem analítica, publicitat o altres eines de perfilat, actualitzarem
+          aquesta pàgina i, quan calgui, us demanarem el consentiment corresponent.
         </P>
 
         <H>9. Menors d’edat</H>
         <P>
-          Aquest web no s’adreça a menors d’edat i no recollim de manera deliberada dades de
+          Aquest web no està destinat a menors d’edat i no recollim de manera deliberada dades de
           nens i adolescents. Si creieu que un menor ens ha proporcionat una adreça de correu
           electrònic, escriviu-nos i l’eliminem.
         </P>
@@ -278,7 +273,7 @@ export default async function PrivacyPage() {
 
         <div className="mt-14 pt-8 border-t border-gray-800 flex flex-wrap gap-6 text-xs uppercase tracking-wider">
           <Link href="/subscriu" className="text-gray-400 hover:text-white transition-colors">
-            Subscriure&apos;t al butlletí
+            Subscriure’t al butlletí
           </Link>
           <Link href="/" className="text-gray-500 hover:text-white transition-colors">
             ← Torna a la revista
