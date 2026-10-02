@@ -261,7 +261,7 @@ export default async function PrivacyPage() {
         <P>
           Quan tanqueu el formulari del butlletí sense subscriure-us, el navegador recorda
           aquesta decisió només mentre duri la sessió oberta, sense enviar res al servidor. Si en
-          el futur hi afegíem analítica, publicitat o altres eines de perfilat, actualitzarem
+          el futur hi afegim mesurament, publicitat o altres eines de perfilat, actualitzarem
           aquesta pàgina i, quan calgui, us demanarem el consentiment corresponent.
         </P>
 
