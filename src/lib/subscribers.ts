@@ -57,7 +57,8 @@ export async function getSubscriberStats(): Promise<SubscriberStats> {
 }
 
 function csvCell(value: string): string {
-  return `"${value.replace(/"/g, '""')}"`
+  const safe = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value
+  return `"${safe.replace(/"/g, '""')}"`
 }
 
 export function subscribersToCsv(rows: SubscriberRow[]): string {

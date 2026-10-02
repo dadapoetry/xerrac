@@ -7,7 +7,8 @@ import { db } from './db'
 import { v4 as uuid } from 'uuid'
 import { safeParse } from '@/lib/utils'
 import { getSiteUrl } from './site'
-import { checkRateLimit } from './rate-limit'
+import { checkRateLimit, resetRateLimit } from './rate-limit'
+import { sanitizeImageUrl, sanitizeSectionContent } from './sanitize'
 
 async function checkAuth() {
   const session = await getServerSession(authOptions)
@@ -100,7 +101,16 @@ export async function createSection(data: {
   const id = uuid()
   await db.execute({
     sql: 'INSERT INTO Section (id, issueId, type, "order", title, content, backgroundImage, backgroundImageMobile) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-    args: [id, data.issueId, data.type, data.order, data.title, data.content, data.backgroundImage || '', data.backgroundImageMobile || ''],
+    args: [
+      id,
+      data.issueId,
+      data.type,
+      data.order,
+      data.title,
+      sanitizeSectionContent(data.content),
+      sanitizeImageUrl(data.backgroundImage || ''),
+      sanitizeImageUrl(data.backgroundImageMobile || ''),
+    ],
   })
   revalidatePublic()
   return { id, ...data }
@@ -119,9 +129,9 @@ export async function updateSection(id: string, data: {
   const args: any[] = []
 
   if (data.title !== undefined) { sets.push('title = ?'); args.push(data.title) }
-  if (data.content !== undefined) { sets.push('content = ?'); args.push(data.content) }
-  if (data.backgroundImage !== undefined) { sets.push('backgroundImage = ?'); args.push(data.backgroundImage) }
-  if (data.backgroundImageMobile !== undefined) { sets.push('backgroundImageMobile = ?'); args.push(data.backgroundImageMobile) }
+  if (data.content !== undefined) { sets.push('content = ?'); args.push(sanitizeSectionContent(data.content)) }
+  if (data.backgroundImage !== undefined) { sets.push('backgroundImage = ?'); args.push(sanitizeImageUrl(data.backgroundImage)) }
+  if (data.backgroundImageMobile !== undefined) { sets.push('backgroundImageMobile = ?'); args.push(sanitizeImageUrl(data.backgroundImageMobile)) }
   if (data.order !== undefined) { sets.push('"order" = ?'); args.push(data.order) }
   if (data.type !== undefined) { sets.push('type = ?'); args.push(data.type) }
 
@@ -177,19 +187,20 @@ export async function deleteSection(id: string) {
 /* Newsletter */
 
 export async function subscribe(email: string) {
+  const normalized = email.trim().toLowerCase()
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email)) {
+  if (!emailRegex.test(normalized)) {
     throw new Error('Correu no vàlid')
   }
 
-  const allowed = await checkRateLimit(`subscribe:${email}`, 3, 3600000)
+  const allowed = await checkRateLimit(`subscribe:${normalized}`, 3, 3600000)
   if (!allowed) {
     throw new Error('Massa intents. Prova-ho més tard.')
   }
 
   const existing = await db.execute({
     sql: 'SELECT id FROM Subscriber WHERE email = ?',
-    args: [email],
+    args: [normalized],
   })
 
   if (existing.rows.length > 0) {
@@ -201,22 +212,32 @@ export async function subscribe(email: string) {
 
   await db.execute({
     sql: 'INSERT INTO Subscriber (id, email, token, confirmed) VALUES (?, ?, ?, 0)',
-    args: [id, email, token],
+    args: [id, normalized, token],
   })
 
   try {
     const { sendConfirmation } = await import('./newsletter')
-    await sendConfirmation(email, token)
+    await sendConfirmation(normalized, token)
   } catch (err) {
     await db.execute({
       sql: 'DELETE FROM Subscriber WHERE id = ?',
       args: [id],
     })
-    console.error('[actions] Failed to send confirmation email to', maskEmail(email), err)
+    await resetRateLimit(`subscribe:${normalized}`)
+    console.error('[actions] Failed to send confirmation email to', maskEmail(normalized), err)
     throw new Error('No s\'ha pogut enviar el correu de confirmació. Prova-ho més tard.')
   }
 
   return { ok: true, message: 'Revisa el teu correu per confirmar la subscripció.' }
+}
+
+export async function getSubscriptionStatus(token: string) {
+  const result = await db.execute({
+    sql: 'SELECT confirmed FROM Subscriber WHERE token = ?',
+    args: [token],
+  })
+  if (result.rows.length === 0) return null
+  return { confirmed: (result.rows[0].confirmed as number) === 1 }
 }
 
 export async function confirmSubscription(token: string) {
@@ -226,19 +247,32 @@ export async function confirmSubscription(token: string) {
   })
   if (result.rows.length === 0) return { ok: false, message: 'Enllaç invàlid o ja confirmat.' }
 
+  const newToken = uuid().replace(/-/g, '') + uuid().replace(/-/g, '')
+
   await db.execute({
-    sql: 'UPDATE Subscriber SET confirmed = 1 WHERE token = ?',
-    args: [token],
+    sql: 'UPDATE Subscriber SET confirmed = 1, token = ? WHERE token = ?',
+    args: [newToken, token],
   })
   return { ok: true, message: 'Subscripció confirmada!' }
 }
 
 export async function unsubscribeByToken(token: string) {
+  const result = await db.execute({
+    sql: 'SELECT email FROM Subscriber WHERE token = ?',
+    args: [token],
+  })
+
   await db.execute({
     sql: 'DELETE FROM Subscriber WHERE token = ?',
     args: [token],
   })
-  return { ok: true }
+
+  const email = result.rows[0]?.email
+  if (typeof email === 'string') {
+    await resetRateLimit(`subscribe:${email}`)
+  }
+
+  return { ok: true, removed: typeof email === 'string' }
 }
 
 export async function sendIssueNewsletter(issueId: string) {

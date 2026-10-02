@@ -1,5 +1,22 @@
 import { db } from './db'
 
+const CLEANUP_INTERVAL_MS = 60 * 60 * 1000
+const CLEANUP_MAX_AGE_MS = 24 * 60 * 60 * 1000
+let lastCleanup = 0
+
+async function cleanupStaleEntries(now: number): Promise<void> {
+  if (now - lastCleanup < CLEANUP_INTERVAL_MS) return
+  lastCleanup = now
+  try {
+    await db.execute({
+      sql: 'DELETE FROM RateLimit WHERE window_start < ?',
+      args: [now - CLEANUP_MAX_AGE_MS],
+    })
+  } catch {
+    // silent
+  }
+}
+
 export async function checkRateLimit(
   key: string,
   maxAttempts: number,
@@ -7,6 +24,7 @@ export async function checkRateLimit(
 ): Promise<boolean> {
   const now = Date.now()
   const cutoff = now - windowMs
+  await cleanupStaleEntries(now)
 
   try {
     const result = await db.execute({

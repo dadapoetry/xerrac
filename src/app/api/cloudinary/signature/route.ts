@@ -1,8 +1,15 @@
 import { createHash } from 'crypto'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 const CLOUDINARY_FOLDER = 'xerrac-imatges'
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session) {
+    return Response.json({ error: 'No autoritzat.' }, { status: 401 })
+  }
+
   const body = await req.json().catch(() => ({}))
   const publicId: unknown = (body as { publicId?: unknown }).publicId
   const cloud = process.env.CLOUDINARY_CLOUD

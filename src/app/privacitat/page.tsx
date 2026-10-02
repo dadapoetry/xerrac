@@ -108,6 +108,12 @@ export default async function PrivacyPage() {
             <span className="text-white">L’estat de la inscripció</span>: si la subscripció
             s’ha confirmat o encara està pendent.
           </Li>
+          <Li>
+            <span className="text-white">Un codi intern de verificació</span>, generat
+            aleatòriament i associat només a la vostra adreça. Ens serveix per confirmar la
+            inscripció i perquè pugueu donar-vos de baixa amb un sol clic. No conté cap
+            informació sobre vosaltres i el canviem quan confirmeu la inscripció.
+          </Li>
         </ul>
         <P>
           No emmagatzemem cap data ni hora de la inscripció, ni cap dada que permeti saber quan
@@ -152,6 +158,12 @@ export default async function PrivacyPage() {
           tercers. Com que no registrem la data de la inscripció, el termini de conservació
           s’ha de fer servir com a criteri general, no com un compte pendent exacte.
         </P>
+        <P>
+          Per protegir els formularis contra inscripcions automatitzades, quan escriviu el
+          correu es desa temporalment un registre del vostre correu i de l’instant de
+          l’intent. Aquest registre s’elimina automàticament en menys de 24 hores i també
+          s’esborra de seguida si feu clic a l’enllaç de baixa.
+        </P>
 
         <H>5. Qui hi té accés: proveïdors i transferències internacionals</H>
         <P>
@@ -161,12 +173,13 @@ export default async function PrivacyPage() {
         <ul className="mb-4">
           <Li>
             <span className="text-white">Turso</span> (estats Units): base de dades on consta
-            la llista de subscriptors. És l’únic lloc on es desa la vostra adreça.
+            permanentment la llista de subscriptors. És l’únic lloc on la vostra adreça queda
+            desat de manera permanent.
           </Li>
           <Li>
             <span className="text-white">Resend</span> (estats Units): enviament dels correus
-            electrònics, inclòs el missatge de confirmació i el butlletí. Conserva les dades
-            necessàries per enviar-los.
+            electrònics, inclòs el missatge de confirmació i el butlletí. Rep i conserva
+            temporalment les dades necessàries per enviar-los.
           </Li>
           <Li>
             <span className="text-white">Vercel</span> (estats Units): allotjament del web. Pot

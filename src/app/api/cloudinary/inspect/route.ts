@@ -1,6 +1,14 @@
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session) {
+    return Response.json({ error: 'No autoritzat.' }, { status: 401 })
+  }
+
   const { searchParams } = new URL(request.url)
   const prefix = searchParams.get('prefix') || ''
   const cloud = process.env.CLOUDINARY_CLOUD

@@ -1,8 +1,15 @@
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { getSubscribers, subscribersToCsv, SubscriberFilter } from '@/lib/subscribers'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session) {
+    return new Response('No autoritzat', { status: 401 })
+  }
+
   const { searchParams } = new URL(req.url)
   const query = searchParams.get('q') || ''
   const filter = (['all', 'confirmed', 'pending'].includes(searchParams.get('f') || '')

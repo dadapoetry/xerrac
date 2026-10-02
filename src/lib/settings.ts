@@ -1,6 +1,13 @@
 'use server'
 
+import { getServerSession } from 'next-auth'
+import { authOptions } from './auth'
 import { db } from './db'
+
+async function requireAuth() {
+  const session = await getServerSession(authOptions)
+  if (!session) throw new Error('No autoritzat')
+}
 
 export async function getSetting(key: string): Promise<string> {
   const result = await db.execute({
@@ -11,6 +18,7 @@ export async function getSetting(key: string): Promise<string> {
 }
 
 export async function setSetting(key: string, value: string) {
+  await requireAuth()
   await db.execute({
     sql: 'INSERT OR REPLACE INTO Settings (key, value) VALUES (?, ?)',
     args: [key, value],
