@@ -176,18 +176,6 @@ body::before {
   }
 }
 
-/* Sections curtes: alçada minima d'una pantalla perquè el fons comparteixi
-   el mateix enquadrament que les seccions amb mes contingut.
-   nomes en pantalla: així la impressió i el PDF no hereten l'alçada. */
-@media screen {
-  .section-fill-screen {
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-}
-
 /* Ensure minimum contrast on dark backgrounds */
 .bg-black .text-gray-600,
 .bg-gray-950 .text-gray-600,
