@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site'
+import { PENDING_TTL_DAYS } from '@/lib/pending'
 import { SawIcon } from '@/components/SawIcon'
 
 export const dynamic = 'force-dynamic'
@@ -116,12 +117,17 @@ export default async function PrivacyPage() {
           </Li>
         </ul>
         <P>
-          No emmagatzemem la data ni l’hora de la subscripció, ni cap altra dada que permeti saber
-          quan heu subscrit o des de quina adreça electrònica ho heu fet. No demanem, i per tant
-          no tractem, cap altra dada personal: ni nom ni cognoms, ni adreça postal, ni telèfon, ni
-          targetes de pagament, ni documents d&apos;identitat. No fem segmentació
-          d&apos;audiència ni publicitat personalitzada, i no mesurem la vostra activitat amb
-          eines de mesurament d&apos;audiència.
+          Mentre la subscripció està pendent de confirmar, conservem també{' '}
+          <span className="text-white">la data i l’hora de la vostra petició</span>, i només
+          per poder esborrar-la quan caduqui (vegeu l’apartat 4). En confirmar la subscripció, la
+          eliminem. Per tant, mai no sabrem quan es va subscriure cap persona que tingui la
+          subscripció activa.
+        </P>
+        <P>
+          No demanem, i per tant no tractem, cap altra dada personal: ni nom ni cognoms, ni
+          adreça postal, ni telèfon, ni targetes de pagament, ni documents d&apos;identitat. No
+          fem segmentació d&apos;audiència ni publicitat personalitzada, i no mesurem la vostra
+          activitat amb eines de mesurament d&apos;audiència.
         </P>
 
         <H>3. Per a què la fem servir i amb quina base legal</H>
@@ -150,15 +156,17 @@ export default async function PrivacyPage() {
           </Li>
           <Li>
             <span className="text-white">Subscripcions sense confirmar:</span> l’adreça només
-            serveix per enviar-vos el missatge de confirmació. Si no la confirmeu, no
-            s’utilitzarà per a cap altra finalitat i podeu demanar-nos que l’eliminem quan
-            vulgueu, escrivint-nos.
+            serveix per enviar-vos el missatge de confirmació. Si no la confirmeu en{' '}
+            {PENDING_TTL_DAYS} dies, l’eliminem automàticament, sense cap altre avís. Si ja sabeu
+            que no voleu subscriure-us, no cal que espereu: podeu demanar-nos que l’eliminem
+            quan vulgueu, escrivint-nos.
           </Li>
         </ul>
         <P>
           No reutilitzem l’adreça per a cap altra finalitat, no la cedim i no la venem a tercers.
-          Com que no en registrem la data, no apliquem cap termini de caducitat: el que determina
-          quan s’elimina l’adreça és l’estat de la subscripció, no el temps transcorregut.
+          Per a les subscripcions confirmades no fixem cap data d’expiració: l’adreça es
+          conserva mentre vulgueu rebre el butlletí i només s’elimina quan ho demaneu, amb
+          l’enllaç de baixa o per correu electrònic.
         </P>
         <P>
           Per protegir els formularis contra l’abús automatitzat, quan escriviu una adreça hi desem

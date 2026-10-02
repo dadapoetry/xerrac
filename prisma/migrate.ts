@@ -28,15 +28,24 @@ async function migrate() {
     }
   }
 
+  // pendingSince només existeix fins que la subscripció es confirma.
+  try {
+    await db.execute('ALTER TABLE Subscriber ADD COLUMN pendingSince INTEGER')
+  } catch {
+    // column already exists — safe to ignore
+  }
+
   // Subscriber: no emmagatzemem cap data ni hora d'alta (minimització de dades).
   // Reconstrueix la taula només si encara hi ha la columna createdAt.
+  // Es fa abans dels ALTER perquè la taula nova ja surti amb la forma final.
   const subCols = await db.execute('PRAGMA table_info(Subscriber)')
   if (subCols.rows.some((r: any) => r.name === 'createdAt')) {
     await db.execute(`CREATE TABLE Subscriber_new (
       id TEXT PRIMARY KEY,
       email TEXT NOT NULL UNIQUE,
       token TEXT NOT NULL,
-      confirmed INTEGER NOT NULL DEFAULT 0
+      confirmed INTEGER NOT NULL DEFAULT 0,
+      pendingSince INTEGER
     )`)
     await db.execute(
       'INSERT INTO Subscriber_new (id, email, token, confirmed) SELECT id, email, token, confirmed FROM Subscriber'

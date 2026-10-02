@@ -53,4 +53,7 @@ model Subscriber {
   email     String   @unique
   token     String
   confirmed Boolean  @default(false)
+  // Només existeix mentre la subscripció està pendent: permet esborrar-la
+  // automàticament. En confirmar, es posa a null.
+  pendingSince DateTime?
 }

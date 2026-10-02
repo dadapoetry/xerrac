@@ -9,6 +9,7 @@ import { safeParse } from '@/lib/utils'
 import { getSiteUrl } from './site'
 import { checkRateLimit, resetRateLimit } from './rate-limit'
 import { sanitizeImageUrl, sanitizeSectionContent } from './sanitize'
+import { purgeStalePendingSubscribers } from './pending'
 
 async function checkAuth() {
   const session = await getServerSession(authOptions)
@@ -211,9 +212,11 @@ export async function subscribe(email: string) {
   const token = uuid().replace(/-/g, '') + uuid().replace(/-/g, '')
 
   await db.execute({
-    sql: 'INSERT INTO Subscriber (id, email, token, confirmed) VALUES (?, ?, ?, 0)',
-    args: [id, normalized, token],
+    sql: 'INSERT INTO Subscriber (id, email, token, confirmed, pendingSince) VALUES (?, ?, ?, 0, ?)',
+    args: [id, normalized, token, Date.now()],
   })
+
+  await purgeStalePendingSubscribers()
 
   try {
     const { sendConfirmation } = await import('./newsletter')
@@ -250,7 +253,7 @@ export async function confirmSubscription(token: string) {
   const newToken = uuid().replace(/-/g, '') + uuid().replace(/-/g, '')
 
   await db.execute({
-    sql: 'UPDATE Subscriber SET confirmed = 1, token = ? WHERE token = ?',
+    sql: 'UPDATE Subscriber SET confirmed = 1, token = ?, pendingSince = NULL WHERE token = ?',
     args: [newToken, token],
   })
   return { ok: true, message: 'Subscripció confirmada!' }
