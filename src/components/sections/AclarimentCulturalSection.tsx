@@ -8,7 +8,7 @@ export function AclarimentCulturalSection({ section, index }: { section: Section
   const content = section.content as unknown as AclarimentCulturalContent
 
   return (
-    <div className="max-w-prose w-full mx-auto py-12">
+    <div className="section-fill-screen max-w-prose w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle="Aclarir allò que continua sense aclarir-se" readingTime={readingTime(content.body)} />
       <div className="relative pl-6 border-l" style={{ borderColor: 'rgba(var(--accent-rgb), 0.3)' }}>
         <div
