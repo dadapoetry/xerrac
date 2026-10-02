@@ -31,6 +31,12 @@ export default async function sitemap() {
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
+    {
+      url: `${baseUrl}/privacitat`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    },
     ...issueUrls,
   ]
 }

@@ -119,8 +119,10 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
           </div>
         )}
 
-        <div className="flex justify-center gap-4 mt-6 text-[11px]">
+        <div className="flex justify-center gap-4 mt-6 text-[11px] flex-wrap">
           <Link href="/arxiu" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Arxiu d'aclariments</Link>
+          <span className="text-gray-700">·</span>
+          <Link href="/privacitat" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Privacitat</Link>
           <span className="text-gray-700">·</span>
           <a href="/api/feed" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">RSS</a>
         </div>

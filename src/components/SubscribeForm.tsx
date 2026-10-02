@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { subscribe } from '@/lib/actions'
+import { PrivacyNote } from '@/components/PrivacyNote'
 
 export function SubscribeForm() {
   const [email, setEmail] = useState('')
@@ -59,6 +60,8 @@ export function SubscribeForm() {
         Subscripció de doble confirmació: rebràs un correu per confirmar. També et pots
         donar de baixa amb un clic.
       </p>
+
+      <PrivacyNote className="mt-3" />
     </form>
   )
 }

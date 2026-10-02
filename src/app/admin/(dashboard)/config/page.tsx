@@ -18,6 +18,7 @@ export default function ConfigPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [issn, setIssn] = useState('')
+  const [contactEmail, setContactEmail] = useState('')
   const [copyright, setCopyright] = useState('')
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([])
 
@@ -25,6 +26,7 @@ export default function ConfigPage() {
     setLoading(true)
     const settings = await getAllSettings()
     setIssn(settings.footer_issn || '')
+    setContactEmail(settings.contact_email || '')
     setCopyright(settings.footer_copyright || '')
     try {
       setSocialLinks(JSON.parse(settings.footer_social_links || '[]'))
@@ -56,6 +58,7 @@ export default function ConfigPage() {
     try {
       await updateSettings({
         footer_issn: issn,
+        contact_email: contactEmail,
         footer_copyright: copyright,
         footer_social_links: JSON.stringify(socialLinks.filter(l => l.name || l.url)),
       })
@@ -88,6 +91,24 @@ export default function ConfigPage() {
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="ISSN 2938-2026 (en tràmit)"
           />
+        </div>
+
+        <div>
+          <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
+            Correu de contacte
+          </label>
+          <input
+            type="email"
+            value={contactEmail}
+            onChange={e => setContactEmail(e.target.value)}
+            className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
+              focus:outline-none focus:border-red-500/50 transition-colors"
+            placeholder="contacte@laxerrac.cat"
+          />
+          <p className="text-[10px] text-gray-600 mt-1">
+            És el correu que apareix a la política de privadesa i al peu de la revista
+            com a dada de contacte.
+          </p>
         </div>
 
         <div>

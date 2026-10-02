@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { SawIcon } from './SawIcon'
 import { subscribe } from '@/lib/actions'
+import { PrivacyNote } from './PrivacyNote'
 
 const STORAGE_KEY = 'xerrac-newsletter-dismissed'
 
@@ -107,6 +108,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
               {status === 'error' && (
                 <p className="text-xs text-red-400">{message}</p>
               )}
+              <PrivacyNote className="mt-1" />
             </form>
           )}
         </div>
