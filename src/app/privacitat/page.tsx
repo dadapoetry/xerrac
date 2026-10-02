@@ -236,14 +236,13 @@ export default async function PrivacyPage() {
           <a href="https://www.apdcat.cat" target="_blank" rel="noopener noreferrer" className="text-white underline hover:text-gray-400 transition-colors">
             www.apdcat.cat
           </a>
-          ). Si ho preferiu, us podem ajudar a presentar-la.
+          ).
         </P>
 
         <H>7. Com protegim les dades</H>
         <P>
           El web es serveix sobre HTTPS, amb xifratge de trànsit. L’accés a la base de dades i a
-          l’àrea d’administració de la revista està restringit a l’equip editorial, les
-          contrasenyes s’emmagatzemen xifrades i els missatges s’envien sense capfitx ni seguiment.
+          l’àrea d’administració de la revista està restringit a l’equip editorial.
         </P>
         <P>
           Cap mesura de seguretat ofereix una garantia absoluta, però apliquem les mesures
