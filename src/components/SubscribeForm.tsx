@@ -56,8 +56,8 @@ export function SubscribeForm() {
         <p className="text-xs text-red-400">{message}</p>
       )}
       <p className="text-[11px] text-gray-600 leading-relaxed">
-        Subscripció doble confirmació: rebràs un correu per confirmar. Sense spam, només el
-        butlletí, i et pots donar de baixa amb un clic.
+        Subscripció de doble confirmació: rebràs un correu per confirmar. També et pots
+        donar de baixa amb un clic.
       </p>
     </form>
   )

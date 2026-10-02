@@ -28,16 +28,16 @@ export default function SubscribePage() {
           <div className="h-px w-12" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.4)' }} />
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-2">
-          Subscri-te al
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-1">
+          Encara no t&apos;hi has subscrit?
         </h1>
         <p className="text-3xl md:text-4xl font-black tracking-tight leading-none mb-6" style={{ color: 'var(--accent)' }}>
-          butlletí
+          Aclareix-te!
         </p>
 
         <p className="text-sm text-gray-400 leading-relaxed mb-6">
-          Cada número de <span className="text-white">Xerrac!</span> — la revista
-          d&apos;aclariment cultural — al teu correu. Sense spam, només el butlletí.
+          Cada número de <span className="text-white">Xerrac!</span> Revista
+          d&apos;aclariment cultural al teu correu.
         </p>
 
         <SubscribeForm />
