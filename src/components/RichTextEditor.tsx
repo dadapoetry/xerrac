@@ -100,6 +100,7 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const abortRef = useRef<AbortController | null>(null)
 
   // Sense <form>: aquest diàleg viu dins del <form> de SectionForm i els
   // <form> anidats no són HTML vàlid, de manera que el navegador descartava el
@@ -134,12 +135,16 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
     if (!file) return
     setStatus('uploading')
     setErrorMsg('')
+    const ctrl = new AbortController()
+    abortRef.current = ctrl
     try {
-      const inserted = await uploadImageToCloudinary(file)
+      const inserted = await uploadImageToCloudinary(file, undefined, undefined, ctrl.signal)
       onInsert(inserted, width, alt)
     } catch (err) {
       setStatus('error')
       setErrorMsg(err instanceof Error ? err.message : "No s'ha pogut pujar la imatge. Torna-ho a provar.")
+    } finally {
+      abortRef.current = null
     }
   }
 
@@ -220,6 +225,15 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
               >
                 {status === 'uploading' ? 'Pujant...' : 'Pujar i inserir'}
               </button>
+              {status === 'uploading' && (
+                <button
+                  type="button"
+                  onClick={() => abortRef.current?.abort()}
+                  className="px-4 py-2 border border-gray-700 text-gray-400 text-sm hover:border-gray-500 transition-colors"
+                >
+                  Cancel·lar
+                </button>
+              )}
             </div>
           </div>
         ) : (
