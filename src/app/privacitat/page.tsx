@@ -10,7 +10,7 @@ const UPDATED = '2 d’octubre de 2026'
 
 export const metadata: Metadata = {
   title: 'Política de privacitat',
-  description: 'Quina informació personal tracta Xerrac!, amb quina finalitat i quins drets teniu per exercir-los.',
+  description: 'Quina informació personal tracta Xerrac!, amb quina finalitat, qui hi té accés i quins drets podeu exercir.',
   alternates: { canonical: '/privacitat' },
   robots: { index: true, follow: true },
 }
@@ -65,12 +65,12 @@ export default async function PrivacyPage() {
         <P>
           Aquesta política explica quina informació personal tracta{' '}
           <span className="text-white">Xerrac! — Revista d’aclariment cultural</span>{' '}
-          (en endavant, «Xerrac!» o «la revista»), per a què la fem servir, qui hi té accés i
-          quins drets podeu exercir. L’apliquem d’acord amb el Reglament (UE) 2016/679 del Parlament
-          Europeu i del Consell, de 27 d’abril, relatiu a la protecció de les persones PHYSiques
-          en el tractament de dades personals i a la lliure circulació d’aquestes dades (RGPD), i
-          amb la Llei orgànica 3/2018, de 5 de desembre, de protecció de dades i garantia dels
-          drets digitals (LOPDGDD).
+          (en endavant, «Xerrac!» o «la revista»), amb quina finalitat la fem servir, qui hi té
+          accés i quins drets podeu exercir. L’apliquem d’acord amb el Reglament (UE) 2016/679
+          del Parlament Europeu i del Consell, de 27 d’abril, relatiu a la protecció de les
+          persones física en el tractament de dades personals i a la lliure circulació
+          d’aquestes dades (RGPD), i amb la Llei orgànica 3/2018, de 5 de desembre, de protecció
+          de dades i garantia dels drets digitals (LOPDGDD).
         </P>
 
         <H>1. Responsable del tractament</H>
@@ -92,112 +92,116 @@ export default async function PrivacyPage() {
           )}
         </ul>
         <P>
-          Aquest correu és, alhora, la via per exercir els drets descrits a l’apartat 6 i per
-          tractar qualsevol consulta o reclamació relacionada amb la revista.
+          Aquesta adreça és, alhora, la via per exercir els drets que s’exposen a l’apartat 6 i
+          per fer-nos qualsevol consulta o reclamació relacionada amb la revista.
         </P>
 
-        <H>2. Quina informació tractem</H>
-        <P>Només tractem la informació que vosaltres decideixu donar-nos, i és:</P>
+        <H>2. Quina informació personal tractem</H>
+        <P>Només tractem la informació que vosaltres decideixu-nos lliurar:</P>
         <ul className="mb-4">
           <Li>
-            <span className="text-white">L’adreça de correu electrònic</span>, quan escriviu el
-            vostre correu al formulari del butlletí (a la revista o a la pàgina{' '}
+            <span className="text-white">L’adreça de correu electrònic</span>, quan l’escriu al
+            formulari de subscripció al butlletí (a la revista o a la pàgina{' '}
             <Link href="/subscriu" className="underline hover:text-white">/subscriu</Link>).
           </Li>
           <Li>
-            <span className="text-white">L’estat de la inscripció</span>: si la subscripció
-            s’ha confirmat o encara està pendent.
+            <span className="text-white">L’estat de la subscripció</span>: si s’ha confirmat o si
+            continua pendent.
           </Li>
           <Li>
-            <span className="text-white">Un codi intern de verificació</span>, generat
-            aleatòriament i associat només a la vostra adreça. Ens serveix per confirmar la
-            inscripció i perquè pugueu donar-vos de baixa amb un sol clic. No conté cap
-            informació sobre vosaltres i el canviem quan confirmeu la inscripció.
+            <span className="text-white">Un codi intern de verificació</span>, generat de manera
+            aleatòria i associat només a la vostra adreça. Ens permet confirmar la subscripció i
+            oferir-vos la baixa amb un sol clic. No conté cap informació personal i el
+            substituïm quan confirmeu la subscripció.
           </Li>
         </ul>
         <P>
-          No emmagatzemem cap data ni hora de la inscripció, ni cap dada que permeti saber quan
-          o des d&apos;on heu subscrit. No demanem, i per tant no tractem, cap altra dada
-          personal: ni nom ni cognoms, ni adreça postal, ni telèfon, ni targetes de pagament, ni
-          documents d&apos;identitat. No fem segmentació d&apos;audiència ni publicitat
-          personalitzada, i no traquem la vostra activitat amb eines de mesurament.
+          No emmagatzemem la data ni l’hora de la subscripció, ni cap altra dada que permeti saber
+          quan heu subscrit o des de quina adreça electrònica ho heu fet. No demanem, i per tant
+          no tractem, cap altra dada personal: ni nom ni cognoms, ni adreça postal, ni telèfon, ni
+          targetes de pagament, ni documents d&apos;identitat. No fem segmentació
+          d&apos;audiència ni publicitat personalitzada, i no mesurem la vostra activitat amb
+          eines de mesurament d&apos;audiència.
         </P>
 
         <H>3. Per a què la fem servir i amb quina base legal</H>
         <P>
           La finalitat és única: enviar-vos el butlletí de la revista per correu electrònic. La
           base legal és el <span className="text-white">vostre consentiment</span> (article 6.1.a
-          del RGPD), que demanem de manera separada i específica per a aquesta finalitat i que
-          podeu retirar en qualsevol moment.
+          del RGPD), demanat de manera separada i específica per a aquesta finalitat, que podeu
+          retirar en qualsevol moment.
         </P>
         <P>
-          El consentiment es manifesta en dos passos, perquè ens puguem assurem que és real i
-          que el correu és vostre: primer, en introduir l’adreça i prémer «Subscriure’m»; després,
-          en prémer el botó de confirmació del correu que us enviem (la{' '}
-          <span className="text-white">doble confirmació</span>). Aquest segon pas serveix, entre
-          d’autres coses, per descartar inscripcions automatitzades o errors de transcripció.
+          El consentiment es formalitza en dos passos, per confirmar que la subscripció és real i
+          que el correu és vostre: primer, introduïu l’adreça al formulari i premeu
+          «Subscriure’m»; segonament, obriu l’enllaç del correu de confirmació que us enviem i
+          premeu el botó de confirmació (la{' '}
+          <span className="text-white">doble confirmació</span>). Aquest segon pas ens permet,
+          entre d’altres coses, descartar subscripcions automatitzades i errors de transcripció.
         </P>
 
-        <H>4. Quant de temps la conservem</H>
+        <H>4. Per quant de temps conservem les dades</H>
         <ul className="mb-4">
           <Li>
-            <span className="text-white">Subscripcions confirmades:</span> conservem el correu
-            mentre duri la subscripció, és a dir, fins que feu clic a l’enllaç de baixa del
+            <span className="text-white">Subscripcions confirmades:</span> conservem l’adreça
+            mentre la subscripció estigui activa, és a dir, fins que premeu l’enllaç de baixa del
             butlletí o ens demaneu que l’eliminem. A partir d’aquell moment, el registre s’esborra
             de la nostra base de dades.
           </Li>
           <Li>
-            <span className="text-white">Subscripcions sense confirmar:</span> el correu només
-            serveix per poder enviar-vos el missatge de confirmació. Si no el confirmeu, no
-            s’utilitzarà per a cap altra cosa; podeu demanar-nos que l’eliminem quan vulgueu
-            escrivint-nos.
+            <span className="text-white">Subscripcions sense confirmar:</span> l’adreça només
+            serveix per enviar-vos el missatge de confirmació. Si no la confirmeu, no
+            s’utilitzarà per a cap altra finalitat i podeu demanar-nos que l’eliminem quan
+            vulgueu, escrivint-nos.
           </Li>
         </ul>
         <P>
-          No reutilitzem l’adreça per a cap altra finalitat, no la cedim i no la venem a
-          tercers. Com que no registrem la data de la inscripció, el termini de conservació
-          s’ha de fer servir com a criteri general, no com un compte pendent exacte.
+          No reutilitzem l’adreça per a cap altra finalitat, no la cedim i no la venem a tercers.
+          Com que no en registrem la data, no apliquem cap termini de caducitat: el que determina
+          quan s’elimina l’adreça és l’estat de la subscripció, no el temps transcorregut.
         </P>
         <P>
-          Per protegir els formularis contra inscripcions automatitzades, quan escriviu el
-          correu es desa temporalment un registre del vostre correu i de l’instant de
-          l’intent. Aquest registre s’elimina automàticament en menys de 24 hores i també
-          s’esborra de seguida si feu clic a l’enllaç de baixa.
+          Per protegir els formularis contra l’abús automatitzat, quan escriviu una adreça hi desem
+          temporalment un registre amb aquesta adreça i l’instant de l’intent. Aquest registre
+          s’elimina automàticament en menys de 24 hores i també s’esborra immediatament si
+          premeu l’enllaç de baixa.
         </P>
 
         <H>5. Qui hi té accés: proveïdors i transferències internacionals</H>
         <P>
-          Per operar el web i enviar-vos el butlletí ens servim de proveïdors externs, que
-          tracten les dades en nom nostre i només per a les finalitats que hem descrit:
+          Per operar el web i enviar-vos el butlletí ens servim de proveïdors externs que actuen
+          com acessorsors, és a dir, que tracten les dades en nom nostre i només per a les
+          finalitats descrites en aquesta política:
         </P>
         <ul className="mb-4">
           <Li>
-            <span className="text-white">Turso</span> (estats Units): base de dades on consta
-            permanentment la llista de subscriptors. És l’únic lloc on la vostra adreça queda
-            desat de manera permanent.
+            <span className="text-white">Turso</span> (estats Units): allotjament de la base de
+            dades on consta permanentment la llista de subscriptors. És l’únic lloc on la vostra
+            adreça es desa de manera permanent.
           </Li>
           <Li>
             <span className="text-white">Resend</span> (estats Units): enviament dels correus
-            electrònics, inclòs el missatge de confirmació i el butlletí. Rep i conserva
+            electrònics, tant el missatge de confirmació com el butlletí. Rep i conserva
             temporalment les dades necessàries per enviar-los.
           </Li>
           <Li>
-            <span className="text-white">Vercel</span> (estats Units): allotjament del web. Pot
-            processar dades de manera transitòria com a part de la infraestructura del
+            <span className="text-white">Vercel</span> (estats Units): allotjament i execució del
+            web. Pot processar dades de manera transitòria com a part de la infraestructura del
             servidor —per exemple, en els registres d’accés i de les funcions—, sense
             utilitzar-les per a cap finalitat pròpia.
           </Li>
         </ul>
         <P>
-          En cap cas no enviem l’adreça dins de cap URL ni la retornem al navegador: només
-          viatja dins de la petició que procesa el servidor.
+          No incloem la vostra adreça en cap adreça web (URL) ni la retornem al navegador de les
+          persones subscrites: només viatja dins de la petició que processa el servidor. La llista
+          de subscriptors només és accessible per l’equip editorial.
         </P>
         <P>
           Aquestes entitats estan situades fora de l’Espai Econòmic Europeu, de manera que el
-          tractament comporta una transferència internacional de dades. Cadascun dels proveïdors
-          manté amb nosaltres contractes que recullen les garanties que preveu el Capítol V del
-          RGPD — concretament, les clàusules contractuals tipus aprovades per la Comissió
-          Europea — juntament amb mesures tècniques i organitzatives adeqüades.
+          tractament implica una transferència internacional de dades. Els acords que mantenim
+          amb cada proveïdor recullen les garanties que preveu el Capítol V del RGPD —concretament,
+          les clàusules contractuals tipus aprovades per la Comissió Europea—, juntament amb
+          mesures tècniques i organitzatives adeqüades.
         </P>
 
         <H>6. Els vostres drets</H>
@@ -210,13 +214,13 @@ export default async function PrivacyPage() {
           <a href={`mailto:${email}`} className="text-white underline hover:text-gray-400 transition-colors">
             {email}
           </a>{' '}
-          indicant quin dret voleu exercir i quin correu afectat. Responderem en el termini
-          d’un mes. Si la sol·licitud és complexa i no la podem atendre a temps, us
-          avisarem i el termini s’ampliarà fins a dos mesos.
+          indicant quin dret voleu exercir i a quina adreça es refereix. Us respondrem en el
+          termini d’un mes. Si la sol·licitud és complexa i no la podem atendre a temps, us ho
+          comunicarem i el termini es podrà ampliar fins a dos mesos.
         </P>
         <P>
-          Si no quedeu satisfets, podeu presentar una reclamació davant l’autoritat de control
-          competent: l’Agència Espanyola de Protecció de Dades (
+          Si no considereu satisfactòria la nostra resposta, podeu presentar una reclamació davant
+          l’autoritat de control competent: l’Agència Espanyola de Protecció de Dades (
           <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" className="text-white underline hover:text-gray-400 transition-colors">
             www.aepd.es
           </a>
@@ -227,23 +231,24 @@ export default async function PrivacyPage() {
           ). Si ho preferiu, us podem ajudar a presentar-la.
         </P>
 
-        <H>7. Com protegit les dades</H>
+        <H>7. Com protegim les dades</H>
         <P>
-          El web es serveix amb xifratge HTTPS. L’accés a la base de dades i a l’àrea
-          d’administració de la revista està restringit a l’equip editorial, i els missatges
-          s’envien sense capfitx ni seguiment. Com tota mesura de seguretat, la protecció no
-          pot ser total, però apliquem les mesures raonables que corresponen a la naturalesa i
-          al risc del tractament, i en revisem l’efectivitat.
+          El web es serveix sobre HTTPS, amb xifratge del trànsit. L’accés a la base de dades i a
+          l’àrea d’administració de la revista està restringit a l’equip editorial, les
+          contrasenyes s’emmagatzemen xifrades i els missatges s’envien sense capfitx ni
+          seguiment. Cap mesura de seguretat no ofereix una garantia absoluta, però apliquem les
+          mesures raonables que corresponen a la naturalesa i al risc del tractament i en revisem
+          l’efectivitat.
         </P>
 
-        <H>8. Cookies</H>
+        <H>8. Galetes (cookies)</H>
         <P>
-          Aquest web no utilitza cookies publicitàries, de perfilat ni de mesurament
-          d’audiència, de manera que no cal cap galeta de consentiment. Les úniques cookies
-          són les estrictament necessàries per fer funcionar el lloc: la cookie de sessió de
-          l’àrea privada d’administració, que només usa l’equip editorial. Quan tanqueu el
+          Aquest web no utilitza galetes publicitàries, de perfilat ni de mesurament
+          d&apos;audiència, de manera que no cal cap galeta de consentiment. Les úniques galetes
+          són les estrictament necessàries per fer funcionar el lloc: la galeta de sessió de
+          l’àrea privada d’administració, que només utilitza l’equip editorial. Quan tanqueu el
           formulari del butlletí sense subscriure-us, el navegador recorda aquesta decisió
-          únicament dins la sessió oberta (memòria del navegador, sense enviar res al
+          únicament dins de la sessió oberta (memòria del navegador, sense enviar res al
           servidor).
         </P>
         <P>
@@ -254,9 +259,9 @@ export default async function PrivacyPage() {
 
         <H>9. Menors d’edat</H>
         <P>
-          Aquest web no s’adreça a menors d’edat i no recollim de manera intencionada dades de
-          nens i adolescents. Si creieu que un menor ens ha proporcionat un correu
-          electrònic, escriviu-nos i l’eliminarem.
+          Aquest web no s’adreça a menors d’edat i no recollim de manera deliberada dades de
+          nens i adolescents. Si creieu que un menor ens ha proporcionat una adreça de correu
+          electrònic, escriviu-nos i l’eliminem.
         </P>
 
         <H>10. Modificacions d’aquesta política</H>
