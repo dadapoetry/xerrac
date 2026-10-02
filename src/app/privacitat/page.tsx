@@ -53,12 +53,9 @@ export default async function PrivacyPage() {
           </span>
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-2">
-          Política de
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-4">
+          Política de privacitat
         </h1>
-        <p className="text-3xl md:text-4xl font-black tracking-tight leading-none mb-4" style={{ color: 'var(--accent)' }}>
-          privacitat
-        </p>
         <p className="text-xs text-gray-600 mb-10">
           Darrera actualització: {UPDATED}
         </p>
