@@ -161,9 +161,18 @@ export default async function PrivacyPage() {
         </P>
         <P>
           Per protegir els formularis contra l’abús automatitzat, quan escriviu una adreça hi
-          registrem temporalment aquesta adreça i l’instant de l’intent. Aquest registre s’elimina
-          automàticament en menys de 24 hores i també s’esborra immediatament si premeu l’enllaç
-          de baixa.
+          registrem temporalment aquesta adreça i l’instant de l’intent. Als intents d’accés a
+          l’àrea d’administració apliquem el mateix control i, en aquest cas, hi consta també
+          l’adreça IP de la connexió.
+        </P>
+        <P>
+          Aquestes dades no serveixen per enviar-vos el butlletí, sinó per un{' '}
+          <span className="text-white">interès legítim</span> de la revista: mantenir el servei
+          segur i disponible i evitar-ne l’ús abusiu (article 6.1.f del RGPD). Són dades escasses
+          i de durada molt curta, de manera que l’impacte sobre vosaltres és mínim. S’eliminen
+          automàticament en menys de 24 hores i, en el cas de la subscripció, també
+          immediatament si premeu l’enllaç de baixa. Podeu oposar-vos a aquest tractament en
+          qualsevol moment (apartat 6).
         </P>
 
         <H>5. Qui hi té accés: proveïdors i transferències internacionals</H>
