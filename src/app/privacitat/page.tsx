@@ -131,10 +131,6 @@ export default async function PrivacyPage() {
           <span className="text-white">doble confirmació</span>). Aquest segon pas serveix, entre
           d’autres coses, per descartar inscripcions automatitzades o errors de transcripció.
         </P>
-        <P>
-          Si preferiu no subscriure-us, no passeu res: no rebreu el butlletí i no hi haurà cap
-          conseqüència. Ningú no queda exclòs del web per no subscriure’s.
-        </P>
 
         <H>4. Quant de temps la conservem</H>
         <ul className="mb-4">
