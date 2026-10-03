@@ -24,6 +24,25 @@ function escapeAttr(value: string): string {
     .replace(/>/g, '&gt;')
 }
 
+// Sense width/height la imatge ocupa zero alçada fins que carrega i provoca
+// un salt de maquetació. Es mesuren abans d'inserir-les.
+function readImageSize(src: string): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    const img = new window.Image()
+    const finish = (value: { width: number; height: number } | null) => resolve(value)
+    const timer = window.setTimeout(() => finish(null), 3000)
+    img.onload = () => {
+      window.clearTimeout(timer)
+      finish(img.naturalWidth ? { width: img.naturalWidth, height: img.naturalHeight } : null)
+    }
+    img.onerror = () => {
+      window.clearTimeout(timer)
+      finish(null)
+    }
+    img.src = src
+  })
+}
+
 export function RichTextEditor({ value, onChange, minimal = false }: RichTextEditorProps) {
   const editorRef = useRef<ReactQuillType | null>(null)
   const rootRef = useRef<HTMLDivElement | null>(null)
@@ -47,30 +66,39 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   // Aquest insert no pot retorna silenciosament: el ref travessa next/dynamic
   // (asíncron) i pot arribar buit, i aleshores el diàleg es quedava obert en
   // estat "Pujant..." amb la imatge ja pujada i sense inserir.
-  const insertImage = useCallback((url: string, width: string, alt: string) => {
-    const ref = editorRef.current as any
-    const quill = ref?.getEditor?.() || ref
-    const maxWidth = width || '100%'
-    if (quill?.clipboard?.dangerouslyPasteHTML) {
-      const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
-      quill.clipboard.dangerouslyPasteHTML(
-        range.index,
-        `<img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}" loading="lazy" style="max-width: ${escapeAttr(maxWidth)}; height: auto;" />`
-      )
-    } else {
-      const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
-      if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
-      const img = document.createElement('img')
-      img.src = url
-      img.alt = alt
-      img.loading = 'lazy'
-      img.style.maxWidth = maxWidth
-      img.style.height = 'auto'
-      editorEl.appendChild(img)
-      editorEl.dispatchEvent(new Event('input', { bubbles: true }))
-    }
-    setShowImageDialog(false)
-  }, [])
+  const insertImage = useCallback(
+    (url: string, width: string, alt: string, dims?: { width: number; height: number } | null) => {
+      const ref = editorRef.current as any
+      const quill = ref?.getEditor?.() || ref
+      const maxWidth = width || '100%'
+      const sizeAttrs = dims ? ` width="${dims.width}" height="${dims.height}"` : ''
+      if (quill?.clipboard?.dangerouslyPasteHTML) {
+        const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
+        quill.clipboard.dangerouslyPasteHTML(
+          range.index,
+          `<img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}"${sizeAttrs} loading="lazy" decoding="async" style="max-width: ${escapeAttr(maxWidth)}; height: auto;" />`
+        )
+      } else {
+        const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
+        if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
+        const img = document.createElement('img')
+        img.src = url
+        img.alt = alt
+        img.loading = 'lazy'
+        img.decoding = 'async'
+        if (dims) {
+          img.width = dims.width
+          img.height = dims.height
+        }
+        img.style.maxWidth = maxWidth
+        img.style.height = 'auto'
+        editorEl.appendChild(img)
+        editorEl.dispatchEvent(new Event('input', { bubbles: true }))
+      }
+      setShowImageDialog(false)
+    },
+    []
+  )
 
   const modules = useMemo(() => {
     const cfg = minimal
@@ -117,7 +145,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   )
 }
 
-function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: string, alt: string) => void; onClose: () => void }) {
+function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: string, alt: string, dims?: { width: number; height: number } | null) => void; onClose: () => void }) {
   const [tab, setTab] = useState<'url' | 'file'>('file')
   const [url, setUrl] = useState('')
   const [alt, setAlt] = useState('')
@@ -131,9 +159,10 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
   // <form> anidats no són HTML vàlid, de manera que el navegador descartava el
   // formulari intern i el botó acabava enviant el formulari de la secció, amb
   // recàrrega de la pàgina i sense pujar res.
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!url) return
-    onInsert(url, width, alt)
+    const dims = await readImageSize(url)
+    onInsert(url, width, alt, dims)
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,7 +205,8 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
     // passi amb la inserció, perquè el diàleg no es quedi penjat.
     setStatus('idle')
     try {
-      onInsert(inserted, width, alt)
+      const dims = await readImageSize(inserted)
+      onInsert(inserted, width, alt, dims)
     } catch (err) {
       setStatus('error')
       setErrorMsg(

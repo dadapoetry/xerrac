@@ -14,6 +14,16 @@
   animation: fade-in 0.5s ease-out backwards;
 }
 
+/* Imatges dins del text de les seccions: si entren al viewport sense caixa
+   reservada, el navegador ajusta el desplaçament i l'article fa un salt. */
+[data-richtext] {
+  overflow-anchor: none;
+}
+[data-richtext] img {
+  max-width: 100%;
+  height: auto;
+}
+
 
 @keyframes blade-sway {
   0%, 100% { transform: rotate(0deg) scaleY(1); }

@@ -15,7 +15,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
   const paras = useMemo(() => splitParagraphs(html), [html])
   if (kick) {
     return (
-      <div className={right ? 'text-right' : ''}>
+      <div data-richtext className={right ? 'text-right' : ''}>
         {paras.map((p, i) => (
           <p
             key={i}
@@ -30,7 +30,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
     )
   }
   return (
-    <div className={right ? 'text-right' : ''}>
+    <div data-richtext className={right ? 'text-right' : ''}>
       {paras.map((p, i) => (
         <div
           key={i}
@@ -73,6 +73,35 @@ export function ScrollySection({ section, index }: { section: SectionData; index
     return () => observer.disconnect()
   }, [steps.length])
 
+  // Les imatges del text venien amb loading="lazy" i sense dimensions: en
+  // arribar al viewport creixien la caixa de la escena i el navegador
+  // compensava el desplaçament per mantenir el contingut fix, cosa que feia
+  // parpellejar l'article. Es precarreguen i es dimensionen quan la secció
+  // s'acosta, de manera que quan arrive al text ja tenen la caixa reservada.
+  useEffect(() => {
+    const rootEl = rootRef.current
+    if (!rootEl) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+        io.disconnect()
+        rootEl.querySelectorAll<HTMLImageElement>('[data-richtext] img').forEach((img) => {
+          img.loading = 'eager'
+          const reserve = () => {
+            if (!img.naturalWidth) return
+            img.setAttribute('width', String(img.naturalWidth))
+            img.setAttribute('height', String(img.naturalHeight))
+          }
+          if (img.complete) reserve()
+          else img.addEventListener('load', reserve, { once: true })
+        })
+      },
+      { rootMargin: '200% 0px' }
+    )
+    io.observe(rootEl)
+    return () => io.disconnect()
+  }, [])
+
   const hasOutro = !!content.outro
   const totalScenes = steps.length + (hasOutro ? 1 : 0)
 
@@ -103,7 +132,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
   }
 
   return (
-    <section ref={rootRef} className="relative w-full bg-black" style={{ height: `${totalScenes * 100}svh` }}>
+    <section ref={rootRef} className="relative w-full bg-black" style={{ height: `${totalScenes * 100}svh`, overflowAnchor: 'none' }}>
       {/* Capa visual clavada a pantalla sencera */}
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
         {steps.map((step, i) =>
