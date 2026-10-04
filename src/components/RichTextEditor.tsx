@@ -59,6 +59,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   const lastEmittedRef = useRef(value)
 
   const handleChange = useCallback((html: string) => {
+    if (html === lastEmittedRef.current) return
     lastEmittedRef.current = html
     setCurrent(html)
     onChange(html)

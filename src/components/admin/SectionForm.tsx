@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSection, updateSection } from '@/lib/actions'
 import { SECTION_TYPES, SECTION_LABELS, SectionData } from '@/types'
@@ -34,6 +34,11 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
   const [showPreview, setShowPreview] = useState(false)
 
   const markDirty = useCallback(() => setDirty(true), [])
+
+  // L'editor reenvia el contingut i el flag "dirty" es pot activar sol. Després
+  // de desar, doncs, el banner només ha de sortir si el text ha tornat a
+  // canviar de veritat respecte del que hem desat.
+  const savedContentRef = useRef<string | null>(initial ? JSON.stringify(initial.content) : null)
 
   useEffect(() => { setGuardDirty(dirty) }, [dirty, setGuardDirty])
 
@@ -88,6 +93,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         toast('Secció creada', 'success')
       }
       setDirty(false)
+      savedContentRef.current = content
       if (!initial) {
         router.push(`/admin/numeros/${issueId}`)
         router.refresh()
@@ -254,7 +260,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           <SectionContentEditor
             type={type}
             content={content}
-            onChange={(v) => { setContent(v); markDirty() }}
+            onChange={(v) => { setContent(v); if (v !== savedContentRef.current) markDirty() }}
           />
         </div>
       </div>
