@@ -88,8 +88,10 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         toast('Secció creada', 'success')
       }
       setDirty(false)
-      router.push(`/admin/numeros/${issueId}`)
-      router.refresh()
+      if (!initial) {
+        router.push(`/admin/numeros/${issueId}`)
+        router.refresh()
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Error en desar la secció'
       setError(msg)
