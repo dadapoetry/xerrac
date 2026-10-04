@@ -40,6 +40,13 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
   // canviar de veritat respecte del que hem desat.
   const savedContentRef = useRef<string | null>(initial ? JSON.stringify(initial.content) : null)
 
+  // En muntar, Quill emet un text-change en normalitzar l'HTML que arriba del
+  // servidor. No és un canvi de l'usuari, però arriba per on arriba i arriba
+  // sol: si el prenem com a canvi, el banner ja hi és quan obres la pàgina. El
+  // primer valor que rep l'editor sense que l'usuari hagi tocat res es pren com
+  // a base; en qualsevol altre cas és un canvi de debò.
+  const editorBaselineRef = useRef(true)
+
   useEffect(() => { setGuardDirty(dirty) }, [dirty, setGuardDirty])
 
   useEffect(() => {
@@ -127,7 +134,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
       </div>
 
       <div className={showPreview ? 'grid grid-cols-1 xl:grid-cols-2 gap-8 items-start' : ''}>
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
+      <form onSubmit={handleSubmit} onPointerDown={() => { editorBaselineRef.current = false }} className="space-y-6 max-w-3xl">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label htmlFor="section-type" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
@@ -260,7 +267,15 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
           <SectionContentEditor
             type={type}
             content={content}
-            onChange={(v) => { setContent(v); if (v !== savedContentRef.current) markDirty() }}
+            onChange={(v) => {
+              setContent(v)
+              if (editorBaselineRef.current) {
+                editorBaselineRef.current = false
+                savedContentRef.current = v
+                return
+              }
+              if (v !== savedContentRef.current) markDirty()
+            }}
           />
         </div>
       </div>
