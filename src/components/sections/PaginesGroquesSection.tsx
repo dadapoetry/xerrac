@@ -43,7 +43,7 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                         <span className="-ml-[0.42em]">«</span>
                         {proverb.text}»
                       </blockquote>
-                      <p className="text-xs mt-2.5 font-mono tracking-wide text-gray-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                      <p className="text-xs mt-2.5 font-mono tracking-wide text-gray-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
                         — {proverb.author}
                       </p>
                     </div>
