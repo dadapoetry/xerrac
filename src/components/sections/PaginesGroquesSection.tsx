@@ -9,7 +9,7 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto">
-        <SectionHeader number={index} title={section.title} subtitle="Proverbis accidentals" />
+        <SectionHeader number={index} title={section.title} subtitle="Proverbis i refranys accidentals" />
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 md:gap-x-10">
             {content.proverbs?.map((proverb: Proverb, i: number) => (
@@ -19,14 +19,17 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
               >
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -mx-3 px-3 rounded-sm"
-                  style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.03)' }}
+                  style={{ backgroundColor: 'rgba(var(--grogues-rgb), 0.05)' }}
                 />
                 <div className="relative flex items-start gap-3">
                   <span className="font-mono text-[11px] leading-none mt-0.5 shrink-0 w-7 text-right select-none text-gray-500">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <blockquote className="text-[16px] md:text-lg text-gray-200 italic leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+                    <blockquote
+                      className="text-[16px] md:text-lg italic leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                      style={{ color: 'var(--grogues)' }}
+                    >
                       &ldquo;{proverb.text}&rdquo;
                     </blockquote>
                     <p className="text-xs mt-1.5 text-right font-mono tracking-wide text-gray-500 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
@@ -36,7 +39,7 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                 </div>
                 <div
                   className="mt-4 h-px w-full"
-                  style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.08)' }}
+                  style={{ backgroundColor: 'rgba(var(--grogues-rgb), 0.14)' }}
                 />
               </div>
             ))}
