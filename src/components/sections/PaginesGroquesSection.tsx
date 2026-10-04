@@ -25,8 +25,7 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                 >
                   <span
                     aria-hidden="true"
-                    className="absolute left-0 top-6 bottom-6 w-[2px] origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out"
-                    style={{ backgroundColor: 'rgba(var(--grogues-rgb), 0.55)' }}
+                    className="absolute left-0 top-6 bottom-6 w-[2px] bg-[rgba(var(--grogues-rgb),0.22)] group-hover:bg-[rgba(var(--grogues-rgb),0.55)] transition-colors duration-300"
                   />
                   <div
                     aria-hidden="true"
@@ -42,10 +41,11 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                     </span>
                     <div className="flex-1 min-w-0">
                       <blockquote
-                        className="font-serif text-[17px] md:text-[19px] italic leading-[1.55] max-w-[40ch] text-pretty hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                        className="font-serif text-[18px] md:text-[19px] italic leading-[1.6] md:leading-[1.55] max-w-[40ch] text-pretty hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                         style={{ color: 'var(--grogues)' }}
                       >
-                        «{proverb.text}»
+                        <span className="-ml-[0.42em]">«</span>
+                        {proverb.text}»
                       </blockquote>
                       <p className="text-xs mt-2.5 font-mono tracking-wide text-gray-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                         — {proverb.author}
