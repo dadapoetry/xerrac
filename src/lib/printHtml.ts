@@ -73,7 +73,7 @@ function renderSectionHTML(s: SectionData, c: any, fs: number, col: number, colS
         `<div style="margin-bottom:${fs*0.3}px"><strong style="font-size:${fs+1}px;text-transform:uppercase;letter-spacing:0.05em">${e.title}</strong><p style="margin:1px 0 0;line-height:${lh}">${stripHtml(e.body)}</p></div>`
       ).join('')}</div>`
       case 'pagines_grogues': return `<div style="line-height:${lh}">${(c.proverbs || []).map((p: any) =>
-        `<p style="margin:0 0 3px">&ldquo;${p.text}&rdquo; <span style="opacity:0.6">— ${p.author}</span></p>`
+        `<p style="margin:0 0 3px">«${p.text}» <span style="opacity:0.6">— ${p.author}</span></p>`
       ).join('')}</div>`
       case 'calaix_sastre': {
         const interviews = c.interviews || []; const reviews = c.reviews || []; const investigacio = c.investigacio || []; const parts: string[] = []

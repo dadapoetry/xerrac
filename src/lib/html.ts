@@ -7,9 +7,9 @@ export function styleBlockquotes(html: string, variant: 'line' | 'quoted' = 'lin
       if (variant === 'quoted') {
         return (
           '<span class="xerrac-quote-quoted">' +
-          '&ldquo;' +
+          '«' +
           content +
-          '&rdquo;' +
+          '»' +
           '</span>'
         )
       }

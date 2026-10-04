@@ -70,7 +70,7 @@ function renderSection(s: SectionData, c: any, fs: number, colSpan: number, acce
     }
     case 'pagines_grogues': return <div style={{ lineHeight: lh }}>
       {(c.proverbs || []).map((p: any, i: number) => (
-        <p key={i} style={{ margin: '0 0 3px' }}>&ldquo;{p.text}&rdquo; <span style={{ opacity: 0.6 }}>— {p.author}</span></p>
+        <p key={i} style={{ margin: '0 0 3px' }}>«{p.text}» <span style={{ opacity: 0.6 }}>— {p.author}</span></p>
       ))}
     </div>
     case 'calaix_sastre': {

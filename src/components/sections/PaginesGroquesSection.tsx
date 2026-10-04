@@ -30,9 +30,9 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                       className="text-[16px] md:text-lg italic leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                       style={{ color: 'var(--grogues)' }}
                     >
-                      &ldquo;{proverb.text}&rdquo;
+                      «{proverb.text}»
                     </blockquote>
-                    <p className="text-xs mt-1.5 text-right font-mono tracking-wide text-gray-500 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                    <p className="text-xs mt-1.5 text-left font-mono tracking-wide text-gray-500 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                       — {proverb.author}
                     </p>
                   </div>
