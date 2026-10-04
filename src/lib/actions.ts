@@ -30,13 +30,21 @@ function maskEmail(email: string): string {
   return `${name.slice(0, 1)}***@${domain}`
 }
 
-export async function createIssue(data: { number: number; title: string; date: string }) {
+export async function createIssue(data: { number: number; title: string; date: string; published?: boolean; accentColor?: string; showPdfButton?: boolean }) {
   await checkAuth()
   const id = uuid()
+  const published = data.published ? 1 : 0
+  const accentColor = data.accentColor || '#ef4444'
+  const showPdfButton = data.showPdfButton === false ? 0 : 1
   await db.execute({
-    sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published) VALUES (?, ?, ?, ?, ?, 0)',
-    args: [id, data.number, data.title, data.date, '#ef4444'],
+    sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published, showPdfButton) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    args: [id, data.number, data.title, data.date, accentColor, published, showPdfButton],
   })
+  if (published && showPdfButton) {
+    fetch(`${getSiteUrl()}/api/pdf/${id}`).catch((err) => {
+      console.error('[actions] PDF generation failed for', id, err)
+    })
+  }
   revalidatePublic()
   return { id, ...data }
 }

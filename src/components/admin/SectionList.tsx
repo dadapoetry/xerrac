@@ -139,9 +139,18 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
             <p className="text-sm text-white truncate">{section.title}</p>
           )}
           {section.backgroundImage && (
-            <p className="text-xs text-gray-700 mt-1 truncate">
-              BG: {section.backgroundImage}
-            </p>
+            <div className="flex items-center gap-2 mt-2">
+              <img
+                src={section.backgroundImage}
+                alt=""
+                loading="lazy"
+                onError={(e) => { e.currentTarget.style.visibility = 'hidden' }}
+                className="w-8 h-8 object-cover border border-gray-800 flex-shrink-0"
+              />
+              <span className="text-xs text-gray-700 truncate" title={section.backgroundImage}>
+                {section.backgroundImage}
+              </span>
+            </div>
           )}
         </div>
       ))}

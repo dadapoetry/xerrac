@@ -161,14 +161,24 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             overwriteFrom={bgImage}
           />
         </div>
-        <input
-          type="text"
-          value={bgImage}
-          onChange={(e) => { setBgImage(e.target.value); markDirty() }}
-          placeholder="/uploads/imatge.jpg"
-          className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
-            text-sm focus:outline-none focus:border-red-500 transition-colors"
-        />
+        <div className="flex gap-3">
+          {bgImage && (
+            <img
+              src={bgImage}
+              alt=""
+              onError={(e) => { e.currentTarget.style.visibility = 'hidden' }}
+              className="w-24 h-24 object-cover border border-gray-700 flex-shrink-0"
+            />
+          )}
+          <input
+            type="text"
+            value={bgImage}
+            onChange={(e) => { setBgImage(e.target.value); markDirty() }}
+            placeholder="/uploads/imatge.jpg"
+            className="flex-1 min-w-0 bg-gray-900 border border-gray-700 px-4 py-2 text-white
+              text-sm focus:outline-none focus:border-red-500 transition-colors"
+          />
+        </div>
         </div>
 
       <div>
@@ -183,14 +193,24 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             overwriteFrom={bgImageMobile}
           />
         </div>
-        <input
-          type="text"
-          value={bgImageMobile}
-          onChange={(e) => { setBgImageMobile(e.target.value); markDirty() }}
-          placeholder="Deixa-ho buit per reutilitzar la imatge d'escriptori"
-          className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
-            text-sm focus:outline-none focus:border-red-500 transition-colors"
-        />
+        <div className="flex gap-3">
+          {bgImageMobile && (
+            <img
+              src={bgImageMobile}
+              alt=""
+              onError={(e) => { e.currentTarget.style.visibility = 'hidden' }}
+              className="w-24 h-24 object-cover border border-gray-700 flex-shrink-0"
+            />
+          )}
+          <input
+            type="text"
+            value={bgImageMobile}
+            onChange={(e) => { setBgImageMobile(e.target.value); markDirty() }}
+            placeholder="Deixa-ho buit per reutilitzar la imatge d'escriptori"
+            className="flex-1 min-w-0 bg-gray-900 border border-gray-700 px-4 py-2 text-white
+              text-sm focus:outline-none focus:border-red-500 transition-colors"
+          />
+        </div>
         <p className="text-[10px] text-gray-600 mt-1">
           Recomanat 1080×2400 px (20:9). Si es deixa buit, el mòbil retalla la imatge d'escriptori.
         </p>

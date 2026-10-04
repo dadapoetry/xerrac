@@ -69,7 +69,7 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
         await updateIssue(initial.id, { number, title, date, published, accentColor, showPdfButton })
         toast('Número actualitzat', 'success')
       } else {
-        await createIssue({ number, title, date })
+        await createIssue({ number, title, date, published, accentColor, showPdfButton })
         toast('Número creat', 'success')
       }
       setDirty(false)
@@ -129,61 +129,63 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
         />
       </div>
 
-      {initial && (
-        <>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
-              Color d'accent
-            </label>
-            <div className="flex items-center gap-3">
-              <input
-                type="color"
-                value={accentColor}
-                onChange={(e) => { setAccentColor(e.target.value); markDirty() }}
-                className="w-10 h-10 border border-gray-700 bg-transparent cursor-pointer"
-              />
-              <input
-                type="text"
-                value={accentColor}
-                onChange={(e) => { setAccentColor(e.target.value); markDirty() }}
-                className="w-28 bg-gray-900 border border-gray-700 px-3 py-2 text-white
-                  text-sm font-mono focus:outline-none focus:border-gray-500 transition-colors"
-              />
-              <span
-                className="w-6 h-6 rounded-full border border-gray-700"
-                style={{ backgroundColor: accentColor }}
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              id="published"
-              checked={published}
-              onChange={(e) => { setPublished(e.target.checked); markDirty() }}
-              className="accent-red-500"
-            />
-            <label htmlFor="published" className="text-sm text-gray-400">
-              Publicat (visible al web)
-            </label>
-          </div>
-          <div className="flex items-start gap-3">
-            <input
-              type="checkbox"
-              id="showPdfButton"
-              checked={showPdfButton}
-              onChange={(e) => { setShowPdfButton(e.target.checked); markDirty() }}
-              className="mt-1 accent-red-500"
-            />
-            <label htmlFor="showPdfButton" className="text-sm text-gray-400">
-              Mostrar el botó «Llegeix en PDF» a la portada
-              <span className="block text-xs text-gray-600 mt-0.5">
-                Desactiva'l si el número conté formats no compilables (p. ex. assaig visual)
-              </span>
-            </label>
-          </div>
-        </>
+      {!initial && (
+        <p className="text-xs text-gray-600 -mt-3">
+          Es crearà com a esborrany. Pots publicar-lo ara mateix si ja està a punt.
+        </p>
       )}
+
+      <div>
+        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+          Color d'accent
+        </label>
+        <div className="flex items-center gap-3">
+          <input
+            type="color"
+            value={accentColor}
+            onChange={(e) => { setAccentColor(e.target.value); markDirty() }}
+            className="w-10 h-10 border border-gray-700 bg-transparent cursor-pointer"
+          />
+          <input
+            type="text"
+            value={accentColor}
+            onChange={(e) => { setAccentColor(e.target.value); markDirty() }}
+            className="w-28 bg-gray-900 border border-gray-700 px-3 py-2 text-white
+              text-sm font-mono focus:outline-none focus:border-gray-500 transition-colors"
+          />
+          <span
+            className="w-6 h-6 rounded-full border border-gray-700"
+            style={{ backgroundColor: accentColor }}
+          />
+        </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <input
+          type="checkbox"
+          id="published"
+          checked={published}
+          onChange={(e) => { setPublished(e.target.checked); markDirty() }}
+          className="accent-red-500"
+        />
+        <label htmlFor="published" className="text-sm text-gray-400">
+          Publicat (visible al web)
+        </label>
+      </div>
+      <div className="flex items-start gap-3">
+        <input
+          type="checkbox"
+          id="showPdfButton"
+          checked={showPdfButton}
+          onChange={(e) => { setShowPdfButton(e.target.checked); markDirty() }}
+          className="mt-1 accent-red-500"
+        />
+        <label htmlFor="showPdfButton" className="text-sm text-gray-400">
+          Mostrar el botó «Llegeix en PDF» a la portada
+          <span className="block text-xs text-gray-600 mt-0.5">
+            Desactiva'l si el número conté formats no compilables (p. ex. assaig visual)
+          </span>
+        </label>
+      </div>
 
       {error && (
         <p className="text-xs text-red-400 bg-red-900/20 border border-red-900 px-4 py-2">{error}</p>
