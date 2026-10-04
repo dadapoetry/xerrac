@@ -54,15 +54,14 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
     <>
       <div className="section-container">
         {section.backgroundImage && (
-          <div
-            className={`absolute inset-x-0 top-0 h-[70svh] z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
-            style={{
-              backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.55) 55%, rgba(0,0,0,0)), url("${section.backgroundImage}")`,
-              maskImage: 'linear-gradient(to bottom, #000 82%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, #000 82%, transparent 100%)',
-            }}
-            aria-hidden="true"
-          />
+          <>
+            <div
+              className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
+              style={{ backgroundImage: `url("${section.backgroundImage}")` }}
+              aria-hidden="true"
+            />
+            <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
+          </>
         )}
         <div className="relative z-[3] w-full">
           <Component section={section} index={index} />
