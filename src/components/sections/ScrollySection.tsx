@@ -281,7 +281,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
           <div key="outro" data-scene={steps.length} className="relative h-[100svh] flex items-center justify-center px-6">
             <div
               aria-hidden="true"
-              className={`absolute inset-0 pointer-events-none bg-gradient-to-b from-black/0 via-black/60 to-black/0 transition-opacity duration-[1200ms] ease-out ${
+              className={`absolute inset-0 pointer-events-none bg-gradient-to-b from-black/0 via-black/20 to-black/75 transition-opacity duration-[1200ms] ease-out ${
                 active === steps.length ? 'opacity-100' : 'opacity-0'
               }`}
             />
