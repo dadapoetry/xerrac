@@ -67,46 +67,46 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   // Aquest insert no pot retorna silenciosament: el ref travessa next/dynamic
   // (asíncron) i pot arribar buit, i aleshores el diàleg es quedava obert en
   // estat "Pujant..." amb la imatge ja pujada i sense inserir. La imatge va on
-  // hi ha el cursor, capturat en obrir el diàleg, i si no hi ha cursor actiu al
-  // final del text.
+  // hi ha el cursor: primer l'API de Quill, que és la que en manté el model i
+  // l'historial, i si no hi ha instància, el cursor capturat en obrir el diàleg.
   const insertImage = useCallback(
     (url: string, width: string, alt: string, dims?: { width: number; height: number } | null) => {
-      const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
-      if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
       const ref = editorRef.current as any
       const quill = ref?.getEditor?.() || ref
       const maxWidth = width || '100%'
-      const img = document.createElement('img')
-      img.src = url
-      img.alt = alt
-      img.loading = 'lazy'
-      img.decoding = 'async'
-      if (dims) {
-        img.width = dims.width
-        img.height = dims.height
-      }
-      img.style.maxWidth = maxWidth
-      img.style.height = 'auto'
+      const sizeAttrs = dims ? ` width="${dims.width}" height="${dims.height}"` : ''
+      const html = `<img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}"${sizeAttrs} loading="lazy" decoding="async" style="max-width: ${escapeAttr(maxWidth)}; height: auto;" />`
 
-      const caret = caretRef.current
-      if (caret && editorEl.contains(caret.startContainer)) {
-        caret.deleteContents()
-        caret.insertNode(img)
-        const after = document.createRange()
-        after.setStartAfter(img)
-        after.collapse(true)
-        const sel = window.getSelection()
-        sel?.removeAllRanges()
-        sel?.addRange(after)
-        editorEl.dispatchEvent(new Event('input', { bubbles: true }))
-      } else if (quill?.clipboard?.dangerouslyPasteHTML) {
+      if (quill?.clipboard?.dangerouslyPasteHTML) {
         const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
-        quill.clipboard.dangerouslyPasteHTML(
-          range.index,
-          `<img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}"${dims ? ` width="${dims.width}" height="${dims.height}"` : ''} loading="lazy" decoding="async" style="max-width: ${escapeAttr(maxWidth)}; height: auto;" />`
-        )
+        quill.clipboard.dangerouslyPasteHTML(range.index, html)
       } else {
-        editorEl.appendChild(img)
+        const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
+        if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
+        const img = document.createElement('img')
+        img.src = url
+        img.alt = alt
+        img.loading = 'lazy'
+        img.decoding = 'async'
+        if (dims) {
+          img.width = dims.width
+          img.height = dims.height
+        }
+        img.style.maxWidth = maxWidth
+        img.style.height = 'auto'
+        const caret = caretRef.current
+        if (caret && editorEl.contains(caret.startContainer)) {
+          caret.deleteContents()
+          caret.insertNode(img)
+          const after = document.createRange()
+          after.setStartAfter(img)
+          after.collapse(true)
+          const sel = window.getSelection()
+          sel?.removeAllRanges()
+          sel?.addRange(after)
+        } else {
+          editorEl.appendChild(img)
+        }
         editorEl.dispatchEvent(new Event('input', { bubbles: true }))
       }
       caretRef.current = null
