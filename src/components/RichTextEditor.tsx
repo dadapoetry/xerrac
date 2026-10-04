@@ -46,6 +46,7 @@ function readImageSize(src: string): Promise<{ width: number; height: number } |
 export function RichTextEditor({ value, onChange, minimal = false }: RichTextEditorProps) {
   const editorRef = useRef<ReactQuillType | null>(null)
   const rootRef = useRef<HTMLDivElement | null>(null)
+  const caretRef = useRef<Range | null>(null)
   const [showImageDialog, setShowImageDialog] = useState(false)
   const [current, setCurrent] = useState(value)
   const lastEmittedRef = useRef(value)
@@ -65,40 +66,64 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
 
   // Aquest insert no pot retorna silenciosament: el ref travessa next/dynamic
   // (asíncron) i pot arribar buit, i aleshores el diàleg es quedava obert en
-  // estat "Pujant..." amb la imatge ja pujada i sense inserir.
+  // estat "Pujant..." amb la imatge ja pujada i sense inserir. La imatge va on
+  // hi ha el cursor, capturat en obrir el diàleg, i si no hi ha cursor actiu al
+  // final del text.
   const insertImage = useCallback(
     (url: string, width: string, alt: string, dims?: { width: number; height: number } | null) => {
+      const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
+      if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
       const ref = editorRef.current as any
       const quill = ref?.getEditor?.() || ref
       const maxWidth = width || '100%'
-      const sizeAttrs = dims ? ` width="${dims.width}" height="${dims.height}"` : ''
-      if (quill?.clipboard?.dangerouslyPasteHTML) {
+      const img = document.createElement('img')
+      img.src = url
+      img.alt = alt
+      img.loading = 'lazy'
+      img.decoding = 'async'
+      if (dims) {
+        img.width = dims.width
+        img.height = dims.height
+      }
+      img.style.maxWidth = maxWidth
+      img.style.height = 'auto'
+
+      const caret = caretRef.current
+      if (caret && editorEl.contains(caret.startContainer)) {
+        caret.deleteContents()
+        caret.insertNode(img)
+        const after = document.createRange()
+        after.setStartAfter(img)
+        after.collapse(true)
+        const sel = window.getSelection()
+        sel?.removeAllRanges()
+        sel?.addRange(after)
+        editorEl.dispatchEvent(new Event('input', { bubbles: true }))
+      } else if (quill?.clipboard?.dangerouslyPasteHTML) {
         const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
         quill.clipboard.dangerouslyPasteHTML(
           range.index,
-          `<img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}"${sizeAttrs} loading="lazy" decoding="async" style="max-width: ${escapeAttr(maxWidth)}; height: auto;" />`
+          `<img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}"${dims ? ` width="${dims.width}" height="${dims.height}"` : ''} loading="lazy" decoding="async" style="max-width: ${escapeAttr(maxWidth)}; height: auto;" />`
         )
       } else {
-        const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
-        if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
-        const img = document.createElement('img')
-        img.src = url
-        img.alt = alt
-        img.loading = 'lazy'
-        img.decoding = 'async'
-        if (dims) {
-          img.width = dims.width
-          img.height = dims.height
-        }
-        img.style.maxWidth = maxWidth
-        img.style.height = 'auto'
         editorEl.appendChild(img)
         editorEl.dispatchEvent(new Event('input', { bubbles: true }))
       }
+      caretRef.current = null
       setShowImageDialog(false)
     },
     []
   )
+
+  // El cursor s'ha de llegir abans que el diàleg el robi el focus: en obrir-lo
+  // es queda capturat i així la imatge aterra on elus estaves escrivint.
+  const captureCaret = useCallback(() => {
+    const host = rootRef.current
+    const sel = window.getSelection()
+    if (!host || !sel || sel.rangeCount === 0) return
+    const range = sel.getRangeAt(0)
+    if (host.contains(range.startContainer)) caretRef.current = range.cloneRange()
+  }, [])
 
   const modules = useMemo(() => {
     const cfg = minimal
@@ -119,7 +144,11 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
         <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
         <button
           type="button"
-          onClick={() => setShowImageDialog(true)}
+          onMouseDown={captureCaret}
+          onClick={() => {
+            captureCaret()
+            setShowImageDialog(true)
+          }}
           className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
         >
           + Inserir imatge
