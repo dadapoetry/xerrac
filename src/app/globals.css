@@ -192,6 +192,20 @@ body::before {
   }
 }
 
+/* Fons de secció: imatge d'escriptori i imatge de mòbil, triades pel viewport.
+   Les dues URL són variables inline, però la regla només en aplica la que
+   correspon a la pantalla activa: així el navegador no baixa les dues. Les
+   seccions sense imatge de mòbil cauen a la d'escriptori. */
+.section-bg {
+  background-image: var(--section-bg-desktop);
+}
+
+@media (max-width: 767px) {
+  .section-bg {
+    background-image: var(--section-bg-mobile, var(--section-bg-desktop));
+  }
+}
+
 /* Previsualització de la secció dins el panell d'admin: la secció pot
    retina el seu contingut, per això el contenidor del visor fa scroll. */
 .preview-root .section-container {

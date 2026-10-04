@@ -56,8 +56,15 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
         {section.backgroundImage && (
           <>
             <div
-              className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
-              style={{ backgroundImage: `url("${section.backgroundImage}")` }}
+              className={`section-bg absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
+              style={
+                {
+                  '--section-bg-desktop': `url("${section.backgroundImage}")`,
+                  ...(section.backgroundImageMobile
+                    ? { '--section-bg-mobile': `url("${section.backgroundImageMobile}")` }
+                    : {}),
+                } as React.CSSProperties
+              }
               aria-hidden="true"
             />
             <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
