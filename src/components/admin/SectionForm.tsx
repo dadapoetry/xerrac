@@ -7,6 +7,7 @@ import { SECTION_TYPES, SECTION_LABELS, SectionData } from '@/types'
 import { SectionContentEditor } from './SectionContentEditor'
 import { CloudinaryUploadButton } from './CloudinaryUploadButton'
 import { useToast } from './Toast'
+import { useUnsavedGuard } from './UnsavedGuard'
 
 interface SectionFormProps {
   issueId: string
@@ -17,6 +18,7 @@ interface SectionFormProps {
 export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
   const router = useRouter()
   const { toast } = useToast()
+  const { setDirty: setGuardDirty, guardLeave } = useUnsavedGuard()
   const [type, setType] = useState(initial?.type || SECTION_TYPES[0])
   const [title, setTitle] = useState(initial?.title || '')
   const [order] = useState(initial?.order ?? nextOrder)
@@ -30,6 +32,8 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
   const [dirty, setDirty] = useState(false)
 
   const markDirty = useCallback(() => setDirty(true), [])
+
+  useEffect(() => { setGuardDirty(dirty) }, [dirty, setGuardDirty])
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -223,15 +227,18 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         </button>
         <button
           type="button"
-          onClick={() => {
-            if (dirty && !confirm('Tens canvis no desats. Vols sortir de totes maneres?')) return
-            router.back()
-          }}
+          onClick={() => guardLeave(() => router.back())}
           className="px-6 py-3 border border-gray-700 text-gray-400 text-sm uppercase tracking-wider
             hover:border-gray-500 transition-colors"
         >
           Cancel·lar
         </button>
+        {dirty && (
+          <span className="self-center text-xs text-amber-500/90">
+            Canvis no desats ·{' '}
+            <span className="hidden sm:inline">Ctrl/Cmd + S per desar</span>
+          </span>
+        )}
       </div>
     </form>
   )

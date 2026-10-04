@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createIssue, updateIssue } from '@/lib/actions'
 import { useToast } from './Toast'
+import { useUnsavedGuard } from './UnsavedGuard'
 
 interface IssueFormProps {
   initial?: {
@@ -21,6 +22,7 @@ interface IssueFormProps {
 export function IssueForm({ initial, nextNumber }: IssueFormProps) {
   const router = useRouter()
   const { toast } = useToast()
+  const { setDirty: setGuardDirty, guardLeave } = useUnsavedGuard()
   const [number, setNumber] = useState(initial?.number || nextNumber || 1)
   const [title, setTitle] = useState(initial?.title || '')
   const [date, setDate] = useState(initial?.date || new Date().toISOString().split('T')[0])
@@ -32,6 +34,8 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
   const [dirty, setDirty] = useState(false)
 
   const markDirty = useCallback(() => setDirty(true), [])
+
+  useEffect(() => { setGuardDirty(dirty) }, [dirty, setGuardDirty])
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -197,15 +201,18 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
         </button>
         <button
           type="button"
-          onClick={() => {
-            if (dirty && !confirm('Tens canvis no desats. Vols sortir de totes maneres?')) return
-            router.back()
-          }}
+          onClick={() => guardLeave(() => router.back())}
           className="px-6 py-3 border border-gray-700 text-gray-400 text-sm uppercase tracking-wider
             hover:border-gray-500 transition-colors"
         >
           Cancel·lar
         </button>
+        {dirty && (
+          <span className="self-center text-xs text-amber-500/90">
+            Canvis no desats ·{' '}
+            <span className="hidden sm:inline">Ctrl/Cmd + S per desar</span>
+          </span>
+        )}
       </div>
     </form>
   )

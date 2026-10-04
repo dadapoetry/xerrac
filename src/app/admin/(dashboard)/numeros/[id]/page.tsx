@@ -3,12 +3,14 @@ import { IssueForm } from '@/components/admin/IssueForm'
 import { SectionList } from '@/components/admin/SectionList'
 import { SendNewsletterButton } from '@/components/admin/SendNewsletterButton'
 import { getSiteUrl } from '@/lib/site'
+import { getSubscriberStats } from '@/lib/subscribers'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default async function EditNumeroPage({ params }: { params: { id: string } }) {
   const issue = await getIssue(params.id)
+  const { confirmed: confirmedSubscribers } = await getSubscriberStats()
   const previewToken = process.env.PREVIEW_TOKEN
   const previewUrl = previewToken
     ? `${getSiteUrl()}/?issue=${params.id}&preview=${previewToken}`
@@ -40,7 +42,12 @@ export default async function EditNumeroPage({ params }: { params: { id: string 
           year: 'numeric', month: 'long'
         })}
         <span className="mx-3">·</span>
-        <SendNewsletterButton issueId={issue.id} />
+        <SendNewsletterButton
+          issueId={issue.id}
+          issueTitle={issue.title}
+          issueNumber={issue.number}
+          confirmedSubscribers={confirmedSubscribers}
+        />
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

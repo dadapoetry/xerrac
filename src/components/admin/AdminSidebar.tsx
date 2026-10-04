@@ -1,14 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
 import { getSiteUrl } from '@/lib/site'
+import { useUnsavedGuard } from './UnsavedGuard'
 
 export function AdminSidebar({ user }: { user: { name?: string | null; email?: string | null } }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const { guardLeave } = useUnsavedGuard()
   const [open, setOpen] = useState(false)
+
+  const navigate = (href: string) => (e: React.MouseEvent) => {
+    e.preventDefault()
+    guardLeave(() => {
+      setOpen(false)
+      router.push(href)
+    })
+  }
 
   const links = [
     { href: '/admin', label: 'Dashboard' },
@@ -20,7 +31,7 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
   const sidebar = (
     <div className="h-full w-64 bg-black border-r border-gray-900 flex flex-col">
       <div className="p-6 border-b border-gray-900">
-        <Link href="/admin" className="no-underline group" onClick={() => setOpen(false)}>
+        <Link href="/admin" className="no-underline group" onClick={navigate('/admin')}>
           <span className="text-base font-black tracking-tight text-white group-hover:text-red-500 transition-colors">
             XERRAC<span className="text-red-500">!</span>
           </span>
@@ -35,7 +46,7 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
           <Link
             key={link.href}
             href={link.href}
-            onClick={() => setOpen(false)}
+onClick={navigate(link.href)}
             className={`block px-4 py-2.5 text-sm transition-colors mb-1 border-l-2
               ${pathname === link.href
                 ? 'border-red-500 text-red-400 bg-red-900/10'
@@ -57,7 +68,7 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
         </a>
         <p className="text-xs text-gray-700 truncate">{user?.email}</p>
         <button
-          onClick={() => signOut({ callbackUrl: '/admin/login' })}
+          onClick={() => guardLeave(() => signOut({ callbackUrl: '/admin/login' }))}
           className="text-[11px] text-gray-600 hover:text-red-400 transition-colors uppercase tracking-wider"
         >
           Tancar sessió

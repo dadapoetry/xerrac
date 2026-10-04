@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { ToastProvider } from '@/components/admin/Toast'
+import { UnsavedGuardProvider } from '@/components/admin/UnsavedGuard'
 
 export const metadata: Metadata = {
   title: 'Admin',
@@ -18,13 +19,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-black flex">
-      <AdminSidebar user={session.user || {}} />
-      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-14 md:pt-8">
-        <ToastProvider>
-          {children}
-        </ToastProvider>
-      </main>
-    </div>
+    <UnsavedGuardProvider>
+      <div className="min-h-screen bg-black flex">
+        <AdminSidebar user={session.user || {}} />
+        <main className="flex-1 md:ml-64 p-4 md:p-8 pt-14 md:pt-8">
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+        </main>
+      </div>
+    </UnsavedGuardProvider>
   )
 }

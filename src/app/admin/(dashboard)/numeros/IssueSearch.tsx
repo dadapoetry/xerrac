@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { DeleteIssueButton } from '@/components/admin/DeleteIssueButton'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { batchUpdateIssues } from '@/lib/actions'
+import { useToast } from '@/components/admin/Toast'
 
 interface IssueRow {
   id: string
@@ -20,11 +21,14 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { toast } = useToast()
 
   const filtered = issues.filter((issue) =>
     issue.title.toLowerCase().includes(search.toLowerCase()) ||
     String(issue.number).includes(search)
   )
+
+  const allSelected = filtered.length > 0 && selected.size === filtered.length
 
   const toggleSelect = (id: string) => {
     setSelected((prev) => {
@@ -36,7 +40,7 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
   }
 
   const toggleAll = () => {
-    if (selected.size === filtered.length) {
+    if (allSelected) {
       setSelected(new Set())
     } else {
       setSelected(new Set(filtered.map((i) => i.id)))
@@ -50,12 +54,16 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
       await batchUpdateIssues(Array.from(selected).map((id) => ({ id, published })))
       setSelected(new Set())
       router.refresh()
-    } catch {
-      // silent
+      toast(
+        `${selected.size} número${selected.size === 1 ? '' : 's'} ${published ? 'publicat' : 'despublicat'}${selected.size === 1 ? '' : 's'}.`,
+        'success',
+      )
+    } catch (err: any) {
+      toast(err?.message || 'No s\'ha pogut completar l\'operació.', 'error')
     } finally {
       setLoading(false)
     }
-  }, [selected, router])
+  }, [selected, router, toast])
 
   return (
     <div>
@@ -68,6 +76,9 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
           className="w-full max-w-md bg-gray-900 border border-gray-700 px-4 py-2 text-white
             text-sm focus:outline-none focus:border-red-500 transition-colors"
         />
+        <span className="text-xs text-gray-600 whitespace-nowrap tabular-nums">
+          {filtered.length} de {issues.length}
+        </span>
         {selected.size > 0 && (
           <div className="flex gap-2 ml-auto">
             <button
@@ -76,7 +87,7 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
               className="px-3 py-1.5 bg-green-700 text-white text-xs uppercase tracking-wider
                 hover:bg-green-600 transition-colors disabled:opacity-50"
             >
-              Publicar ({selected.size})
+              {loading ? 'Publicant...' : `Publicar (${selected.size})`}
             </button>
             <button
               onClick={() => batchPublish(false)}
@@ -84,7 +95,7 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
               className="px-3 py-1.5 bg-gray-700 text-white text-xs uppercase tracking-wider
                 hover:bg-gray-600 transition-colors disabled:opacity-50"
             >
-              Despublicar ({selected.size})
+              {loading ? 'Despublicant...' : `Despublicar (${selected.size})`}
             </button>
           </div>
         )}
@@ -95,9 +106,11 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
           text-xs uppercase tracking-wider text-gray-500 items-center">
           <button
             onClick={toggleAll}
-            className={`w-4 h-4 border ${selected.size === filtered.length && filtered.length > 0 ? 'bg-red-600 border-red-600' : 'border-gray-600'} flex-shrink-0`}
+            aria-pressed={allSelected}
+            aria-label={allSelected ? 'Desmarca tots els números' : 'Marca tots els números'}
+            className={`w-4 h-4 border ${allSelected ? 'bg-red-600 border-red-600' : 'border-gray-600'} flex-shrink-0`}
           >
-            {selected.size === filtered.length && filtered.length > 0 && (
+            {allSelected && (
               <span className="text-white text-[10px] block leading-[14px] text-center">✓</span>
             )}
           </button>
@@ -115,6 +128,8 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
           >
             <button
               onClick={() => toggleSelect(issue.id)}
+              aria-pressed={selected.has(issue.id)}
+              aria-label={`Selecciona el número ${issue.number}, ${issue.title}`}
               className={`w-4 h-4 border ${selected.has(issue.id) ? 'bg-red-600 border-red-600' : 'border-gray-600'} flex-shrink-0`}
             >
               {selected.has(issue.id) && (
