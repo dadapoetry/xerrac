@@ -278,8 +278,14 @@ export function ScrollySection({ section, index }: { section: SectionData; index
           )
         })}
         {hasOutro && (
-          <div key="outro" data-scene={steps.length} className="h-[100svh] flex items-center justify-center px-6">
-            <div className={`max-w-2xl text-center transition-all duration-[1200ms] ease-out ${
+          <div key="outro" data-scene={steps.length} className="relative h-[100svh] flex items-center justify-center px-6">
+            <div
+              aria-hidden="true"
+              className={`absolute inset-0 pointer-events-none bg-gradient-to-b from-black/0 via-black/60 to-black/0 transition-opacity duration-[1200ms] ease-out ${
+                active === steps.length ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+            <div className={`relative max-w-2xl text-center transition-all duration-[1200ms] ease-out ${
               active === steps.length ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}>
               <div className="mx-auto mb-8 h-px w-16 bg-white/40" />
