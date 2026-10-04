@@ -34,7 +34,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
       {paras.map((p, i) => (
         <div
           key={i}
-          className={`text-gray-100 leading-loose font-serif text-[15px] md:text-lg prose-invert transition-all duration-[900ms] ease-out ${
+          className={`text-gray-100 leading-relaxed md:leading-loose font-serif text-[15px] md:text-lg prose-invert transition-all duration-[900ms] ease-out ${
             active
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-6'
