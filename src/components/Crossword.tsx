@@ -48,6 +48,8 @@ export function Crossword({ data }: CrosswordProps) {
   const [direction, setDirection] = useState<'across' | 'down'>('across')
   const [revealed, setRevealed] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[][]>([])
+  const activeRef = useRef<Position | null>(null)
+  const pressRef = useRef<{ row: number; col: number; wasActive: boolean } | null>(null)
 
   const isBlackCell = (row: number, col: number): boolean => {
     for (const clue of Object.values(clues.across)) {
@@ -73,21 +75,38 @@ export function Crossword({ data }: CrosswordProps) {
     return null
   }
 
-  const getClueForCell = (row: number, col: number): { clue: string; answer: string } | null => {
-    if (direction === 'across') {
-      for (const [, clue] of Object.entries(clues.across)) {
+  const getClueFor = (
+    row: number,
+    col: number,
+    dir: 'across' | 'down'
+  ): { clue: string; answer: string } | null => {
+    const list = dir === 'across' ? clues.across : clues.down
+    for (const clue of Object.values(list)) {
+      if (dir === 'across') {
         if (row === clue.row && col >= clue.col && col < clue.col + clue.answer.length) {
           return { clue: clue.clue, answer: clue.answer }
         }
-      }
-    } else {
-      for (const [, clue] of Object.entries(clues.down)) {
+      } else {
         if (col === clue.col && row >= clue.row && row < clue.row + clue.answer.length) {
           return { clue: clue.clue, answer: clue.answer }
         }
       }
     }
     return null
+  }
+
+  // Activa una cel·la i tria la direcció que hi té pista: si la cel·la només
+// pertany a una paraula, la direcció ha de ser necessàriament aquesta.
+const activate = (row: number, col: number, toggle: boolean) => {
+    const across = getClueFor(row, col, 'across')
+    const down = getClueFor(row, col, 'down')
+    let dir = direction
+    if (!across && down) dir = 'down'
+    else if (across && !down) dir = 'across'
+    else if (toggle && across && down) dir = dir === 'across' ? 'down' : 'across'
+    setDirection(dir)
+    activeRef.current = { row, col }
+    setActivePos({ row, col })
   }
 
   const handleCellChange = (row: number, col: number, value: string) => {
@@ -100,7 +119,7 @@ export function Crossword({ data }: CrosswordProps) {
   const handleKeyDown = (row: number, col: number, e: React.KeyboardEvent) => {
     if (e.key === 'Tab') {
       e.preventDefault()
-      setDirection(d => d === 'across' ? 'down' : 'across')
+      activate(row, col, true)
       return
     }
 
@@ -117,16 +136,18 @@ export function Crossword({ data }: CrosswordProps) {
   const moveTo = (row: number, col: number) => {
     if (row < 0 || row >= numRows || col < 0 || col >= numCols) return
     if (isBlackCell(row, col)) return
-    setActivePos({ row, col })
+    activate(row, col, false)
     inputRefs.current[row]?.[col]?.focus()
   }
 
   const handleCellClick = (row: number, col: number) => {
     if (isBlackCell(row, col)) return
-    if (activePos && activePos.row === row && activePos.col === col) {
-      setDirection(d => d === 'across' ? 'down' : 'across')
-    }
-    setActivePos({ row, col })
+    // El focus i el clic del mateix ratolí arriben seguits: només es commuta
+    // la direcció si la cel·la ja era la activa abans d'aquest clic.
+    const press = pressRef.current
+    pressRef.current = null
+    const wasActive = !!press && press.row === row && press.col === col && press.wasActive
+    activate(row, col, wasActive)
   }
 
   const checkAnswers = () => {
@@ -167,6 +188,18 @@ export function Crossword({ data }: CrosswordProps) {
     setGrid(g)
   }
 
+  // La pista que es mostra és la de la direcció activa; si aquesta cel·la no
+  // en té, es mostra la de l'altra direcció en lloc de guillemets.
+  const clueInfo = activePos
+    ? (() => {
+        const primary = getClueFor(activePos.row, activePos.col, direction)
+        if (primary) return { dir: direction, clue: primary.clue }
+        const other = direction === 'across' ? ('down' as const) : ('across' as const)
+        const fallback = getClueFor(activePos.row, activePos.col, other)
+        return fallback ? { dir: other, clue: fallback.clue } : null
+      })()
+    : null
+
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       <div className="flex-shrink-0 overflow-x-auto pb-4">
@@ -186,7 +219,7 @@ export function Crossword({ data }: CrosswordProps) {
             const cellNum = getCellNumber(row, col)
             const isActive = activePos?.row === row && activePos?.col === col
 
-            return (
+return (
               <div
                 key={idx}
                 className="crossword-cell relative"
@@ -197,6 +230,13 @@ export function Crossword({ data }: CrosswordProps) {
                   border: '1px solid #333',
                 }}
                 onClick={() => handleCellClick(row, col)}
+                onPointerDown={() => {
+                  pressRef.current = {
+                    row,
+                    col,
+                    wasActive: activeRef.current?.row === row && activeRef.current?.col === col,
+                  }
+                }}
               >
                 {cellNum && (
                   <span className="absolute top-0 left-0.5 text-[0.5rem] text-gray-400 leading-none">
@@ -215,7 +255,7 @@ export function Crossword({ data }: CrosswordProps) {
                     onChange={(e) => handleCellChange(row, col, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(row, col, e)}
                     onClick={() => handleCellClick(row, col)}
-                    onFocus={() => setActivePos({ row, col })}
+                    onFocus={() => activate(row, col, false)}
                     className={`w-full h-full bg-transparent text-center text-white
                       font-mono text-base md:text-lg uppercase outline-none
                       ${isActive ? 'bg-red-900/30' : ''}
@@ -231,14 +271,12 @@ export function Crossword({ data }: CrosswordProps) {
       </div>
 
       <div className="flex-1 space-y-6">
-        {activePos && (
+        {activePos && clueInfo && (
           <div className="p-4 border border-red-900 bg-red-950/20">
             <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">
-              {direction === 'across' ? 'Horitzontal' : 'Vertical'}
+              {clueInfo.dir === 'across' ? 'Horitzontal' : 'Vertical'}
             </p>
-            <p className="text-white text-sm">
-              {getClueForCell(activePos.row, activePos.col)?.clue || '—'}
-            </p>
+            <p className="text-white text-sm">{clueInfo.clue}</p>
           </div>
         )}
 
