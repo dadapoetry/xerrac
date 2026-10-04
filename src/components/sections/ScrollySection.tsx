@@ -284,8 +284,8 @@ export function ScrollySection({ section, index }: { section: SectionData; index
             }`}>
               <div className="mx-auto mb-8 h-px w-16 bg-white/40" />
               <div
-                className="font-mono text-[11px] uppercase tracking-[0.3em] text-gray-300 transition-all duration-[900ms] ease-out"
-                style={{ transitionDelay: '150ms', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}
+                className="font-mono text-[11px] uppercase tracking-[0.3em] text-white/90 transition-all duration-[900ms] ease-out"
+                style={{ transitionDelay: '150ms', textShadow: '0 2px 10px rgba(0,0,0,0.95), 0 0 18px rgba(0,0,0,0.9)' }}
               >
                 · Fi ·
               </div>
@@ -296,8 +296,8 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                 {content.outro}
               </h3>
               <div
-                className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-gray-300 transition-all duration-[900ms] ease-out"
-                style={{ transitionDelay: '450ms', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}
+                className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-white/85 transition-all duration-[900ms] ease-out"
+                style={{ transitionDelay: '450ms', textShadow: '0 2px 10px rgba(0,0,0,0.95), 0 0 18px rgba(0,0,0,0.9)' }}
               >
                 {section.title}
                 {content.subtitle ? <span> · {content.subtitle}</span> : null}
