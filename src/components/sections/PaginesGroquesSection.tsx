@@ -23,10 +23,6 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                   key={i}
                   className="group relative border-t border-white/[0.07] py-6"
                 >
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-0 top-6 bottom-6 w-[2px] bg-[rgba(var(--grogues-rgb),0.22)] group-hover:bg-[rgba(var(--grogues-rgb),0.55)] transition-colors duration-300"
-                  />
                   <div
                     aria-hidden="true"
                     className="absolute inset-0 -mx-3 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
