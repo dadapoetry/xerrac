@@ -28,10 +28,11 @@ export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutr
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <label className="block text-xs uppercase tracking-wide text-gray-500">
+        <label htmlFor="scrolly-subtitle" className="block text-xs uppercase tracking-wide text-gray-500">
           Subtítol de la secció
         </label>
         <input
+          id="scrolly-subtitle"
           type="text"
           value={subtitle || ''}
           onChange={(e) => onSubtitleChange(e.target.value)}
@@ -41,10 +42,11 @@ export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutr
       </div>
 
       <div className="space-y-2">
-        <label className="block text-xs uppercase tracking-wide text-gray-500">
+        <label htmlFor="scrolly-outro" className="block text-xs uppercase tracking-wide text-gray-500">
           Colofó final (frase de tancament)
         </label>
         <input
+          id="scrolly-outro"
           type="text"
           value={outro || ''}
           onChange={(e) => onOutroChange(e.target.value)}
@@ -77,8 +79,9 @@ export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutr
             </button>
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Títol de l&apos;escena</label>
+            <label htmlFor={`scrolly-title-${i}`} className="block text-xs text-gray-500 mb-1">Títol de l&apos;escena</label>
             <input
+              id={`scrolly-title-${i}`}
               type="text"
               value={step.title || ''}
               onChange={(e) => onUpdateArrayItem('steps', i, 'title', e.target.value)}
@@ -88,7 +91,7 @@ export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutr
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <label className="block text-xs text-gray-500 mb-1">Imatge</label>
+              <label htmlFor={`scrolly-media-${i}`} className="block text-xs text-gray-500 mb-1">Imatge</label>
               <CloudinaryUploadButton
                 onUploaded={(url) => onUpdateArrayItem('steps', i, 'media', url)}
                 label="pujar"
@@ -97,6 +100,7 @@ export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutr
               />
             </div>
             <input
+              id={`scrolly-media-${i}`}
               type="text"
               value={step.media || ''}
               onChange={(e) => onUpdateArrayItem('steps', i, 'media', e.target.value)}
@@ -105,8 +109,9 @@ export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutr
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Peu de foto</label>
+            <label htmlFor={`scrolly-caption-${i}`} className="block text-xs text-gray-500 mb-1">Peu de foto</label>
             <input
+              id={`scrolly-caption-${i}`}
               type="text"
               value={step.caption || ''}
               onChange={(e) => onUpdateArrayItem('steps', i, 'caption', e.target.value)}
@@ -116,8 +121,9 @@ export function ScrollyEditor({ steps, subtitle, outro, onSubtitleChange, onOutr
           </div>
           <div className="flex items-center gap-6">
             <div className="flex-1">
-              <label className="block text-xs text-gray-500 mb-1">Posició del text</label>
+              <label htmlFor={`scrolly-position-${i}`} className="block text-xs text-gray-500 mb-1">Posició del text</label>
               <select
+                id={`scrolly-position-${i}`}
                 value={step.position || 'left'}
                 onChange={(e) => onUpdateArrayItem('steps', i, 'position', e.target.value)}
                 className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"

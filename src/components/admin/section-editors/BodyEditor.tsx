@@ -16,8 +16,9 @@ export function BodyEditor({ body, source, showSource, subtitle, showSubtitle, o
     <div className="space-y-4">
       {showSource && (
         <div>
-          <label className="block text-xs uppercase text-gray-500 mb-1">Font / Source</label>
+          <label htmlFor="body-source" className="block text-xs uppercase text-gray-500 mb-1">Font / Source</label>
           <input
+            id="body-source"
             type="text"
             value={source || ''}
             onChange={(e) => onFieldChange('source', e.target.value)}
@@ -27,8 +28,9 @@ export function BodyEditor({ body, source, showSource, subtitle, showSubtitle, o
       )}
       {showSubtitle && (
         <div>
-          <label className="block text-xs uppercase text-gray-500 mb-1">Subtítol</label>
+          <label htmlFor="body-subtitle" className="block text-xs uppercase text-gray-500 mb-1">Subtítol</label>
           <input
+            id="body-subtitle"
             type="text"
             value={subtitle || ''}
             onChange={(e) => onFieldChange('subtitle', e.target.value)}

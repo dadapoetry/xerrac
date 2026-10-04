@@ -8,6 +8,7 @@ import { SectionContentEditor } from './SectionContentEditor'
 import { CloudinaryUploadButton } from './CloudinaryUploadButton'
 import { useToast } from './Toast'
 import { useUnsavedGuard } from './UnsavedGuard'
+import { SectionPreview } from './SectionPreview'
 
 interface SectionFormProps {
   issueId: string
@@ -30,6 +31,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [dirty, setDirty] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
 
   const markDirty = useCallback(() => setDirty(true), [])
 
@@ -98,13 +100,33 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
+    <>
+      <div className="flex items-center justify-between gap-4 mb-6 max-w-3xl">
+        <p className="text-xs text-gray-600">
+          Previsualització en viu: el que veus és el que quedarà desat, sense haver-ho publicat.
+        </p>
+        <button
+          type="button"
+          onClick={() => setShowPreview((v) => !v)}
+          aria-pressed={showPreview}
+          className={`text-xs uppercase tracking-wider px-3 py-2 border transition-colors flex-shrink-0
+            ${showPreview
+              ? 'border-red-500 text-red-400 bg-red-950/20'
+              : 'border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white'}`}
+        >
+          {showPreview ? 'Amagar previsualització' : 'Previsualitzar'}
+        </button>
+      </div>
+
+      <div className={showPreview ? 'grid grid-cols-1 xl:grid-cols-2 gap-8 items-start' : ''}>
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+          <label htmlFor="section-type" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
             Tipus de secció
           </label>
           <select
+            id="section-type"
             value={type}
             onChange={(e) => { setType(e.target.value); markDirty() }}
             className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
@@ -118,10 +140,11 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+          <label htmlFor="section-order" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
             Ordre
           </label>
           <input
+            id="section-order"
             type="number"
             value={order}
             disabled
@@ -135,10 +158,11 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+        <label htmlFor="section-title" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
           Títol de la secció
         </label>
         <input
+          id="section-title"
           type="text"
           value={title}
           onChange={(e) => { setTitle(e.target.value); markDirty() }}
@@ -151,7 +175,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         <>
       <div>
         <div className="flex items-center justify-between">
-          <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+          <label htmlFor="section-bg" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
             URL de la imatge de fons
           </label>
           <CloudinaryUploadButton
@@ -171,6 +195,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             />
           )}
           <input
+            id="section-bg"
             type="text"
             value={bgImage}
             onChange={(e) => { setBgImage(e.target.value); markDirty() }}
@@ -183,7 +208,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
 
       <div>
         <div className="flex items-center justify-between">
-          <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+          <label htmlFor="section-bg-mobile" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
             Imatge de fons en mòbil (opcional) · 1080×2400
           </label>
           <CloudinaryUploadButton
@@ -203,6 +228,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             />
           )}
           <input
+            id="section-bg-mobile"
             type="text"
             value={bgImageMobile}
             onChange={(e) => { setBgImageMobile(e.target.value); markDirty() }}
@@ -261,5 +287,30 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         )}
       </div>
     </form>
+
+      {showPreview && (
+        <aside className="xl:sticky xl:top-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs uppercase tracking-wider text-gray-500">
+              {SECTION_LABELS[type] || type}
+            </span>
+            <span className="text-[10px] text-gray-700">sense desar</span>
+          </div>
+          <div className="border border-gray-800 h-[70vh] overflow-y-auto overscroll-contain">
+            <SectionPreview
+              type={type}
+              title={title}
+              bgImage={bgImage}
+              bgImageMobile={bgImageMobile}
+              content={content}
+            />
+          </div>
+          <p className="text-[10px] text-gray-700 mt-2">
+            Les mides són les del lloc real; aquí hi ha espai per veure-ho sencer.
+          </p>
+        </aside>
+      )}
+      </div>
+    </>
   )
 }

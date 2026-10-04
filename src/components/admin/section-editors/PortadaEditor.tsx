@@ -9,8 +9,9 @@ export function PortadaEditor({ topic, onChange }: Props) {
   return (
     <div className="space-y-4 text-sm text-gray-300">
       <div>
-        <label className="block text-xs uppercase text-gray-500 mb-1">Tema / Topic</label>
+        <label htmlFor="portada-topic" className="block text-xs uppercase text-gray-500 mb-1">Tema / Topic</label>
         <input
+          id="portada-topic"
           type="text"
           value={topic || ''}
           onChange={(e) => onChange('topic', e.target.value)}

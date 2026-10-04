@@ -87,10 +87,11 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
   return (
     <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+        <label htmlFor="issue-number" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
           Número
         </label>
         <input
+          id="issue-number"
           type="number"
           value={number}
           onChange={(e) => { setNumber(parseInt(e.target.value) || 0); markDirty() }}
@@ -102,10 +103,11 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+        <label htmlFor="issue-title" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
           Títol
         </label>
         <input
+          id="issue-title"
           type="text"
           value={title}
           onChange={(e) => { setTitle(e.target.value); markDirty() }}
@@ -116,10 +118,11 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+        <label htmlFor="issue-date" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
           Data de publicació
         </label>
         <input
+          id="issue-date"
           type="date"
           value={date}
           onChange={(e) => { setDate(e.target.value); markDirty() }}
@@ -136,17 +139,19 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
       )}
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+        <label htmlFor="issue-accent" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
           Color d'accent
         </label>
         <div className="flex items-center gap-3">
           <input
             type="color"
+            aria-label="Selector de color d'accent"
             value={accentColor}
             onChange={(e) => { setAccentColor(e.target.value); markDirty() }}
             className="w-10 h-10 border border-gray-700 bg-transparent cursor-pointer"
           />
           <input
+            id="issue-accent"
             type="text"
             value={accentColor}
             onChange={(e) => { setAccentColor(e.target.value); markDirty() }}

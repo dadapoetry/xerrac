@@ -18,6 +18,7 @@ export default function ConfigPage() {
   const { toast } = useToast()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
   const [issn, setIssn] = useState('')
   const [contactEmail, setContactEmail] = useState('')
   const [copyright, setCopyright] = useState('')
@@ -56,6 +57,7 @@ export default function ConfigPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
+    setError('')
     try {
       await updateSettings({
         footer_issn: issn,
@@ -66,7 +68,9 @@ export default function ConfigPage() {
       toast('Configuració guardada', 'success')
       router.refresh()
     } catch (err) {
-      toast('Error en guardar la configuració', 'error')
+      const msg = err instanceof Error ? err.message : 'Error en guardar la configuració'
+      setError(msg)
+      toast(msg, 'error')
     }
     setSaving(false)
   }
@@ -82,10 +86,11 @@ export default function ConfigPage() {
 
       <form onSubmit={handleSave} className="max-w-xl space-y-6">
         <div>
-          <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
+          <label htmlFor="config-issn" className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
             ISSN
           </label>
           <input
+            id="config-issn"
             value={issn}
             onChange={e => setIssn(e.target.value)}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
@@ -95,10 +100,11 @@ export default function ConfigPage() {
         </div>
 
         <div>
-          <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
+          <label htmlFor="config-contact" className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
             Correu de contacte
           </label>
           <input
+            id="config-contact"
             type="email"
             value={contactEmail}
             onChange={e => setContactEmail(e.target.value)}
@@ -113,10 +119,11 @@ export default function ConfigPage() {
         </div>
 
         <div>
-          <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
+          <label htmlFor="config-copyright" className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
             Copyright
           </label>
           <input
+            id="config-copyright"
             value={copyright}
             onChange={e => setCopyright(e.target.value)}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
@@ -142,6 +149,7 @@ export default function ConfigPage() {
             {socialLinks.map((link, i) => (
               <div key={i} className="flex gap-2 items-start">
                 <input
+                  aria-label={`Nom de l'enllaç ${i + 1}`}
                   value={link.name}
                   onChange={e => updateLink(i, 'name', e.target.value)}
                   placeholder="Nom"
@@ -149,6 +157,7 @@ export default function ConfigPage() {
                     focus:outline-none focus:border-red-500/50 transition-colors"
                 />
                 <input
+                  aria-label={`URL de l'enllaç ${i + 1}`}
                   value={link.url}
                   onChange={e => updateLink(i, 'url', e.target.value)}
                   placeholder="URL"
@@ -158,6 +167,7 @@ export default function ConfigPage() {
                 <button
                   type="button"
                   onClick={() => removeLink(i)}
+                  aria-label={`Elimina l'enllaç ${i + 1}`}
                   className="px-2 py-2 text-xs text-gray-600 hover:text-red-400 transition-colors"
                 >
                   ✕
@@ -169,6 +179,12 @@ export default function ConfigPage() {
             )}
           </div>
         </div>
+
+        {error && (
+          <p className="text-xs text-red-400 bg-red-900/20 border border-red-900 px-4 py-2 max-w-xl">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"

@@ -190,6 +190,12 @@ body::before {
   }
 }
 
+/* Previsualització de la secció dins el panell d'admin: la secció pot
+   retina el seu contingut, per això el contenidor del visor fa scroll. */
+.preview-root .section-container {
+  overflow: visible;
+}
+
 /* Ensure minimum contrast on dark backgrounds */
 .bg-black .text-gray-600,
 .bg-gray-950 .text-gray-600,

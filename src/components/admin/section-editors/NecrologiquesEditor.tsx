@@ -34,18 +34,26 @@ export function NecrologiquesEditor({ entries, onUpdateArrayItem, onAddArrayItem
               Eliminar
             </button>
           </div>
+          <label htmlFor={`necro-name-${i}`} className="block text-xs text-gray-500 mb-1">
+            Nom del concepte
+          </label>
           <input
+            id={`necro-name-${i}`}
             type="text"
             value={entry.name || ''}
             onChange={(e) => onUpdateArrayItem('entries', i, 'name', e.target.value)}
-            placeholder="Nom del concepte (ex.: La concentració)"
+            placeholder="Ex.: La concentració"
             className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
           />
+          <label htmlFor={`necro-years-${i}`} className="block text-xs text-gray-500 mt-3 mb-1">
+            Anys
+          </label>
           <input
+            id={`necro-years-${i}`}
             type="text"
             value={entry.years || ''}
             onChange={(e) => onUpdateArrayItem('entries', i, 'years', e.target.value)}
-            placeholder="Anys (ex.: 1980 — 2026, o ? — 2026)"
+            placeholder="Ex.: 1980 — 2026, o ? — 2026"
             className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm font-mono"
           />
           <div>

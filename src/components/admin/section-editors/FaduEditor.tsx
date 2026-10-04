@@ -31,7 +31,11 @@ export function FaduEditor({ entries, onUpdateArrayItem, onAddArrayItem, onRemov
               Eliminar
             </button>
           </div>
+          <label htmlFor={`fadu-type-${i}`} className="block text-xs text-gray-500 mb-1">
+            Tipus d'entrada
+          </label>
           <select
+            id={`fadu-type-${i}`}
             value={entry.type || 'biography'}
             onChange={(e) => onUpdateArrayItem('entries', i, 'type', e.target.value)}
             className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
@@ -40,7 +44,11 @@ export function FaduEditor({ entries, onUpdateArrayItem, onAddArrayItem, onRemov
             <option value="ucronia">Ucronia</option>
             <option value="artefacte">Artefacte de futur</option>
           </select>
+          <label htmlFor={`fadu-title-${i}`} className="block text-xs text-gray-500 mt-3 mb-1">
+            Títol
+          </label>
           <input
+            id={`fadu-title-${i}`}
             type="text"
             value={entry.title || ''}
             onChange={(e) => onUpdateArrayItem('entries', i, 'title', e.target.value)}

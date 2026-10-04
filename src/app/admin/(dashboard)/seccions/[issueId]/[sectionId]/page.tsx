@@ -1,7 +1,7 @@
 import { getIssue } from '@/lib/data'
 import { safeParse } from '@/lib/utils'
 import { SectionForm } from '@/components/admin/SectionForm'
-import { SectionData } from '@/types'
+import { SectionData, SECTION_LABELS } from '@/types'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -35,7 +35,7 @@ export default async function EditSeccioPage({
 
       <h1 className="text-3xl font-bold text-white mb-2">Editar secció</h1>
       <p className="text-gray-500 text-sm mb-8">
-        {issue.title} · {section.type}
+        {issue.title} · {SECTION_LABELS[section.type] || section.type}
       </p>
 
       <SectionForm

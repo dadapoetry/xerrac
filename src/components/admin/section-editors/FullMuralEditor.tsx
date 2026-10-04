@@ -17,16 +17,22 @@ export function FullMuralEditor({ collages, onUpdateArrayItem, onAddArrayItem, o
             <button type="button" onClick={() => onRemoveArrayItem('collages', i)}
               className="text-xs text-red-500">Eliminar</button>
           </div>
+          <label htmlFor={`mural-image-${i}`} className="block text-xs text-gray-500 mb-1">
+            URL de la imatge
+          </label>
           <input
+            id={`mural-image-${i}`}
             type="text" value={item.image || ''}
             onChange={(e) => onUpdateArrayItem('collages', i, 'image', e.target.value)}
-            placeholder="URL de la imatge"
             className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
           />
+          <label htmlFor={`mural-desc-${i}`} className="block text-xs text-gray-500 mt-3 mb-1">
+            Descripció
+          </label>
           <textarea
+            id={`mural-desc-${i}`}
             value={item.description || ''}
             onChange={(e) => onUpdateArrayItem('collages', i, 'description', e.target.value)}
-            placeholder="Descripció"
             className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
             rows={2}
           />

@@ -21,7 +21,11 @@ export function CalaixSastreEditor({ data, onUpdateArrayItem, onAddArrayItem, on
               <button type="button" onClick={() => onRemoveArrayItem('interviews', i)}
                 className="text-xs text-red-500">Eliminar</button>
             </div>
+            <label htmlFor={`calaix-subject-${i}`} className="block text-xs text-gray-500 mb-1">
+              Tema / Persona entrevistada
+            </label>
             <input
+              id={`calaix-subject-${i}`}
               type="text" value={item.subject || ''}
               onChange={(e) => onUpdateArrayItem('interviews', i, 'subject', e.target.value)}
               placeholder="Tema / Persona entrevistada"
@@ -52,10 +56,13 @@ export function CalaixSastreEditor({ data, onUpdateArrayItem, onAddArrayItem, on
               <button type="button" onClick={() => onRemoveArrayItem('reviews', i)}
                 className="text-xs text-red-500">Eliminar</button>
             </div>
+            <label htmlFor={`calaix-review-${i}`} className="block text-xs text-gray-500 mb-1">
+              Títol de l'obra ressenyada
+            </label>
             <input
+              id={`calaix-review-${i}`}
               type="text" value={item.title || ''}
               onChange={(e) => onUpdateArrayItem('reviews', i, 'title', e.target.value)}
-              placeholder="Títol de l'obra ressenyada"
               className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
             />
             <RichTextEditor
@@ -83,10 +90,13 @@ export function CalaixSastreEditor({ data, onUpdateArrayItem, onAddArrayItem, on
               <button type="button" onClick={() => onRemoveArrayItem('investigacio', i)}
                 className="text-xs text-red-500">Eliminar</button>
             </div>
+            <label htmlFor={`calaix-investigation-${i}`} className="block text-xs text-gray-500 mb-1">
+              Títol de la investigació
+            </label>
             <input
+              id={`kalaix-investigation-${i}`}
               type="text" value={item.title || ''}
               onChange={(e) => onUpdateArrayItem('investigacio', i, 'title', e.target.value)}
-              placeholder="Títol de la investigació"
               className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
             />
             <RichTextEditor
