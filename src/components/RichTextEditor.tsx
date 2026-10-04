@@ -16,6 +16,10 @@ interface RichTextEditorProps {
   minimal?: boolean
 }
 
+const SIZE_BAR_WIDTH = 344
+const SIZE_BAR_HEIGHT = 40
+const SIZE_PRESETS = ['25%', '50%', '75%', '100%']
+
 function escapeAttr(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -50,6 +54,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   const [showImageDialog, setShowImageDialog] = useState(false)
   const [activeImage, setActiveImage] = useState<HTMLImageElement | null>(null)
   const [sizeDraft, setSizeDraft] = useState('')
+  const [sizeBar, setSizeBar] = useState<{ top: number; left: number; below: boolean } | null>(null)
   const [current, setCurrent] = useState(value)
   const lastEmittedRef = useRef(value)
 
@@ -164,6 +169,51 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     if (img) setSizeDraft(img.getAttribute('width') || '100%')
   }, [])
 
+  // La barra flota al costat de la imatge i la segueix quan es mou l'editor.
+  // Si no hi ha espai a dalt, es posa a sota; si la imatge surt de l'editor,
+  // amaga.
+  useEffect(() => {
+    if (!activeImage) {
+      setSizeBar(null)
+      return
+    }
+    const reposition = () => {
+      const host = rootRef.current
+      if (!host || !host.contains(activeImage)) {
+        setSizeBar(null)
+        return
+      }
+      const imgRect = activeImage.getBoundingClientRect()
+      const hostRect = host.getBoundingClientRect()
+      if (imgRect.width === 0 && imgRect.height === 0) {
+        setSizeBar(null)
+        return
+      }
+      const left = Math.max(
+        8,
+        Math.min(
+          imgRect.left - hostRect.left + imgRect.width / 2 - SIZE_BAR_WIDTH / 2,
+          hostRect.width - SIZE_BAR_WIDTH - 8
+        )
+      )
+      const above = imgRect.top - hostRect.top - SIZE_BAR_HEIGHT - 10
+      const below = above < 0
+      const top = below ? imgRect.bottom - hostRect.top + 10 : above
+      setSizeBar((prev) =>
+        prev && Math.abs(prev.top - top) < 1 && Math.abs(prev.left - left) < 1 && prev.below === below
+          ? prev
+          : { top, left, below }
+      )
+    }
+    reposition()
+    window.addEventListener('scroll', reposition, true)
+    window.addEventListener('resize', reposition)
+    return () => {
+      window.removeEventListener('scroll', reposition, true)
+      window.removeEventListener('resize', reposition)
+    }
+  }, [activeImage, current])
+
   // El cursor s'ha de llegir abans que el diàleg el robi el focus: en obrir-lo
   // es queda capturat i així la imatge aterra on elus estaves escrivint.
   const captureCaret = useCallback(() => {
@@ -188,7 +238,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   }, [minimal])
 
   return (
-    <div ref={rootRef} onClick={handleEditorClick}>
+    <div ref={rootRef} onClick={handleEditorClick} className="relative">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
         <button
@@ -213,46 +263,60 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
         modules={modules}
       />
 
-      {activeImage && (
-        <div className="mt-2 flex flex-wrap items-center gap-2 border border-gray-700 bg-gray-900 px-3 py-2">
-          <span className="text-[10px] uppercase tracking-wider text-gray-400">Mida</span>
-          {['25%', '50%', '75%', '100%'].map((preset) => (
+      {activeImage && sizeBar && (
+        <div
+          className="absolute z-50 select-none rounded border border-gray-700 bg-gray-900/95 px-2 py-1.5 shadow-xl backdrop-blur"
+          style={{
+            top: sizeBar.top,
+            left: sizeBar.left,
+            width: SIZE_BAR_WIDTH,
+          }}
+        >
+          <div className="flex items-center gap-1">
+            <span className="mr-0.5 text-[9px] uppercase tracking-wider text-gray-500">Mida</span>
+            {SIZE_PRESETS.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => applyImageWidth(preset)}
+                className={`rounded px-1.5 py-0.5 text-[11px] transition-colors ${
+                  sizeDraft === preset
+                    ? 'bg-red-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                {preset}
+              </button>
+            ))}
+            <input
+              type="text"
+              value={sizeDraft}
+              onChange={(e) => setSizeDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  applyImageWidth(sizeDraft)
+                } else if (e.key === 'Escape') {
+                  setActiveImage(null)
+                }
+              }}
+              placeholder="50% o 480"
+              className="w-16 rounded border border-gray-700 bg-gray-950 px-1.5 py-0.5 text-[11px] text-white focus:border-red-500 focus:outline-none"
+            />
+            {activeImage.naturalWidth > 0 && (
+              <span className="ml-auto whitespace-nowrap text-[9px] text-gray-500">
+                {activeImage.naturalWidth}×{activeImage.naturalHeight}
+              </span>
+            )}
             <button
-              key={preset}
               type="button"
-              onClick={() => applyImageWidth(preset)}
-              className={`border px-2 py-1 text-xs transition-colors ${
-                sizeDraft === preset
-                  ? 'border-red-500 bg-red-600 text-white'
-                  : 'border-gray-700 text-gray-300 hover:border-gray-500'
-              }`}
+              onClick={() => setActiveImage(null)}
+              aria-label="Tancar la barra de mida"
+              className="ml-1 text-[11px] leading-none text-gray-500 hover:text-gray-300"
             >
-              {preset}
+              ✕
             </button>
-          ))}
-          <input
-            type="text"
-            value={sizeDraft}
-            onChange={(e) => setSizeDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                applyImageWidth(sizeDraft)
-              }
-            }}
-            placeholder="50% o 480"
-            className="w-24 border border-gray-700 bg-gray-950 px-2 py-1 text-xs text-white focus:border-red-500 focus:outline-none"
-          />
-          <button
-            type="button"
-            onClick={() => applyImageWidth(sizeDraft)}
-            className="border border-gray-700 px-2 py-1 text-xs text-gray-300 hover:border-gray-500 transition-colors"
-          >
-            Aplicar
-          </button>
-          <span className="text-[10px] text-gray-500">
-            {activeImage.naturalWidth ? `${activeImage.naturalWidth}×${activeImage.naturalHeight} px` : ''}
-          </span>
+          </div>
         </div>
       )}
 
