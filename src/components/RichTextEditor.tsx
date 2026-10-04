@@ -48,6 +48,8 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   const rootRef = useRef<HTMLDivElement | null>(null)
   const caretRef = useRef<Range | null>(null)
   const [showImageDialog, setShowImageDialog] = useState(false)
+  const [activeImage, setActiveImage] = useState<HTMLImageElement | null>(null)
+  const [sizeDraft, setSizeDraft] = useState('')
   const [current, setCurrent] = useState(value)
   const lastEmittedRef = useRef(value)
 
@@ -115,6 +117,53 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     []
   )
 
+  // Canviar la mida de la imatge ja inserida, sense tornar-la a pujar. Quill 1
+  // desa width/height com a atributs de l'img; en percentatge es treu l'alçada
+  // perquè conservi la proporció, i en píxels es calcula l'alçada corresponent
+  // perquè la caixa quedi reservada i l'article no faci un salt.
+  const applyImageWidth = useCallback(
+    (value: string) => {
+      const img = activeImage
+      const raw = value.trim()
+      if (!img || !raw) return
+      const attrs: { width: string; height?: string } = { width: raw }
+      const px = Number.parseFloat(raw)
+      if (!raw.endsWith('%') && Number.isFinite(px) && px > 0 && img.naturalWidth) {
+        attrs.height = String(Math.round((img.naturalHeight * px) / img.naturalWidth))
+      }
+      const ref = editorRef.current as any
+      const quill = ref?.getEditor?.() || ref
+      let applied = false
+      if (quill?.formatText) {
+        const blot = quill.find?.(img)
+        const index = typeof blot?.index === 'function' ? blot.index() : null
+        if (index != null) {
+          quill.formatText({ index, length: 1 }, 'image', attrs, 'user')
+          applied = img.getAttribute('width') === raw
+        }
+      }
+      if (!applied) {
+        img.setAttribute('width', attrs.width)
+        if (attrs.height) img.setAttribute('height', attrs.height)
+        else img.removeAttribute('height')
+        img.style.maxWidth = '100%'
+        img.style.height = 'auto'
+        rootRef.current?.querySelector('.ql-editor')?.dispatchEvent(new Event('input', { bubbles: true }))
+      }
+      setSizeDraft(raw)
+    },
+    [activeImage]
+  )
+
+  const handleEditorClick = useCallback((e: React.MouseEvent) => {
+    const editorEl = rootRef.current?.querySelector('.ql-editor')
+    const target = e.target as HTMLElement
+    if (!editorEl || !editorEl.contains(target)) return
+    const img = target.tagName === 'IMG' ? (target as HTMLImageElement) : null
+    setActiveImage(img)
+    if (img) setSizeDraft(img.getAttribute('width') || '100%')
+  }, [])
+
   // El cursor s'ha de llegir abans que el diàleg el robi el focus: en obrir-lo
   // es queda capturat i així la imatge aterra on elus estaves escrivint.
   const captureCaret = useCallback(() => {
@@ -139,7 +188,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   }, [minimal])
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} onClick={handleEditorClick}>
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
         <button
@@ -163,6 +212,49 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
         theme="snow"
         modules={modules}
       />
+
+      {activeImage && (
+        <div className="mt-2 flex flex-wrap items-center gap-2 border border-gray-700 bg-gray-900 px-3 py-2">
+          <span className="text-[10px] uppercase tracking-wider text-gray-400">Mida</span>
+          {['25%', '50%', '75%', '100%'].map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => applyImageWidth(preset)}
+              className={`border px-2 py-1 text-xs transition-colors ${
+                sizeDraft === preset
+                  ? 'border-red-500 bg-red-600 text-white'
+                  : 'border-gray-700 text-gray-300 hover:border-gray-500'
+              }`}
+            >
+              {preset}
+            </button>
+          ))}
+          <input
+            type="text"
+            value={sizeDraft}
+            onChange={(e) => setSizeDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                applyImageWidth(sizeDraft)
+              }
+            }}
+            placeholder="50% o 480"
+            className="w-24 border border-gray-700 bg-gray-950 px-2 py-1 text-xs text-white focus:border-red-500 focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => applyImageWidth(sizeDraft)}
+            className="border border-gray-700 px-2 py-1 text-xs text-gray-300 hover:border-gray-500 transition-colors"
+          >
+            Aplicar
+          </button>
+          <span className="text-[10px] text-gray-500">
+            {activeImage.naturalWidth ? `${activeImage.naturalWidth}×${activeImage.naturalHeight} px` : ''}
+          </span>
+        </div>
+      )}
 
       {showImageDialog && (
         <ImageDialog
