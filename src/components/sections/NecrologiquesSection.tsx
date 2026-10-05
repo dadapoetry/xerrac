@@ -41,7 +41,7 @@ export function NecrologiquesSection({ section }: { section: SectionData }) {
         ) : (
           entries.map((entry, i) => (
             <article key={i} className={`editorial-body text-gray-300 ${i < entries.length - 1 ? 'mb-9' : ''}`}>
-              <p>
+              <p className="necrologica-name">
                 <span className="font-semibold uppercase tracking-[0.06em] text-gray-100">
                   {entry.name}
                 </span>
@@ -56,13 +56,10 @@ export function NecrologiquesSection({ section }: { section: SectionData }) {
                     </span>
                   </>
                 )}
-                {entry.epitaph && (
-                  <>
-                    {'. '}
-                    <span className="epitaph-inline" dangerouslySetInnerHTML={{ __html: entry.epitaph }} />
-                  </>
-                )}
               </p>
+              {entry.epitaph && (
+                <div className="necrologica-epitaph" dangerouslySetInnerHTML={{ __html: entry.epitaph }} />
+              )}
             </article>
           ))
         )}
