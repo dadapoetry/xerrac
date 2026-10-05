@@ -42,7 +42,7 @@ export function FaduEditor({ entries, onUpdateArrayItem, onAddArrayItem, onRemov
           >
             <option value="biography">Biografia apòcrifa</option>
             <option value="ucronia">Ucronia</option>
-            <option value="artefacte">Artefacte de futur</option>
+            <option value="artefacte">Artefacte</option>
           </select>
           <label htmlFor={`fadu-title-${i}`} className="block text-xs text-gray-500 mt-3 mb-1">
             Títol
