@@ -7,3 +7,8 @@ out/
 public/uploads/*
 !public/uploads/.gitkeep
 *.tsbuildinfo
+
+# Context local per a assistants. No puja a GitHub.
+XERRAC-CONTEXT.md
+CLAUDE.md
+AGENTS.md
