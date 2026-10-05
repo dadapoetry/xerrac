@@ -266,6 +266,10 @@ body::before {
 .editorial-body p:last-child {
   margin-bottom: 0;
 }
+.editorial-body .epitaph-inline p:only-child {
+  display: inline;
+  margin: 0;
+}
 .editorial-body a {
   color: var(--accent);
   text-decoration: underline;

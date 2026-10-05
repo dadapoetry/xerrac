@@ -59,7 +59,7 @@ export function NecrologiquesSection({ section }: { section: SectionData }) {
                 {entry.epitaph && (
                   <>
                     {'. '}
-                    <span dangerouslySetInnerHTML={{ __html: entry.epitaph }} />
+                    <span className="epitaph-inline" dangerouslySetInnerHTML={{ __html: entry.epitaph }} />
                   </>
                 )}
               </p>
