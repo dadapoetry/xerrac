@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
+import { DEFAULT_CONTACT_EMAIL } from '@/lib/site'
 import { getPublishedIssues } from '@/lib/data'
 import { SawIcon } from '@/components/SawIcon'
 
@@ -23,6 +24,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
   const address = settings.footer_address || ''
   const periodicity = settings.footer_periodicity || ''
   const license = settings.footer_license || ''
+  const contactEmail = settings.contact_email?.trim() || DEFAULT_CONTACT_EMAIL
 
   let prevIssue: { number: number; title: string; id: string } | null = null
   let nextIssue: { number: number; title: string; id: string; coverImage?: string } | null = null
@@ -88,6 +90,11 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
           {address && <p>{address}</p>}
           {periodicity && <p>Periodicitat: {periodicity}</p>}
           {license && <p>{license}</p>}
+          <p>
+            <a href={`mailto:${contactEmail}`} className="hover:text-gray-400 transition-colors">
+              {contactEmail}
+            </a>
+          </p>
         </div>
 
         {socialLinks.length > 0 && (
