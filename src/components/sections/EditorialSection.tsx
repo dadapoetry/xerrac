@@ -11,7 +11,7 @@ export function EditorialSection({ section, index }: { section: SectionData; ind
     <div className="max-w-prose w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} readingTime={readingTime(content.body)} />
       <div
-        className="editorial-body text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+        className="editorial-body text-justify hyphens-auto text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
         dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body) }}
       />
     </div>

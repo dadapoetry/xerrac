@@ -26,7 +26,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                 <div key={i} className="border border-gray-700 p-6 md:p-8">
                   <h3 className="text-lg font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.subject}</h3>
                   <div
-                    className="text-gray-300 leading-relaxed text-[15px] md:text-base drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-300 leading-relaxed text-[15px] md:text-base text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                     dangerouslySetInnerHTML={{ __html: item.body }}
                   />
                 </div>
@@ -43,7 +43,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                 <div key={i} className="border border-gray-700 p-6">
                   <h3 className="text-lg font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.title}</h3>
                   <div
-                    className="text-gray-300 leading-relaxed text-[15px] md:text-base drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-300 leading-relaxed text-[15px] md:text-base text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                     dangerouslySetInnerHTML={{ __html: item.body }}
                   />
                 </div>
@@ -60,7 +60,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                 <div key={i} className="border border-gray-700 p-6 md:p-8">
                   <h3 className="text-lg font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.title}</h3>
                   <div
-                    className="text-gray-300 leading-relaxed text-[15px] md:text-base drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-300 leading-relaxed text-[15px] md:text-base text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                     dangerouslySetInnerHTML={{ __html: item.body }}
                   />
                 </div>
