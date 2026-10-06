@@ -260,12 +260,6 @@ body::before {
   font-variant-ligatures: common-ligatures discretionary-ligatures;
   font-kerning: normal;
 }
-.editorial-body p {
-  margin-bottom: 1.5em;
-}
-.editorial-body p:last-child {
-  margin-bottom: 0;
-}
 .editorial-body .necrologica-name {
   margin-bottom: 0.4em;
 }
