@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { getOgFonts } from '@/lib/ogFonts'
+import { getOgBackground } from '@/lib/ogImage'
 
 export const runtime = 'nodejs'
 
@@ -45,6 +46,7 @@ export async function GET(request: Request) {
   let number = ''
   let excerpt = ''
   let accent = '#ef4444'
+  let cover = ''
 
   if (issueId) {
     try {
@@ -55,6 +57,7 @@ export async function GET(request: Request) {
         accent = issue.accentColor || '#ef4444'
 
         const sections = [...((issue.sections as any[]) || [])].sort((a, b) => a.order - b.order)
+        cover = sections.find((s) => s.type === 'portada')?.backgroundImage || ''
         const idx = sectionParam !== null ? parseInt(sectionParam, 10) : NaN
 
         if (!isNaN(idx) && idx > 0 && idx < sections.length) {
@@ -74,6 +77,15 @@ export async function GET(request: Request) {
     } catch {}
   }
 
+  if (!cover) {
+    try {
+      const { getLatestIssue } = await import('@/lib/data')
+      const latest = await getLatestIssue()
+      cover = (((latest?.sections as any[]) || []).find((s) => s.type === 'portada')?.backgroundImage) || ''
+    } catch {}
+  }
+  const background = await getOgBackground(cover)
+
   const titleSize = excerpt ? 52 : number ? 72 : 160
 
   const response = new ImageResponse(
@@ -82,14 +94,50 @@ export async function GET(request: Request) {
         style={{
           width: '100%',
           height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
           background: '#0a0a0a',
-          fontFamily: 'Inter, Arial, sans-serif',
+          position: 'relative',
+          display: 'flex',
         }}
       >
+        {background && (
+          <img
+            src={background}
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        )}
+        {background && (
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: '100%',
+              height: '100%',
+              background: 'rgba(10,10,10,0.78)',
+            }}
+          />
+        )}
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'Inter, Arial, sans-serif',
+          }}
+        >
         <div
           style={{
             fontSize: titleSize,
@@ -158,6 +206,7 @@ export async function GET(request: Request) {
             Xerrac! — Revista d&apos;aclariment cultural
           </div>
         )}
+        </div>
       </div>
     ),
     { width: 1200, height: 630, fonts: await getOgFonts() },
