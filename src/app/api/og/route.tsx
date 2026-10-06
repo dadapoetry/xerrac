@@ -22,18 +22,77 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
 }
 
+const TEXT_KEYS = ['body', 'text', 'content', 'description', 'quote', 'topic', 'summary', 'caption', 'answer']
+
+function isNoise(value: string): boolean {
+  return /^(https?:|data:|blob:|\/)/i.test(value)
+}
+
+function collectText(
+  value: unknown,
+  key: string | null,
+  depth: number,
+  out: { key: string | null; text: string }[],
+): void {
+  if (depth > 8 || out.length > 80) return
+  if (typeof value === 'string') {
+    const text = stripHtml(value)
+    if (text && !isNoise(text)) out.push({ key, text })
+    return
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) collectText(item, key, depth + 1, out)
+    return
+  }
+  if (value && typeof value === 'object') {
+    for (const [k, v] of Object.entries(value)) collectText(v, k, depth + 1, out)
+  }
+}
+
+function genericText(content: unknown): string {
+  const found: { key: string | null; text: string }[] = []
+  collectText(content, null, 0, found)
+  if (found.length === 0) return ''
+  const preferred = found.filter((f) => f.key !== null && TEXT_KEYS.includes(f.key))
+  const pool = preferred.length > 0 ? preferred : found
+  return pool.reduce((best, f) => (f.text.length > best.text.length ? f : best), pool[0]).text
+}
+
+function firstSentenceEnd(text: string): number {
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+    if (ch !== '.' && ch !== '!' && ch !== '?') continue
+    const next = text[i + 1]
+    if (next === undefined || next === ' ') return i
+  }
+  return -1
+}
+
+function cutExcerpt(text: string, maxLen: number): string {
+  const clean = stripHtml(String(text ?? ''))
+  if (!clean) return ''
+  const end = firstSentenceEnd(clean)
+  if (end >= 0 && end + 1 <= maxLen) return clean.slice(0, end + 1)
+  if (clean.length <= maxLen) return clean
+  const window = clean.slice(0, maxLen)
+  const space = window.lastIndexOf(' ')
+  return (space > 0 ? window.slice(0, space) : window).trim()
+}
+
 function extractExcerpt(content: unknown, maxLen = 220): string {
   if (!content || typeof content !== 'object') return ''
   const c = content as Record<string, any>
-  if (c.topic) return String(c.topic).slice(0, maxLen)
-  if (c.source) return `Entrevista a ${c.source}`
-  if (c.body) return stripHtml(c.body).slice(0, maxLen)
-  if (c.proverbs) return (c.proverbs as any[]).map((e) => e?.text).filter(Boolean).join(' · ').slice(0, maxLen)
-  if (c.interviews) return (c.interviews as any[]).map((e) => e?.subject || stripHtml(e?.body || '')).filter(Boolean).join(', ').slice(0, maxLen)
-  if (c.reviews) return (c.reviews as any[]).map((e) => e?.title || stripHtml(e?.body || '')).filter(Boolean).join(', ').slice(0, maxLen)
-  if (c.collages) return (c.collages as any[]).map((e) => e?.description).filter(Boolean).join(' · ').slice(0, maxLen)
-  if (c.crossword) return 'L\'enigma del número'
-  return ''
+  let text = ''
+  if (typeof c.topic === 'string' && c.topic) text = c.topic
+  else if (typeof c.source === 'string' && c.source) text = `Entrevista a ${c.source}`
+  else if (typeof c.body === 'string' && c.body) text = c.body
+  else if (Array.isArray(c.proverbs)) text = c.proverbs.map((e: any) => e?.text).filter(Boolean).join(' · ')
+  else if (Array.isArray(c.interviews)) text = c.interviews.map((e: any) => e?.subject || (typeof e?.body === 'string' ? stripHtml(e.body) : '')).filter(Boolean).join(', ')
+  else if (Array.isArray(c.reviews)) text = c.reviews.map((e: any) => e?.title || (typeof e?.body === 'string' ? stripHtml(e.body) : '')).filter(Boolean).join(', ')
+  else if (Array.isArray(c.collages)) text = c.collages.map((e: any) => e?.description).filter(Boolean).join(' · ')
+  else if (c.crossword) text = 'L\'enigma del número'
+  if (!text) text = genericText(c)
+  return cutExcerpt(text, maxLen)
 }
 
 export async function GET(request: Request) {
@@ -66,7 +125,7 @@ export async function GET(request: Request) {
           subtitle = `Núm. ${number}`
           let content: unknown = s.content
           if (typeof content === 'string') {
-            try { content = JSON.parse(content) } catch { content = {} }
+            try { content = JSON.parse(content) } catch { content = { body: content } }
           }
           excerpt = extractExcerpt(content)
         } else {
@@ -198,7 +257,7 @@ export async function GET(request: Request) {
               fontSize: 14,
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.2)',
+              color: 'rgba(255,255,255,0.6)',
               marginTop: 12,
               fontWeight: 400,
             }}
