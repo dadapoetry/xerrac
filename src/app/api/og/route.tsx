@@ -1,4 +1,7 @@
 import { ImageResponse } from 'next/og'
+import { getOgFonts } from '@/lib/ogFonts'
+
+export const runtime = 'nodejs'
 
 const typeLabels: Record<string, string> = {
   portada: 'Portada',
@@ -157,7 +160,7 @@ export async function GET(request: Request) {
         )}
       </div>
     ),
-    { width: 1200, height: 630 },
+    { width: 1200, height: 630, fonts: await getOgFonts() },
   )
 
   response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')
