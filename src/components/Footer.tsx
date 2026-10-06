@@ -20,6 +20,9 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
 
   const copyright = settings.footer_copyright || ''
   const issn = settings.footer_issn || ''
+  const address = settings.footer_address || ''
+  const periodicity = settings.footer_periodicity || ''
+  const license = settings.footer_license || ''
 
   let prevIssue: { number: number; title: string; id: string } | null = null
   let nextIssue: { number: number; title: string; id: string; coverImage?: string } | null = null
@@ -82,6 +85,9 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
         <div className="text-[11px] text-gray-600 leading-relaxed space-y-1">
           {issn && <p>{issn}</p>}
           {copyright && <p>{copyright}</p>}
+          {address && <p>{address}</p>}
+          {periodicity && <p>Periodicitat: {periodicity}</p>}
+          {license && <p>{license}</p>}
         </div>
 
         {socialLinks.length > 0 && (

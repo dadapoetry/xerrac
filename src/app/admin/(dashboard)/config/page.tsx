@@ -22,6 +22,9 @@ export default function ConfigPage() {
   const [issn, setIssn] = useState('')
   const [contactEmail, setContactEmail] = useState('')
   const [copyright, setCopyright] = useState('')
+  const [address, setAddress] = useState('')
+  const [periodicity, setPeriodicity] = useState('')
+  const [license, setLicense] = useState('')
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([])
 
   const load = useCallback(async () => {
@@ -30,6 +33,9 @@ export default function ConfigPage() {
     setIssn(settings.footer_issn || '')
     setContactEmail(settings.contact_email || DEFAULT_CONTACT_EMAIL)
     setCopyright(settings.footer_copyright || '')
+    setAddress(settings.footer_address || '')
+    setPeriodicity(settings.footer_periodicity || '')
+    setLicense(settings.footer_license || '')
     try {
       setSocialLinks(JSON.parse(settings.footer_social_links || '[]'))
     } catch {
@@ -63,6 +69,9 @@ export default function ConfigPage() {
         footer_issn: issn,
         contact_email: contactEmail,
         footer_copyright: copyright,
+        footer_address: address,
+        footer_periodicity: periodicity,
+        footer_license: license,
         footer_social_links: JSON.stringify(socialLinks.filter(l => l.name || l.url)),
       })
       toast('Configuració guardada', 'success')
@@ -128,8 +137,57 @@ export default function ConfigPage() {
             onChange={e => setCopyright(e.target.value)}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
               focus:outline-none focus:border-red-500/50 transition-colors"
-            placeholder="© 2025 Xerrac!"
+            placeholder="© 2026 Xerrac!"
           />
+        </div>
+
+        <div>
+          <label htmlFor="config-address" className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
+            Adreça de l'editor
+          </label>
+          <input
+            id="config-address"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
+              focus:outline-none focus:border-red-500/50 transition-colors"
+            placeholder="Nom de l'editor, carrer i número, 08001 Barcelona"
+          />
+          <p className="text-[10px] text-gray-600 mt-1">
+            Apareix al peu com a dada editorial; la Biblioteca de Catalunya la
+            demana per tramitar l'ISSN.
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="config-periodicity" className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
+            Periodicitat
+          </label>
+          <input
+            id="config-periodicity"
+            value={periodicity}
+            onChange={e => setPeriodicity(e.target.value)}
+            className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
+              focus:outline-none focus:border-red-500/50 transition-colors"
+            placeholder="Irregular"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="config-license" className="block text-xs text-gray-500 uppercase tracking-wider mb-2">
+            Llicència
+          </label>
+          <input
+            id="config-license"
+            value={license}
+            onChange={e => setLicense(e.target.value)}
+            className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
+              focus:outline-none focus:border-red-500/50 transition-colors"
+            placeholder="CC BY-NC-SA 4.0"
+          />
+          <p className="text-[10px] text-gray-600 mt-1">
+            Deixa-ho buit si no vols cap menció de llicència al peu.
+          </p>
         </div>
 
         <div>
