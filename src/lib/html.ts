@@ -20,7 +20,10 @@ export function styleBlockquotes(html: string, variant: 'line' | 'quoted' = 'lin
 
 export function readingTime(html: string, wordsPerMinute = 200): number {
   if (!html) return 1
-  const text = html.replace(/<[^>]*>/g, '').trim()
+  const text = html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;|&#160;/gi, ' ')
+    .trim()
   const words = text.split(/\s+/).filter(Boolean).length
   return Math.max(1, Math.round(words / wordsPerMinute))
 }
