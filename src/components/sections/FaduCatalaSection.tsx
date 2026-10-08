@@ -2,6 +2,7 @@
 
 import { SectionData, FaduCatalaContent, FaduEntry } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
+import { readingTime } from '@/lib/html'
 
 function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
   return (
@@ -23,11 +24,17 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
 
 export function FaduCatalaSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as FaduCatalaContent
+  const body = (content.entries || []).map((entry) => entry.body || '').join(' ')
 
   return (
     <div className="w-full py-12 relative overflow-hidden">
       <div className="max-w-4xl mx-auto">
-        <SectionHeader number={index} title={section.title} subtitle="Caricatures i humor negre" />
+        <SectionHeader
+          number={index}
+          title={section.title}
+          subtitle="Caricatures i humor negre"
+          readingTime={body ? readingTime(body) : undefined}
+        />
         <div className="md:columns-2 md:gap-8">
           {content.entries?.map((entry: FaduEntry, i: number) => (
             <EntryCard key={i} entry={entry} index={i} />
