@@ -17,10 +17,28 @@ async function checkAuth() {
 }
 
 function revalidatePublic() {
-  revalidatePath('/')
-  revalidatePath('/arxiu')
-  revalidatePath('/api/feed')
-  revalidatePath('/sitemap.xml')
+  for (const path of ['/', '/arxiu', '/api/feed', '/sitemap.xml']) {
+    try {
+      revalidatePath(path)
+    } catch (err) {
+      console.error('[actions] revalidatePath ha fallat a', path, err)
+    }
+  }
+}
+
+// Turso pot respondre "busy" si dues accions arriben alhora. Reintentem abans
+// de deixar que l'error pugi tal com surt i es converteixi en un 500 a l'interfície.
+async function execute(sql: string, args: any[], attempts = 3) {
+  let lastErr: unknown
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await db.execute({ sql, args })
+    } catch (err) {
+      lastErr = err
+      if (i < attempts - 1) await new Promise((resolve) => setTimeout(resolve, 150 * (i + 1)))
+    }
+  }
+  throw new Error(lastErr instanceof Error ? lastErr.message : String(lastErr))
 }
 
 function maskEmail(email: string): string {
@@ -108,9 +126,9 @@ export async function createSection(data: {
 }) {
   await checkAuth()
   const id = uuid()
-  await db.execute({
-    sql: 'INSERT INTO Section (id, issueId, type, "order", title, content, backgroundImage, backgroundImageMobile) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-    args: [
+  await execute(
+    'INSERT INTO Section (id, issueId, type, "order", title, content, backgroundImage, backgroundImageMobile) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [
       id,
       data.issueId,
       data.type,
@@ -120,7 +138,7 @@ export async function createSection(data: {
       sanitizeImageUrl(data.backgroundImage || ''),
       sanitizeImageUrl(data.backgroundImageMobile || ''),
     ],
-  })
+  )
   revalidatePublic()
   return { id, ...data }
 }
@@ -146,10 +164,10 @@ export async function updateSection(id: string, data: {
 
   if (sets.length > 0) {
     args.push(id)
-    await db.execute({
-      sql: `UPDATE Section SET ${sets.join(', ')}, updatedAt = datetime('now') WHERE id = ?`,
+    await execute(
+      `UPDATE Section SET ${sets.join(', ')}, updatedAt = datetime('now') WHERE id = ?`,
       args,
-    })
+    )
   }
 
   revalidatePublic()

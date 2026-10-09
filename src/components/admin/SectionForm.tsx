@@ -47,6 +47,10 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
   // a base; en qualsevol altre cas és un canvi de debò.
   const editorBaselineRef = useRef(true)
 
+  // Guarda de re-entrància: dos Ctrl+S seguits (o un clic sobre un botó que
+  // encara no s'ha desactivat) no han d'arrencar dues desades alhora.
+  const savingRef = useRef(false)
+
   useEffect(() => { setGuardDirty(dirty) }, [dirty, setGuardDirty])
 
   useEffect(() => {
@@ -64,6 +68,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 's') {
         e.preventDefault()
+        if (e.repeat || savingRef.current) return
         document.getElementById('section-form-submit')?.click()
       }
     }
@@ -73,6 +78,8 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (savingRef.current) return
+    savingRef.current = true
     setLoading(true)
     setError('')
 
@@ -106,10 +113,12 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         router.refresh()
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Error en desar la secció'
+      const raw = err instanceof Error ? err.message.trim() : ''
+      const msg = raw || 'Error en desar la secció'
       setError(msg)
       toast(msg, 'error')
     } finally {
+      savingRef.current = false
       setLoading(false)
     }
   }
