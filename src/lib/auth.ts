@@ -13,9 +13,21 @@ if (secretWarning) {
 }
 
 function clientIp(req: unknown): string {
-  const headers = (req as { headers?: { get(name: string): string | null } } | undefined)?.headers
-  const forwarded = headers?.get('x-forwarded-for')
-  const ip = (forwarded || headers?.get('x-real-ip') || '').split(',')[0].trim()
+  // next-auth transforms the incoming request into an internal one i, segons la
+  // versio, `headers` pot ser un Headers (te .get) o un objecte pla (no en te).
+  const headers = (req as { headers?: unknown } | undefined)?.headers
+  let forwarded: string | null = null
+  if (headers) {
+    if (typeof (headers as Headers).get === 'function') {
+      const h = headers as Headers
+      forwarded = h.get('x-forwarded-for') || h.get('x-real-ip')
+    } else {
+      const h = headers as Record<string, string | string[] | undefined>
+      const value = h['x-forwarded-for'] ?? h['x-real-ip']
+      forwarded = Array.isArray(value) ? value[0] ?? null : value ?? null
+    }
+  }
+  const ip = (forwarded || '').split(',')[0].trim()
   return ip || 'unknown'
 }
 
