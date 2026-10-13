@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
 import { getSiteUrl, DEFAULT_CONTACT_EMAIL, hreflang } from '@/lib/site'
-import { SECTION_LABELS } from '@/types'
 import { SawIcon } from '@/components/SawIcon'
 import { Footer } from '@/components/Footer'
 
@@ -10,17 +9,29 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Qui som',
-  description: "Xerrac! és una revista d'aclariment cultural. Aquí trobareu què hi publiquem, com contactar-hi i les dades de la publicació.",
+  description: "Xerrac! és una revista cultural digital semestral en català. Cada número és un volum monogràfic amb una tesi pròpia, amb seccions de crítica, traducció, ficció i jocs de llengua.",
   alternates: { canonical: '/sobre', languages: hreflang() },
   robots: { index: true, follow: true },
   openGraph: {
     title: 'Qui som — Xerrac!',
-    description: "Xerrac! és una revista d'aclariment cultural.",
+    description: "Revista cultural digital semestral en català. Cada número, un volum monogràfic amb tesi pròpia.",
     url: `${getSiteUrl()}/sobre`,
   },
 }
 
-const SECTION_ORDER = Object.keys(SECTION_LABELS).filter((t) => t !== 'portada')
+const SECTIONS: { name: string; desc: string }[] = [
+  { name: 'Portada', desc: 'el tema del número, en una línia.' },
+  { name: 'Editorial', desc: 'el manifest que obre el número i n’enuncia la tesi.' },
+  { name: 'Aclariment Cultural', desc: 'l’argumentació llarga: aclarir allò que continua sense aclarir-se.' },
+  { name: 'Calaix de Sastre', desc: 'crítica i investigació comparada, amb referències i fonts.' },
+  { name: 'Visita', desc: 'la traducció d’un text fundador, presentada com a citació a gran.' },
+  { name: 'Fàdu Català', desc: 'ficció satírica: biografies apòcrifes, ucronies i artefactes.' },
+  { name: 'Pàgines Grogues', desc: 'aforismes i refranys deformats per la temàtica del número.' },
+  { name: 'Ludita', desc: 'un encreuat fet amb el vocabulari del número.' },
+  { name: 'Assaig visual', desc: 'un relat en imatges que avança amb el desplaçament.' },
+  { name: 'Necrològiques conceptuals', desc: 'obituaris de conceptes, no de persones.' },
+  { name: 'Full Mural', desc: 'un mural amb material enviat pels lectors.' },
+]
 
 export default async function AboutPage() {
   const settings = await getAllSettings()
@@ -49,6 +60,7 @@ export default async function AboutPage() {
       '@type': 'Periodical',
       name: 'Xerrac!',
       url: siteUrl,
+      description: 'Revista cultural digital semestral en català. Cada número és un volum monogràfic amb una tesi pròpia.',
       inLanguage: 'ca',
       ...(issn ? { issn } : {}),
     },
@@ -72,19 +84,27 @@ export default async function AboutPage() {
             Qui som
           </h1>
 
+          <p className="text-gray-300 text-[15px] leading-relaxed mb-4">
+            <strong className="text-white">Xerrac!</strong> és una revista cultural digital en català,
+            de periodicitat semestral i amb vocació de revista en paper. Cada número és un{' '}
+            <strong className="text-white">volum monogràfic amb una tesi pròpia</strong> —un tema, un
+            angle i un to— que travessa totes les seccions i es llegeix en ordre, com un número de
+            revista.
+          </p>
           <p className="text-gray-300 text-[15px] leading-relaxed mb-6">
-            <strong className="text-white">Xerrac!</strong> és una revista d&rsquo;aclariment cultural.
-            Cada número aplega un conjunt de seccions que exploren la cultura des d&rsquo;una mirada
-            pròpia, amb text i imatge.
+            El nom ve de l&rsquo;eina: una fulla d&rsquo;acer d&rsquo;un mil·límetre, rígida i alhora
+            una mica flexible. No és un receptari de materials coneguts ni una revista de crítica a
+            l&rsquo;ús. Torna a posar en conversa autors, textos i conceptes —sovint per primera
+            vegada— per veure què en surt quan es posen l&rsquo;un al costat de l&rsquo;altre.
           </p>
 
           <h2 className="text-white text-base md:text-lg font-bold tracking-tight uppercase mt-10 mb-3">
-            Seccions habituals
+            Què hi trobareu
           </h2>
           <ul className="text-gray-300 text-[15px] leading-relaxed mb-4">
-            {SECTION_ORDER.map((type) => (
-              <li key={type} className="mb-2 list-disc pl-5 marker:text-gray-600">
-                {SECTION_LABELS[type]}
+            {SECTIONS.map((section) => (
+              <li key={section.name} className="mb-2 list-disc pl-5 marker:text-gray-600">
+                <strong className="text-white">{section.name}</strong> — {section.desc}
               </li>
             ))}
           </ul>
