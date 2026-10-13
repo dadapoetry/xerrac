@@ -9,12 +9,12 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Qui som',
-  description: "Xerrac! és una revista cultural digital semestral en català. Cada número és un volum monogràfic amb una tesi pròpia, amb seccions de crítica, traducció, ficció i jocs de llengua.",
+  description: "Xerrac! és una revista cultural digital semestral en català. Cada número és un volum monogràfic amb tesi pròpia: una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.",
   alternates: { canonical: '/sobre', languages: hreflang() },
   robots: { index: true, follow: true },
   openGraph: {
     title: 'Qui som — Xerrac!',
-    description: "Revista cultural digital semestral en català. Cada número, un volum monogràfic amb tesi pròpia.",
+    description: "Revista cultural digital semestral en català. Una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.",
     url: `${getSiteUrl()}/sobre`,
   },
 }
@@ -23,12 +23,11 @@ const SECTIONS: { name: string; desc: string }[] = [
   { name: 'Portada', desc: 'el tema del número, en una línia.' },
   { name: 'Editorial', desc: 'el manifest que obre el número i n’enuncia la tesi.' },
   { name: 'Aclariment Cultural', desc: 'l’argumentació llarga: aclarir allò que continua sense aclarir-se.' },
-  { name: 'Calaix de Sastre', desc: 'crítica i investigació comparada, amb referències i fonts.' },
-  { name: 'Visita', desc: 'la traducció d’un text fundador, presentada com a citació a gran.' },
+  { name: 'Calaix Desastre', desc: 'crítica i investigació comparada, amb referències i fonts.' },
+  { name: 'Visita', desc: 'turisme teòric només quan cal.' },
   { name: 'Fàdu Català', desc: 'ficció satírica: biografies apòcrifes, ucronies i artefactes.' },
   { name: 'Pàgines Grogues', desc: 'aforismes i refranys deformats per la temàtica del número.' },
   { name: 'Ludita', desc: 'un encreuat fet amb el vocabulari del número.' },
-  { name: 'Assaig visual', desc: 'un relat en imatges que avança amb el desplaçament.' },
   { name: 'Necrològiques conceptuals', desc: 'obituaris de conceptes, no de persones.' },
   { name: 'Full Mural', desc: 'un mural amb material enviat pels lectors.' },
 ]
@@ -60,7 +59,7 @@ export default async function AboutPage() {
       '@type': 'Periodical',
       name: 'Xerrac!',
       url: siteUrl,
-      description: 'Revista cultural digital semestral en català. Cada número és un volum monogràfic amb una tesi pròpia.',
+      description: 'Revista cultural digital semestral en català. Cada número és un volum monogràfic amb tesi pròpia; una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.',
       inLanguage: 'ca',
       ...(issn ? { issn } : {}),
     },
@@ -91,11 +90,14 @@ export default async function AboutPage() {
             angle i un to— que travessa totes les seccions i es llegeix en ordre, com un número de
             revista.
           </p>
+          <p className="text-gray-300 text-[15px] leading-relaxed mb-4">
+            El nom ve de l&rsquo;eina: una fulla d&rsquo;acer d&rsquo;aproximadament un mil·límetre
+            de gruix, d&rsquo;una certa rigidesa però alhora amb una mica de flexibilitat.
+          </p>
           <p className="text-gray-300 text-[15px] leading-relaxed mb-6">
-            El nom ve de l&rsquo;eina: una fulla d&rsquo;acer d&rsquo;un mil·límetre, rígida i alhora
-            una mica flexible. No és un receptari de materials coneguts ni una revista de crítica a
-            l&rsquo;ús. Torna a posar en conversa autors, textos i conceptes —sovint per primera
-            vegada— per veure què en surt quan es posen l&rsquo;un al costat de l&rsquo;altre.
+            Xerrac és una <strong className="text-white">eina de nova cultura</strong>: vol produir
+            pensament nou i noves referències, ser el suport que fins ara no hi era i, sobretot,
+            aclarir tot allò que continua sense aclarir-se.
           </p>
 
           <h2 className="text-white text-base md:text-lg font-bold tracking-tight uppercase mt-10 mb-3">
