@@ -8,12 +8,12 @@ import { Footer } from '@/components/Footer'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Qui som',
+  title: 'La revista',
   description: "Xerrac! és una revista cultural digital semestral en català. Cada número és un volum monogràfic amb tesi pròpia: una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.",
   alternates: { canonical: '/sobre', languages: hreflang() },
   robots: { index: true, follow: true },
   openGraph: {
-    title: 'Qui som — Xerrac!',
+    title: 'La revista — Xerrac!',
     description: "Revista cultural digital semestral en català. Una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.",
     url: `${getSiteUrl()}/sobre`,
   },
@@ -52,7 +52,7 @@ export default async function AboutPage() {
   const aboutJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
-    name: 'Qui som — Xerrac!',
+    name: 'La revista — Xerrac!',
     url: `${siteUrl}/sobre`,
     inLanguage: 'ca',
     mainEntity: {
@@ -75,12 +75,12 @@ export default async function AboutPage() {
               <SawIcon className="w-4 h-4" />
             </span>
             <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
-              La publicació
+              Eina de nova cultura
             </span>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-6">
-            Qui som
+            La revista
           </h1>
 
           <p className="text-gray-300 text-[15px] leading-relaxed mb-4">
