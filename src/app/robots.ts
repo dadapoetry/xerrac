@@ -5,6 +5,7 @@ export default function robots() {
     rules: [
       {
         userAgent: '*',
+        allow: ['/api/og', '/api/feed'],
         disallow: ['/admin/', '/api/', '/compilar/'],
       },
     ],

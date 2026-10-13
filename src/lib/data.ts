@@ -104,3 +104,15 @@ export const getLatestIssue = cache(async () => {
   await loadIssueSections(issue)
   return issue as any
 })
+
+export const getPublishedIssueByNumber = cache(async (number: number) => {
+  const result = await db.execute({
+    sql: 'SELECT * FROM Issue WHERE number = ? AND published = 1',
+    args: [number],
+  })
+  if (result.rows.length === 0) return null
+
+  const issue = mapIssue(result.rows[0])
+  await loadIssueSections(issue)
+  return issue as any
+})

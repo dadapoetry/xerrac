@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getPublishedIssues } from '@/lib/data'
-import { getSiteUrl } from '@/lib/site'
+import { getSiteUrl, hreflang } from '@/lib/site'
+import { issuePath } from '@/lib/slugs'
 import { Footer } from '@/components/Footer'
 
 export const revalidate = 300
@@ -19,9 +20,9 @@ const SECTION_LABELS: Record<string, string> = {
 }
 
 export const metadata: Metadata = {
-  title: 'Arxiu — Xerrac!',
+  title: { absolute: "Arxiu — Xerrac!" },
   description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
-  alternates: { canonical: `${getSiteUrl()}/arxiu` },
+  alternates: { canonical: `${getSiteUrl()}/arxiu`, languages: hreflang() },
   openGraph: {
     title: 'Arxiu — Xerrac!',
     description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
@@ -120,7 +121,7 @@ function getTreatment(index: number, total: number): Treatment {
 function HeroIssue({ issue }: { issue: IssueShape }) {
   return (
     <Link
-      href={`/?issue=${issue.id}`}
+      href={issuePath(issue.number)}
       className="group block relative overflow-hidden border-b border-gray-900"
       style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
@@ -171,7 +172,7 @@ function SplitIssue({ issue, reverse }: { issue: IssueShape; reverse?: boolean }
 
   return (
     <Link
-      href={`/?issue=${issue.id}`}
+      href={issuePath(issue.number)}
       className="group block relative overflow-hidden border-b border-gray-900"
       style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
@@ -213,7 +214,7 @@ function SplitIssue({ issue, reverse }: { issue: IssueShape; reverse?: boolean }
 function TypographyIssue({ issue }: { issue: IssueShape }) {
   return (
     <Link
-      href={`/?issue=${issue.id}`}
+      href={issuePath(issue.number)}
       className="group block relative overflow-hidden border-b border-gray-900"
       style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
@@ -246,7 +247,7 @@ function TypographyIssue({ issue }: { issue: IssueShape }) {
 function GalleryIssue({ issue }: { issue: IssueShape }) {
   return (
     <Link
-      href={`/?issue=${issue.id}`}
+      href={issuePath(issue.number)}
       className="group block relative overflow-hidden border-b border-gray-900"
     >
       <div className="aspect-[3/2] sm:aspect-[2/1] md:aspect-[3/1] relative">
@@ -297,7 +298,7 @@ export default async function ArxiuPage() {
       itemListElement: issues.map((issue: any, i: number) => ({
         '@type': 'ListItem',
         position: i + 1,
-        url: `${siteUrl}/?issue=${issue.id}`,
+        url: `${siteUrl}${issuePath(issue.number)}`,
         name: issue.title,
       })),
     },

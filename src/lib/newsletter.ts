@@ -131,7 +131,7 @@ function buildNewsletterHtml(
   sections: { title: string; summary: string; image?: string; origIndex: number }[],
   coverImage?: string,
 ) {
-  const issueUrl = `${BASE_URL}/?issue=${issue.id}`
+  const issueUrl = `${BASE_URL}/numeros/${issue.number}`
   const unsubscribeUrl = `${BASE_URL}/api/newsletter/baixa?token=${token}`
 
   const sectionsHtml = sections.map((s) => `

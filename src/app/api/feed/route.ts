@@ -2,6 +2,7 @@ import { getPublishedIssues } from '@/lib/data'
 import { getAllSettings } from '@/lib/settings'
 import { escapeXml } from '@/lib/utils'
 import { getSiteUrl } from '@/lib/site'
+import { issuePath } from '@/lib/slugs'
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
@@ -72,8 +73,8 @@ export async function GET() {
 
     return `    <item>
       <title>${escapeXml(issue.title)}</title>
-      <link>${getSiteUrl()}/?issue=${issue.id}</link>
-      <guid>${issue.id}</guid>
+      <link>${getSiteUrl()}${issuePath(issue.number)}</link>
+      <guid isPermaLink="false">${issue.id}</guid>
       <pubDate>${new Date(issue.date).toUTCString()}</pubDate>
       <description><![CDATA[${escapeXml(firstText)}…]]></description>
 ${categories}

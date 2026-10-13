@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site'
 import { getPublishedIssues } from '@/lib/data'
+import { issuePath } from '@/lib/slugs'
 import { SawIcon } from '@/components/SawIcon'
 
 interface SocialLink {
@@ -51,7 +52,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
       <div className="max-w-lg mx-auto text-center">
         {nextIssue && (
           <Link
-            href={`/?issue=${nextIssue.id}`}
+            href={issuePath(nextIssue.number)}
             className="group block relative overflow-hidden mb-12 border border-gray-800 hover:[border-color:rgba(var(--accent-rgb,239,68,68),0.4)] transition-colors text-left"
           >
             {nextIssue.coverImage && (
@@ -116,14 +117,14 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
         {(prevIssue || nextIssue) && (
           <div className="flex justify-center gap-6 mt-8 pt-6 border-t border-gray-800 text-[11px]">
             {prevIssue ? (
-              <Link href={`/?issue=${prevIssue.id}`} className="text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
+              <Link href={issuePath(prevIssue.number)} className="text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
                 ← {String(prevIssue.number).padStart(2, '0')}
               </Link>
             ) : (
               <span />
             )}
             {nextIssue ? (
-              <Link href={`/?issue=${nextIssue.id}`} className="text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
+              <Link href={issuePath(nextIssue.number)} className="text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
                 {String(nextIssue.number).padStart(2, '0')} →
               </Link>
             ) : (
@@ -134,6 +135,8 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
 
         <div className="flex justify-center gap-4 mt-6 text-[11px] flex-wrap">
           <Link href="/arxiu" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Arxiu d'aclariments</Link>
+          <span className="text-gray-700">·</span>
+          <Link href="/sobre" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Qui som</Link>
           <span className="text-gray-700">·</span>
           <Link href="/privacitat" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Privacitat</Link>
           <span className="text-gray-700">·</span>

@@ -16,9 +16,13 @@ export const metadata: Metadata = {
   },
   description: 'Revista d\'aclariment cultural',
   metadataBase: new URL(siteUrl),
-  icons: { icon: '/favicon.svg' },
+  icons: { icon: '/favicon.svg', apple: '/apple-touch-icon.png' },
   manifest: '/api/manifest',
   alternates: {
+    languages: {
+      'ca': siteUrl,
+      'x-default': siteUrl,
+    },
     types: {
       'application/rss+xml': `${siteUrl}/api/feed`,
     },

@@ -1,43 +1,13 @@
 import type { Metadata } from 'next'
 import { getLatestIssue, getIssue } from '@/lib/data'
-import { safeParse } from '@/lib/utils'
-import { getSiteUrl } from '@/lib/site'
-
-import { FanzineViewer } from '@/components/FanzineViewer'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { Footer } from '@/components/Footer'
-import { Afterthought } from '@/components/Afterthought'
+import { getSiteUrl, hreflang } from '@/lib/site'
+import { permanentRedirect } from 'next/navigation'
+import { IssueView } from '@/components/IssueView'
+import { issuePath, articlePath, buildSectionSlugMap } from '@/lib/slugs'
 
 function getPreviewStatus(preview?: string): boolean {
   const token = process.env.PREVIEW_TOKEN
   return token ? preview === token : false
-}
-
-const sectionLabels: Record<string, string> = {
-  portada: 'Portada',
-  editorial: 'Editorial',
-  aclariment_cultural: 'Aclariment Cultural',
-  fadu_catala: 'Fadu Català',
-  pagines_grogues: 'Pàgines Grogues',
-  calaix_sastre: 'Calaix de Sastre',
-  visita: 'Visita',
-  full_mural: 'Full Mural',
-  ludita: 'Ludita',
-  scrolly: 'Assaig visual',
-  necrologiques: 'Necrològiques',
-}
-
-function extractExcerpt(content: any): string {
-  if (!content || typeof content !== 'object') return ''
-  if (content.topic) return content.topic
-  if (content.source) return `Entrevista a ${content.source}`
-  if (content.body) return content.body.replace(/<[^>]+>/g, '').slice(0, 200)
-  if (content.proverbs) return content.proverbs.map((e: any) => e.text).filter(Boolean).join(' · ').slice(0, 200)
-  if (content.interviews) return content.interviews.map((e: any) => e.subject).filter(Boolean).join(', ').slice(0, 200)
-  if (content.reviews) return content.reviews.map((e: any) => e.title).filter(Boolean).join(', ').slice(0, 200)
-  if (content.investigacio) return content.investigacio.map((e: any) => e.title).filter(Boolean).join(', ').slice(0, 200)
-  if (content.collages) return content.collages.map((e: any) => e.description).filter(Boolean).join(' ').slice(0, 200)
-  return ''
 }
 
 export async function generateMetadata({ searchParams }: { searchParams: { issue?: string; section?: string; preview?: string } }): Promise<Metadata> {
@@ -48,52 +18,36 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
 
   if (!issue || (!issue.published && !isPreview)) {
     return {
-      title: 'Xerrac! — Revista d\'aclariment cultural',
-      description: 'Revista d\'aclariment cultural',
+      title: { absolute: "Xerrac! — Revista d'aclariment cultural" },
+      description: "Revista d'aclariment cultural",
     }
   }
 
   const sectionNames = (issue.sections as any[])
     .filter((s: any) => s.type !== 'portada')
-    .map((s: any) => s.type)
+    .map((s: any) => s.title || s.type)
 
-  const issueUrl = `${siteUrl}/?issue=${issue.id}`
-
-  let ogTitle = `${issue.title} — Xerrac!`
-  let ogDescription = `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}.`
-  let ogImagePath = `/api/og?issue=${issue.id}`
-
-  const secIdx = searchParams.section !== undefined ? parseInt(searchParams.section, 10) : NaN
-  const allSections = (issue.sections as any[]).sort((a: any, b: any) => a.order - b.order)
-  if (!isNaN(secIdx) && secIdx > 0 && secIdx < allSections.length) {
-    const s = allSections[secIdx]
-    const label = s.title || sectionLabels[s.type] || s.type
-    const excerpt = extractExcerpt(typeof s.content === 'string' ? safeParse(s.content) : s.content)
-    ogTitle = `${label} — Xerrac!`
-    if (excerpt) ogDescription = excerpt
-    ogImagePath = `/api/og?issue=${issue.id}&section=${secIdx}`
-  }
+  const canonical = issueId ? `${siteUrl}${issuePath(issue.number)}` : `${siteUrl}/`
 
   return {
-    title: `${issue.title} — Xerrac!`,
+    title: { absolute: `Número ${issue.number}: ${issue.title} — Xerrac!` },
     description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}. ${sectionNames.join(', ')}.`,
-    alternates: { canonical: issueUrl },
+    alternates: { canonical, languages: hreflang() },
     robots: isPreview ? { index: false, follow: false } : undefined,
     openGraph: {
-      title: ogTitle,
-      description: ogDescription,
+      title: `${issue.title} — Xerrac!`,
+      description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}.`,
       type: 'article',
       publishedTime: new Date(issue.date).toISOString(),
-      modifiedTime: new Date(issue.date).toISOString(),
-      section: 'Revista',
-      url: issueUrl,
-      images: [{ url: `${siteUrl}${ogImagePath}`, width: 1200, height: 630 }],
+      modifiedTime: new Date(issue.updatedAt || issue.date).toISOString(),
+      url: `${siteUrl}${issuePath(issue.number)}`,
+      images: [{ url: `${siteUrl}/api/og?issue=${issue.id}`, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: ogTitle,
-      description: ogDescription,
-      images: [`${siteUrl}${ogImagePath}`],
+      title: `${issue.title} — Xerrac!`,
+      description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural.`,
+      images: [`${siteUrl}/api/og?issue=${issue.id}`],
     },
   }
 }
@@ -101,10 +55,22 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: { issue?: string; preview?: string }
-}) {  const isPreview = getPreviewStatus(searchParams.preview)
+  searchParams: { issue?: string; section?: string; preview?: string }
+}) {
+  const isPreview = getPreviewStatus(searchParams.preview)
   const issueId = searchParams.issue
   const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
+
+  if (issue && issue.published && !isPreview) {
+    const slugMap = buildSectionSlugMap((issue.sections as any[]) || [])
+    const allSections = [...((issue.sections as any[]) || [])].sort((a, b) => a.order - b.order)
+    const secIdx = searchParams.section !== undefined ? parseInt(searchParams.section, 10) : NaN
+    if (!isNaN(secIdx) && secIdx > 0 && secIdx < allSections.length) {
+      const slug = slugMap.get(allSections[secIdx].id)
+      if (slug) permanentRedirect(articlePath(issue.number, slug))
+    }
+    permanentRedirect(issuePath(issue.number))
+  }
 
   if (issue && !issue.published && !isPreview) {
     return (
@@ -129,83 +95,5 @@ export default async function HomePage({
     )
   }
 
-  const parsedIssue = {
-    ...issue,
-    sections: (issue.sections as any[]).map((s: any) => ({
-      ...s,
-      content: typeof s.content === 'string' ? safeParse(s.content) : s.content,
-    })),
-  }
-
-  const siteUrl = getSiteUrl()
-  const issueUrl = `${siteUrl}/?issue=${issue.id}`
-
-  const contentSections = parsedIssue.sections.filter((s: any) => s.type !== 'portada')
-  const hasPart = contentSections.map((s: any) => ({
-    '@type': 'ArticleSection' as const,
-    name: s.title || sectionLabels[s.type] || s.type,
-    about: extractExcerpt(s.content),
-  }))
-
-  const articleJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: issue.title,
-    description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural`,
-    datePublished: new Date(issue.date).toISOString(),
-    dateModified: new Date(issue.date).toISOString(),
-    author: {
-      '@type': 'Organization',
-      name: 'Xerrac!',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Xerrac!',
-      logo: `${siteUrl}/favicon.svg`,
-    },
-    image: `${siteUrl}/api/og?issue=${issue.id}`,
-    url: issueUrl,
-    mainEntityOfPage: issueUrl,
-    about: {
-      '@type': 'Thing',
-      name: `Número ${issue.number}: ${issue.title}`,
-    },
-    isPartOf: {
-      '@type': 'PublicationIssue',
-      issueNumber: issue.number,
-      datePublished: new Date(issue.date).toISOString(),
-      publisher: {
-        '@type': 'Organization',
-        name: 'Xerrac!',
-      },
-    },
-    hasPart,
-  }
-
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Xerrac!', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: issue.title, item: issueUrl },
-    ],
-  }
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <ErrorBoundary>
-        <FanzineViewer issue={parsedIssue as any} />
-      </ErrorBoundary>
-      <Afterthought />
-      <Footer currentIssueNumber={issue.number} />
-    </>
-  )
+  return <IssueView issue={issue} />
 }
