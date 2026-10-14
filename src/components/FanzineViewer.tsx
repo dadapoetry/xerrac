@@ -25,12 +25,14 @@ interface FanzineViewerProps {
 
 function getCurrentSectionIndex(): number {
   const els = document.querySelectorAll('[data-section-index]')
-  const probe = window.scrollY + 96
   let idx = 0
+  let closest = Infinity
   els.forEach((el) => {
     try {
-      const top = (el as HTMLElement).offsetTop
-      if (top <= probe) {
+      const rect = el.getBoundingClientRect()
+      const dist = Math.abs(rect.top)
+      if (dist < closest) {
+        closest = dist
         const val = parseInt(el.getAttribute('data-section-index') || '0', 10)
         if (!isNaN(val)) idx = val
       }
@@ -125,25 +127,27 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [])
 
   useEffect(() => {
-    const update = () => {
-      const idx = getCurrentSectionIndex()
-      setActiveSection((prev) => (prev === idx ? prev : idx))
-      if (idx >= 2) setShowNewsletter(true)
-      try {
-        const u = new URL(window.location.href)
-        if (u.searchParams.get('section') !== String(idx)) {
-          u.searchParams.set('section', String(idx))
-          history.replaceState(null, '', u.pathname + u.search)
+    const els = Array.from(document.querySelectorAll('[data-section-index]'))
+    if (els.length === 0) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          const idx = parseInt(entry.target.getAttribute('data-section-index') || '0', 10)
+          if (isNaN(idx)) continue
+          setActiveSection(idx)
+          if (idx >= 2) setShowNewsletter(true)
+          try {
+            const u = new URL(window.location.href)
+            u.searchParams.set('section', String(idx))
+            history.replaceState(null, '', u.pathname + u.search)
+          } catch {}
         }
-      } catch {}
-    }
-    update()
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
-    return () => {
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
-    }
+      },
+      { threshold: 0, rootMargin: '-50% 0px -50% 0px' }
+    )
+    els.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
   }, [sortedSections.length])
 
   useLayoutEffect(() => {
@@ -322,7 +326,7 @@ const shareLink = useCallback(async () => {
         <Fragment key={section.id}>
 
       {i === 0 ? (
-        <div data-section-index={i} id={sectionSlug(i)} className="stack-slide">
+        <div data-section-index={i} id={sectionSlug(i)}>
           <div className="section-container min-h-[100dvh]">
             {section.backgroundImage && (() => {
               const mobileBg =
@@ -352,7 +356,7 @@ const shareLink = useCallback(async () => {
           </div>
         </div>
       ) : (
-        <div data-section-index={i} id={sectionSlug(i)} className="stack-slide">
+        <div data-section-index={i} id={sectionSlug(i)}>
           <SectionRenderer section={section as any} index={i} />
         </div>
       )}
