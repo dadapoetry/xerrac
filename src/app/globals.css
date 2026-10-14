@@ -284,34 +284,36 @@ body::before {
   font-weight: 700;
 }
 
-/* Xerrac! citations — tall de serra */
+/* Xerrac! citations */
 .xerrac-quote {
   position: relative;
   border-left: 0;
-  margin: 2.5rem 0 !important;
-  padding: 0.4rem 0 0.4rem 1.75rem !important;
+  margin: 2.75rem 0 !important;
+  padding: 0 0 0 2.75rem !important;
   font-family: inherit !important;
 }
-/* Fulla d'acer: barra d'accent amb els extrems tallats en diagonal */
+/* Cometa d'obertura com a element gràfic */
 .xerrac-quote::before {
-  content: '';
+  content: '\201C';
   position: absolute;
   left: 0;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  background: var(--accent);
-  clip-path: polygon(0 0, 100% 18%, 100% 82%, 0 100%);
+  top: -0.4rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+  opacity: 0.9;
+  pointer-events: none;
 }
 .editorial-body .xerrac-quote,
 .xerrac-quote,
 .xerrac-quote * {
   font-style: italic !important;
-  font-weight: 500;
-  font-size: 1.15rem !important;
-  line-height: 1.65 !important;
-  letter-spacing: 0.005em;
-  color: #d4d4d4 !important;
+  font-weight: 400;
+  font-size: 1.25rem !important;
+  line-height: 1.75 !important;
+  color: #e5e5e5 !important;
 }
 .xerrac-quote strong,
 .xerrac-quote b {
@@ -319,7 +321,7 @@ body::before {
   color: var(--accent) !important;
 }
 .xerrac-quote p + p {
-  margin-top: 0.75rem !important;
+  margin-top: 0.85rem !important;
 }
 
 /* Xerrac! quoted citations (aclariment cultural) */
