@@ -162,6 +162,21 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     return quill
   }, [])
 
+  // Escriure a l'editor amb l'àrea editable sense focus (per exemple, quan el
+  // cursor el té un camp del diàleg) fa que Quill cridi `root.focus()` i el
+  // navegador arrossegue la pàgina fins a dalt de tot per mostrar l'editor.
+  // Quill només desa i restaura el scroll del seu `scrollingContainer` quan
+  // cridem `focus()`, no quan canvia la selecció. Per això desem la posició de
+  // la vista abans d'escriure i la tornem a deixar exactament igual després.
+  const preservingScroll = useCallback((quill: any, write: () => void) => {
+    const scroller: HTMLElement | null =
+      quill?.scrollingContainer ||
+      (typeof document !== 'undefined' ? (document.scrollingElement as HTMLElement | null) : null)
+    const top = scroller?.scrollTop ?? 0
+    write()
+    if (scroller && scroller.scrollTop !== top) scroller.scrollTop = top
+  }, [])
+
   const handleChange = useCallback((html: string) => {
     if (html === lastEmittedRef.current) return
     lastEmittedRef.current = html
@@ -248,8 +263,10 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
       delta.push(...ops)
       delta.push({ insert: '\n', attributes: { [XERRAC_REF_BLOT]: true } })
       if (atNewline) delta.push({ delete: 1 })
-      quill.updateContents(delta, 'user')
-      quill.setSelection(Math.min(index + (atLineStart ? 0 : 1) + textLength + 1, quill.getLength()), 0, 'silent')
+      preservingScroll(quill, () => {
+        quill.updateContents(delta, 'user')
+        quill.setSelection(Math.min(index + (atLineStart ? 0 : 1) + textLength + 1, quill.getLength()), 0, 'silent')
+      })
     } else if (pieces.length) {
       const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
       if (editorEl) {
@@ -260,7 +277,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     caretRef.current = null
     caretIndexRef.current = null
     setShowRefDialog(false)
-  }, [getQuill])
+  }, [getQuill, preservingScroll])
 
   // Canviar la mida de la imatge ja inserida, sense tornar-la a pujar. Quill 1
   // desa width/height com a atributs de l'img; en percentatge es treu l'alçada
@@ -783,7 +800,19 @@ function ReferenceDialog({ onInsert, onClose }: { onInsert: (fields: ReferenceFi
   const labelClass = 'block text-xs uppercase tracking-wider text-gray-400 mb-2'
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-[90] flex items-center justify-center"
+      onClick={onClose}
+      onKeyDown={(e) => {
+        // El diàleg viu dins el <form> de la secció: si no ho aturéssim, prémer
+        // Retorn en un camp enviaria la secció sencera. Retorn insereix la
+        // referència, com al diàleg d'imatge.
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          submit()
+        }
+      }}
+    >
       <div className="absolute inset-0 bg-black/70" />
       <div
         onClick={(e) => e.stopPropagation()}
