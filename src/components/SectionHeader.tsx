@@ -59,7 +59,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
             {subtitle}
           </p>
         )}
-        <div className={`stagger-rule ${subtitle ? 'delay-4' : 'delay-3'} w-12 h-[2px] opacity-60`} style={{ backgroundColor: 'var(--accent)' }} />
+        <div className={`stagger-rule ${subtitle ? 'delay-4' : 'delay-3'} w-12 h-[2px]`} style={{ backgroundColor: 'var(--accent)' }} />
       </div>
     </div>
   )
