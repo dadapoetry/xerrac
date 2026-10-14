@@ -34,7 +34,6 @@ export function CalaixSastreEditor({ data, onUpdateArrayItem, onAddArrayItem, on
             <RichTextEditor
               value={item.body || ''}
               onChange={(v) => onUpdateArrayItem('interviews', i, 'body', v)}
-              minimal
             />
           </div>
         ))}
@@ -68,7 +67,6 @@ export function CalaixSastreEditor({ data, onUpdateArrayItem, onAddArrayItem, on
             <RichTextEditor
               value={item.body || ''}
               onChange={(v) => onUpdateArrayItem('reviews', i, 'body', v)}
-              minimal
             />
           </div>
         ))}
@@ -102,7 +100,6 @@ export function CalaixSastreEditor({ data, onUpdateArrayItem, onAddArrayItem, on
             <RichTextEditor
               value={item.body || ''}
               onChange={(v) => onUpdateArrayItem('investigacio', i, 'body', v)}
-              minimal
             />
           </div>
         ))}
