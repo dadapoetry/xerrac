@@ -1,7 +1,7 @@
 'use client'
 
 import { SectionData, VisitaContent } from '@/types'
-import { SectionOpener } from '@/components/SectionOpener'
+import { SectionHeader } from '@/components/SectionHeader'
 import { readingTime } from '@/lib/html'
 
 export function VisitaSection({ section, index }: { section: SectionData; index: number }) {
@@ -9,7 +9,7 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
 
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
-      <SectionOpener variant="press" number={index} title={section.title} subtitle="Turisme teòric" readingTime={readingTime(content.body)} />
+      <SectionHeader number={index} title={section.title} subtitle="Turisme teòric" readingTime={readingTime(content.body)} />
 
       {content.source && (
         <p className="text-xs text-gray-400 mb-6 italic tracking-wider drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">

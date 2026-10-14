@@ -1,7 +1,7 @@
 'use client'
 
 import { SectionData, PaginesGroquesContent, Proverb } from '@/types'
-import { SectionOpener } from '@/components/SectionOpener'
+import { SectionHeader } from '@/components/SectionHeader'
 
 export function PaginesGroquesSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as PaginesGroquesContent
@@ -10,7 +10,7 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto">
-        <SectionOpener variant="register" number={index} title={section.title} subtitle="Proverbis, refranys i onomatopeies accidentals" />
+        <SectionHeader number={index} title={section.title} subtitle="Proverbis, refranys i onomatopeies accidentals" />
         <div className="max-w-4xl mx-auto">
           {proverbs.length === 0 ? (
             <p className="editorial-body text-gray-400 italic">

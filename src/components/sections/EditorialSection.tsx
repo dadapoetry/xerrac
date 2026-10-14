@@ -1,7 +1,7 @@
 'use client'
 
 import { SectionData, EditorialContent } from '@/types'
-import { SectionOpener } from '@/components/SectionOpener'
+import { SectionHeader } from '@/components/SectionHeader'
 import { styleBlockquotes, readingTime } from '@/lib/html'
 
 export function EditorialSection({ section, index }: { section: SectionData; index: number }) {
@@ -9,7 +9,7 @@ export function EditorialSection({ section, index }: { section: SectionData; ind
 
   return (
     <div className="max-w-prose w-full mx-auto py-12">
-      <SectionOpener variant="press" number={index} title={section.title} subtitle={content.subtitle || undefined} readingTime={readingTime(content.body)} />
+      <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} readingTime={readingTime(content.body)} />
       <div
         className="editorial-body text-justify hyphens-auto text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
         dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body) }}

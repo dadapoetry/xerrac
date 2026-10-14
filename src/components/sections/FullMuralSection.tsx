@@ -1,14 +1,14 @@
 'use client'
 
 import { SectionData, FullMuralContent, CollageEntry } from '@/types'
-import { SectionOpener } from '@/components/SectionOpener'
+import { SectionHeader } from '@/components/SectionHeader'
 
 export function FullMuralSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as FullMuralContent
 
   return (
     <div className="max-w-5xl w-full mx-auto py-12">
-      <SectionOpener variant="register" number={index} title={section.title} subtitle="Collages i contribucions dels lectors" />
+      <SectionHeader number={index} title={section.title} subtitle="Collages i contribucions dels lectors" />
 
       <div className="mb-10 text-center">
         <div className="inline-flex items-center gap-3 text-[11px] text-gray-500">

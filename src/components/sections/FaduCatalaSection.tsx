@@ -1,7 +1,7 @@
 'use client'
 
 import { SectionData, FaduCatalaContent, FaduEntry } from '@/types'
-import { SectionOpener } from '@/components/SectionOpener'
+import { SectionHeader } from '@/components/SectionHeader'
 import { readingTime } from '@/lib/html'
 
 function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
@@ -29,8 +29,7 @@ export function FaduCatalaSection({ section, index }: { section: SectionData; in
   return (
     <div className="w-full py-12 relative overflow-hidden">
       <div className="max-w-4xl mx-auto">
-        <SectionOpener
-          variant="register"
+        <SectionHeader
           number={index}
           title={section.title}
           subtitle="Caricatures i humor negre"
