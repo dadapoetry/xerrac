@@ -4,7 +4,16 @@ import { useRef, useCallback, useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import type ReactQuillType from 'react-quill'
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false }) as any
+import { registerXerracIcon, XERRAC_ICON_BLOT } from '@/components/xerracIconBlot'
+
+const ReactQuill = dynamic(
+  async () => {
+    const mod = await import('react-quill')
+    registerXerracIcon((mod.default as any)?.Quill)
+    return mod.default
+  },
+  { ssr: false }
+) as any
 
 import 'react-quill/dist/quill.snow.css'
 
@@ -225,6 +234,17 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     if (host.contains(range.startContainer)) caretRef.current = range.cloneRange()
   }, [])
 
+  // Insereix el logo de Xerrac com a objecte inline (no una imatge). Va on hi ha
+  // el cursor i es desa com a <span class="xerrac-mark">, igual que una emoticona.
+  const insertXerracIcon = useCallback(() => {
+    const ref = editorRef.current as any
+    const quill = ref?.getEditor?.() || ref
+    if (!quill?.insertEmbed) return
+    const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
+    quill.insertEmbed(range.index, XERRAC_ICON_BLOT, true, 'user')
+    quill.setSelection(range.index + 1, 0, 'user')
+  }, [])
+
   const modules = useMemo(() => {
     const cfg = minimal
       ? [['bold', 'italic'], ['clean']]
@@ -242,17 +262,27 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     <div ref={rootRef} onClick={handleEditorClick} className="relative">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
-        <button
-          type="button"
-          onMouseDown={captureCaret}
-          onClick={() => {
-            captureCaret()
-            setShowImageDialog(true)
-          }}
-          className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
-        >
-          + Inserir imatge
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={insertXerracIcon}
+            className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
+          >
+            + Logo
+          </button>
+          <button
+            type="button"
+            onMouseDown={captureCaret}
+            onClick={() => {
+              captureCaret()
+              setShowImageDialog(true)
+            }}
+            className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
+          >
+            + Inserir imatge
+          </button>
+        </div>
       </div>
 
       <ReactQuill

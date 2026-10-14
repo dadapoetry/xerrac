@@ -49,6 +49,7 @@ const OPTIONS: sanitizeHtml.IOptions = {
     '*': ['style', 'class'],
     a: ['href', 'title', 'rel'],
     img: ['src', 'alt', 'title', 'width', 'height'],
+    span: ['role', 'aria-label'],
   },
   allowedStyles: {
     '*': Object.fromEntries(SAFE_STYLE_PROPS.map((prop) => [prop, [SAFE_VALUE]])),
