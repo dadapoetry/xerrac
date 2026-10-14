@@ -313,7 +313,7 @@ body::before {
   margin-top: 1.15rem;
 }
 .editorial-body u {
-  text-decoration-color: var(--accent);
+  text-decoration-color: rgba(var(--accent-rgb), 0.75);
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
 }
