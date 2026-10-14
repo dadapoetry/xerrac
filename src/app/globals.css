@@ -427,6 +427,39 @@ body::before {
   background-color: #06c;
 }
 
+/* Referències bibliogràfiques: un bloc de fonts, no prosa. Cos mono petit, gris
+   secundari i sagnat penjant (la segona línia s'alinea sota el text, no sota el
+   número). El títol és un enllaç cap a la font: la referència és verificable. */
+.xerrac-ref {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  letter-spacing: 0.005em;
+  color: #a3a3a3;
+  margin: 0.4rem 0 !important;
+  padding-left: 1.6em;
+  text-indent: -1.6em;
+  text-wrap: pretty;
+}
+.xerrac-ref a {
+  color: var(--accent, #ef4444);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(var(--accent-rgb, 239, 68, 68), 0.4);
+  transition: text-decoration-color 0.2s ease;
+}
+.xerrac-ref a:hover {
+  text-decoration-color: var(--accent);
+}
+.xerrac-ref em {
+  font-style: italic;
+}
+/* Dins l'editor d'admin el fons és blanc: el gris clar de la web no s'hi
+   llegiria, així que les referències hi van en un to més fosc. */
+.ql-editor .xerrac-ref {
+  color: #4b5563;
+}
+
 /* Xerrac! citations — pull-quote */
 .xerrac-quote {
   position: relative;

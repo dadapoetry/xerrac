@@ -6,12 +6,14 @@ import type ReactQuillType from 'react-quill'
 
 import { registerXerracIcon, XERRAC_ICON_BLOT } from '@/components/xerracIconBlot'
 import { registerXerracComodi, XERRAC_COMODI_BLOT } from '@/components/xerracComodiBlot'
+import { registerXerracRef, XERRAC_REF_CLASS } from '@/components/xerracRefBlot'
 
 const ReactQuill = dynamic(
   async () => {
     const mod = await import('react-quill')
     registerXerracIcon((mod.default as any)?.Quill)
     registerXerracComodi((mod.default as any)?.Quill)
+    registerXerracRef((mod.default as any)?.Quill)
     return mod.default
   },
   { ssr: false }
@@ -39,6 +41,37 @@ function escapeAttr(value: string): string {
     .replace(/>/g, '&gt;')
 }
 
+interface ReferenceFields {
+  authors: string
+  year: string
+  title: string
+  source: string
+  url: string
+}
+
+// Construeix el paràgraf de referència. El títol és la part clicable (enllaç a
+// la font); la resta de camps s'escapen perquè ningú no pugui injectar HTML.
+function composeReferenceHtml(fields: ReferenceFields): string {
+  const authors = fields.authors.trim()
+  const year = fields.year.trim()
+  const title = fields.title.trim()
+  const source = fields.source.trim()
+  const url = fields.url.trim()
+
+  const authorYear = [authors, year ? `(${year})` : ''].filter(Boolean).join(' ')
+  const titleHtml = url
+    ? `<a href="${escapeAttr(url)}"><em>${escapeAttr(title)}</em></a>`
+    : `<em>${escapeAttr(title)}</em>`
+
+  const parts = [
+    authorYear ? `${escapeAttr(authorYear)}.` : '',
+    title ? `${titleHtml}.` : '',
+    source ? `${escapeAttr(source)}.` : '',
+  ].filter(Boolean)
+
+  return `<p class="${XERRAC_REF_CLASS}">${parts.join(' ')}</p>`
+}
+
 // Sense width/height la imatge ocupa zero alçada fins que carrega i provoca
 // un salt de maquetació. Es mesuren abans d'inserir-les.
 function readImageSize(src: string): Promise<{ width: number; height: number } | null> {
@@ -63,6 +96,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   const rootRef = useRef<HTMLDivElement | null>(null)
   const caretRef = useRef<Range | null>(null)
   const [showImageDialog, setShowImageDialog] = useState(false)
+  const [showRefDialog, setShowRefDialog] = useState(false)
   const [activeImage, setActiveImage] = useState<HTMLImageElement | null>(null)
   const [sizeDraft, setSizeDraft] = useState('')
   const [sizeBar, setSizeBar] = useState<{ top: number; left: number; below: boolean } | null>(null)
@@ -133,6 +167,30 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     },
     []
   )
+
+  // Insereix una referència com a bloc propi. Va on hi ha el cursor; la classe
+  // .xerrac-ref i l'enllaç del títol sobreviuen perquè el bloc i l'enllaç són
+  // formats registrats de Quill. Si l'API de Quill no hi és (ref buit), cau al
+  // DOM directament, com fa la inserció d'imatges.
+  const insertReference = useCallback((fields: ReferenceFields) => {
+    const html = composeReferenceHtml(fields)
+    const ref = editorRef.current as any
+    const quill = ref?.getEditor?.() || ref
+    if (quill?.clipboard?.dangerouslyPasteHTML) {
+      const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
+      quill.clipboard.dangerouslyPasteHTML(range.index, html)
+    } else {
+      const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
+      if (editorEl) {
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = html
+        const node = wrapper.firstElementChild
+        if (node) editorEl.appendChild(node)
+        editorEl.dispatchEvent(new Event('input', { bubbles: true }))
+      }
+    }
+    setShowRefDialog(false)
+  }, [])
 
   // Canviar la mida de la imatge ja inserida, sense tornar-la a pujar. Quill 1
   // desa width/height com a atributs de l'img; en percentatge es treu l'alçada
@@ -323,6 +381,17 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
           >
             + Inserir imatge
           </button>
+          <button
+            type="button"
+            onMouseDown={captureCaret}
+            onClick={() => {
+              captureCaret()
+              setShowRefDialog(true)
+            }}
+            className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
+          >
+            + Referència
+          </button>
         </div>
       </div>
 
@@ -397,6 +466,13 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
         <ImageDialog
           onInsert={insertImage}
           onClose={() => setShowImageDialog(false)}
+        />
+      )}
+
+      {showRefDialog && (
+        <ReferenceDialog
+          onInsert={insertReference}
+          onClose={() => setShowRefDialog(false)}
         />
       )}
     </div>
@@ -621,6 +697,118 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
             </div>
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+function ReferenceDialog({ onInsert, onClose }: { onInsert: (fields: ReferenceFields) => void; onClose: () => void }) {
+  const [authors, setAuthors] = useState('')
+  const [year, setYear] = useState('')
+  const [title, setTitle] = useState('')
+  const [source, setSource] = useState('')
+  const [url, setUrl] = useState('')
+
+  // Sense <form>, com el diàleg d'imatge: els <form> anidats dins el formulari
+  // de la secció no són HTML vàlid.
+  const submit = () => {
+    if (!authors.trim() && !title.trim()) return
+    onInsert({ authors, year, title, source, url })
+  }
+
+  const inputClass =
+    'w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white text-sm focus:outline-none focus:border-red-500 transition-colors'
+  const labelClass = 'block text-xs uppercase tracking-wider text-gray-400 mb-2'
+
+  return (
+    <div className="fixed inset-0 z-[90] flex items-center justify-center" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/70" />
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative bg-gray-950 border border-gray-800 p-6 max-w-md w-full mx-4 shadow-2xl"
+      >
+        <h3 className="text-white font-bold text-lg mb-1">Inserir referència</h3>
+        <p className="text-[11px] text-gray-500 mb-4">
+          El títol queda clicable si hi poses una URL. La referència s&rsquo;insereix com un bloc de fonts.
+        </p>
+        <div className="space-y-3">
+          <div className="flex gap-3">
+            <div className="flex-1">
+              <label className={labelClass}>Autor/s</label>
+              <input
+                type="text"
+                value={authors}
+                onChange={(e) => setAuthors(e.target.value)}
+                className={inputClass}
+                placeholder="Cognom, X."
+                autoFocus
+              />
+            </div>
+            <div className="w-24">
+              <label className={labelClass}>Any</label>
+              <input
+                type="text"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className={inputClass}
+                placeholder="2020"
+              />
+            </div>
+          </div>
+          <div>
+            <label className={labelClass}>Títol</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className={inputClass}
+              placeholder="Títol de l'obra o article"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Editorial / publicació (opcional)</label>
+            <input
+              type="text"
+              value={source}
+              onChange={(e) => setSource(e.target.value)}
+              className={inputClass}
+              placeholder="Editorial o revista"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>URL (opcional)</label>
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  submit()
+                }
+              }}
+              className={inputClass}
+              placeholder="https://…"
+            />
+          </div>
+        </div>
+        <div className="flex gap-3 justify-end mt-6">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border border-gray-700 text-gray-400 text-sm hover:border-gray-500 transition-colors"
+          >
+            Cancel·lar
+          </button>
+          <button
+            type="button"
+            onClick={submit}
+            disabled={!authors.trim() && !title.trim()}
+            className="px-4 py-2 bg-red-600 text-white text-sm hover:bg-red-700 transition-colors disabled:opacity-50"
+          >
+            Inserir
+          </button>
+        </div>
       </div>
     </div>
   )
