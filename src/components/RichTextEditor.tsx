@@ -419,7 +419,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
 
   const modules = useMemo(() => {
     const cfg = minimal
-      ? [['bold', 'italic', 'xerrac', 'comodi'], ['clean']]
+      ? [['bold', 'italic', 'xerrac', 'comodi', 'referencia'], ['clean']]
       : [
           [{ header: [1, 2, 3, false] }],
           ['bold', 'italic', 'underline', 'strike', 'xerrac', 'comodi'],
