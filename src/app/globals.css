@@ -306,8 +306,8 @@ body::before {
 .xerrac-quote * {
   font-style: normal !important;
   font-weight: 700 !important;
-  font-size: clamp(1.35rem, 3.4vw, 2.35rem) !important;
-  line-height: 1.22 !important;
+  font-size: clamp(1.125rem, 2.6vw, 1.6rem) !important;
+  line-height: 1.3 !important;
   letter-spacing: -0.01em !important;
   color: #fafafa !important;
 }
