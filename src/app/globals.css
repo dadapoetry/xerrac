@@ -364,6 +364,69 @@ body::before {
   background-color: #06c;
 }
 
+/* Mot comodí: la paraula queda ratllada per una serra d'accent, com una marca
+   de rebuig. El traç viu en un pseudo-element perquè el text no en quedi
+   afectat, i el color segueix l'accent del número via var(). `white-space:
+   nowrap` evita que la paraula es parteixi i deixi el traç orfe. */
+.xerrac-comodi {
+  position: relative;
+  white-space: nowrap;
+}
+.xerrac-comodi::after {
+  content: '';
+  position: absolute;
+  left: -0.06em;
+  right: -0.06em;
+  top: 50%;
+  height: 0.32em;
+  transform: translateY(-50%);
+  background-color: var(--accent, #ef4444);
+  pointer-events: none;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2010'%3E%3Cpath%20d='M0,9%20L6,1%20L12,9'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: repeat-x;
+  -webkit-mask-position: 0 50%;
+  -webkit-mask-size: 0.44em 100%;
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2010'%3E%3Cpath%20d='M0,9%20L6,1%20L12,9'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-repeat: repeat-x;
+  mask-position: 0 50%;
+  mask-size: 0.44em 100%;
+}
+/* Sample de serra per a la llegenda (taulell de mots comodí) */
+.xerrac-comodi-key {
+  display: inline-block;
+  width: 1.6em;
+  height: 0.5em;
+  background-color: var(--accent, #ef4444);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2010'%3E%3Cpath%20d='M0,9%20L6,1%20L12,9'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: repeat-x;
+  -webkit-mask-position: 0 50%;
+  -webkit-mask-size: 0.5em 100%;
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2010'%3E%3Cpath%20d='M0,9%20L6,1%20L12,9'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-repeat: repeat-x;
+  mask-position: 0 50%;
+  mask-size: 0.5em 100%;
+}
+
+/* Boto "mot comodí" de la barra d'eines de Quill: una serra ratllada */
+.ql-snow.ql-toolbar button.ql-comodi::before,
+.ql-snow .ql-toolbar button.ql-comodi::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 18px;
+  background-color: #444;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2012'%3E%3Cpath%20d='M1,10%20L6,2%20L11,10%20L16,2%20L21,10'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px 10px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2012'%3E%3Cpath%20d='M1,10%20L6,2%20L11,10%20L16,2%20L21,10'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px 10px no-repeat;
+}
+.ql-snow.ql-toolbar button.ql-comodi:hover::before,
+.ql-snow .ql-toolbar button.ql-comodi:hover::before,
+.ql-snow.ql-toolbar button.ql-comodi:focus::before,
+.ql-snow .ql-toolbar button.ql-comodi:focus::before,
+.ql-snow.ql-toolbar button.ql-comodi.ql-active::before,
+.ql-snow .ql-toolbar button.ql-comodi.ql-active::before {
+  background-color: #06c;
+}
+
 /* Xerrac! citations — pull-quote */
 .xerrac-quote {
   position: relative;

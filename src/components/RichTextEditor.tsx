@@ -5,11 +5,13 @@ import dynamic from 'next/dynamic'
 import type ReactQuillType from 'react-quill'
 
 import { registerXerracIcon, XERRAC_ICON_BLOT } from '@/components/xerracIconBlot'
+import { registerXerracComodi, XERRAC_COMODI_BLOT } from '@/components/xerracComodiBlot'
 
 const ReactQuill = dynamic(
   async () => {
     const mod = await import('react-quill')
     registerXerracIcon((mod.default as any)?.Quill)
+    registerXerracComodi((mod.default as any)?.Quill)
     return mod.default
   },
   { ssr: false }
@@ -246,12 +248,38 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     quill.setSelection(range.index + 1, 0, 'user')
   }, [])
 
+  // Marca (o desmarca) el text seleccionat com a "mot comodí": és un format
+  // inline de Quill, així que s'aplica a la selecció com el negreta. Si no hi
+  // ha selecció, s'agafa la paraula que hi ha sota el cursor, perquè marcar un
+  // mot amb un clic sigui possible. El handler rep `value` del toolbar: true si
+  // el botó no estava actiu (marcar) i false si ja ho estava (treure la marca).
+  const toggleComodi = useCallback(function (this: any, value: boolean) {
+    const quill = this?.quill || (editorRef.current as any)?.getEditor?.()
+    if (!quill?.format || !quill.getSelection) return
+    let range = quill.getSelection(true)
+    if (!range) return
+    if (range.length === 0) {
+      const text: string = quill.getText()
+      const isWordChar = (ch: string) => /[0-9A-Za-zÀ-ÿ·'’-]/.test(ch)
+      let start = range.index
+      let end = range.index
+      while (start > 0 && isWordChar(text[start - 1])) start -= 1
+      while (end < text.length && isWordChar(text[end])) end += 1
+      if (end > start) {
+        range = { index: start, length: end - start }
+        quill.setSelection(start, end - start, 'silent')
+      }
+    }
+    if (range.length === 0) return
+    quill.format(XERRAC_COMODI_BLOT, value !== false, 'user')
+  }, [])
+
   const modules = useMemo(() => {
     const cfg = minimal
-      ? [['bold', 'italic', 'xerrac'], ['clean']]
+      ? [['bold', 'italic', 'xerrac', 'comodi'], ['clean']]
       : [
           [{ header: [1, 2, 3, false] }],
-          ['bold', 'italic', 'underline', 'strike', 'xerrac'],
+          ['bold', 'italic', 'underline', 'strike', 'xerrac', 'comodi'],
           [{ list: 'ordered' }, { list: 'bullet' }],
           ['blockquote', 'link'],
           ['clean'],
@@ -259,10 +287,10 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     return {
       toolbar: {
         container: cfg,
-        handlers: { xerrac: insertXerracIcon },
+        handlers: { xerrac: insertXerracIcon, comodi: toggleComodi },
       },
     }
-  }, [minimal, insertXerracIcon])
+  }, [minimal, insertXerracIcon, toggleComodi])
 
   // En enganxar, Quill fa focus() sobre l'àrea editable i el navegador
   // arrossega la pàgina fins a mostrar l'editor sencer (és a dir, cap a dalt).
