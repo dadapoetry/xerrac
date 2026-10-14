@@ -286,19 +286,35 @@ body::before {
 
 /* Xerrac! citations */
 .xerrac-quote {
-  border-left: 3px solid var(--accent);
-  margin: 1.75rem 0 !important;
-  padding: 0.35rem 0 0.35rem 1.25rem !important;
+  position: relative;
+  border-left: 0;
+  margin: 2.25rem 0 !important;
+  padding: 1.1rem 1.4rem 1.1rem 1.5rem !important;
+  background: linear-gradient(
+    100deg,
+    rgba(var(--accent-rgb), 0.12) 0%,
+    rgba(var(--accent-rgb), 0.03) 55%,
+    transparent 100%
+  );
   font-family: inherit !important;
+}
+.xerrac-quote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--accent), rgba(var(--accent-rgb), 0.25));
 }
 .editorial-body .xerrac-quote,
 .xerrac-quote,
 .xerrac-quote * {
   font-style: italic !important;
   font-weight: 400;
-  font-size: 1.0625rem !important;
-  line-height: 1.6 !important;
-  color: #b9b9b9 !important;
+  font-size: 1.15rem !important;
+  line-height: 1.7 !important;
+  color: #d4d4d4 !important;
 }
 .xerrac-quote strong,
 .xerrac-quote b {
@@ -422,6 +438,9 @@ body::before {
   }
   .text-white {
     color: #000 !important;
+  }
+  .xerrac-quote {
+    background: none !important;
   }
   .border-red-500\/30 {
     border-color: #ccc !important;
