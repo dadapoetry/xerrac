@@ -407,6 +407,16 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     quill.format(XERRAC_COMODI_BLOT, value !== false, 'user')
   }, [])
 
+  // El botó de referències viu a la barra de format (que queda sticky). Captura
+  // el cursor abans d'obrir el diàleg: així la referència cau on escrivies i no
+  // al final del text.
+  const openReferenceDialog = useCallback(function (this: any) {
+    const quill = this?.quill || (editorRef.current as any)?.getEditor?.()
+    const range = quill?.getSelection?.(true)
+    if (range) caretIndexRef.current = range.index + range.length
+    setShowRefDialog(true)
+  }, [])
+
   const modules = useMemo(() => {
     const cfg = minimal
       ? [['bold', 'italic', 'xerrac', 'comodi'], ['clean']]
@@ -414,16 +424,16 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
           [{ header: [1, 2, 3, false] }],
           ['bold', 'italic', 'underline', 'strike', 'xerrac', 'comodi'],
           [{ list: 'ordered' }, { list: 'bullet' }],
-          ['blockquote', 'link'],
+          ['blockquote', 'link', 'referencia'],
           ['clean'],
         ]
     return {
       toolbar: {
         container: cfg,
-        handlers: { xerrac: insertXerracIcon, comodi: toggleComodi },
+        handlers: { xerrac: insertXerracIcon, comodi: toggleComodi, referencia: openReferenceDialog },
       },
     }
-  }, [minimal, insertXerracIcon, toggleComodi])
+  }, [minimal, insertXerracIcon, toggleComodi, openReferenceDialog])
 
   // En enganxar, Quill fa focus() sobre l'àrea editable i el navegador
   // arrossega la pàgina fins a mostrar l'editor sencer (és a dir, cap a dalt).
@@ -441,7 +451,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   )
 
   return (
-    <div ref={rootRef} onClick={handleEditorClick} className="relative">
+    <div ref={rootRef} onClick={handleEditorClick} className="relative editor-shell">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
         <div className="flex items-center gap-3">
@@ -455,17 +465,6 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
             className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
           >
             + Inserir imatge
-          </button>
-          <button
-            type="button"
-            onMouseDown={captureCaret}
-            onClick={() => {
-              captureCaret()
-              setShowRefDialog(true)
-            }}
-            className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
-          >
-            + Referència
           </button>
         </div>
       </div>

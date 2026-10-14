@@ -427,6 +427,40 @@ body::before {
   background-color: #06c;
 }
 
+/* Botó "referència" de la barra: una llista de fonts amb sagnat (una barra a
+   l'esquerra i files de text). Obre el diàleg d'inserció de referències. */
+.ql-snow.ql-toolbar button.ql-referencia::before,
+.ql-snow .ql-toolbar button.ql-referencia::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 18px;
+  background-color: #444;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M4,6%20V18'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M9,7%20H20'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M9,12%20H20'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M9,17%20H20'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E") center / 18px 18px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M4,6%20V18'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M9,7%20H20'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M9,12%20H20'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M9,17%20H20'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E") center / 18px 18px no-repeat;
+}
+.ql-snow.ql-toolbar button.ql-referencia:hover::before,
+.ql-snow .ql-toolbar button.ql-referencia:hover::before,
+.ql-snow.ql-toolbar button.ql-referencia:focus::before,
+.ql-snow .ql-toolbar button.ql-referencia:focus::before {
+  background-color: #06c;
+}
+
+/* La barra de format queda enganxada a dalt mentre s'edita un text llarg: així
+   el botó de referències (i la resta de formats) sempre són a mà i no cal pujar
+   i baixar. En mòbil baixa sota la barra superior fixa de l'admin. */
+.editor-shell .ql-toolbar.ql-snow {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fff;
+}
+@media (max-width: 767px) {
+  .editor-shell .ql-toolbar.ql-snow {
+    top: 3.5rem;
+  }
+}
+
 /* Referències bibliogràfiques: un bloc de fonts, no prosa. Cos mono petit, gris
    secundari i sagnat penjant (la segona línia s'alinea sota el text, no sota el
    número). El títol és un enllaç cap a la font: la referència és verificable. */
