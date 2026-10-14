@@ -236,9 +236,10 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
 
   // Insereix el logo de Xerrac com a objecte inline (no una imatge). Va on hi ha
   // el cursor i es desa com a <span class="xerrac-mark">, igual que una emoticona.
-  const insertXerracIcon = useCallback(() => {
-    const ref = editorRef.current as any
-    const quill = ref?.getEditor?.() || ref
+  // Quill crida el handler amb `this` = toolbar, que exposa `this.quill`; és la
+  // via fiable perquè el ref travessa next/dynamic i pot arribar buit.
+  const insertXerracIcon = useCallback(function (this: any) {
+    const quill = this?.quill || (editorRef.current as any)?.getEditor?.()
     if (!quill?.insertEmbed) return
     const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
     quill.insertEmbed(range.index, XERRAC_ICON_BLOT, true, 'user')
@@ -258,7 +259,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     return {
       toolbar: {
         container: cfg,
-        handlers: { xerrac: () => insertXerracIcon() },
+        handlers: { xerrac: insertXerracIcon },
       },
     }
   }, [minimal, insertXerracIcon])
