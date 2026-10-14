@@ -2,18 +2,23 @@
 
 import { useRef, useCallback, useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import type ReactQuillType from 'react-quill'
 
 import { registerXerracIcon, XERRAC_ICON_BLOT } from '@/components/xerracIconBlot'
 import { registerXerracComodi, XERRAC_COMODI_BLOT } from '@/components/xerracComodiBlot'
 import { registerXerracRef, XERRAC_REF_BLOT, XERRAC_REF_CLASS } from '@/components/xerracRefBlot'
 
+// La classe Quill, que ens cal per fer-hi `Quill.find` i recuperar la instància
+// des del DOM. `next/dynamic` no reenvia refs, així que no en podem tenir cap de
+// fiable sobre <ReactQuill>.
+let QuillClass: any = null
+
 const ReactQuill = dynamic(
   async () => {
     const mod = await import('react-quill')
-    registerXerracIcon((mod.default as any)?.Quill)
-    registerXerracComodi((mod.default as any)?.Quill)
-    registerXerracRef((mod.default as any)?.Quill)
+    QuillClass = (mod.default as any)?.Quill
+    registerXerracIcon(QuillClass)
+    registerXerracComodi(QuillClass)
+    registerXerracRef(QuillClass)
     return mod.default
   },
   { ssr: false }
@@ -32,14 +37,6 @@ interface RichTextEditorProps {
 const SIZE_BAR_WIDTH = 344
 const SIZE_BAR_HEIGHT = 40
 const SIZE_PRESETS = ['25%', '50%', '75%', '100%']
-
-function escapeAttr(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-}
 
 interface ReferenceFields {
   authors: string
@@ -137,7 +134,7 @@ function readImageSize(src: string): Promise<{ width: number; height: number } |
 }
 
 export function RichTextEditor({ value, onChange, minimal = false }: RichTextEditorProps) {
-  const editorRef = useRef<ReactQuillType | null>(null)
+  const quillRef = useRef<any>(null)
   const rootRef = useRef<HTMLDivElement | null>(null)
   const caretRef = useRef<Range | null>(null)
   // Índex del cursor segons el model de Quill, capturat mentre l'editor encara
@@ -150,6 +147,20 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   const [sizeBar, setSizeBar] = useState<{ top: number; left: number; below: boolean } | null>(null)
   const [current, setCurrent] = useState(value)
   const lastEmittedRef = useRef(value)
+
+  // Instància real de Quill. Com que `next/dynamic` no reenvia refs, no podem
+  // obtenir-la amb una ref sobre <ReactQuill>: la recuperem del DOM (Quill desa
+  // la instància al seu contenidor) la primera vegada i la desem en memòria.
+  const getQuill = useCallback((): any => {
+    const container = rootRef.current?.querySelector('.ql-container') as HTMLElement | null
+    if (!container) return null
+    // Reutilitza la instància només si continua essent la del mateix contenidor:
+    // si l'editor s'ha regenerat, el node és nou i cal tornar-la a buscar.
+    if (quillRef.current && quillRef.current.container === container) return quillRef.current
+    const quill = (QuillClass?.find?.(container)) || (container as any).__quill || null
+    if (quill) quillRef.current = quill
+    return quill
+  }, [])
 
   const handleChange = useCallback((html: string) => {
     if (html === lastEmittedRef.current) return
@@ -165,51 +176,41 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     }
   }, [value])
 
-  // Aquest insert no pot retorna silenciosament: el ref travessa next/dynamic
-  // (asíncron) i pot arribar buit, i aleshores el diàleg es quedava obert en
-  // estat "Pujant..." amb la imatge ja pujada i sense inserir. La imatge va on
-  // hi ha el cursor: primer l'API de Quill, que és la que en manté el model i
-  // l'historial, i si no hi ha instància, el cursor capturat en obrir el diàleg.
+  // La imatge no s'insereix amb l'API de Quill perquè el format d'imatge només
+  // admet alt/width/height: Quill descartaria l'amplada màxima (style), que és la
+  // que evita que la imatge desborde. Així que s'insereix al DOM, al cursor
+  // capturat en obrir el diàleg, i es notifica el canvi perquè Quill l'incorpore
+  // al seu model.
   const insertImage = useCallback(
     (url: string, width: string, alt: string, dims?: { width: number; height: number } | null) => {
-      const ref = editorRef.current as any
-      const quill = ref?.getEditor?.() || ref
       const maxWidth = width || '100%'
-      const sizeAttrs = dims ? ` width="${dims.width}" height="${dims.height}"` : ''
-      const html = `<img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}"${sizeAttrs} loading="lazy" decoding="async" style="max-width: ${escapeAttr(maxWidth)}; height: auto;" />`
-
-      if (quill?.clipboard?.dangerouslyPasteHTML) {
-        const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
-        quill.clipboard.dangerouslyPasteHTML(range.index, html)
-      } else {
-        const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
-        if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
-        const img = document.createElement('img')
-        img.src = url
-        img.alt = alt
-        img.loading = 'lazy'
-        img.decoding = 'async'
-        if (dims) {
-          img.width = dims.width
-          img.height = dims.height
-        }
-        img.style.maxWidth = maxWidth
-        img.style.height = 'auto'
-        const caret = caretRef.current
-        if (caret && editorEl.contains(caret.startContainer)) {
-          caret.deleteContents()
-          caret.insertNode(img)
-          const after = document.createRange()
-          after.setStartAfter(img)
-          after.collapse(true)
-          const sel = window.getSelection()
-          sel?.removeAllRanges()
-          sel?.addRange(after)
-        } else {
-          editorEl.appendChild(img)
-        }
-        editorEl.dispatchEvent(new Event('input', { bubbles: true }))
+      const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
+      if (!editorEl) throw new Error("No s'ha pogut accedir a l'editor de text.")
+      const img = document.createElement('img')
+      img.src = url
+      img.alt = alt
+      img.loading = 'lazy'
+      img.decoding = 'async'
+      if (dims) {
+        img.width = dims.width
+        img.height = dims.height
       }
+      img.style.maxWidth = maxWidth
+      img.style.height = 'auto'
+      const caret = caretRef.current
+      if (caret && editorEl.contains(caret.startContainer)) {
+        caret.deleteContents()
+        caret.insertNode(img)
+        const after = document.createRange()
+        after.setStartAfter(img)
+        after.collapse(true)
+        const sel = window.getSelection()
+        sel?.removeAllRanges()
+        sel?.addRange(after)
+      } else {
+        editorEl.appendChild(img)
+      }
+      editorEl.dispatchEvent(new Event('input', { bubbles: true }))
       caretRef.current = null
       setShowImageDialog(false)
     },
@@ -223,8 +224,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   // formats de línia.
   const insertReference = useCallback((fields: ReferenceFields) => {
     const pieces = referencePieces(fields)
-    const ref = editorRef.current as any
-    const quill = ref?.getEditor?.() || ref
+    const quill = getQuill()
 
     if (pieces.length && quill?.updateContents && quill?.getLength) {
       const ops = referenceOps(pieces)
@@ -260,7 +260,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     caretRef.current = null
     caretIndexRef.current = null
     setShowRefDialog(false)
-  }, [])
+  }, [getQuill])
 
   // Canviar la mida de la imatge ja inserida, sense tornar-la a pujar. Quill 1
   // desa width/height com a atributs de l'img; en percentatge es treu l'alçada
@@ -271,30 +271,19 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
       const img = activeImage
       const raw = value.trim()
       if (!img || !raw) return
-      const attrs: { width: string; height?: string } = { width: raw }
+      // La mida es desa com a atributs width/height (el format d'imatge de Quill
+      // no admet l'estil) i es reinicia l'amplada màxima perquè la mida triada es
+      // faci efectiva encara que la imatge vingués amb una amplada limitada.
+      img.setAttribute('width', raw)
       const px = Number.parseFloat(raw)
       if (!raw.endsWith('%') && Number.isFinite(px) && px > 0 && img.naturalWidth) {
-        attrs.height = String(Math.round((img.naturalHeight * px) / img.naturalWidth))
+        img.setAttribute('height', String(Math.round((img.naturalHeight * px) / img.naturalWidth)))
+      } else {
+        img.removeAttribute('height')
       }
-      const ref = editorRef.current as any
-      const quill = ref?.getEditor?.() || ref
-      let applied = false
-      if (quill?.formatText) {
-        const blot = quill.find?.(img)
-        const index = typeof blot?.index === 'function' ? blot.index() : null
-        if (index != null) {
-          quill.formatText({ index, length: 1 }, 'image', attrs, 'user')
-          applied = img.getAttribute('width') === raw
-        }
-      }
-      if (!applied) {
-        img.setAttribute('width', attrs.width)
-        if (attrs.height) img.setAttribute('height', attrs.height)
-        else img.removeAttribute('height')
-        img.style.maxWidth = '100%'
-        img.style.height = 'auto'
-        rootRef.current?.querySelector('.ql-editor')?.dispatchEvent(new Event('input', { bubbles: true }))
-      }
+      img.style.maxWidth = '100%'
+      img.style.height = 'auto'
+      rootRef.current?.querySelector('.ql-editor')?.dispatchEvent(new Event('input', { bubbles: true }))
       setSizeDraft(raw)
     },
     [activeImage]
@@ -363,23 +352,23 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     const range = sel.getRangeAt(0)
     if (host.contains(range.startContainer)) {
       caretRef.current = range.cloneRange()
-      const quill = (editorRef.current as any)?.getEditor?.()
+      const quill = getQuill()
       const quillRange = quill?.getSelection?.()
       if (quillRange) caretIndexRef.current = quillRange.index + quillRange.length
     }
-  }, [])
+  }, [getQuill])
 
   // Insereix el logo de Xerrac com a objecte inline (no una imatge). Va on hi ha
   // el cursor i es desa com a <span class="xerrac-mark">, igual que una emoticona.
-  // Quill crida el handler amb `this` = toolbar, que exposa `this.quill`; és la
-  // via fiable perquè el ref travessa next/dynamic i pot arribar buit.
+  // Quill crida el handler amb `this` = toolbar, que exposa `this.quill`; si no,
+  // es recupera la instància del DOM amb getQuill.
   const insertXerracIcon = useCallback(function (this: any) {
-    const quill = this?.quill || (editorRef.current as any)?.getEditor?.()
+    const quill = this?.quill || getQuill()
     if (!quill?.insertEmbed) return
     const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
     quill.insertEmbed(range.index, XERRAC_ICON_BLOT, true, 'user')
     quill.setSelection(range.index + 1, 0, 'user')
-  }, [])
+  }, [getQuill])
 
   // Marca (o desmarca) el text seleccionat com a "mot comodí": és un format
   // inline de Quill, així que s'aplica a la selecció com el negreta. Si no hi
@@ -387,7 +376,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   // mot amb un clic sigui possible. El handler rep `value` del toolbar: true si
   // el botó no estava actiu (marcar) i false si ja ho estava (treure la marca).
   const toggleComodi = useCallback(function (this: any, value: boolean) {
-    const quill = this?.quill || (editorRef.current as any)?.getEditor?.()
+    const quill = this?.quill || getQuill()
     if (!quill?.format || !quill.getSelection) return
     let range = quill.getSelection(true)
     if (!range) return
@@ -405,17 +394,17 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     }
     if (range.length === 0) return
     quill.format(XERRAC_COMODI_BLOT, value !== false, 'user')
-  }, [])
+  }, [getQuill])
 
   // El botó de referències viu a la barra de format (que queda sticky). Captura
   // el cursor abans d'obrir el diàleg: així la referència cau on escrivies i no
   // al final del text.
   const openReferenceDialog = useCallback(function (this: any) {
-    const quill = this?.quill || (editorRef.current as any)?.getEditor?.()
+    const quill = this?.quill || getQuill()
     const range = quill?.getSelection?.(true)
     if (range) caretIndexRef.current = range.index + range.length
     setShowRefDialog(true)
-  }, [])
+  }, [getQuill])
 
   const modules = useMemo(() => {
     const cfg = minimal
@@ -470,7 +459,6 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
       </div>
 
       <ReactQuill
-        ref={(el: any) => { editorRef.current = el }}
         value={current}
         onChange={handleChange}
         className="bg-white text-black rounded text-sm"
