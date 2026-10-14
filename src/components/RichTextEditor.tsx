@@ -6,7 +6,7 @@ import type ReactQuillType from 'react-quill'
 
 import { registerXerracIcon, XERRAC_ICON_BLOT } from '@/components/xerracIconBlot'
 import { registerXerracComodi, XERRAC_COMODI_BLOT } from '@/components/xerracComodiBlot'
-import { registerXerracRef, XERRAC_REF_CLASS } from '@/components/xerracRefBlot'
+import { registerXerracRef, XERRAC_REF_BLOT, XERRAC_REF_CLASS } from '@/components/xerracRefBlot'
 
 const ReactQuill = dynamic(
   async () => {
@@ -49,27 +49,72 @@ interface ReferenceFields {
   url: string
 }
 
-// Construeix el paràgraf de referència. El títol és la part clicable (enllaç a
-// la font); la resta de camps s'escapen perquè ningú no pugui injectar HTML.
-function composeReferenceHtml(fields: ReferenceFields): string {
+interface ReferencePiece {
+  text: string
+  italic?: boolean
+  link?: string
+}
+
+type ReferenceOp = { insert: string; attributes?: Record<string, unknown> }
+
+// Una referència bibliogràfica es compon de fragments: autors i any, el títol
+// (cursiva i, si hi ha URL, enllaç) i la font. Es tracten com a text pla —sense
+// HTML— perquè no cal escapar res i Quill els aplica com a formats de caràcter.
+function referencePieces(fields: ReferenceFields): ReferencePiece[] {
   const authors = fields.authors.trim()
   const year = fields.year.trim()
   const title = fields.title.trim()
   const source = fields.source.trim()
   const url = fields.url.trim()
-
   const authorYear = [authors, year ? `(${year})` : ''].filter(Boolean).join(' ')
-  const titleHtml = url
-    ? `<a href="${escapeAttr(url)}"><em>${escapeAttr(title)}</em></a>`
-    : `<em>${escapeAttr(title)}</em>`
 
-  const parts = [
-    authorYear ? `${escapeAttr(authorYear)}.` : '',
-    title ? `${titleHtml}.` : '',
-    source ? `${escapeAttr(source)}.` : '',
-  ].filter(Boolean)
+  const pieces: ReferencePiece[] = []
+  if (authorYear) pieces.push({ text: authorYear })
+  if (title) pieces.push({ text: title, italic: true, link: url || undefined })
+  if (source) pieces.push({ text: source })
+  return pieces
+}
 
-  return `<p class="${XERRAC_REF_CLASS}">${parts.join(' ')}</p>`
+// Cada fragment de la referència s'acaba amb un punt; el del títol queda fora de
+// la cursiva. Com que no hi ha HTML, ningú no hi pot injectar res.
+function referenceOps(pieces: ReferencePiece[]): ReferenceOp[] {
+  const ops: ReferenceOp[] = []
+  pieces.forEach((piece, i) => {
+    if (i > 0) ops.push({ insert: ' ' })
+    const attributes: Record<string, unknown> = {}
+    if (piece.italic) attributes.italic = true
+    if (piece.link) attributes.link = piece.link
+    ops.push(Object.keys(attributes).length ? { insert: piece.text, attributes } : { insert: piece.text })
+    ops.push({ insert: '.' })
+  })
+  return ops
+}
+
+// Camí de reserva si Quill encara no està muntat: construeix el <p> de la
+// referència directament al DOM, com fa la inserció d'imatges.
+function buildReferenceNode(pieces: ReferencePiece[]): HTMLElement {
+  const paragraph = document.createElement('p')
+  paragraph.className = XERRAC_REF_CLASS
+  pieces.forEach((piece, i) => {
+    if (i > 0) paragraph.appendChild(document.createTextNode(' '))
+    if (piece.italic || piece.link) {
+      const em = document.createElement('em')
+      em.textContent = piece.text
+      if (piece.link) {
+        const anchor = document.createElement('a')
+        anchor.href = piece.link
+        anchor.rel = 'noopener noreferrer'
+        anchor.appendChild(em)
+        paragraph.appendChild(anchor)
+      } else {
+        paragraph.appendChild(em)
+      }
+    } else {
+      paragraph.appendChild(document.createTextNode(piece.text))
+    }
+    paragraph.appendChild(document.createTextNode('.'))
+  })
+  return paragraph
 }
 
 // Sense width/height la imatge ocupa zero alçada fins que carrega i provoca
@@ -95,6 +140,9 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   const editorRef = useRef<ReactQuillType | null>(null)
   const rootRef = useRef<HTMLDivElement | null>(null)
   const caretRef = useRef<Range | null>(null)
+  // Índex del cursor segons el model de Quill, capturat mentre l'editor encara
+  // té el focus. És el que fa que la referència caiga on escrivies i no al final.
+  const caretIndexRef = useRef<number | null>(null)
   const [showImageDialog, setShowImageDialog] = useState(false)
   const [showRefDialog, setShowRefDialog] = useState(false)
   const [activeImage, setActiveImage] = useState<HTMLImageElement | null>(null)
@@ -168,27 +216,49 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     []
   )
 
-  // Insereix una referència com a bloc propi. Va on hi ha el cursor; la classe
-  // .xerrac-ref i l'enllaç del títol sobreviuen perquè el bloc i l'enllaç són
-  // formats registrats de Quill. Si l'API de Quill no hi és (ref buit), cau al
-  // DOM directament, com fa la inserció d'imatges.
+  // Insereix una referència com a bloc propi, exactament on tenies el cursor.
+  // El bloc es crea amb un salt de línia al davant: sense això, Quill fusiona la
+  // referència amb la línia on escrivies i el text queda descol·locat. L'atribut
+  // de bloc `referencia` viatja al salt de línia final, que és on Quill desa els
+  // formats de línia.
   const insertReference = useCallback((fields: ReferenceFields) => {
-    const html = composeReferenceHtml(fields)
+    const pieces = referencePieces(fields)
     const ref = editorRef.current as any
     const quill = ref?.getEditor?.() || ref
-    if (quill?.clipboard?.dangerouslyPasteHTML) {
-      const range = quill.getSelection(true) || { index: quill.getLength(), length: 0 }
-      quill.clipboard.dangerouslyPasteHTML(range.index, html)
-    } else {
+
+    if (pieces.length && quill?.updateContents && quill?.getLength) {
+      const ops = referenceOps(pieces)
+      const textLength = ops.reduce((total, op) => total + op.insert.length, 0)
+      const length = quill.getLength()
+      const rawIndex = caretIndexRef.current ?? quill.getSelection()?.index ?? length
+      const index = Math.max(0, Math.min(rawIndex, length))
+
+      // Col·locació: el bloc ha de quedar sencer. Si hi ha text abans del cursor
+      // a la mateixa línia, cal trencar-la; si el cursor ja obre línia, no. I si
+      // el cursor és damunt d'un salt de línia, esborrem aquest salt perquè no
+      // quedi una línia buida de més.
+      const prevChar = index > 0 ? quill.getText(index - 1, 1) : '\n'
+      const currentChar = index < length ? quill.getText(index, 1) : ''
+      const atLineStart = index === 0 || prevChar === '\n'
+      const atNewline = currentChar === '\n'
+
+      const delta: { retain?: number; insert?: string; delete?: number; attributes?: Record<string, unknown> }[] = []
+      if (index > 0) delta.push({ retain: index })
+      if (!atLineStart) delta.push({ insert: '\n' })
+      delta.push(...ops)
+      delta.push({ insert: '\n', attributes: { [XERRAC_REF_BLOT]: true } })
+      if (atNewline) delta.push({ delete: 1 })
+      quill.updateContents(delta, 'user')
+      quill.setSelection(Math.min(index + (atLineStart ? 0 : 1) + textLength + 1, quill.getLength()), 0, 'silent')
+    } else if (pieces.length) {
       const editorEl = rootRef.current?.querySelector('.ql-editor') as HTMLElement | null
       if (editorEl) {
-        const wrapper = document.createElement('div')
-        wrapper.innerHTML = html
-        const node = wrapper.firstElementChild
-        if (node) editorEl.appendChild(node)
+        editorEl.appendChild(buildReferenceNode(pieces))
         editorEl.dispatchEvent(new Event('input', { bubbles: true }))
       }
     }
+    caretRef.current = null
+    caretIndexRef.current = null
     setShowRefDialog(false)
   }, [])
 
@@ -291,7 +361,12 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     const sel = window.getSelection()
     if (!host || !sel || sel.rangeCount === 0) return
     const range = sel.getRangeAt(0)
-    if (host.contains(range.startContainer)) caretRef.current = range.cloneRange()
+    if (host.contains(range.startContainer)) {
+      caretRef.current = range.cloneRange()
+      const quill = (editorRef.current as any)?.getEditor?.()
+      const quillRange = quill?.getSelection?.()
+      if (quillRange) caretIndexRef.current = quillRange.index + quillRange.length
+    }
   }, [])
 
   // Insereix el logo de Xerrac com a objecte inline (no una imatge). Va on hi ha
