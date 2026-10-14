@@ -284,36 +284,33 @@ body::before {
   font-weight: 700;
 }
 
-/* Xerrac! citations */
+/* Xerrac! citations — tall de serra */
 .xerrac-quote {
   position: relative;
   border-left: 0;
-  margin: 2.25rem 0 !important;
-  padding: 1.1rem 1.4rem 1.1rem 1.5rem !important;
-  background: linear-gradient(
-    100deg,
-    rgba(var(--accent-rgb), 0.12) 0%,
-    rgba(var(--accent-rgb), 0.03) 55%,
-    transparent 100%
-  );
+  margin: 2.5rem 0 !important;
+  padding: 0.4rem 0 0.4rem 1.75rem !important;
   font-family: inherit !important;
 }
+/* Fulla d'acer: barra d'accent amb els extrems tallats en diagonal */
 .xerrac-quote::before {
   content: '';
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 3px;
-  background: linear-gradient(to bottom, var(--accent), rgba(var(--accent-rgb), 0.25));
+  width: 6px;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 18%, 100% 82%, 0 100%);
 }
 .editorial-body .xerrac-quote,
 .xerrac-quote,
 .xerrac-quote * {
   font-style: italic !important;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 1.15rem !important;
-  line-height: 1.7 !important;
+  line-height: 1.65 !important;
+  letter-spacing: 0.005em;
   color: #d4d4d4 !important;
 }
 .xerrac-quote strong,
@@ -438,9 +435,6 @@ body::before {
   }
   .text-white {
     color: #000 !important;
-  }
-  .xerrac-quote {
-    background: none !important;
   }
   .border-red-500\/30 {
     border-color: #ccc !important;
