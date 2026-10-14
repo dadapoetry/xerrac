@@ -264,6 +264,21 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     }
   }, [minimal, insertXerracIcon])
 
+  // En enganxar, Quill fa focus() sobre l'àrea editable i el navegador
+  // arrossega la pàgina fins a mostrar l'editor sencer (és a dir, cap a dalt).
+  // Quill només desa i restaura el scroll del seu `scrollingContainer`, que per
+  // omissió és el mateix editor —un element que no fa scroll—, de manera que el
+  // salt acaba afectant la finestra. Si li passem l'element que sí que fa scroll
+  // a la pàgina, Quill desa i restaura la posició de la vista i l'enganxada no
+  // mou la pàgina.
+  const scrollingContainer = useMemo(
+    () =>
+      typeof document !== 'undefined'
+        ? document.scrollingElement || document.documentElement
+        : undefined,
+    []
+  )
+
   return (
     <div ref={rootRef} onClick={handleEditorClick} className="relative">
       <div className="flex items-center justify-between mb-1">
@@ -290,6 +305,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
         className="bg-white text-black rounded text-sm"
         theme="snow"
         modules={modules}
+        scrollingContainer={scrollingContainer}
       />
 
       {activeImage && sizeBar && (

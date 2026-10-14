@@ -15,7 +15,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
   const paras = useMemo(() => splitParagraphs(html), [html])
   if (kick) {
     return (
-      <div data-richtext className={right ? 'text-right' : ''}>
+      <div data-richtext data-scrolly-text className={right ? 'text-right' : ''}>
         {paras.map((p, i) => (
           <p
             key={i}
@@ -30,7 +30,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
     )
   }
   return (
-    <div data-richtext className={right ? 'text-right' : ''}>
+    <div data-richtext data-scrolly-text className={right ? 'text-right' : ''}>
       {paras.map((p, i) => (
         <div
           key={i}
