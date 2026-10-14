@@ -288,7 +288,7 @@ body::before {
 .xerrac-quote {
   position: relative;
   border-left: 0;
-  margin: 3.25rem 0 !important;
+  margin: 1.75rem 0 !important;
   padding: 0.15rem 0 0.15rem 1.85rem !important;
   font-family: inherit !important;
 }
