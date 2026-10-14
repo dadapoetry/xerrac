@@ -212,6 +212,36 @@ body::before {
   overflow: visible;
 }
 
+/* Costura tipus motion site: cada secció és una diapositiva fixa, opaca i
+   d'una pantalla. En baixar, la secció sortint queda enganxada i la següent
+   puja i la tapa. El contingut més llarg que una pantalla fa scroll dins la
+   mateixa diapositiva (després encadena amb la pàgina). */
+.stack-slide {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: #0a0a0a;
+}
+.stack-slide > .section-container {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  justify-content: center;
+  justify-content: safe center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stack-slide {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .stack-slide > .section-container {
+    height: auto;
+    overflow: visible;
+  }
+}
+
 /* Ensure minimum contrast on dark backgrounds */
 .bg-black .text-gray-600,
 .bg-gray-950 .text-gray-600,
