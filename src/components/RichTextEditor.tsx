@@ -247,30 +247,27 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
 
   const modules = useMemo(() => {
     const cfg = minimal
-      ? [['bold', 'italic'], ['clean']]
+      ? [['bold', 'italic', 'xerrac'], ['clean']]
       : [
           [{ header: [1, 2, 3, false] }],
-          ['bold', 'italic', 'underline', 'strike'],
+          ['bold', 'italic', 'underline', 'strike', 'xerrac'],
           [{ list: 'ordered' }, { list: 'bullet' }],
           ['blockquote', 'link'],
           ['clean'],
         ]
-    return { toolbar: cfg }
-  }, [minimal])
+    return {
+      toolbar: {
+        container: cfg,
+        handlers: { xerrac: () => insertXerracIcon() },
+      },
+    }
+  }, [minimal, insertXerracIcon])
 
   return (
     <div ref={rootRef} onClick={handleEditorClick} className="relative">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={insertXerracIcon}
-            className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
-          >
-            + Logo
-          </button>
           <button
             type="button"
             onMouseDown={captureCaret}

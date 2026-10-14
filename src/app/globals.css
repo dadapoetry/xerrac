@@ -330,6 +330,24 @@ body::before {
   mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cpath%20d='M8,20%20L92,20%20L92,32%20L88,32%20L76,68%20L64,32%20L58,32%20L46,68%20L34,32%20L28,32%20L18,68%20L8,32%20Z'%20fill='%23fff'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
+/* Boto "Xerrac!" de la barra d'eines de Quill, amb la mateixa serra que la icona */
+.ql-snow.ql-toolbar button.ql-xerrac::before,
+.ql-snow .ql-toolbar button.ql-xerrac::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 18px;
+  background-color: #444;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cpath%20d='M8,20%20L92,20%20L92,32%20L88,32%20L76,68%20L64,32%20L58,32%20L46,68%20L34,32%20L28,32%20L18,68%20L8,32%20Z'%20fill='%23fff'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cpath%20d='M8,20%20L92,20%20L92,32%20L88,32%20L76,68%20L64,32%20L58,32%20L46,68%20L34,32%20L28,32%20L18,68%20L8,32%20Z'%20fill='%23fff'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.ql-snow.ql-toolbar button.ql-xerrac:hover::before,
+.ql-snow .ql-toolbar button.ql-xerrac:hover::before,
+.ql-snow.ql-toolbar button.ql-xerrac:focus::before,
+.ql-snow .ql-toolbar button.ql-xerrac:focus::before {
+  background-color: #06c;
+}
+
 /* Xerrac! citations — pull-quote */
 .xerrac-quote {
   position: relative;
