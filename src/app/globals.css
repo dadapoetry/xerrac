@@ -492,6 +492,8 @@ body::before {
    llegiria, així que les referències hi van en un to més fosc. */
 .ql-editor .xerrac-ref {
   color: #4b5563;
+  padding-left: 1.6em !important;
+  text-indent: -1.6em !important;
 }
 
 /* Xerrac! citations — pull-quote */
