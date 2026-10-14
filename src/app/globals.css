@@ -284,36 +284,32 @@ body::before {
   font-weight: 700;
 }
 
-/* Xerrac! citations */
+/* Xerrac! citations — pull-quote */
 .xerrac-quote {
   position: relative;
   border-left: 0;
-  margin: 2.75rem 0 !important;
-  padding: 0 0 0 2.75rem !important;
+  margin: 3.25rem 0 !important;
+  padding: 0.15rem 0 0.15rem 1.85rem !important;
   font-family: inherit !important;
 }
-/* Cometa d'obertura com a element gràfic */
 .xerrac-quote::before {
-  content: '\201C';
+  content: '';
   position: absolute;
   left: 0;
-  top: -0.4rem;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 3.5rem;
-  line-height: 1;
-  font-style: normal;
-  color: var(--accent);
-  opacity: 0.9;
-  pointer-events: none;
+  top: 0.08em;
+  bottom: 0.08em;
+  width: 3px;
+  background: var(--accent);
 }
 .editorial-body .xerrac-quote,
 .xerrac-quote,
 .xerrac-quote * {
-  font-style: italic !important;
-  font-weight: 400;
-  font-size: 1.25rem !important;
-  line-height: 1.75 !important;
-  color: #e5e5e5 !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  font-size: clamp(1.35rem, 3.4vw, 2.35rem) !important;
+  line-height: 1.22 !important;
+  letter-spacing: -0.01em !important;
+  color: #fafafa !important;
 }
 .xerrac-quote strong,
 .xerrac-quote b {
@@ -436,6 +432,10 @@ body::before {
     color: #444 !important;
   }
   .text-white {
+    color: #000 !important;
+  }
+  .xerrac-quote,
+  .xerrac-quote * {
     color: #000 !important;
   }
   .border-red-500\/30 {
