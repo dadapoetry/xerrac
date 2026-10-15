@@ -5,7 +5,6 @@ import { getSiteUrl } from '@/lib/site'
 import { permanentRedirect, notFound } from 'next/navigation'
 import { IssueView } from '@/components/IssueView'
 import { SubscribeForm } from '@/components/SubscribeForm'
-import { PrivacyNote } from '@/components/PrivacyNote'
 import { Footer } from '@/components/Footer'
 import { Logo } from '@/components/Logo'
 import { issuePath, articlePath, buildSectionSlugMap } from '@/lib/slugs'
@@ -74,7 +73,6 @@ function EmptyHome() {
           </p>
 
           <SubscribeForm />
-          <PrivacyNote className="mt-4" />
 
           <nav className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[11px] uppercase tracking-wider">
             <Link href="/sobre" className="text-gray-400 hover:text-white transition-colors">
