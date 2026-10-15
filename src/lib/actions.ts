@@ -6,7 +6,6 @@ import { authOptions } from './auth'
 import { db } from './db'
 import { v4 as uuid } from 'uuid'
 import { safeParse } from '@/lib/utils'
-import { getSiteUrl } from './site'
 import { checkRateLimit, resetRateLimit } from './rate-limit'
 import { sanitizeImageUrl, sanitizeSectionContent } from './sanitize'
 import { purgeStalePendingSubscribers } from './pending'
@@ -48,26 +47,20 @@ function maskEmail(email: string): string {
   return `${name.slice(0, 1)}***@${domain}`
 }
 
-export async function createIssue(data: { number: number; title: string; date: string; published?: boolean; accentColor?: string; showPdfButton?: boolean }) {
+export async function createIssue(data: { number: number; title: string; date: string; published?: boolean; accentColor?: string }) {
   await checkAuth()
   const id = uuid()
   const published = data.published ? 1 : 0
   const accentColor = data.accentColor || '#ef4444'
-  const showPdfButton = data.showPdfButton === false ? 0 : 1
   await db.execute({
-    sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published, showPdfButton) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    args: [id, data.number, data.title, data.date, accentColor, published, showPdfButton],
+    sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published) VALUES (?, ?, ?, ?, ?, ?)',
+    args: [id, data.number, data.title, data.date, accentColor, published],
   })
-  if (published && showPdfButton) {
-    fetch(`${getSiteUrl()}/api/pdf/${id}`).catch((err) => {
-      console.error('[actions] PDF generation failed for', id, err)
-    })
-  }
   revalidatePublic()
   return { id, ...data }
 }
 
-export async function updateIssue(id: string, data: { title?: string; number?: number; date?: string; published?: boolean; accentColor?: string; showPdfButton?: boolean }) {
+export async function updateIssue(id: string, data: { title?: string; number?: number; date?: string; published?: boolean; accentColor?: string }) {
   await checkAuth()
   const sets: string[] = []
   const args: any[] = []
@@ -77,20 +70,12 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
   if (data.date !== undefined) { sets.push('date = ?'); args.push(data.date) }
   if (data.published !== undefined) { sets.push('published = ?'); args.push(data.published ? 1 : 0) }
   if (data.accentColor !== undefined) { sets.push('accentColor = ?'); args.push(data.accentColor) }
-  if (data.showPdfButton !== undefined) { sets.push('showPdfButton = ?'); args.push(data.showPdfButton ? 1 : 0) }
 
   if (sets.length > 0) {
     args.push(id)
     await db.execute({
       sql: `UPDATE Issue SET ${sets.join(', ')}, updatedAt = datetime('now') WHERE id = ?`,
       args,
-    })
-  }
-
-  if (data.published && data.showPdfButton !== false) {
-    const baseUrl = getSiteUrl()
-    fetch(`${baseUrl}/api/pdf/${id}`).catch((err) => {
-      console.error('[actions] PDF generation failed for', id, err)
     })
   }
 

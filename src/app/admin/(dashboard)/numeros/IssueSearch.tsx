@@ -102,7 +102,7 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
       </div>
 
       <div className="border border-gray-800">
-        <div className="grid grid-cols-[auto_auto_1fr_auto_auto_auto_auto] gap-4 p-4 border-b border-gray-800
+        <div className="grid grid-cols-[auto_auto_1fr_auto_auto_auto] gap-4 p-4 border-b border-gray-800
           text-xs uppercase tracking-wider text-gray-500 items-center">
           <button
             onClick={toggleAll}
@@ -118,12 +118,11 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
           <span>Títol</span>
           <span>Data</span>
           <span>Estat</span>
-          <span>PDF</span>
           <span>Accions</span>
         </div>
         {filtered.map((issue) => (
           <div key={issue.id}
-            className="grid grid-cols-[auto_auto_1fr_auto_auto_auto_auto] gap-4 p-4 border-b border-gray-800
+            className="grid grid-cols-[auto_auto_1fr_auto_auto_auto] gap-4 p-4 border-b border-gray-800
               items-center hover:bg-gray-900 transition-colors"
           >
             <button
@@ -144,13 +143,6 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
               {new Date(issue.date).toLocaleDateString('ca-ES')}
             </span>
             <PublishToggle id={issue.id} published={!!issue.published} />
-            <Link
-              href={`/compilar/${issue.id}`}
-              className="text-xs text-gray-400 hover:text-red-400 transition-colors"
-              target="_blank"
-            >
-              Compilar
-            </Link>
             <div className="flex gap-2">
               <Link
                 href={`/admin/numeros/${issue.id}`}

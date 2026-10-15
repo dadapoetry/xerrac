@@ -62,7 +62,6 @@ export default async function EditNumeroPage({ params }: { params: { id: string 
                 date: issue.date.toISOString().split('T')[0],
                 published: issue.published,
                 accentColor: issue.accentColor || '#ef4444',
-                showPdfButton: issue.showPdfButton !== false,
               }}
             />
           </div>

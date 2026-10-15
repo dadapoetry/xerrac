@@ -14,7 +14,6 @@ function mapIssue(row: any) {
     title: row.title,
     date: toDate(row.date),
     published: Boolean(row.published),
-    showPdfButton: row.showPdfButton === undefined ? true : Boolean(row.showPdfButton),
     accentColor: row.accentColor || '#ef4444',
     createdAt: toDate(row.createdAt),
     updatedAt: toDate(row.updatedAt),

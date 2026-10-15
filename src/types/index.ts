@@ -149,7 +149,6 @@ export interface IssueData {
   date: Date
   published: boolean
   accentColor?: string
-  showPdfButton?: boolean
   sections: SectionData[]
 }
 

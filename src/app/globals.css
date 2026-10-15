@@ -661,13 +661,3 @@ body::before {
     text-decoration: underline !important;
   }
 }
-
-/* Tabloid print (screen uses inline styles, print uses separate window) */
-@media print {
-  .no-print {
-    display: none !important;
-  }
-  body {
-    background: #fff !important;
-  }
-}

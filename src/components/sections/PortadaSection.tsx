@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { SectionData, PortadaContent } from '@/types'
 import { Logo } from '@/components/Logo'
 
@@ -32,35 +32,8 @@ interface SumariEntry {
   title: string
 }
 
-export function PortadaSection({ section, sumariEntries, issueNumber, issueId, showPdfButton = true }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number; issueId?: string; showPdfButton?: boolean }) {
+export function PortadaSection({ section, sumariEntries, issueNumber }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number }) {
   const content = section.content as unknown as PortadaContent
-  const [downloading, setDownloading] = useState(false)
-
-  const handleDownload = useCallback(async () => {
-    if (downloading || !issueId) return
-    setDownloading(true)
-    try {
-      const res = await fetch(`/api/pdf/${issueId}`)
-      if (!res.ok) throw new Error('Error generating PDF')
-      const blob = await res.blob()
-      const disposition = res.headers.get('Content-Disposition')
-      const match = disposition?.match(/filename="?(.+?)"?$/)
-      const filename = match ? match[1] : `xerrac-${String(issueNumber ?? 0).padStart(2, '0')}.pdf`
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = filename
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    } catch (e) {
-      console.error(e)
-      alert('No s\'ha pogut generar el PDF. Torna-ho a intentar.')
-    } finally {
-      setDownloading(false)
-    }
-  }, [downloading, issueId, issueNumber])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] w-full text-center px-4 relative overflow-hidden">
@@ -77,57 +50,12 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueId, s
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-1 text-xs text-gray-300">
             {sumariEntries.map((entry, i) => (
               <span key={i} className="inline-flex items-center gap-1">
-                {i > 0 && <span className="text-gray-500 select-none mx-0.5">/</span>}
-                <span className="font-mono text-[10px] text-gray-400">{entry.number}</span>
-                <span className="text-gray-200">{entry.title}</span>
+                {i > 0 && <span className="text-gray-500 select-none mx-1">·</span>}
+                <span className="text-gray-500 font-mono">{entry.number}</span>
+                <span>{entry.title}</span>
               </span>
             ))}
           </div>
-        )}
-        {issueId && showPdfButton && (
-          <button
-  onClick={handleDownload}
-  disabled={downloading}
-  style={{ '--btn-hover': 'var(--accent)' } as React.CSSProperties}
-  className="group relative mt-6 inline-flex items-center gap-2.5 px-5 py-2.5 text-[11px] font-bold
-    tracking-[0.15em] uppercase text-gray-300 border border-gray-700 rounded-sm
-    hover:text-[var(--btn-hover)] hover:border-[var(--btn-hover)]
-    disabled:opacity-50 disabled:cursor-wait
-    transition-colors duration-300 overflow-hidden"
->
-  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--btn-hover)]/10 to-transparent
-    translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
-  <span className="absolute inset-0 bg-[var(--btn-hover)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-  <span className="relative z-10 flex items-center gap-2.5">
-    {downloading ? (
-      <>
-        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-        </svg>
-        <span>Generant...</span>
-      </>
-    ) : (
-      <>
-        <span className="relative">
-          Llegeix en PDF
-          <span className="absolute -inset-x-1 bottom-0 h-px bg-[var(--btn-hover)]/0 group-hover:bg-[var(--btn-hover)]/60
-            transition-all duration-300 scale-x-0 group-hover:scale-x-100 origin-left" />
-        </span>
-        <svg
-          className="w-3.5 h-3.5 transition-all duration-500 group-hover:translate-y-0.5 group-hover:drop-shadow-[0_0_4px_var(--btn-hover)]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          style={{ transform: 'translateY(1px)' }}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-        </svg>
-      </>
-    )}
-  </span>
-</button>
         )}
       </div>
 
