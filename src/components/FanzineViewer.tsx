@@ -440,18 +440,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                 </button>
               )}
             </div>
-            <a
-              href="/arxiu"
-              className="w-8 h-8 border border-gray-800 text-gray-400 transition-all flex items-center justify-center"
-              title="Arxiu d'aclariments"
-              onMouseEnter={onIconEnter}
-              onMouseLeave={onIconLeave}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path d="M2 3a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2Z" />
-                <path d="M2 7.5h16l-.811 7.71a2 2 0 0 1-1.99 1.79H4.802a2 2 0 0 1-1.99-1.79L2 7.5Z" />
-              </svg>
-            </a>
           </div>
         </div>
         {copied && (
