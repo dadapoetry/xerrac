@@ -2,28 +2,17 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getPublishedIssues } from '@/lib/data'
-import { getSiteUrl, hreflang } from '@/lib/site'
+import { getSiteUrl } from '@/lib/site'
 import { issuePath } from '@/lib/slugs'
+import { SECTION_LABELS } from '@/types'
 import { Footer } from '@/components/Footer'
 
 export const revalidate = 300
 
-const SECTION_LABELS: Record<string, string> = {
-  editorial: 'Editorial',
-  aclariment_cultural: 'Aclariment Cultural',
-  fadu_catala: 'Fadu Català',
-  pagines_grogues: 'Pàgines Grogues',
-  calaix_sastre: 'Calaix de Sastre',
-  visita: 'Visita',
-  full_mural: 'Full Mural',
-  ludita: 'Ludita',
-  assaig: 'Assaig visual',
-}
-
 export const metadata: Metadata = {
   title: { absolute: "Arxiu — Xerrac!" },
   description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
-  alternates: { canonical: `${getSiteUrl()}/arxiu`, languages: hreflang() },
+  alternates: { canonical: `${getSiteUrl()}/arxiu` },
   openGraph: {
     title: 'Arxiu — Xerrac!',
     description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',

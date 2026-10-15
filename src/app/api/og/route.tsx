@@ -1,22 +1,9 @@
 import { ImageResponse } from 'next/og'
 import { getOgFonts } from '@/lib/ogFonts'
 import { getOgBackground } from '@/lib/ogImage'
+import { SECTION_LABELS } from '@/types'
 
 export const runtime = 'nodejs'
-
-const typeLabels: Record<string, string> = {
-  portada: 'Portada',
-  editorial: 'Editorial',
-  aclariment_cultural: 'Aclariment Cultural',
-  fadu_catala: 'Fadu Català',
-  pagines_grogues: 'Pàgines Grogues',
-  calaix_sastre: 'Calaix de Sastre',
-  visita: 'Visita',
-  full_mural: 'Full Mural',
-  ludita: 'Ludita',
-  assaig: 'Assaig visual',
-  necrologiques: 'Necrològiques',
-}
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
@@ -111,7 +98,7 @@ export async function GET(request: Request) {
     try {
       const { getIssue } = await import('@/lib/data')
       const issue = await getIssue(issueId)
-      if (issue) {
+      if (issue && issue.published) {
         number = String(issue.number).padStart(2, '0')
         accent = issue.accentColor || '#ef4444'
 
@@ -121,7 +108,7 @@ export async function GET(request: Request) {
 
         if (!isNaN(idx) && idx > 0 && idx < sections.length) {
           const s = sections[idx]
-          title = (s.title || typeLabels[s.type] || s.type).toUpperCase()
+          title = (s.title || SECTION_LABELS[s.type] || s.type).toUpperCase()
           subtitle = `Núm. ${number}`
           let content: unknown = s.content
           if (typeof content === 'string') {

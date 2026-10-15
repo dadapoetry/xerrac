@@ -25,7 +25,7 @@ export function SubscribeForm() {
 
   if (status === 'success') {
     return (
-      <div className="border border-gray-800 bg-gray-950 p-6">
+      <div className="border border-gray-800 bg-gray-950 p-6" role="status">
         <p className="text-sm text-green-400">{message}</p>
       </div>
     )
@@ -33,12 +33,13 @@ export function SubscribeForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <label htmlFor="subscribe-email" className="sr-only">El teu correu electrònic</label>
       <input
+        id="subscribe-email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="El teu correu"
-        autoFocus
         required
         disabled={status === 'loading'}
         className="w-full bg-gray-950 border border-gray-800 px-4 py-3.5 text-base text-white
@@ -54,7 +55,7 @@ export function SubscribeForm() {
         {status === 'loading' ? 'Enviant...' : 'Subscriure\'m'}
       </button>
       {status === 'error' && (
-        <p className="text-xs text-red-400">{message}</p>
+        <p className="text-xs text-red-400" role="alert">{message}</p>
       )}
       <p className="text-[11px] text-gray-600 leading-relaxed">
         Subscripció de doble confirmació: rebràs un correu per confirmar. També et pots

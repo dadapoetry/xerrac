@@ -183,7 +183,21 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [])
 
   useEffect(() => {
+    // Les fletxes canvien de secció, però només quan el lector les demana de debò.
+    // Si està escrivint en un camp, navegant un encreuat o un altre element ja
+    // n'ha fet ús (defaultPrevented), el gest pertoca a l'element, no a nosaltres.
+    const isBusyTarget = (target: EventTarget | null): boolean => {
+      const el = target as HTMLElement | null
+      if (!el || typeof el.tagName !== 'string') return false
+      const tag = el.tagName.toLowerCase()
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return true
+      if (el.isContentEditable) return true
+      return Boolean(el.closest('[data-arrow-nav-off]'))
+    }
+
     const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return
+      if (isBusyTarget(e.target)) return
       try {
         const cur = getCurrentSectionIndex()
         if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {

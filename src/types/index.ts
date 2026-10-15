@@ -152,18 +152,20 @@ export interface IssueData {
   sections: SectionData[]
 }
 
+// Única font de veritat dels noms de secció. L'admin, l'arxiu, la imatge OG i
+// la pàgina «La revista» els importen d'aquí perquè no tornin a divergir.
 export const SECTION_LABELS: Record<string, string> = {
   portada: 'Portada',
   editorial: 'Editorial',
-  aclariment_cultural: 'Aclariment cultural',
+  aclariment_cultural: 'Aclariment Cultural',
   fadu_catala: 'Fadu Català',
   pagines_grogues: 'Pàgines Grogues',
-  calaix_sastre: 'Calaix de Sastre',
+  calaix_sastre: 'Calaix Desastre',
   visita: 'Visita',
   full_mural: 'Full Mural',
   ludita: 'Ludita',
-  assaig: 'Assaig visual',
-  necrologiques: 'Necrològiques',
+  assaig: 'Assaig Visual',
+  necrologiques: 'Necrològiques Conceptuals',
 }
 
 export const SECTION_TYPES = [

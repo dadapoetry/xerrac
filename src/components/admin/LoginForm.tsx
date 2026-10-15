@@ -83,7 +83,7 @@ export function LoginForm() {
           </div>
 
           {error && (
-            <p className="text-red-400 text-xs">{error}</p>
+            <p className="text-red-400 text-xs" role="alert">{error}</p>
           )}
 
           <button

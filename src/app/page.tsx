@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { getLatestIssue, getIssue } from '@/lib/data'
-import { getSiteUrl, hreflang } from '@/lib/site'
-import { permanentRedirect } from 'next/navigation'
+import { getSiteUrl } from '@/lib/site'
+import { permanentRedirect, notFound } from 'next/navigation'
 import { IssueView } from '@/components/IssueView'
+import { SubscribeForm } from '@/components/SubscribeForm'
+import { PrivacyNote } from '@/components/PrivacyNote'
+import { Footer } from '@/components/Footer'
+import { Logo } from '@/components/Logo'
 import { issuePath, articlePath, buildSectionSlugMap } from '@/lib/slugs'
 
 function getPreviewStatus(preview?: string): boolean {
@@ -20,6 +25,7 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
     return {
       title: { absolute: "Xerrac! — Revista d'aclariment cultural" },
       description: "Revista d'aclariment cultural",
+      alternates: { canonical: `${siteUrl}/` },
     }
   }
 
@@ -32,7 +38,7 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
   return {
     title: { absolute: `Número ${issue.number}: ${issue.title} — Xerrac!` },
     description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}. ${sectionNames.join(', ')}.`,
-    alternates: { canonical, languages: hreflang() },
+    alternates: { canonical },
     robots: isPreview ? { index: false, follow: false } : undefined,
     openGraph: {
       title: `${issue.title} — Xerrac!`,
@@ -52,6 +58,42 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
   }
 }
 
+// Portada abans del primer número: la revista encara no ha sortit, però el lloc
+// no ha de semblar trencat. Explica què és Xerrac!, recull correus i dona accés
+// a la resta de pàgines.
+function EmptyHome() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-1 flex items-center justify-center px-4 py-20">
+        <div className="max-w-md w-full text-center">
+          <Logo className="mb-8" />
+
+          <p className="text-gray-300 text-[15px] leading-relaxed mb-10">
+            Encara no hi ha cap número publicat. El primer número arriba aviat; si vols, deixa el
+            correu i t&rsquo;avisarem.
+          </p>
+
+          <SubscribeForm />
+          <PrivacyNote className="mt-4" />
+
+          <nav className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[11px] uppercase tracking-wider">
+            <Link href="/sobre" className="text-gray-400 hover:text-white transition-colors">
+              La revista
+            </Link>
+            <Link href="/arxiu" className="text-gray-400 hover:text-white transition-colors">
+              Arxiu
+            </Link>
+            <Link href="/privacitat" className="text-gray-400 hover:text-white transition-colors">
+              Privacitat
+            </Link>
+          </nav>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  )
+}
+
 export default async function HomePage({
   searchParams,
 }: {
@@ -61,7 +103,10 @@ export default async function HomePage({
   const issueId = searchParams.issue
   const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
 
-  if (issue && issue.published && !isPreview) {
+  // Un número esborrany només és visible amb el testimoni de previsualització.
+  if (issue && !issue.published && !isPreview) notFound()
+
+  if (issue && !isPreview) {
     const slugMap = buildSectionSlugMap((issue.sections as any[]) || [])
     const allSections = [...((issue.sections as any[]) || [])].sort((a, b) => a.order - b.order)
     const secIdx = searchParams.section !== undefined ? parseInt(searchParams.section, 10) : NaN
@@ -72,28 +117,8 @@ export default async function HomePage({
     permanentRedirect(issuePath(issue.number))
   }
 
-  if (issue && !issue.published && !isPreview) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-red-500 mb-4">XERRAC!</h1>
-          <p className="text-gray-500">Aquest número encara no està publicat.</p>
-        </div>
-      </div>
-    )
-  }
+  // Només s'arriba aquí amb una previsualització vàlida.
+  if (issue) return <IssueView issue={issue} />
 
-  if (!issue) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-red-500 mb-4">XERRAC!</h1>
-          <p className="text-gray-500">Revista d&apos;aclariment cultural</p>
-          <p className="text-gray-700 mt-8">Encara no hi ha números publicats.</p>
-        </div>
-      </div>
-    )
-  }
-
-  return <IssueView issue={issue} />
+  return <EmptyHome />
 }

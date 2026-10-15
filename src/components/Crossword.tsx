@@ -117,12 +117,8 @@ const activate = (row: number, col: number, toggle: boolean) => {
   }
 
   const handleKeyDown = (row: number, col: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      e.preventDefault()
-      activate(row, col, true)
-      return
-    }
-
+    // Tab no és nostre: ha de poder sortir de la graella com a qualsevol altre
+    // camp (abans es bloquejava i deixava el teclat atrapat a l'encreuat).
     if (e.key === 'ArrowRight') moveTo(row, col + 1)
     else if (e.key === 'ArrowLeft') moveTo(row, col - 1)
     else if (e.key === 'ArrowDown') moveTo(row + 1, col)

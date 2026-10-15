@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPublishedIssueByNumber } from '@/lib/data'
-import { getSiteUrl, hreflang } from '@/lib/site'
+import { getSiteUrl } from '@/lib/site'
 import { safeParse } from '@/lib/utils'
 import { extractExcerpt } from '@/lib/excerpt'
 import { buildSectionSlugMap, sectionLabel, issuePath, articlePath } from '@/lib/slugs'
@@ -55,7 +55,7 @@ export async function generateMetadata({
   return {
     title: { absolute: `${label} — Número ${issue.number} — Xerrac!` },
     description: excerpt,
-    alternates: { canonical, languages: hreflang() },
+    alternates: { canonical },
     openGraph: {
       title: `${label} — Xerrac!`,
       description: excerpt,

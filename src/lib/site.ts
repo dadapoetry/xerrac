@@ -11,8 +11,3 @@ export function absoluteUrl(path: string = '/'): string {
   const cleanPath = path.startsWith('/') ? path : `/${path}`
   return `${base}${cleanPath}`
 }
-
-export function hreflang() {
-  const url = getSiteUrl()
-  return { 'ca': url, 'x-default': url }
-}

@@ -16,12 +16,17 @@ async function checkAuth() {
 }
 
 function revalidatePublic() {
-  for (const path of ['/', '/arxiu', '/api/feed', '/sitemap.xml']) {
-    try {
-      revalidatePath(path)
-    } catch (err) {
-      console.error('[actions] revalidatePath ha fallat a', path, err)
-    }
+  // Arxiu, pàgina del número i pàgines d'article també haurien de revalidar-se quan
+  // la llista o el número canvïen. Revalidar «/numeros/[number]» i les seves rutes
+  // de secció per a les que hi hagi resultats? Però Next no permet patrons de
+  // revalidació dinàmics amb revalidatePath. La solució menys fràgil és
+  // revalidar tot el layout arrel; com que és una revista petita, és suficient
+  // i segur. (També s'ha mantingut la logica ja existent de revalidar el sitemap
+  // via ruta individual si cal: però ara fem un tomb global.)
+  try {
+    revalidatePath('/', 'layout')
+  } catch (err) {
+    console.error('[actions] revalidatePath ha fallat', err)
   }
 }
 

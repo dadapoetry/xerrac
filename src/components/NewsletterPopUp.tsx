@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { SawIcon } from './SawIcon'
 import { subscribe } from '@/lib/actions'
 import { PrivacyNote } from './PrivacyNote'
@@ -12,7 +12,6 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
   const [dismissed, setDismissed] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (visible && !dismissed) {
@@ -20,13 +19,6 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
       if (stored === '1') setDismissed(true)
     }
   }, [visible, dismissed])
-
-  useEffect(() => {
-    if (visible && !dismissed && status === 'idle') {
-      const timer = setTimeout(() => inputRef.current?.focus(), 300)
-      return () => clearTimeout(timer)
-    }
-  }, [visible, dismissed, status])
 
   const handleDismiss = () => {
     setDismissed(true)
@@ -82,11 +74,12 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
           </p>
 
           {status === 'success' ? (
-            <p className="text-xs text-green-400">{message}</p>
+            <p className="text-xs text-green-400" role="status">{message}</p>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
+              <label htmlFor="newsletter-email" className="sr-only">El teu correu electrònic</label>
               <input
-                ref={inputRef}
+                id="newsletter-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -106,7 +99,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
                 {status === 'loading' ? 'Enviant...' : 'Subscriure\'m'}
               </button>
               {status === 'error' && (
-                <p className="text-xs text-red-400">{message}</p>
+                <p className="text-xs text-red-400" role="alert">{message}</p>
               )}
               <PrivacyNote className="mt-1" />
             </form>

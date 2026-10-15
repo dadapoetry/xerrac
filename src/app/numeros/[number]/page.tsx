@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPublishedIssueByNumber } from '@/lib/data'
-import { getSiteUrl, hreflang } from '@/lib/site'
+import { getSiteUrl } from '@/lib/site'
 import { IssueView } from '@/components/IssueView'
 import { issuePath } from '@/lib/slugs'
 
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: { number: string } 
   return {
     title: { absolute: `Número ${issue.number}: ${issue.title} — Xerrac!` },
     description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}. ${sectionNames.join(', ')}.`,
-    alternates: { canonical: `${siteUrl}${issuePath(issue.number)}`, languages: hreflang() },
+    alternates: { canonical: `${siteUrl}${issuePath(issue.number)}` },
     openGraph: {
       title: `${issue.title} — Xerrac!`,
       description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural.`,

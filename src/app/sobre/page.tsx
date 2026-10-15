@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
-import { getSiteUrl, DEFAULT_CONTACT_EMAIL, hreflang } from '@/lib/site'
+import { getSiteUrl, DEFAULT_CONTACT_EMAIL } from '@/lib/site'
+import { SECTION_LABELS } from '@/types'
 import { SawIcon } from '@/components/SawIcon'
 import { Footer } from '@/components/Footer'
 
@@ -10,7 +11,7 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'La revista',
   description: "Xerrac! és una revista cultural digital semestral en català. Cada número és un volum monogràfic amb tesi pròpia: una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.",
-  alternates: { canonical: '/sobre', languages: hreflang() },
+  alternates: { canonical: '/sobre' },
   robots: { index: true, follow: true },
   openGraph: {
     title: 'La revista — Xerrac!',
@@ -19,17 +20,19 @@ export const metadata: Metadata = {
   },
 }
 
-const SECTIONS: { name: string; desc: string }[] = [
-  { name: 'Portada', desc: 'el tema del número, en una línia.' },
-  { name: 'Editorial', desc: 'el manifest que obre el número i n’enuncia la tesi.' },
-  { name: 'Aclariment Cultural', desc: 'l’argumentació llarga: aclarir allò que continua sense aclarir-se.' },
-  { name: 'Calaix Desastre', desc: 'crítica i investigació comparada, amb referències i fonts.' },
-  { name: 'Visita', desc: 'turisme teòric només quan cal.' },
-  { name: 'Fàdu Català', desc: 'ficció satírica: biografies apòcrifes, ucronies i artefactes.' },
-  { name: 'Pàgines Grogues', desc: 'aforismes i refranys deformats per la temàtica del número.' },
-  { name: 'Ludita', desc: 'un encreuat fet amb el vocabulari del número.' },
-  { name: 'Necrològiques conceptuals', desc: 'obituaris de conceptes, no de persones.' },
-  { name: 'Full Mural', desc: 'un mural amb material enviat pels lectors.' },
+// Descripcions de les seccions. Els noms surten de SECTION_LABELS perquè no
+// tornin a divergir de la resta del lloc. L'«Assaig Visual» no es descriu aquí.
+const SECTIONS: { type: string; desc: string }[] = [
+  { type: 'portada', desc: 'el tema del número, en una línia.' },
+  { type: 'editorial', desc: 'el manifest que obre el número i n’enuncia la tesi.' },
+  { type: 'aclariment_cultural', desc: 'l’argumentació llarga: aclarir allò que continua sense aclarir-se.' },
+  { type: 'calaix_sastre', desc: 'crítica i investigació comparada, amb referències i fonts.' },
+  { type: 'visita', desc: 'turisme teòric només quan cal.' },
+  { type: 'fadu_catala', desc: 'ficció satírica: biografies apòcrifes, ucronies i artefactes.' },
+  { type: 'pagines_grogues', desc: 'aforismes i refranys deformats per la temàtica del número.' },
+  { type: 'ludita', desc: 'un encreuat fet amb el vocabulari del número.' },
+  { type: 'necrologiques', desc: 'obituaris de conceptes, no de persones.' },
+  { type: 'full_mural', desc: 'un mural amb material enviat pels lectors.' },
 ]
 
 export default async function AboutPage() {
@@ -105,8 +108,8 @@ export default async function AboutPage() {
           </h2>
           <ul className="text-gray-300 text-[15px] leading-relaxed mb-4">
             {SECTIONS.map((section) => (
-              <li key={section.name} className="mb-2 list-disc pl-5 marker:text-gray-600">
-                <strong className="text-white">{section.name}</strong> — {section.desc}
+              <li key={section.type} className="mb-2 list-disc pl-5 marker:text-gray-600">
+                <strong className="text-white">{SECTION_LABELS[section.type]}</strong> — {section.desc}
               </li>
             ))}
           </ul>

@@ -85,7 +85,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
         <div className="flex justify-center mb-3">
           <SawIcon className="w-5 h-5 opacity-60" />
         </div>
-        <div className="text-[11px] text-gray-600 leading-relaxed space-y-1">
+        <div className="text-[11px] text-gray-400 leading-relaxed space-y-1">
           {issn && <p>{issn}</p>}
           {copyright && <p>{copyright}</p>}
           {address && <p>{address}</p>}

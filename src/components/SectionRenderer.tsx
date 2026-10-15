@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { SectionData } from '@/types'
-import { ComodiLegend, hasComodi } from './ComodiLegend'
 
 type SectionProps = { section: SectionData; index: number }
 
@@ -36,7 +35,6 @@ const sectionMap: Record<string, React.ComponentType<SectionProps>> = {
 export function SectionRenderer({ section, index }: { section: SectionData; index: number }) {
   const [bgReady, setBgReady] = useState(false)
   const Component = sectionMap[section.type]
-  const showComodiLegend = useMemo(() => hasComodi(section.content), [section.content])
 
   useEffect(() => {
     setBgReady(true)
@@ -74,7 +72,6 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
         )}
         <div className="relative z-[3] w-full">
           <Component section={section} index={index} />
-          {showComodiLegend && <ComodiLegend />}
         </div>
       </div>
     </>

@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Només les imatges que servim nosaltres des de Cloudinary: un comodí «**»
+  // deixaria que qualsevol fes servir el nostre optimitzador d'imatges.
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: '**' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'http', hostname: 'localhost' },
     ],
   },
