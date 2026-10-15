@@ -16,17 +16,30 @@ async function checkAuth() {
 }
 
 function revalidatePublic() {
-  // Arxiu, pàgina del número i pàgines d'article també haurien de revalidar-se quan
-  // la llista o el número canvïen. Revalidar «/numeros/[number]» i les seves rutes
-  // de secció per a les que hi hagi resultats? Però Next no permet patrons de
-  // revalidació dinàmics amb revalidatePath. La solució menys fràgil és
-  // revalidar tot el layout arrel; com que és una revista petita, és suficient
-  // i segur. (També s'ha mantingut la logica ja existent de revalidar el sitemap
-  // via ruta individual si cal: però ara fem un tomb global.)
-  try {
-    revalidatePath('/', 'layout')
-  } catch (err) {
-    console.error('[actions] revalidatePath ha fallat', err)
+  // Només revalidem pàgines i recursos públics, i amb precisió. Les rutes de
+  // número i article tenen `revalidate = 300`, així que s'han d'esmentar pel
+  // patró literal (Next no permet revalidar-ne una sola instància des d'aquí).
+  //
+  // IMPORTANT: no fem servir revalidatePath('/', 'layout'). Invalidaria tot
+  // l'arbre de rutes que pengen del layout arrel —l'àrea d'administració
+  // inclosa—, i a cada desat obligaria l'admin a tornar a demanar-ho tot al
+  // servidor. Això alentia la navegació.
+  const paths: [string, ('page' | 'layout')?][] = [
+    ['/', undefined],
+    ['/arxiu', undefined],
+    ['/api/feed', undefined],
+    ['/sitemap.xml', undefined],
+    ['/numeros/[number]', 'page'],
+    ['/numeros/[number]/[section]', 'page'],
+  ]
+
+  for (const [path, type] of paths) {
+    try {
+      if (type) revalidatePath(path, type)
+      else revalidatePath(path)
+    } catch (err) {
+      console.error('[actions] revalidatePath ha fallat a', path, err)
+    }
   }
 }
 
