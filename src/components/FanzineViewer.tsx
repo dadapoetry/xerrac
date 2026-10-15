@@ -104,12 +104,14 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return !isNaN(idx) && idx >= 0 && idx < sortedSections.length ? idx : 0
   })
   const [copied, setCopied] = useState(false)
-  const [shareOpen, setShareOpen] = useState(false)
+  const [sharePhase, setSharePhase] = useState<'closed' | 'open' | 'closing'>('closed')
+  const [togglePop, setTogglePop] = useState(false)
   const [origin, setOrigin] = useState('')
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
   const [bgReady, setBgReady] = useState(false)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
+  const shareTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const onActivity = () => {
@@ -215,12 +217,20 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [sortedSections.length])
 
-  const onIconEnter = (e: React.MouseEvent<HTMLElement>) => {
+  const iconHoverOn = (e: React.MouseEvent<HTMLElement>) => {
     e.currentTarget.style.color = 'var(--accent)'
+    e.currentTarget.style.backgroundColor = 'rgba(var(--accent-rgb), 0.12)'
+  }
+  const iconHoverOff = (e: React.MouseEvent<HTMLElement>) => {
+    e.currentTarget.style.color = ''
+    e.currentTarget.style.backgroundColor = ''
+  }
+  const toggleHoverOn = (e: React.MouseEvent<HTMLElement>) => {
+    iconHoverOn(e)
     e.currentTarget.style.borderColor = 'rgba(var(--accent-rgb), 0.5)'
   }
-  const onIconLeave = (e: React.MouseEvent<HTMLElement>) => {
-    e.currentTarget.style.color = ''
+  const toggleHoverOff = (e: React.MouseEvent<HTMLElement>) => {
+    iconHoverOff(e)
     e.currentTarget.style.borderColor = ''
   }
 
@@ -298,6 +308,13 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     ]
   }, [shareMeta, origin])
 
+  const showStrip = sharePhase !== 'closed'
+  const stripAnim = sharePhase === 'closing' ? 'animate-share-item-out' : 'animate-share-item-in'
+  const stripDelay = (index: number) => {
+    const total = shareTargets.length + 2
+    return sharePhase === 'closing' ? `${(total - 1 - index) * 16}ms` : `${index * 40}ms`
+  }
+
   const copyShareLink = useCallback(async () => {
     if (!shareUrl) return
     const ok = await copyToClipboard(shareUrl)
@@ -307,15 +324,35 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     }
   }, [shareUrl])
 
+  const openShare = useCallback(() => {
+    clearTimeout(shareTimer.current)
+    setTogglePop(false)
+    setSharePhase('open')
+  }, [])
+
+  const closeShare = useCallback(() => {
+    if (sharePhase !== 'open') return
+    setSharePhase('closing')
+    clearTimeout(shareTimer.current)
+    // Deixa acabar la sortida esglaonada abans de tornar a mostrar el botó.
+    shareTimer.current = setTimeout(() => {
+      setSharePhase('closed')
+      setTogglePop(true)
+      shareTimer.current = setTimeout(() => setTogglePop(false), 320)
+    }, 250)
+  }, [sharePhase])
+
+  useEffect(() => () => clearTimeout(shareTimer.current), [])
+
   useEffect(() => {
-    if (!shareOpen) return
+    if (sharePhase === 'closed') return
     const onOutside = (e: PointerEvent) => {
       const el = e.target as HTMLElement | null
       if (el && el.closest('[data-share-region]')) return
-      setShareOpen(false)
+      closeShare()
     }
     const onEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShareOpen(false)
+      if (e.key === 'Escape') closeShare()
     }
     document.addEventListener('pointerdown', onOutside)
     document.addEventListener('keydown', onEscape)
@@ -323,7 +360,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       document.removeEventListener('pointerdown', onOutside)
       document.removeEventListener('keydown', onEscape)
     }
-  }, [shareOpen])
+  }, [sharePhase, closeShare])
 
   if (sortedSections.length === 0) {
     return (
@@ -368,78 +405,76 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             ))}
           </div>
 
-          <div className="flex items-center gap-1 shrink-0">
-            <div data-share-region className="flex items-center gap-0.5 max-w-[60vw] overflow-x-auto nav-scroll">
-              {shareOpen ? (
-                <>
-                  {shareTargets.map((t, i) => (
-                    <a
-                      key={t.name}
-                      href={t.href}
-                      target={t.name === 'Correu' ? undefined : '_blank'}
-                      rel={t.name === 'Correu' ? undefined : 'noopener noreferrer'}
-                      onClick={() => setShareOpen(false)}
-                      title={t.name}
-                      aria-label={t.label}
-                      className="animate-share-item-in w-7 h-7 md:w-8 md:h-8 border border-gray-800 text-gray-400 transition-colors flex items-center justify-center shrink-0"
-                      style={{ animationDelay: `${i * 40}ms` }}
-                      onMouseEnter={onIconEnter}
-                      onMouseLeave={onIconLeave}
-                    >
-                      {t.icon}
-                    </a>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={copyShareLink}
-                    title="Copiar l'enllaç"
-                    aria-label="Copiar l'enllaç"
-                    className="animate-share-item-in w-7 h-7 md:w-8 md:h-8 border border-gray-800 text-gray-400 transition-colors flex items-center justify-center shrink-0"
-                    style={{ animationDelay: `${shareTargets.length * 40}ms` }}
-                    onMouseEnter={onIconEnter}
-                    onMouseLeave={onIconLeave}
+          <div data-share-region className="flex items-center min-w-0">
+            {showStrip ? (
+              <div className="flex h-8 items-stretch divide-x divide-gray-800 border border-gray-800 bg-white/[0.03] min-w-0 overflow-x-auto nav-scroll">
+                {shareTargets.map((t, i) => (
+                  <a
+                    key={t.name}
+                    href={t.href}
+                    target={t.name === 'Correu' ? undefined : '_blank'}
+                    rel={t.name === 'Correu' ? undefined : 'noopener noreferrer'}
+                    onClick={closeShare}
+                    title={t.name}
+                    aria-label={t.label}
+                    className={`${stripAnim} w-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                    style={{ animationDelay: stripDelay(i) }}
+                    onMouseEnter={iconHoverOn}
+                    onMouseLeave={iconHoverOff}
                   >
-                    {copied ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 animate-check-pop">
-                        <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                        <path fillRule="evenodd" d="M12.586 4.586a2 2 0 1 1 2.828 2.828l-3 3a2 2 0 0 1-2.828 0 1 1 0 0 0-1.414 1.414 4 4 0 0 0 5.656 0l3-3a4 4 0 0 0-5.656-5.656l-1.5 1.5a1 1 0 1 0 1.414 1.414l1.5-1.5Zm-5 5a2 2 0 0 1 2.828 0 1 1 0 1 0 1.414-1.414 4 4 0 0 0-5.656 0l-3 3a4 4 0 1 0 5.656 5.656l1.5-1.5a1 1 0 1 0-1.414-1.414l-1.5 1.5a2 2 0 1 1-2.828-2.828l3-3Z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShareOpen(false)}
-                    title="Tancar"
-                    aria-label="Tancar"
-                    className="animate-share-item-in w-7 h-7 md:w-8 md:h-8 border border-gray-800 text-gray-400 transition-colors flex items-center justify-center shrink-0"
-                    style={{ animationDelay: `${(shareTargets.length + 1) * 40}ms` }}
-                    onMouseEnter={onIconEnter}
-                    onMouseLeave={onIconLeave}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                    </svg>
-                  </button>
-                </>
-              ) : (
+                    {t.icon}
+                  </a>
+                ))}
                 <button
                   type="button"
-                  onClick={() => setShareOpen(true)}
-                  className="w-8 h-8 border border-gray-800 text-gray-400 transition-all flex items-center justify-center"
-                  title="Compartir"
-                  aria-label="Compartir"
-                  onMouseEnter={onIconEnter}
-                  onMouseLeave={onIconLeave}
+                  onClick={copyShareLink}
+                  title="Copiar l'enllaç"
+                  aria-label="Copiar l'enllaç"
+                  className={`${stripAnim} w-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                  style={{ animationDelay: stripDelay(shareTargets.length) }}
+                  onMouseEnter={iconHoverOn}
+                  onMouseLeave={iconHoverOff}
+                >
+                  {copied ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 animate-check-pop">
+                      <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                  </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                      <path fillRule="evenodd" d="M12.586 4.586a2 2 0 1 1 2.828 2.828l-3 3a2 2 0 0 1-2.828 0 1 1 0 0 0-1.414 1.414 4 4 0 0 0 5.656 0l3-3a4 4 0 0 0-5.656-5.656l-1.5 1.5a1 1 0 1 0 1.414 1.414l1.5-1.5Zm-5 5a2 2 0 0 1 2.828 0 1 1 0 1 0 1.414-1.414 4 4 0 0 0-5.656 0l-3 3a4 4 0 1 0 5.656 5.656l1.5-1.5a1 1 0 1 0-1.414-1.414l-1.5 1.5a2 2 0 1 1-2.828-2.828l3-3Z" clipRule="evenodd" />
+                  </svg>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={closeShare}
+                  title="Tancar"
+                  aria-label="Tancar"
+                  className={`${stripAnim} w-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                  style={{ animationDelay: stripDelay(shareTargets.length + 1) }}
+                  onMouseEnter={iconHoverOn}
+                  onMouseLeave={iconHoverOff}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                    <path d="M13 4.5a2.5 2.5 0 1 1 .702 1.737L6.97 9.604a2.518 2.518 0 0 1 0 .792l6.733 3.367a2.5 2.5 0 1 1-.671 1.341l-6.733-3.367a2.5 2.5 0 1 1 0-3.475l6.733-3.366A2.52 2.52 0 0 1 13 4.5Z" />
+                    <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
                   </svg>
                 </button>
-              )}
-            </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={openShare}
+                className={`w-8 h-8 shrink-0 border border-gray-800 text-gray-400 transition-all duration-150 active:scale-95 flex items-center justify-center ${togglePop ? 'animate-share-toggle-in' : ''}`}
+                title="Compartir"
+                aria-label="Compartir"
+                onMouseEnter={toggleHoverOn}
+                onMouseLeave={toggleHoverOff}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                  <path d="M13 4.5a2.5 2.5 0 1 1 .702 1.737L6.97 9.604a2.518 2.518 0 0 1 0 .792l6.733 3.367a2.5 2.5 0 1 1-.671 1.341l-6.733-3.367a2.5 2.5 0 1 1 0-3.475l6.733-3.366A2.52 2.52 0 0 1 13 4.5Z" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
         {copied && (

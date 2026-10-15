@@ -45,14 +45,31 @@
 }
 
 /* El botó de compartir es desplega en un reguitzell de xarxes: cada icona
-   hi entra esglaonada des de la dreta, com si s'hi desplegués. */
+   hi entra esglaonada des de la dreta, i se'n va pel mateix camí. */
 @keyframes share-item-in {
-  0% { opacity: 0; transform: translateX(14px) scale(0.6); }
+  0% { opacity: 0; transform: scale(0.4); }
   60% { opacity: 1; }
-  100% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 1; transform: scale(1); }
 }
+/* 'backwards' i no 'both': en acabar, l'element recupera els estils propis
+   i no queda amb un transform fix que anul·li l'active:scale. */
 .animate-share-item-in {
-  animation: share-item-in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: share-item-in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+@keyframes share-item-out {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.4); }
+}
+.animate-share-item-out {
+  animation: share-item-out 0.15s ease-in forwards;
+}
+/* El botó es plega i torna a aparèixer girant, com si es desfés el gest. */
+@keyframes share-toggle-in {
+  0% { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+  100% { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+.animate-share-toggle-in {
+  animation: share-toggle-in 0.26s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
 .nav-btn {
