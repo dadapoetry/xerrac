@@ -413,15 +413,74 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     quill.format(XERRAC_COMODI_BLOT, value !== false, 'user')
   }, [getQuill])
 
-  // El botó de referències viu a la barra de format (que queda sticky). Captura
-  // el cursor abans d'obrir el diàleg: així la referència cau on escrivies i no
-  // al final del text.
-  const openReferenceDialog = useCallback(function (this: any) {
+  // El botó de referències viu a la barra de format (que queda sticky) i fa
+  // dues coses:
+  //  - Amb el cursor sol, obre el diàleg per compondre una referència.
+  //  - Amb text seleccionat, converteix cada línia triada en un bloc de
+  //    referència (sense passar pel diàleg), que és el que estalvia d'anar
+  //    inserint les referències d'una en una.
+  // Dins cada línia es reconeixen dos convenis per als enllaços:
+  //    [Títol de l'obra](https://url)  -> títol en cursiva i enllaçat
+  //    https://url  (o www.url)        -> enllaç
+  const handleReference = useCallback(function (this: any) {
     const quill = this?.quill || getQuill()
-    const range = quill?.getSelection?.(true)
-    if (range) caretIndexRef.current = range.index + range.length
-    setShowRefDialog(true)
-  }, [getQuill])
+    if (!quill?.getSelection || !quill?.formatLine) return
+    const range = quill.getSelection(true)
+    if (!range) return
+
+    // Sense selecció: diàleg, com sempre. Guardem l'índex del cursor perquè la
+    // referència caiga on escrivies i no al final del text.
+    if (range.length === 0) {
+      caretIndexRef.current = range.index
+      setShowRefDialog(true)
+      return
+    }
+
+    preservingScroll(quill, () => {
+      // El format de bloc afecta la línia sencera, així que eixamplem el rang
+      // fins als extrems de la primera i la darrera línia triades.
+      const [, firstOffset] = quill.getLine(range.index)
+      const lastChar = range.index + range.length - 1
+      const [lastLine, lastOffset] = quill.getLine(lastChar)
+      const blockStart = range.index - firstOffset
+      const blockLength = Math.max(1, lastChar - lastOffset + lastLine.length() - 1 - blockStart)
+
+      // Commuta com els altres botons de bloc: si la primera línia ja és una
+      // referència, es trau la marca; si no, es posa a tot el bloc.
+      const already = !!quill.getFormat(blockStart, 1)[XERRAC_REF_BLOT]
+      quill.formatLine(blockStart, blockLength, XERRAC_REF_BLOT, !already, 'user')
+      if (already) return
+
+      const plain: string = quill.getText(blockStart, blockLength)
+
+      // URLs soltes -> enllaç. No canvia la longitud, així que es pot fer
+      // directament sobre els índexs reals.
+      const urlRe = /\b(?:https?:\/\/|www\.)[^\s<>()"']+/g
+      let match: RegExpExecArray | null
+      while ((match = urlRe.exec(plain))) {
+        const url = match[0]
+        const href = url.startsWith('http') ? url : `https://${url}`
+        quill.formatText(blockStart + match.index, url.length, 'link', href, 'silent')
+      }
+
+      // [Títol](url) -> títol en cursiva i enllaçat. Això escurça el text, així
+      // que s'aplica de dreta a esquerra perquè els índexs previs no es moguin.
+      const mdRe = /\[([^\]\n]+)\]\(([^)\s]+)\)/g
+      const links: { start: number; end: number; titleLen: number; href: string }[] = []
+      while ((match = mdRe.exec(plain))) {
+        const start = match.index
+        links.push({ start, end: start + match[0].length, titleLen: match[1].length, href: match[2] })
+      }
+      for (let i = links.length - 1; i >= 0; i--) {
+        const { start, end, titleLen, href } = links[i]
+        const at = blockStart + start
+        // Treu "](url)" i, després, el "[" d'obertura: hi queda només el títol.
+        quill.deleteText(at + titleLen + 1, end - (start + titleLen + 1), 'silent')
+        quill.deleteText(at, 1, 'silent')
+        quill.formatText(at, titleLen, { italic: true, link: href }, 'silent')
+      }
+    })
+  }, [getQuill, preservingScroll])
 
   const modules = useMemo(() => {
     const cfg = minimal
@@ -436,10 +495,10 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
     return {
       toolbar: {
         container: cfg,
-        handlers: { xerrac: insertXerracIcon, comodi: toggleComodi, referencia: openReferenceDialog },
+        handlers: { xerrac: insertXerracIcon, comodi: toggleComodi, referencia: handleReference },
       },
     }
-  }, [minimal, insertXerracIcon, toggleComodi, openReferenceDialog])
+  }, [minimal, insertXerracIcon, toggleComodi, handleReference])
 
   // En enganxar, Quill fa focus() sobre l'àrea editable i el navegador
   // arrossega la pàgina fins a mostrar l'editor sencer (és a dir, cap a dalt).
@@ -821,6 +880,10 @@ function ReferenceDialog({ onInsert, onClose }: { onInsert: (fields: ReferenceFi
         <h3 className="text-white font-bold text-lg mb-1">Inserir referència</h3>
         <p className="text-[11px] text-gray-500 mb-4">
           El títol queda clicable si hi poses una URL. La referència s&rsquo;insereix com un bloc de fonts.
+          Per afegir-ne moltes de cop, escriu o enganxa la llista a l&rsquo;editor (una per línia),
+          selecciona-la i clica <strong className="text-gray-400">Referència</strong>: cada línia es
+          converteix en un bloc. Amb <code className="text-gray-400">[Títol](url)</code> el títol queda
+          en cursiva i enllaçat.
         </p>
         <div className="space-y-3">
           <div className="flex gap-3">
