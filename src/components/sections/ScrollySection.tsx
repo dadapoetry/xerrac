@@ -14,10 +14,15 @@ function splitParagraphs(html: string): string[] {
 function RevealText({ html, active, right, kick }: { html: string; active: boolean; right?: boolean; kick?: boolean }) {
   const paras = useMemo(() => splitParagraphs(html), [html])
   if (kick) {
+    // El contingut dels passos ja és un `<p>` (ve de l'editor), així que el
+    // contenidor ha de ser un `<div>`: un `<p>` dins d'un altre `<p>` és HTML
+    // invàlid, el navegador els separa en analitzar-lo i les classes es queden
+    // al `<p>` buit, de manera que la citació surt sense estil fins que React
+    // rehidrata.
     return (
       <div data-richtext data-scrolly-text className={right ? 'text-right' : ''}>
         {paras.map((p, i) => (
-          <p
+          <div
             key={i}
             className={`text-center font-black uppercase leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] text-4xl md:text-5xl lg:text-6xl transition-all duration-[1200ms] ease-out ${
               active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'

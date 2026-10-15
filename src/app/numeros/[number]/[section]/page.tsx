@@ -131,9 +131,9 @@ export default async function ArticlePage({
 
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print">
         <div className="flex items-center gap-3 px-3 min-h-[2.5rem]">
-          <Link href="/" aria-label="Inici">
-            <Logo compact />
-          </Link>
+          {/* El Logo ja és un enllaç a l'inici: embolcallar-lo amb <Link> hi
+              posaria un <a> dins d'un altre. */}
+          <Logo compact />
           <span className="text-gray-700 hidden sm:inline">·</span>
           <Link
             href={issuePath(issue.number)}
