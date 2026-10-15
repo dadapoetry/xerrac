@@ -6,9 +6,28 @@ async function main() {
   const url = process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || 'file:./dev.db'
   const authToken = process.env.TURSO_AUTH_TOKEN
 
+  // El seed crea un usuari administrador i publica un número de farciment: no ha
+  // d'anar mai contra la base real sense demanar-ho explícitament.
+  if (/^(libsql|https?):/i.test(url) && process.env.ALLOW_REMOTE_SEED !== '1') {
+    console.error(
+      'Seed aturat: la URL de la base de dades és remota. El seed només és per a ' +
+      'una base local.\nSi de debò vols sembrar el servidor, usa ALLOW_REMOTE_SEED=1.',
+    )
+    process.exit(1)
+  }
+
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD
+  if (!adminPassword) {
+    console.error(
+      'Falta la variable SEED_ADMIN_PASSWORD. Defineix-la abans de fer el seed; ' +
+      'no hi ha cap contrasenya per defecte.'
+    )
+    process.exit(1)
+  }
+
   const db = createClient({ url, ...(authToken ? { authToken } : {}) })
 
-  const hashed = await bcrypt.hash('Xerrac!2026-admin', 12)
+  const hashed = await bcrypt.hash(adminPassword, 12)
 
   const existingUser = await db.execute({
     sql: 'SELECT id FROM User WHERE email = ?',
@@ -90,7 +109,7 @@ async function main() {
       content: JSON.stringify({
         proverbs: [
           { text: 'La cultura és com la xocolata: millor si és negra i amarga.', author: 'Inspirat en Cioran' },
-          { text: 'L\'avantguarda és el que fas mentre esperes que arribi el下一秒.', author: 'Llegint Vila-Matas' },
+          { text: 'L\'avantguarda és el que fas mentre esperes que arribi el demà.', author: 'Llegint Vila-Matas' },
           { text: 'No hi ha pitjor sord que el que no vol pagar el lloguer.', author: 'Adaptat de Perec' },
           { text: 'Els clàssics són aquells llibres que tothom cita i ningú llegeix.', author: 'Remix de Mark Twain' },
           { text: 'La ironia és la cortesia de la desesperació.', author: 'Deixat caure per Deleuze' },

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "tsx prisma/migrate.ts && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "db:migrate": "tsx prisma/migrate.ts",

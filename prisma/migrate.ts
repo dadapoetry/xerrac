@@ -6,6 +6,17 @@ async function migrate() {
   const url = process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || 'file:./dev.db'
   const authToken = process.env.TURSO_AUTH_TOKEN
 
+  // Aquesta migració fa ALTER i, si la forma antiga encara hi és, DROP/CREATE de
+  // taules. No ha de tocar mai una base remota per accident: si la URL apunta a
+  // un servidor, cal demanar-ho explícitament.
+  if (/^(libsql|https?):/i.test(url) && process.env.ALLOW_REMOTE_MIGRATE !== '1') {
+    console.error(
+      'Migració aturada: la URL de la base de dades és remota, no pas un fitxer local.\n' +
+        'Si de debò vols migrar el servidor, executa-ho amb ALLOW_REMOTE_MIGRATE=1.',
+    )
+    process.exit(1)
+  }
+
   const db = createClient({ url, ...(authToken ? { authToken } : {}) })
   const sql = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf-8')
 
