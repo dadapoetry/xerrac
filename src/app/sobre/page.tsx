@@ -4,7 +4,6 @@ import { getAllSettings } from '@/lib/settings'
 import { getSiteUrl, DEFAULT_CONTACT_EMAIL } from '@/lib/site'
 import { SECTION_LABELS } from '@/types'
 import { SawIcon } from '@/components/SawIcon'
-import { Footer } from '@/components/Footer'
 
 export const dynamic = 'force-dynamic'
 
@@ -162,7 +161,6 @@ export default async function AboutPage() {
           </div>
         </article>
       </div>
-      <Footer />
     </div>
   )
 }
