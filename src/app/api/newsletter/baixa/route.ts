@@ -12,7 +12,9 @@ const TOKEN_RE = /^[A-Za-z0-9_-]{8,128}$/
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get('token') || ''
   if (!TOKEN_RE.test(token)) {
-    return NextResponse.redirect(new URL('/', getSiteUrl()))
+    const dest = new URL('/subscriu/baixa', getSiteUrl())
+    dest.searchParams.set('estat', 'error')
+    return NextResponse.redirect(dest)
   }
 
   const html = `<!doctype html>
@@ -55,18 +57,18 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const token = req.nextUrl.searchParams.get('token') || ''
-  const dest = new URL('/', getSiteUrl())
+  const dest = new URL('/subscriu/baixa', getSiteUrl())
 
   if (!TOKEN_RE.test(token)) {
-    dest.searchParams.set('unsubscribed', 'invalid')
+    dest.searchParams.set('estat', 'error')
     return NextResponse.redirect(dest, { status: 303 })
   }
 
   try {
     const result = await unsubscribeByToken(token)
-    dest.searchParams.set('unsubscribed', result.removed ? 'ok' : 'invalid')
+    dest.searchParams.set('estat', result.removed ? 'ok' : 'error')
   } catch {
-    dest.searchParams.set('unsubscribed', 'invalid')
+    dest.searchParams.set('estat', 'error')
   }
   return NextResponse.redirect(dest, { status: 303 })
 }

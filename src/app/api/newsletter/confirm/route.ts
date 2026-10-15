@@ -74,16 +74,19 @@ export async function POST(req: NextRequest) {
   const form = await req.formData().catch(() => null)
   const raw = form?.get('token')
   const token = typeof raw === 'string' ? raw : ''
+  // 303 i pàgina de destí pròpia: així la confirmació es veu, i el refresh no
+  // repeteix el POST (el que abans feia un salt cec a la portada).
+  const dest = new URL('/subscriu/confirmat', getSiteUrl())
   if (!token) {
-    return NextResponse.redirect(new URL('/?subscribed=error', getSiteUrl()))
+    dest.searchParams.set('estat', 'error')
+    return NextResponse.redirect(dest, { status: 303 })
   }
 
   try {
     const result = await confirmSubscription(token)
-    const dest = new URL('/', getSiteUrl())
-    dest.searchParams.set('subscribed', result.ok ? 'ok' : 'error')
-    return NextResponse.redirect(dest)
+    dest.searchParams.set('estat', result.ok ? 'ok' : 'error')
   } catch {
-    return NextResponse.redirect(new URL('/?subscribed=error', getSiteUrl()))
+    dest.searchParams.set('estat', 'error')
   }
+  return NextResponse.redirect(dest, { status: 303 })
 }
