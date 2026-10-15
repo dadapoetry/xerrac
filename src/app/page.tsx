@@ -5,7 +5,6 @@ import { getSiteUrl } from '@/lib/site'
 import { permanentRedirect, notFound } from 'next/navigation'
 import { IssueView } from '@/components/IssueView'
 import { SubscribeForm } from '@/components/SubscribeForm'
-import { Footer } from '@/components/Footer'
 import { Logo } from '@/components/Logo'
 import { issuePath, articlePath, buildSectionSlugMap } from '@/lib/slugs'
 
@@ -58,8 +57,8 @@ export async function generateMetadata({ searchParams }: { searchParams: { issue
 }
 
 // Portada abans del primer número: la revista encara no ha sortit, però el lloc
-// no ha de semblar trencat. Explica què és Xerrac!, recull correus i dona accés
-// a la resta de pàgines.
+// no ha de semblar trencat. Recull correus i dona accés a «La revista» i a la
+// privacitat, prou. Sense peu ni enllaç a l'arxiu: encara no hi ha res a arxivar.
 function EmptyHome() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -78,16 +77,12 @@ function EmptyHome() {
             <Link href="/sobre" className="text-gray-400 hover:text-white transition-colors">
               La revista
             </Link>
-            <Link href="/arxiu" className="text-gray-400 hover:text-white transition-colors">
-              Arxiu
-            </Link>
             <Link href="/privacitat" className="text-gray-400 hover:text-white transition-colors">
               Privacitat
             </Link>
           </nav>
         </div>
       </div>
-      <Footer />
     </div>
   )
 }
