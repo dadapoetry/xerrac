@@ -68,8 +68,8 @@ function EmptyHome() {
           <Logo className="mb-8" />
 
           <p className="text-gray-300 text-[15px] leading-relaxed mb-10">
-            Encara no hi ha cap número publicat. El primer número arriba aviat; si vols, deixa el
-            correu i t&rsquo;avisarem.
+            Encara no t&rsquo;hi has subscrit? Aclareix-te! Sigues el primer en llegir el primer
+            número de Xerrac.
           </p>
 
           <SubscribeForm />
