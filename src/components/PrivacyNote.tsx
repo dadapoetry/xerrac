@@ -7,7 +7,7 @@ export function PrivacyNote({ className = '' }: { className?: string }) {
       <Link href="/privacitat" className="underline hover:text-gray-400 transition-colors">
         política de privacitat
       </Link>
-      . Baixa disponible a peu de cada butlletí.
+      . Baixa disponible al peu de cada butlletí.
     </p>
   )
 }
