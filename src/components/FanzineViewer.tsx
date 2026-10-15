@@ -104,7 +104,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return !isNaN(idx) && idx >= 0 && idx < sortedSections.length ? idx : 0
   })
   const [copied, setCopied] = useState(false)
-  const [snip, setSnip] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
+  const [origin, setOrigin] = useState('')
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
   const [bgReady, setBgReady] = useState(false)
@@ -180,6 +181,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
 
   useEffect(() => {
     setBgReady(true)
+    setOrigin(window.location.origin)
   }, [])
 
   useEffect(() => {
@@ -213,30 +215,115 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [sortedSections.length])
 
-const shareLink = useCallback(async () => {
-  const section = sortedSections[activeSection]
-  if (!section) return
-
-  const year = new Date(issue.date).getFullYear()
-  const sectionTitle = section.type === 'portada' ? issue.title : section.title
-  const slugMap = buildSectionSlugMap(issue.sections)
-  const slug = slugMap.get(section.id)
-  const url = slug
-    ? `${window.location.origin}${articlePath(issue.number, slug)}`
-    : `${window.location.origin}${issuePath(issue.number)}`
-  const citation = `${sectionTitle}. (${year}). Xerrac!: Revista d'aclariment cultural, (No. ${String(issue.number).padStart(2, '0')}). ${url}`
-
-  const copied = await copyToClipboard(citation)
-
-  if (copied) {
-    setCopied(true)
-    setSnip(true)
-    setTimeout(() => {
-      setCopied(false)
-      setSnip(false)
-    }, 2000)
+  const onIconEnter = (e: React.MouseEvent<HTMLElement>) => {
+    e.currentTarget.style.color = 'var(--accent)'
+    e.currentTarget.style.borderColor = 'rgba(var(--accent-rgb), 0.5)'
   }
-}, [activeSection, sortedSections, issue])
+  const onIconLeave = (e: React.MouseEvent<HTMLElement>) => {
+    e.currentTarget.style.color = ''
+    e.currentTarget.style.borderColor = ''
+  }
+
+  const shareMeta = useMemo(() => {
+    const section = sortedSections[activeSection]
+    if (!section) return null
+    const slugMap = buildSectionSlugMap(issue.sections)
+    const slug = slugMap.get(section.id)
+    const title = section.type === 'portada' ? issue.title : section.title
+    return {
+      path: slug ? articlePath(issue.number, slug) : issuePath(issue.number),
+      text: `${title} — Xerrac!, núm. ${String(issue.number).padStart(2, '0')}`,
+    }
+  }, [activeSection, sortedSections, issue])
+
+  const shareUrl = shareMeta && origin ? `${origin}${shareMeta.path}` : ''
+
+  const shareTargets = useMemo(() => {
+    if (!shareMeta || !origin) return []
+    const url = `${origin}${shareMeta.path}`
+    const text = shareMeta.text
+    const brand = 'w-4 h-4'
+    return [
+      {
+        name: 'WhatsApp',
+        label: 'Compartir a WhatsApp',
+        href: `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={brand}>
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+          </svg>
+        ),
+      },
+      {
+        name: 'X',
+        label: 'Compartir a X',
+        href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={brand}>
+            <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+          </svg>
+        ),
+      },
+      {
+        name: 'Facebook',
+        label: 'Compartir a Facebook',
+        href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={brand}>
+            <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z" />
+          </svg>
+        ),
+      },
+      {
+        name: 'Bluesky',
+        label: 'Compartir a Bluesky',
+        href: `https://bsky.app/intent/compose?text=${encodeURIComponent(`${text} ${url}`)}`,
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={brand}>
+            <path d="M5.769 2.462C8.445 4.471 11.317 8.545 12.4 10.733c1.083-2.188 3.955-6.262 6.631-8.271 1.93-1.45 5.06-2.57 5.06.998 0 .713-.409 5.992-.649 6.849-.834 2.98-3.873 3.74-6.577 3.28 4.727.803 5.93 3.47 3.333 6.136-4.937 5.064-7.096-1.27-7.649-2.894-.1-.294-.147-.432-.147-.315 0-.117-.048.021-.148.315-.553 1.624-2.712 7.958-7.649 2.894-2.597-2.666-1.394-5.333 3.333-6.136-2.704.46-5.743-.3-6.577-3.28-.24-.857-.649-6.136-.649-6.849 0-3.568 3.13-2.448 5.06-.998Z" />
+          </svg>
+        ),
+      },
+      {
+        name: 'Correu',
+        label: 'Compartir per correu',
+        href: `mailto:?subject=${encodeURIComponent(text)}&body=${encodeURIComponent(`${text}\n\n${url}`)}`,
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={brand}>
+            <path d="M3 4a2 2 0 0 0-2 2v1.161l8.441 4.221a1.25 1.25 0 0 0 1.118 0L19 7.162V6a2 2 0 0 0-2-2H3Z" />
+            <path d="m19 8.839-7.77 3.885a2.75 2.75 0 0 1-2.46 0L1 8.839V14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.839Z" />
+          </svg>
+        ),
+      },
+    ]
+  }, [shareMeta, origin])
+
+  const copyShareLink = useCallback(async () => {
+    if (!shareUrl) return
+    const ok = await copyToClipboard(shareUrl)
+    if (ok) {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }, [shareUrl])
+
+  useEffect(() => {
+    if (!shareOpen) return
+    const onOutside = (e: PointerEvent) => {
+      const el = e.target as HTMLElement | null
+      if (el && el.closest('[data-share-region]')) return
+      setShareOpen(false)
+    }
+    const onEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShareOpen(false)
+    }
+    document.addEventListener('pointerdown', onOutside)
+    document.addEventListener('keydown', onEscape)
+    return () => {
+      document.removeEventListener('pointerdown', onOutside)
+      document.removeEventListener('keydown', onEscape)
+    }
+  }, [shareOpen])
 
   if (sortedSections.length === 0) {
     return (
@@ -282,32 +369,83 @@ const shareLink = useCallback(async () => {
           </div>
 
           <div className="flex items-center gap-1 shrink-0">
-              <button
-                onClick={shareLink}
-                className={`w-8 h-8 border border-gray-800 text-gray-400 hover:border-[var(--btn-hover)]/50
-                  transition-all flex items-center justify-center ${snip ? 'animate-snip' : ''}`}
-                style={{ '--btn-hover': 'var(--accent)' } as React.CSSProperties}
-                title="Aclarir"
-                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = '' }}
-              >
-                {copied ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 animate-check-pop">
-                    <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
-                  </svg>
-                ) : (
+            <div data-share-region className="flex items-center gap-0.5 max-w-[60vw] overflow-x-auto nav-scroll">
+              {shareOpen ? (
+                <>
+                  {shareTargets.map((t, i) => (
+                    <a
+                      key={t.name}
+                      href={t.href}
+                      target={t.name === 'Correu' ? undefined : '_blank'}
+                      rel={t.name === 'Correu' ? undefined : 'noopener noreferrer'}
+                      onClick={() => setShareOpen(false)}
+                      title={t.name}
+                      aria-label={t.label}
+                      className="animate-share-item-in w-7 h-7 md:w-8 md:h-8 border border-gray-800 text-gray-400 transition-colors flex items-center justify-center shrink-0"
+                      style={{ animationDelay: `${i * 40}ms` }}
+                      onMouseEnter={onIconEnter}
+                      onMouseLeave={onIconLeave}
+                    >
+                      {t.icon}
+                    </a>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={copyShareLink}
+                    title="Copiar l'enllaç"
+                    aria-label="Copiar l'enllaç"
+                    className="animate-share-item-in w-7 h-7 md:w-8 md:h-8 border border-gray-800 text-gray-400 transition-colors flex items-center justify-center shrink-0"
+                    style={{ animationDelay: `${shareTargets.length * 40}ms` }}
+                    onMouseEnter={onIconEnter}
+                    onMouseLeave={onIconLeave}
+                  >
+                    {copied ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 animate-check-pop">
+                        <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                        <path fillRule="evenodd" d="M12.586 4.586a2 2 0 1 1 2.828 2.828l-3 3a2 2 0 0 1-2.828 0 1 1 0 0 0-1.414 1.414 4 4 0 0 0 5.656 0l3-3a4 4 0 0 0-5.656-5.656l-1.5 1.5a1 1 0 1 0 1.414 1.414l1.5-1.5Zm-5 5a2 2 0 0 1 2.828 0 1 1 0 1 0 1.414-1.414 4 4 0 0 0-5.656 0l-3 3a4 4 0 1 0 5.656 5.656l1.5-1.5a1 1 0 1 0-1.414-1.414l-1.5 1.5a2 2 0 1 1-2.828-2.828l3-3Z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShareOpen(false)}
+                    title="Tancar"
+                    aria-label="Tancar"
+                    className="animate-share-item-in w-7 h-7 md:w-8 md:h-8 border border-gray-800 text-gray-400 transition-colors flex items-center justify-center shrink-0"
+                    style={{ animationDelay: `${(shareTargets.length + 1) * 40}ms` }}
+                    onMouseEnter={onIconEnter}
+                    onMouseLeave={onIconLeave}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                    </svg>
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShareOpen(true)}
+                  className="w-8 h-8 border border-gray-800 text-gray-400 transition-all flex items-center justify-center"
+                  title="Compartir"
+                  aria-label="Compartir"
+                  onMouseEnter={onIconEnter}
+                  onMouseLeave={onIconLeave}
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                     <path d="M13 4.5a2.5 2.5 0 1 1 .702 1.737L6.97 9.604a2.518 2.518 0 0 1 0 .792l6.733 3.367a2.5 2.5 0 1 1-.671 1.341l-6.733-3.367a2.5 2.5 0 1 1 0-3.475l6.733-3.366A2.52 2.52 0 0 1 13 4.5Z" />
                   </svg>
-                )}
-              </button>
+                </button>
+              )}
+            </div>
             <a
               href="/arxiu"
-              className="w-8 h-8 border border-gray-800 text-gray-400 hover:border-[var(--btn-hover)]/50
-                transition-all flex items-center justify-center"
+              className="w-8 h-8 border border-gray-800 text-gray-400 transition-all flex items-center justify-center"
               title="Arxiu d'aclariments"
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = '' }}
+              onMouseEnter={onIconEnter}
+              onMouseLeave={onIconLeave}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path d="M2 3a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2Z" />
@@ -318,7 +456,7 @@ const shareLink = useCallback(async () => {
         </div>
         {copied && (
           <div className="absolute left-1/2 -translate-x-1/2 top-full z-50 bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in whitespace-nowrap">
-            Aclariment copiat
+            Enllaç copiat
           </div>
         )}
         <NewsletterPopUp visible={showNewsletter} onDismiss={() => setShowNewsletter(false)} />
