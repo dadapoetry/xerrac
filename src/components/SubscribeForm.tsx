@@ -57,10 +57,6 @@ export function SubscribeForm() {
       {status === 'error' && (
         <p className="text-xs text-red-400" role="alert">{message}</p>
       )}
-      <p className="text-[11px] text-gray-600 leading-relaxed">
-        Subscripció de doble confirmació: rebràs un correu per confirmar. També et pots
-        donar de baixa amb un clic.
-      </p>
 
       <PrivacyNote className="mt-3" />
     </form>
