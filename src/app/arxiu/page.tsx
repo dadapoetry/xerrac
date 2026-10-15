@@ -17,6 +17,7 @@ const SECTION_LABELS: Record<string, string> = {
   visita: 'Visita',
   full_mural: 'Full Mural',
   ludita: 'Ludita',
+  assaig: 'Assaig visual',
 }
 
 export const metadata: Metadata = {

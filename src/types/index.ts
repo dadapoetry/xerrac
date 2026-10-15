@@ -163,7 +163,7 @@ export const SECTION_LABELS: Record<string, string> = {
   visita: 'Visita',
   full_mural: 'Full Mural',
   ludita: 'Ludita',
-  scrolly: 'Assaig visual',
+  assaig: 'Assaig visual',
   necrologiques: 'Necrològiques',
 }
 
@@ -177,6 +177,6 @@ export const SECTION_TYPES = [
   'visita',
   'full_mural',
   'ludita',
-  'scrolly',
+  'assaig',
   'necrologiques',
 ] as const

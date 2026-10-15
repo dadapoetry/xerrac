@@ -195,7 +195,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
         />
       </div>
 
-      {type !== 'scrolly' && (
+      {type !== 'assaig' && (
         <>
       <div>
         <div className="flex items-center justify-between">

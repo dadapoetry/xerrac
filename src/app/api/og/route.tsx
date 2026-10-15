@@ -14,7 +14,7 @@ const typeLabels: Record<string, string> = {
   visita: 'Visita',
   full_mural: 'Full Mural',
   ludita: 'Ludita',
-  scrolly: 'Assaig visual',
+  assaig: 'Assaig visual',
   necrologiques: 'Necrològiques',
 }
 

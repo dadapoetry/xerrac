@@ -44,6 +44,7 @@ const typeLabels: Record<string, string> = {
   visita: 'Visita',
   full_mural: 'Full Mural',
   ludita: 'Ludita',
+  assaig: 'Assaig visual',
 }
 
 export const revalidate = 3600

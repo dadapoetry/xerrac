@@ -97,7 +97,7 @@ export function SectionContentEditor({ type, content, onChange }: SectionContent
     case 'ludita':
       return <CrosswordEditor data={data} onChange={onChange} />
 
-    case 'scrolly':
+    case 'assaig':
       return (
         <ScrollyEditor
           steps={data.steps || []}

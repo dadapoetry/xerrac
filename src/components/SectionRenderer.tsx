@@ -29,7 +29,7 @@ const sectionMap: Record<string, React.ComponentType<SectionProps>> = {
   visita: VisitaSection,
   full_mural: FullMuralSection,
   ludita: LuditaSection,
-  scrolly: ScrollySection,
+  assaig: ScrollySection,
   necrologiques: NecrologiquesSection,
 }
 
@@ -48,7 +48,7 @@ export function SectionRenderer({ section, index }: { section: SectionData; inde
     return null
   }
 
-  if (section.type === 'scrolly' || section.type === 'necrologiques') {
+  if (section.type === 'assaig' || section.type === 'necrologiques') {
     return <Component section={section} index={index} />
   }
 
