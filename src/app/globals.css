@@ -670,6 +670,28 @@ body::before {
   bottom: 0;
 }
 
+/* Aparell de marge de l'aclariment cultural: cada bloc del cos va marcat amb
+   una «§» mono a l'esquerra, dins del marge que obra el filet d'accent. És
+   l'aparell d'una edició crítica, no un adorn.
+   Els paràgrafs buits que separen els blocs no en duen: no són blocs.
+   `content: ... / ''` marca la § com a decorativa per als lectors de pantalla. */
+.aparell > p {
+  position: relative;
+}
+.aparell > p::before {
+  content: '\00A7' / '';
+  position: absolute;
+  left: -1.4rem;
+  top: 0.7em;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--accent-text);
+}
+.aparell > p:has(> br:only-child)::before {
+  content: none;
+}
+
 /* Xerrac! quoted citations (aclariment cultural) */
 .xerrac-quote-quoted {
   display: block;
@@ -679,7 +701,8 @@ body::before {
   line-height: 1.6;
   color: #b9b9b9;
   margin: 2.5rem 0 !important;
-  padding: 0 0.5rem;
+  padding: 0 0 0 1rem;
+  border-left: 2px solid var(--accent);
 }
 .xerrac-quote-quoted strong,
 .xerrac-quote-quoted b {
