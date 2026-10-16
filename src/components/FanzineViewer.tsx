@@ -448,9 +448,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   }`}
                   style={i === activeSection ? { color: 'var(--accent-text)' } : undefined}
                 >
-                  <span className="font-mono tabular-nums mr-1.5 opacity-50" aria-hidden="true">
-                    {String(i).padStart(2, '0')}
-                  </span>
                   <span>{section.type === 'portada' ? issue.title : section.title}</span>
                 </a>
               ))}
