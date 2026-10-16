@@ -30,14 +30,14 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                   />
                   <div className="relative flex items-start gap-3">
                     <span
-                      className="font-mono text-[11px] leading-none pt-[0.35rem] w-6 shrink-0 select-none tabular-nums"
+                      className="font-mono text-2xs leading-none pt-[0.35rem] w-6 shrink-0 select-none tabular-nums"
                       style={{ color: 'rgba(var(--grogues-rgb), 0.55)' }}
                     >
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <div className="flex-1 min-w-0">
                       <blockquote
-                        className="font-serif text-[18px] md:text-[19px] italic leading-[1.6] md:leading-[1.55] max-w-[40ch] text-pretty hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                        className="font-serif text-xl italic leading-[1.6] md:leading-[1.55] max-w-[40ch] text-pretty hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                         style={{ color: 'var(--grogues)' }}
                       >
                         <span className="-ml-[0.42em]">«</span>

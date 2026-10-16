@@ -39,7 +39,7 @@ export function LoginForm() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="w-full max-w-sm p-8 border border-gray-900">
-        <h1 className="text-2xl font-black tracking-tight text-white mb-1">
+        <h1 className="text-3xl font-black tracking-tight text-white mb-1">
           XERRAC<span className="text-red-500">!</span>
         </h1>
         <div className="h-px w-12 bg-red-500/50 mb-6" />

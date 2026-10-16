@@ -41,13 +41,10 @@ function CoverImage({ src, alt, priority }: { src: string; alt: string; priority
   )
 }
 
-function IssueNumber({ num, size = 'default' }: { num: number; size?: 'default' | 'hero' }) {
-  const cls = size === 'hero'
-    ? 'text-[min(30vw,16rem)]'
-    : 'text-[min(25vw,10rem)]'
+function IssueNumber({ num }: { num: number }) {
   return (
     <span
-      className={`${cls} font-black leading-[0.8] tracking-tighter select-none pointer-events-none`}
+      className="text-section-num font-black leading-[0.8] tracking-tighter select-none pointer-events-none"
       style={{ color: 'var(--issue-accent, #dc2626)', opacity: 0.07 }}
       aria-hidden="true"
     >
@@ -66,7 +63,7 @@ function SectionList({ sections }: { sections: { type: string }[] }) {
   return (
     <ul className="space-y-1">
       {names.map((name) => (
-        <li key={name} className="text-[10px] sm:text-[11px] text-gray-500 uppercase tracking-[0.15em] leading-relaxed">
+        <li key={name} className="text-2xs text-gray-500 uppercase tracking-[0.15em] leading-relaxed">
           {name}
         </li>
       ))}
@@ -125,30 +122,30 @@ function HeroIssue({ issue }: { issue: IssueShape }) {
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
 
         <div className="relative h-full flex flex-col justify-end p-5 sm:p-8 md:p-12">
-          <span className="text-[8px] sm:text-[9px] text-gray-500 tracking-[0.3em] uppercase mb-2 sm:mb-3">
+          <span className="text-2xs text-gray-500 tracking-[0.3em] uppercase mb-2 sm:mb-3">
             Últim número
           </span>
 
           <div className="flex items-end gap-4 sm:gap-6 md:gap-8">
             <div className="hidden sm:block -mb-4 -ml-2 sm:-ml-3 md:-ml-4 shrink-0">
-              <IssueNumber num={issue.number} size="hero" />
+              <IssueNumber num={issue.number} />
             </div>
             <div className="flex-1 min-w-0 pb-1 sm:pb-2">
-              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[0.95] tracking-tight group-hover:text-[var(--issue-accent)] transition-colors duration-300">
+              <h2 className="text-xl sm:text-3xl md:text-5xl font-black text-white leading-[0.95] tracking-tight group-hover:text-[var(--issue-accent)] transition-colors duration-300">
                 {issue.title}
               </h2>
               <p className="text-xs sm:text-sm text-gray-500 mt-2 sm:mt-3">
                 {issue.date.toLocaleDateString('ca-ES', { year: 'numeric', month: 'long' })}
               </p>
             </div>
-            <span className="hidden sm:inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-gray-500 group-hover:text-white transition-colors duration-300 shrink-0 pb-1 sm:pb-2">
+            <span className="hidden sm:inline-flex items-center gap-2 text-2xs uppercase tracking-[0.25em] text-gray-500 group-hover:text-white transition-colors duration-300 shrink-0 pb-1 sm:pb-2">
               Llegir
-              <span className="text-lg leading-none group-hover:translate-x-1 transition-transform duration-300">→</span>
+              <span className="text-xl leading-none group-hover:translate-x-1 transition-transform duration-300">→</span>
             </span>
           </div>
 
           <div className="sm:hidden absolute bottom-5 right-5">
-            <IssueNumber num={issue.number} size="hero" />
+            <IssueNumber num={issue.number} />
           </div>
         </div>
       </div>
@@ -180,10 +177,10 @@ function SplitIssue({ issue, reverse }: { issue: IssueShape; reverse?: boolean }
             <IssueNumber num={issue.number} />
           </div>
 
-          <span className="text-[8px] text-gray-600 tracking-[0.3em] uppercase mb-2">
+          <span className="text-2xs text-gray-600 tracking-[0.3em] uppercase mb-2">
             Número {String(issue.number).padStart(2, '0')}
           </span>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white leading-[0.95] tracking-tight mb-3 sm:mb-4 group-hover:text-[var(--issue-accent)] transition-colors duration-300">
+          <h2 className="text-xl sm:text-3xl lg:text-5xl font-black text-white leading-[0.95] tracking-tight mb-3 sm:mb-4 group-hover:text-[var(--issue-accent)] transition-colors duration-300">
             {issue.title}
           </h2>
           <p className="text-xs text-gray-600 mb-4 sm:mb-6">
@@ -191,9 +188,9 @@ function SplitIssue({ issue, reverse }: { issue: IssueShape; reverse?: boolean }
           </p>
           <SectionList sections={issue.sections} />
 
-          <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-gray-600 group-hover:text-gray-400 transition-colors duration-300 mt-4 sm:mt-6">
+          <span className="inline-flex items-center gap-2 text-2xs uppercase tracking-[0.25em] text-gray-600 group-hover:text-gray-400 transition-colors duration-300 mt-4 sm:mt-6">
             Explorar
-            <span className="text-lg leading-none group-hover:translate-x-1 transition-transform duration-300">→</span>
+            <span className="text-xl leading-none group-hover:translate-x-1 transition-transform duration-300">→</span>
           </span>
         </div>
       </div>
@@ -214,10 +211,10 @@ function TypographyIssue({ issue }: { issue: IssueShape }) {
         </div>
 
         <div className="max-w-lg">
-          <span className="text-[8px] text-gray-700 tracking-[0.3em] uppercase mb-2 block">
+          <span className="text-2xs text-gray-700 tracking-[0.3em] uppercase mb-2 block">
             Número {String(issue.number).padStart(2, '0')}
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[0.92] tracking-tight mb-4 sm:mb-6 group-hover:text-[var(--issue-accent)] transition-colors duration-300">
+          <h2 className="text-3xl md:text-5xl font-black text-white leading-[0.92] tracking-tight mb-4 sm:mb-6 group-hover:text-[var(--issue-accent)] transition-colors duration-300">
             {issue.title}
           </h2>
           <p className="text-xs text-gray-600 mb-4">
@@ -225,8 +222,8 @@ function TypographyIssue({ issue }: { issue: IssueShape }) {
           </p>
           <SectionList sections={issue.sections} />
 
-          <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-gray-700 group-hover:text-gray-500 transition-colors duration-300 mt-4 sm:mt-6">
-            Explorar →)
+          <span className="inline-flex items-center gap-2 text-2xs uppercase tracking-[0.25em] text-gray-700 group-hover:text-gray-500 transition-colors duration-300 mt-4 sm:mt-6">
+            Explorar →
           </span>
         </div>
       </div>
@@ -252,13 +249,13 @@ function GalleryIssue({ issue }: { issue: IssueShape }) {
         <div className="relative h-full flex flex-col justify-end p-5 sm:p-8 md:p-10">
           <div className="flex items-end gap-4">
             <span
-              className="text-5xl sm:text-6xl md:text-7xl font-black leading-none tracking-tight shrink-0"
+              className="text-5xl sm:text-7xl font-black leading-none tracking-tight shrink-0"
               style={{ color: 'rgba(239, 68, 68, 0.12)' }}
             >
               {String(issue.number).padStart(2, '0')}
             </span>
             <div className="flex-1 min-w-0 pb-1">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight group-hover:text-red-400 transition-colors duration-300">
+              <h2 className="text-xl md:text-3xl font-bold text-white leading-tight group-hover:text-red-400 transition-colors duration-300">
                 {issue.title}
               </h2>
               <p className="text-xs text-gray-500 mt-1">
@@ -310,17 +307,17 @@ export default async function ArxiuPage() {
             <div className="max-w-6xl mx-auto">
               <Link
                 href="/"
-                className="text-[11px] text-gray-300 hover:text-white transition-colors mb-10 sm:mb-14 inline-block py-2 uppercase tracking-[0.3em]"
+                className="text-2xs text-gray-300 hover:text-white transition-colors mb-10 sm:mb-14 inline-block py-2 uppercase tracking-[0.3em]"
               >
                 ← Tornar a la revista
               </Link>
             </div>
 
             <header className="max-w-6xl mx-auto mb-14 sm:mb-16 md:mb-20">
-              <span className="text-[8px] text-gray-400 tracking-[0.35em] uppercase block mb-3">
+              <span className="text-2xs text-gray-400 tracking-[0.35em] uppercase block mb-3">
                 Biblioteca d&rsquo;aclariments
               </span>
-              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
+              <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
                 Xerrac<span style={{ color: 'var(--accent-text, #f87171)' }}>!</span>
               </h1>
               <div className="h-px w-16 sm:w-20 bg-red-900/60 mt-6 sm:mt-8" />
@@ -330,7 +327,7 @@ export default async function ArxiuPage() {
           {issues.length === 0 ? (
             <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-32">
               <div className="text-center">
-                <span className="text-8xl font-black text-gray-800 select-none">:</span>
+                <span className="text-7xl font-black text-gray-800 select-none">:</span>
                 <p className="text-gray-400 text-sm mt-4">No hi ha números publicats encara.</p>
               </div>
             </div>
@@ -355,7 +352,7 @@ export default async function ArxiuPage() {
               })}
 
               <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 text-center">
-                <p className="text-[9px] text-gray-500 tracking-[0.3em] uppercase">
+                <p className="text-2xs text-gray-500 tracking-[0.3em] uppercase">
                   {issues.length} {issues.length === 1 ? 'volum' : 'volums'} a la biblioteca
                 </p>
               </div>

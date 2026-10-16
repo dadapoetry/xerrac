@@ -42,7 +42,7 @@ export function SubscribeForm() {
         placeholder="El teu correu"
         required
         disabled={status === 'loading'}
-        className="w-full bg-gray-950 border border-gray-500 px-4 py-3.5 text-base text-white
+        className="w-full bg-gray-950 border border-gray-500 px-4 py-3.5 text-md text-white
           placeholder:text-[var(--meta)] focus:outline-none focus:border-[var(--accent-text)] transition-colors"
       />
       <button

@@ -32,10 +32,10 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
     <div className="h-full w-64 bg-black border-r border-gray-900 flex flex-col">
       <div className="p-6 border-b border-gray-900">
         <Link href="/admin" className="no-underline group" onClick={navigate('/admin')}>
-          <span className="text-base font-black tracking-tight text-white group-hover:text-red-500 transition-colors">
+          <span className="text-md font-black tracking-tight text-white group-hover:text-red-500 transition-colors">
             XERRAC<span className="text-red-500">!</span>
           </span>
-          <p className="text-[10px] text-gray-600 tracking-wider uppercase mt-0.5">
+          <p className="text-2xs text-gray-600 tracking-wider uppercase mt-0.5">
             Admin
           </p>
         </Link>
@@ -62,14 +62,14 @@ onClick={navigate(link.href)}
         <a
           href={getSiteUrl()}
           target="_blank"
-          className="block text-[11px] text-gray-600 hover:text-red-400 transition-colors uppercase tracking-wider"
+          className="block text-2xs text-gray-600 hover:text-red-400 transition-colors uppercase tracking-wider"
         >
           Veure lloc →
         </a>
         <p className="text-xs text-gray-700 truncate">{user?.email}</p>
         <button
           onClick={() => guardLeave(() => signOut({ callbackUrl: '/admin/login' }))}
-          className="text-[11px] text-gray-600 hover:text-red-400 transition-colors uppercase tracking-wider"
+          className="text-2xs text-gray-600 hover:text-red-400 transition-colors uppercase tracking-wider"
         >
           Tancar sessió
         </button>

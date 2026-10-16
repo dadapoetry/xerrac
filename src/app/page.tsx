@@ -66,14 +66,14 @@ function EmptyHome() {
         <div className="max-w-md w-full text-center">
           <Logo className="mb-8" />
 
-          <p className="text-gray-300 text-[15px] leading-relaxed mb-10">
+          <p className="text-gray-300 text-sm leading-relaxed mb-10">
             Encara no t&rsquo;hi has subscrit? Aclareix-te! Sigues el primer en llegir el primer
             número de Xerrac.
           </p>
 
           <SubscribeForm />
 
-          <nav className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[11px] uppercase tracking-wider">
+          <nav className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-2xs uppercase tracking-wider">
             <Link href="/sobre" className="text-gray-400 hover:text-white transition-colors">
               La revista
             </Link>

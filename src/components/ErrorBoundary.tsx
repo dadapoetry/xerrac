@@ -26,7 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center p-8 text-center">
           <div>
-            <h1 className="text-4xl font-bold text-red-500 mb-4">XERRAC!</h1>
+            <h1 className="text-5xl font-bold text-red-500 mb-4">XERRAC!</h1>
             <p className="text-gray-500">S&#39;ha produït un error</p>
             <button
               onClick={() => this.setState({ hasError: false })}

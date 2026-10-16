@@ -76,36 +76,36 @@ export default async function AboutPage() {
             <span style={{ color: 'var(--accent-text)' }}>
               <SawIcon className="w-4 h-4" />
             </span>
-            <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
+            <span className="text-2xs text-gray-500 font-mono tracking-[0.3em] uppercase">
               Eina de nova cultura
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-6">
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-none mb-6">
             La revista
           </h1>
 
-          <p className="text-gray-300 text-[15px] leading-relaxed mb-4">
+          <p className="text-gray-300 text-sm leading-relaxed mb-4">
             <strong className="text-white">Xerrac!</strong> és una revista cultural digital en català,
             de periodicitat semestral i amb vocació de revista en paper. Cada número és un{' '}
             <strong className="text-white">volum monogràfic amb una tesi pròpia</strong> —un tema, un
             angle i un to— que travessa totes les seccions i es llegeix en ordre, com un número de
             revista.
           </p>
-          <p className="text-gray-300 text-[15px] leading-relaxed mb-4">
+          <p className="text-gray-300 text-sm leading-relaxed mb-4">
             El nom ve de l&rsquo;eina: una fulla d&rsquo;acer d&rsquo;aproximadament un mil·límetre
             de gruix, d&rsquo;una certa rigidesa però alhora amb una mica de flexibilitat.
           </p>
-          <p className="text-gray-300 text-[15px] leading-relaxed mb-6">
+          <p className="text-gray-300 text-sm leading-relaxed mb-6">
             Xerrac és una <strong className="text-white">eina de nova cultura</strong>: vol produir
             pensament nou i noves referències, ser el suport que fins ara no hi era i, sobretot,
             aclarir tot allò que continua sense aclarir-se.
           </p>
 
-          <h2 className="text-white text-base md:text-lg font-bold tracking-tight uppercase mt-10 mb-3">
+          <h2 className="text-white text-md md:text-xl font-bold tracking-tight uppercase mt-10 mb-3">
             Què hi trobareu
           </h2>
-          <ul className="text-gray-300 text-[15px] leading-relaxed mb-4">
+          <ul className="text-gray-300 text-sm leading-relaxed mb-4">
             {SECTIONS.map((section) => (
               <li key={section.type} className="mb-2 list-disc pl-5 marker:text-gray-600">
                 <strong className="text-white">{SECTION_LABELS[section.type]}</strong> — {section.desc}
@@ -113,20 +113,20 @@ export default async function AboutPage() {
             ))}
           </ul>
 
-          <h2 className="text-white text-base md:text-lg font-bold tracking-tight uppercase mt-10 mb-3">
+          <h2 className="text-white text-md md:text-xl font-bold tracking-tight uppercase mt-10 mb-3">
             Dades de la publicació
           </h2>
-          <ul className="text-gray-300 text-[15px] leading-relaxed mb-4 space-y-1">
+          <ul className="text-gray-300 text-sm leading-relaxed mb-4 space-y-1">
             {issn && <li>ISSN: {issn}</li>}
             {periodicity && <li>Periodicitat: {periodicity}</li>}
             {address && <li>{address}</li>}
             {license && <li>{license}</li>}
           </ul>
 
-          <h2 className="text-white text-base md:text-lg font-bold tracking-tight uppercase mt-10 mb-3">
+          <h2 className="text-white text-md md:text-xl font-bold tracking-tight uppercase mt-10 mb-3">
             Contacte
           </h2>
-          <p className="text-gray-300 text-[15px] leading-relaxed mb-4">
+          <p className="text-gray-300 text-sm leading-relaxed mb-4">
             Podeu escriure&rsquo;ns a{' '}
             <a href={`mailto:${email}`} className="inline-block py-1.5 text-white hover:text-gray-400 underline underline-offset-4">
               {email}
@@ -134,7 +134,7 @@ export default async function AboutPage() {
             .
           </p>
           {socialLinks.length > 0 && (
-            <ul className="text-gray-300 text-[15px] leading-relaxed mb-4">
+            <ul className="text-gray-300 text-sm leading-relaxed mb-4">
               {socialLinks.map((l) => (
                 <li key={l.name} className="mb-2 list-disc pl-5 marker:text-gray-600">
                   <a href={l.url} target="_blank" rel="noopener noreferrer" className="inline-block py-1.5 hover:text-white transition-colors">
@@ -145,7 +145,7 @@ export default async function AboutPage() {
             </ul>
           )}
 
-          <div className="flex flex-wrap gap-6 mt-12 pt-8 border-t border-gray-800 text-[11px] uppercase tracking-wider">
+          <div className="flex flex-wrap gap-6 mt-12 pt-8 border-t border-gray-800 text-2xs uppercase tracking-wider">
             <Link href="/arxiu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
               Arxiu d&rsquo;aclariments
             </Link>

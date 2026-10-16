@@ -439,7 +439,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                 href={`#${sectionSlug(i)}`}
                 onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
                 aria-current={i === activeSection ? 'location' : undefined}
-                className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-11 md:h-9 flex items-center leading-none transition-colors shrink-0 ${
+                className={`nav-btn text-2xs uppercase tracking-wider whitespace-nowrap px-2 h-11 md:h-9 flex items-center leading-none transition-colors shrink-0 ${
                   i === activeSection
                     ? 'active'
                     : 'text-gray-600 hover:text-gray-400'

@@ -65,7 +65,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
               </div>
             )}
             <div className="relative z-[1] p-8">
-              <span className="text-[10px] text-gray-500 uppercase tracking-[0.3em] block mb-2">
+              <span className="text-2xs text-gray-500 uppercase tracking-[0.3em] block mb-2">
                 Número següent
               </span>
               <span className="text-3xl font-black tracking-tight text-white group-hover:[color:var(--accent-text,#f87171)] transition-colors block mb-1">
@@ -74,7 +74,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
               <span className="text-sm text-gray-300 block mb-4">
                 {nextIssue.title}
               </span>
-              <span className="inline-block text-[10px] uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">
+              <span className="inline-block text-2xs uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">
                 Llegir → 
               </span>
             </div>
@@ -85,7 +85,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
         <div className="flex justify-center mb-3">
           <SawIcon className="w-5 h-5 opacity-60" />
         </div>
-        <div className="text-[11px] text-gray-400 leading-relaxed space-y-1">
+        <div className="text-2xs text-gray-400 leading-relaxed space-y-1">
           {issn && <p>{issn}</p>}
           {copyright && <p>{copyright}</p>}
           {address && <p>{address}</p>}
@@ -115,7 +115,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
         )}
 
         {(prevIssue || nextIssue) && (
-          <div className="flex justify-center gap-6 mt-8 pt-6 border-t border-gray-800 text-[11px]">
+          <div className="flex justify-center gap-6 mt-8 pt-6 border-t border-gray-800 text-2xs">
             {prevIssue ? (
               <Link href={issuePath(prevIssue.number)} className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
                 ← {String(prevIssue.number).padStart(2, '0')}
@@ -133,7 +133,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
           </div>
         )}
 
-        <div className="flex justify-center gap-4 mt-6 text-[11px] flex-wrap">
+        <div className="flex justify-center gap-4 mt-6 text-2xs flex-wrap">
           <Link href="/arxiu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">Arxiu d&apos;aclariments</Link>
           <span className="text-gray-700" aria-hidden="true">·</span>
           <Link href="/sobre" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">La revista</Link>

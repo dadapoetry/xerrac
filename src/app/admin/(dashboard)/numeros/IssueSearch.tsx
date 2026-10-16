@@ -111,7 +111,7 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
             className={`w-4 h-4 border ${allSelected ? 'bg-red-600 border-red-600' : 'border-gray-600'} flex-shrink-0`}
           >
             {allSelected && (
-              <span className="text-white text-[10px] block leading-[14px] text-center">✓</span>
+              <span className="text-white text-2xs block leading-[14px] text-center">✓</span>
             )}
           </button>
           <span>Núm.</span>
@@ -132,7 +132,7 @@ export function IssueSearch({ issues }: { issues: IssueRow[] }) {
               className={`w-4 h-4 border ${selected.has(issue.id) ? 'bg-red-600 border-red-600' : 'border-gray-600'} flex-shrink-0`}
             >
               {selected.has(issue.id) && (
-                <span className="text-white text-[10px] block leading-[14px] text-center">✓</span>
+                <span className="text-white text-2xs block leading-[14px] text-center">✓</span>
               )}
             </button>
             <span className="text-white font-mono">{issue.number}</span>

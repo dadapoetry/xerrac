@@ -518,7 +518,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
   return (
     <div ref={rootRef} onClick={handleEditorClick} className="relative editor-shell">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] text-gray-500 uppercase tracking-wider">Editor de text</span>
+        <span className="text-2xs text-gray-500 uppercase tracking-wider">Editor de text</span>
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -527,7 +527,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
               captureCaret()
               setShowImageDialog(true)
             }}
-            className="text-[11px] text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
+            className="text-2xs text-gray-400 hover:text-red-400 transition-colors uppercase tracking-wider"
           >
             + Inserir imatge
           </button>
@@ -553,13 +553,13 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
           }}
         >
           <div className="flex items-center gap-1">
-            <span className="mr-0.5 text-[9px] uppercase tracking-wider text-gray-500">Mida</span>
+            <span className="mr-0.5 text-2xs uppercase tracking-wider text-gray-500">Mida</span>
             {SIZE_PRESETS.map((preset) => (
               <button
                 key={preset}
                 type="button"
                 onClick={() => applyImageWidth(preset)}
-                className={`rounded px-1.5 py-0.5 text-[11px] transition-colors ${
+                className={`rounded px-1.5 py-0.5 text-2xs transition-colors ${
                   sizeDraft === preset
                     ? 'bg-red-600 text-white'
                     : 'text-gray-300 hover:bg-gray-700'
@@ -581,10 +581,10 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
                 }
               }}
               placeholder="50% o 480"
-              className="w-16 rounded border border-gray-700 bg-gray-950 px-1.5 py-0.5 text-[11px] text-white focus:border-red-500 focus:outline-none"
+              className="w-16 rounded border border-gray-700 bg-gray-950 px-1.5 py-0.5 text-2xs text-white focus:border-red-500 focus:outline-none"
             />
             {activeImage.naturalWidth > 0 && (
-              <span className="ml-auto whitespace-nowrap text-[9px] text-gray-500">
+              <span className="ml-auto whitespace-nowrap text-2xs text-gray-500">
                 {activeImage.naturalWidth}×{activeImage.naturalHeight}
               </span>
             )}
@@ -592,7 +592,7 @@ export function RichTextEditor({ value, onChange, minimal = false }: RichTextEdi
               type="button"
               onClick={() => setActiveImage(null)}
               aria-label="Tancar la barra de mida"
-              className="ml-1 text-[11px] leading-none text-gray-500 hover:text-gray-300"
+              className="ml-1 text-2xs leading-none text-gray-500 hover:text-gray-300"
             >
               ✕
             </button>
@@ -696,7 +696,7 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
         onClick={(e) => e.stopPropagation()}
         className="relative bg-gray-950 border border-gray-800 p-6 max-w-md w-full mx-4 shadow-2xl"
       >
-        <h3 className="text-white font-bold text-lg mb-4">Inserir imatge</h3>
+        <h3 className="text-white font-bold text-xl mb-4">Inserir imatge</h3>
         <div className="flex gap-2 mb-4">
           {(['file', 'url'] as const).map((t) => (
             <button
@@ -725,7 +725,7 @@ function ImageDialog({ onInsert, onClose }: { onInsert: (url: string, width: str
                 onChange={handleFileChange}
                 className="w-full text-sm text-gray-300 file:mr-4 file:px-4 file:py-2 file:bg-gray-800 file:text-gray-200 file:border file:border-gray-700 file:text-sm hover:file:border-gray-500 file:transition-colors"
               />
-              <p className="text-[11px] text-gray-500 mt-1">
+              <p className="text-2xs text-gray-500 mt-1">
                 Si repuges un arxiu amb el mateix nom d'un borrador, la imatge anterior se substitueix amb la mateixa URL.
               </p>
             </div>
@@ -877,8 +877,8 @@ function ReferenceDialog({ onInsert, onClose }: { onInsert: (fields: ReferenceFi
         onClick={(e) => e.stopPropagation()}
         className="relative bg-gray-950 border border-gray-800 p-6 max-w-md w-full mx-4 shadow-2xl"
       >
-        <h3 className="text-white font-bold text-lg mb-1">Inserir referència</h3>
-        <p className="text-[11px] text-gray-500 mb-4">
+        <h3 className="text-white font-bold text-xl mb-1">Inserir referència</h3>
+        <p className="text-2xs text-gray-500 mb-4">
           El títol queda clicable si hi poses una URL. La referència s&rsquo;insereix com un bloc de fonts.
           Per afegir-ne moltes de cop, escriu o enganxa la llista a l&rsquo;editor (una per línia),
           selecciona-la i clica <strong className="text-gray-400">Referència</strong>: cada línia es

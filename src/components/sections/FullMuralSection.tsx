@@ -11,7 +11,7 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
       <SectionHeader number={index} title={section.title} subtitle="Collages i contribucions dels lectors" />
 
       <div className="mb-10 text-center">
-        <div className="inline-flex items-center gap-3 text-[11px] text-gray-500">
+        <div className="inline-flex items-center gap-3 text-2xs text-gray-500">
           <span className="h-px w-6 bg-gray-800" />
           <span>
             Participa-hi — envia els teus treballs visuals o textos a{' '}
@@ -42,7 +42,7 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
                 <p className="text-gray-500 text-xs">Imatge no disponible</p>
               )}
             </div>
-            <p className="text-[10px] font-mono tracking-wider text-gray-500 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+            <p className="text-2xs font-mono tracking-wider text-gray-500 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
               {collage.description}
             </p>
           </div>

@@ -10,8 +10,19 @@ const config: Config = {
     extend: {
       fontFamily: {
         mono: ['Courier New', 'Courier', 'monospace'],
-        display: ['Impact', 'Haettenschweiler', 'sans-serif'],
         serif: ['Georgia', 'Times New Roman', 'serif'],
+      },
+      // Una sola escala tipogràfica de 8 passos: 11 · 12 · 14 · 17 · 20 · 30 · 48 · 72.
+      // Els graons que Tailwind ja portava de sèrie es queden amb el seu nom
+      // (xs 12, sm 14, xl 20, 3xl 30, 5xl 48, 7xl 72); aquí només s'hi afegeixen
+      // els dos que faltaven i la xifra de secció, que és un clamp perquè la
+      // mida no depengui d'un viewport exacte.
+      // Així una classe absent no pot escurçar res per accident: si algú se
+      // n'oblida una, es queda amb la mida de Tailwind, no amb una d'inventada.
+      fontSize: {
+        '2xs': '0.6875rem',   // 11 px — etiquetes mono en majúscules (abans 8/9/10/11)
+        md: '1.0625rem',      // 17 px — cos editorial (abans 16)
+        'section-num': 'clamp(140px, 16vw, 220px)', // xifra de secció
       },
       colors: {
         xerrac: {

@@ -29,7 +29,7 @@ export function NecrologiquesSection({ section }: { section: SectionData }) {
       <div className="relative z-[3] max-w-prose w-full mx-auto px-6 py-14 md:py-20">
         <div className="w-12 h-[2px] opacity-60 mb-4" style={{ backgroundColor: 'var(--accent)' }} />
 
-        <p className="text-[11px] md:text-xs tracking-[0.25em] uppercase mb-10">
+        <p className="text-2xs md:text-xs tracking-[0.25em] uppercase mb-10">
           <span className="font-semibold" style={{ color: 'rgba(var(--accent-rgb), 0.8)' }}>
             {section.title}
           </span>

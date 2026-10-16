@@ -19,7 +19,7 @@ function ScrollHint() {
 
   return (
     <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 pointer-events-none">
-      <span className="text-[10px] text-gray-500 uppercase tracking-[0.25em]">Desplaça</span>
+      <span className="text-2xs text-gray-500 uppercase tracking-[0.25em]">Desplaça</span>
       <svg className="w-4 h-4 text-gray-400 animate-bounce motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
       </svg>
@@ -41,7 +41,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
         <Logo className="mb-5" />
 
         {content.topic && (
-          <p className="text-3xl md:text-4xl text-gray-100 font-bold">
+          <p className="text-3xl md:text-5xl text-gray-100 font-bold">
             {content.topic}
           </p>
         )}
@@ -60,7 +60,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
       </div>
 
       {issueNumber !== undefined && (
-        <span className="absolute bottom-4 right-4 text-[10px] text-gray-100 font-mono pointer-events-none z-10">Nº&nbsp;{String(issueNumber).padStart(2, '0')}</span>
+        <span className="absolute bottom-4 right-4 text-2xs text-gray-100 font-mono pointer-events-none z-10">Nº&nbsp;{String(issueNumber).padStart(2, '0')}</span>
       )}
       <ScrollHint />
     </div>

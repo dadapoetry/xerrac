@@ -239,7 +239,7 @@ return (
                 }}
               >
                 {cellNum && (
-                  <span className="absolute top-0 left-0.5 text-[0.5rem] text-gray-400 leading-none">
+                  <span className="absolute top-0 left-0.5 text-2xs text-gray-400 leading-none">
                     {cellNum}
                   </span>
                 )}
@@ -257,7 +257,7 @@ return (
                     onClick={() => handleCellClick(row, col)}
                     onFocus={() => activate(row, col, false)}
                     className={`w-full h-full bg-transparent text-center text-white
-                      font-mono text-base md:text-lg uppercase outline-none
+                      font-mono text-md md:text-xl uppercase outline-none
                       ${isActive ? 'bg-red-900/30' : ''}
                       ${revealed && grid[row][col] ? 'text-green-400' : ''}`}
                     autoComplete="off"

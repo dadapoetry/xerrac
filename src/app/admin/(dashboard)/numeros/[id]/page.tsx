@@ -19,7 +19,7 @@ export default async function EditNumeroPage({ params }: { params: { id: string 
   if (!issue) {
     return (
       <div className="text-center py-16">
-        <h1 className="text-2xl font-bold text-white mb-4">Número no trobat</h1>
+        <h1 className="text-3xl font-bold text-white mb-4">Número no trobat</h1>
         <Link href="/admin/numeros" className="text-red-400 hover:text-red-300">
           ← Tornar als números
         </Link>

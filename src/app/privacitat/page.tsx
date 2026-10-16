@@ -18,19 +18,19 @@ export const metadata: Metadata = {
 
 function H({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-white text-base md:text-lg font-bold tracking-tight uppercase mt-10 mb-3">
+    <h2 className="text-white text-md md:text-xl font-bold tracking-tight uppercase mt-10 mb-3">
       {children}
     </h2>
   )
 }
 
 function P({ children }: { children: React.ReactNode }) {
-  return <p className="text-gray-300 text-[15px] leading-relaxed mb-4">{children}</p>
+  return <p className="text-gray-300 text-sm leading-relaxed mb-4">{children}</p>
 }
 
 function Li({ children }: { children: React.ReactNode }) {
   return (
-    <li className="text-gray-300 text-[15px] leading-relaxed mb-2 list-disc pl-5 marker:text-gray-600">
+    <li className="text-gray-300 text-sm leading-relaxed mb-2 list-disc pl-5 marker:text-gray-600">
       {children}
     </li>
   )
@@ -48,12 +48,12 @@ export default async function PrivacyPage() {
           <span style={{ color: 'var(--accent-text)' }}>
             <SawIcon className="w-4 h-4" />
           </span>
-          <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
+          <span className="text-2xs text-gray-500 font-mono tracking-[0.3em] uppercase">
             Dades personals
           </span>
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-4">
+        <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-none mb-4">
           Política de privacitat
         </h1>
         <p className="text-xs text-gray-600 mb-10">
@@ -72,7 +72,7 @@ export default async function PrivacyPage() {
 
         <H>1. Responsable del tractament</H>
         <P>El responsable del tractament és l’equip editorial de la revista.</P>
-        <ul className="mb-4 text-[15px] leading-relaxed text-gray-300">
+        <ul className="mb-4 text-sm leading-relaxed text-gray-300">
           <li className="mb-1">
             <span className="text-gray-500">Correu de contacte:</span>{' '}
             <a href={`mailto:${email}`} className="text-white underline hover:text-gray-400 transition-colors">

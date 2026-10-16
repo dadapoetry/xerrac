@@ -137,7 +137,7 @@ export default async function ArticlePage({
           <span className="text-gray-700 hidden sm:inline">·</span>
           <Link
             href={issuePath(issue.number)}
-            className="text-[10px] uppercase tracking-wider text-gray-500 hover:text-white transition-colors truncate"
+            className="text-2xs uppercase tracking-wider text-gray-500 hover:text-white transition-colors truncate"
           >
             Número {String(issue.number).padStart(2, '0')} — {issue.title}
           </Link>

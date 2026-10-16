@@ -50,16 +50,16 @@ export function NewsletterResult({ mode, ok }: { mode: Mode; ok: boolean }) {
           <span style={{ color: 'var(--accent-text)' }}>
             <SawIcon className="w-4 h-4" />
           </span>
-          <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
+          <span className="text-2xs text-gray-500 font-mono tracking-[0.3em] uppercase">
             Butlletí
           </span>
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-tight mb-4">
+        <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-tight mb-4">
           {ok ? copy.okTitle : copy.koTitle}
         </h1>
 
-        <p className="text-gray-300 text-[15px] leading-relaxed mb-8">
+        <p className="text-gray-300 text-sm leading-relaxed mb-8">
           {ok ? copy.okBody : copy.koBody}
         </p>
 

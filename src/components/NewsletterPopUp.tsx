@@ -60,16 +60,16 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
 
           <div className="flex items-center gap-2 mb-3">
             <SawIcon className="w-4 h-4" />
-            <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
+            <span className="text-2xs text-gray-500 font-mono tracking-[0.3em] uppercase">
               Butlletí
             </span>
             <div className="h-px w-12" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.4)' }} />
           </div>
 
-          <p className="text-base font-black tracking-tight text-white leading-tight mb-1">
+          <p className="text-md font-black tracking-tight text-white leading-tight mb-1">
             Encara no t&apos;hi has subscrit?
           </p>
-          <p className="text-lg font-black tracking-tight leading-none mb-4" style={{ color: 'var(--accent-text)' }}>
+          <p className="text-xl font-black tracking-tight leading-none mb-4" style={{ color: 'var(--accent-text)' }}>
             Aclareix-te!
           </p>
 

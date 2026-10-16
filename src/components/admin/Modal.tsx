@@ -91,7 +91,7 @@ export function Modal({
         aria-describedby={messageId}
         className="relative bg-gray-950 border border-gray-800 p-6 max-w-md w-full mx-4 shadow-2xl"
       >
-        <h3 id={titleId} className="text-white font-bold text-lg mb-2">{title}</h3>
+        <h3 id={titleId} className="text-white font-bold text-xl mb-2">{title}</h3>
         <p id={messageId} className="text-gray-400 text-sm mb-6">{message}</p>
         {children}
         <div className="flex gap-3 justify-end">

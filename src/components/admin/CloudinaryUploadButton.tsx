@@ -38,7 +38,7 @@ export function CloudinaryUploadButton({ onUploaded, label = 'Pujar', transforms
         type="button"
         onClick={() => fileRef.current?.click()}
         disabled={status === 'uploading'}
-        className="text-[11px] text-gray-400 hover:text-red-400 disabled:opacity-50 transition-colors uppercase tracking-wider"
+        className="text-2xs text-gray-400 hover:text-red-400 disabled:opacity-50 transition-colors uppercase tracking-wider"
       >
         {status === 'uploading' ? 'Pujant...' : `+ ${label}`}
       </button>

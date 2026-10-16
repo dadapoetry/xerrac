@@ -24,7 +24,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
         {paras.map((p, i) => (
           <div
             key={i}
-            className={`text-center font-black uppercase leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] text-4xl md:text-5xl lg:text-6xl transition-all duration-[1200ms] ease-out ${
+            className={`text-center font-black uppercase leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] text-5xl lg:text-7xl transition-all duration-[1200ms] ease-out ${
               active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
             style={{ transitionDelay: `${i * 120}ms` }}
@@ -39,7 +39,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
       {paras.map((p, i) => (
         <div
           key={i}
-          className={`text-gray-100 leading-relaxed md:leading-loose font-serif text-[15px] md:text-lg prose-invert transition-all duration-[900ms] ease-out ${
+          className={`text-gray-100 leading-relaxed md:leading-loose font-serif text-sm md:text-xl prose-invert transition-all duration-[900ms] ease-out ${
             active
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-6'
@@ -169,7 +169,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
         {current?.caption && (
           <p
             key={mediaIdx}
-            className="absolute bottom-6 left-6 md:left-12 max-w-md font-mono text-[11px] leading-relaxed tracking-wide text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] animate-fade-in"
+            className="absolute bottom-6 left-6 md:left-12 max-w-md font-mono text-2xs leading-relaxed tracking-wide text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] animate-fade-in"
           >
             {current.caption}
           </p>
@@ -238,7 +238,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                 </h4>
               )}
               {i === 0 && content.subtitle && (
-                <p className="-mt-4 mb-6 max-w-xl text-sm md:text-base tracking-wider uppercase text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+                <p className="-mt-4 mb-6 max-w-xl text-sm md:text-md tracking-wider uppercase text-gray-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
                   {content.subtitle}
                 </p>
               )}
@@ -276,7 +276,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                     </svg>
                   </span>
                   <span
-                    className="font-mono text-[11px] uppercase tracking-[0.25em] text-gray-200"
+                    className="font-mono text-2xs uppercase tracking-[0.25em] text-gray-200"
                     style={{ textShadow: '0 2px 6px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.9)' }}
                   >
                     Continua llegint
@@ -302,19 +302,19 @@ export function ScrollySection({ section, index }: { section: SectionData; index
             }`}>
               <div className="mx-auto mb-8 h-px w-16 bg-white/40" />
               <div
-                className="font-mono text-[11px] uppercase tracking-[0.3em] text-white/90 transition-all duration-[900ms] ease-out"
+                className="font-mono text-2xs uppercase tracking-[0.3em] text-white/90 transition-all duration-[900ms] ease-out"
                 style={{ transitionDelay: '150ms', textShadow: '0 2px 10px rgba(0,0,0,0.95), 0 0 18px rgba(0,0,0,0.9)' }}
               >
                 · Fi ·
               </div>
               <h3
-                className="mt-5 font-black uppercase leading-tight tracking-tight text-white text-3xl md:text-4xl transition-all duration-[900ms] ease-out"
+                className="mt-5 font-black uppercase leading-tight tracking-tight text-white text-3xl md:text-5xl transition-all duration-[900ms] ease-out"
                 style={{ transitionDelay: '300ms', textShadow: '0 2px 10px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.85)' }}
               >
                 {content.outro}
               </h3>
               <div
-                className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-white/85 transition-all duration-[900ms] ease-out"
+                className="mt-8 font-mono text-2xs uppercase tracking-[0.2em] text-white/85 transition-all duration-[900ms] ease-out"
                 style={{ transitionDelay: '450ms', textShadow: '0 2px 10px rgba(0,0,0,0.95), 0 0 18px rgba(0,0,0,0.9)' }}
               >
                 {section.title}

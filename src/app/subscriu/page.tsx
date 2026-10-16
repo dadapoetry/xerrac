@@ -22,16 +22,16 @@ export default function SubscribePage() {
           <span style={{ color: 'var(--accent-text)' }}>
             <SawIcon className="w-4 h-4" />
           </span>
-          <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
+          <span className="text-2xs text-gray-500 font-mono tracking-[0.3em] uppercase">
             Butlletí
           </span>
           <div className="h-px w-12" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.4)' }} />
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-1">
+        <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-none mb-1">
           Encara no t&apos;hi has subscrit?
         </h1>
-        <p className="text-3xl md:text-4xl font-black tracking-tight leading-none mb-6" style={{ color: 'var(--accent-text)' }}>
+        <p className="text-3xl md:text-5xl font-black tracking-tight leading-none mb-6" style={{ color: 'var(--accent-text)' }}>
           Aclareix-te!
         </p>
 

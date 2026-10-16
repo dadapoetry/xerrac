@@ -8,14 +8,14 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
   return (
     <div className="mb-6 pb-6 last:border-0">
       <div className="flex items-center gap-3 mb-3">
-        <span className="text-[10px] uppercase tracking-widest drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" style={{ color: 'var(--accent-text)' }}>
+        <span className="text-2xs uppercase tracking-widest drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" style={{ color: 'var(--accent-text)' }}>
           {entry.type === 'biography' ? 'Biografia apòcrifa' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte' : 'Personatge inventat'}
         </span>
         <span className="text-xs text-gray-500 font-mono drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">#{String(index + 1).padStart(2, '0')}</span>
       </div>
-      <h3 className="text-lg md:text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
+      <h3 className="text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
       <div
-        className="text-gray-300 leading-relaxed text-[15px] md:text-base text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+        className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
         dangerouslySetInnerHTML={{ __html: entry.body }}
       />
     </div>

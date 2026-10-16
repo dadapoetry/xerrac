@@ -177,7 +177,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             min="0"
             title="L'ordre es canvia des de la llista de seccions amb els botons de moure"
           />
-          <p className="text-[10px] text-gray-600 mt-1">Canvia l'ordre des de la llista de seccions</p>
+          <p className="text-2xs text-gray-600 mt-1">Canvia l'ordre des de la llista de seccions</p>
         </div>
       </div>
 
@@ -261,7 +261,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
               text-sm focus:outline-none focus:border-red-500 transition-colors"
           />
         </div>
-        <p className="text-[10px] text-gray-600 mt-1">
+        <p className="text-2xs text-gray-600 mt-1">
           Recomanat 1080×2400 px (20:9). Si es deixa buit, el mòbil retalla la imatge d'escriptori.
         </p>
       </div>
@@ -326,7 +326,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
             <span className="text-xs uppercase tracking-wider text-gray-500">
               {SECTION_LABELS[type] || type}
             </span>
-            <span className="text-[10px] text-gray-700">sense desar</span>
+            <span className="text-2xs text-gray-700">sense desar</span>
           </div>
           <div className="border border-gray-800 h-[70vh] overflow-y-auto overscroll-contain">
             <SectionPreview
@@ -337,7 +337,7 @@ export function SectionForm({ issueId, initial, nextOrder }: SectionFormProps) {
               content={content}
             />
           </div>
-          <p className="text-[10px] text-gray-700 mt-2">
+          <p className="text-2xs text-gray-700 mt-2">
             Les mides són les del lloc real; aquí hi ha espai per veure-ho sencer.
           </p>
         </aside>

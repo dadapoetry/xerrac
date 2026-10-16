@@ -121,7 +121,7 @@ export default function ConfigPage() {
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="contacte@laxerrac.cat"
           />
-          <p className="text-[10px] text-gray-600 mt-1">
+          <p className="text-2xs text-gray-600 mt-1">
             És el correu que apareix a la política de privadesa i al peu de la revista
             com a dada de contacte.
           </p>
@@ -153,7 +153,7 @@ export default function ConfigPage() {
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="Nom de l'editor, carrer i número, 08001 Barcelona"
           />
-          <p className="text-[10px] text-gray-600 mt-1">
+          <p className="text-2xs text-gray-600 mt-1">
             Apareix al peu com a dada editorial; la Biblioteca de Catalunya la
             demana per tramitar l'ISSN.
           </p>
@@ -185,7 +185,7 @@ export default function ConfigPage() {
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="CC BY-NC-SA 4.0"
           />
-          <p className="text-[10px] text-gray-600 mt-1">
+          <p className="text-2xs text-gray-600 mt-1">
             Deixa-ho buit si no vols cap menció de llicència al peu.
           </p>
         </div>
