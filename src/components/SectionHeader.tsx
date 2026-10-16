@@ -32,7 +32,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
   }, [])
 
   return (
-<div ref={ref} className={mb-12 md:mb-16 relative ${entered ? 'entered' : ''}}>
+    <div ref={ref} className={`mb-12 md:mb-16 relative ${entered ? 'entered' : ''}`}>
       <div className="stagger-number absolute -top-10 -left-4 text-section-num font-black select-none pointer-events-none leading-none" style={{ color: 'var(--accent)' }}>
         {String(number).padStart(2, '0')}
       </div>
@@ -41,12 +41,12 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
             <span style={{ color: 'var(--accent-text)' }}>
               <SawIcon className="w-4 h-4" />
             </span>
-            <span className={text-2xs tracking-[0.3em] uppercase font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-200' : 'text-gray-400'}}>
+            <span className={`text-2xs tracking-[0.3em] uppercase font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-200' : 'text-gray-400'}`}>
               {String(number).padStart(2, '0')}
             </span>
-            <span className={h-px flex-1 ${bright ? 'bg-white/20' : 'bg-white/10'}} />
+            <span className={`h-px flex-1 ${bright ? 'bg-white/20' : 'bg-white/10'}`} />
             {readingTime && (
-              <span className={text-2xs tracking-wider font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] ${bright ? 'text-gray-300' : 'text-gray-500'}}>
+              <span className={`text-2xs tracking-wider font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] ${bright ? 'text-gray-300' : 'text-gray-500'}`}>
                 ~{readingTime} min
               </span>
             )}
