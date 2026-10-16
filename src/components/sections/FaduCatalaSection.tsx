@@ -13,7 +13,6 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
         <h3 className="text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
         <span aria-hidden="true" className="text-3xl font-serif italic text-gray-400 select-none" style={{ color: 'rgba(var(--accent-text-rgb), 0.45)' }}>
         {entry.type === 'biography' ? 'Biografia' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte' : 'Fadu'}
-        #{String(index + 1).padStart(2, '0')}
         </span>
       </div>
       <div
