@@ -32,7 +32,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
   }, [])
 
   return (
-    <div ref={ref} className={`mb-12 md:mb-16 relative ${entered ? 'entered' : ''}`}>
+<div ref={ref} className={`mb-12 md:mb-16 relative ${entered ? 'entered' : ''}`}>
       <div className="stagger-number absolute -top-10 -left-4 text-section-num font-black select-none pointer-events-none leading-none" style={{ color: 'var(--accent)' }}>
         {String(number).padStart(2, '0')}
       </div>
@@ -59,7 +59,13 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
             {subtitle}
           </p>
         )}
-        <div className={`stagger-rule ${subtitle ? 'delay-4' : 'delay-3'} w-12 h-[2px]`} style={{ backgroundColor: 'var(--accent)' }} />
+        
+        {/* Divisor modificado para parecerse al segundo */}
+        <div className={`stagger-rule ${subtitle ? 'delay-4' : 'delay-3'} flex items-center gap-2 w-full my-6`}>
+          <span className={`h-[2px] flex-1`} style={{ backgroundColor: 'var(--accent)' }} />
+          <SawIcon className="w-3.5 h-3.5 opacity-75" style={{ color: 'var(--accent)' }} />
+          <span className={`h-[2px] flex-1`} style={{ backgroundColor: 'var(--accent)' }} />
+        </div>
       </div>
     </div>
   )
