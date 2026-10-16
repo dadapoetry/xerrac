@@ -427,7 +427,7 @@ body::before {
    el descendent queia damunt del text de sota. */
 .capitular > p:first-child::first-letter {
   float: left;
-  font-family: Inter, serif;
+  font-family: 'Inter', serif;
   font-size: 4.5em;
   line-height: 1.1;
   font-weight: 700;
