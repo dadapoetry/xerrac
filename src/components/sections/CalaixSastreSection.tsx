@@ -23,7 +23,11 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
             <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">Entrevistes</span>
             <div className="space-y-6">
               {content.interviews.map((item, i) => (
-                <div key={i} className="border border-gray-700 p-6 md:p-8">
+                <div key={i} className="relative pt-4">
+                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'var(--accent)' }} aria-hidden="true" />
+                  <div className="absolute -left-6 top-4 hidden md:block font-mono text-2xs tabular-nums text-gray-500 select-none" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </div>
                   <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.subject}</h3>
                   <div
                     className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
@@ -40,7 +44,11 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
             <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">Crítiques</span>
             <div className="grid md:grid-cols-2 gap-6">
               {content.reviews.map((item, i) => (
-                <div key={i} className="border border-gray-700 p-6">
+                <div key={i} className="relative pt-4">
+                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'var(--accent)' }} aria-hidden="true" />
+                  <div className="absolute -left-6 top-4 hidden md:block font-mono text-2xs tabular-nums text-gray-500 select-none" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </div>
                   <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.title}</h3>
                   <div
                     className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
@@ -57,7 +65,11 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
             <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">Investigació</span>
             <div className="space-y-6">
               {content.investigacio.map((item, i) => (
-                <div key={i} className="border border-gray-700 p-6 md:p-8">
+                <div key={i} className="relative pt-4">
+                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'var(--accent)' }} aria-hidden="true" />
+                  <div className="absolute -left-6 top-4 hidden md:block font-mono text-2xs tabular-nums text-gray-500 select-none" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </div>
                   <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.title}</h3>
                   <div
                     className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
