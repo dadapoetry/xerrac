@@ -10,15 +10,6 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle="Turisme teòric" readingTime={readingTime(content.body)} />
-
-      {/* Etiqueta de traducció. Ocupa el lloc on abans hi havia la font, que
-          baixa al colofó perquè el lector sàpiga què llegeix abans de llegir-ho. */}
-      {content.source && (
-        <p className="text-2xs font-mono uppercase tracking-[0.3em] mb-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]" style={{ color: 'var(--accent-text)' }}>
-          Traducció
-        </p>
-      )}
-
       <blockquote className="relative -mx-4 md:-mx-12 px-4 md:px-12 border-l-2" style={{ borderColor: 'rgba(var(--accent-rgb), 0.1)' }}>
         {/* Les cometes van al marge, no dins del text: així la citació arrenca a
             la columna i el marc no desplaça la primera línia. Decoratives per als
