@@ -86,8 +86,7 @@
 .nav-btn::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  margin-bottom: -1;
+  bottom: -0.2em;
   left: 0;
   width: 100%;
   height: 1px;
@@ -433,7 +432,7 @@ body::before {
   line-height: 1.1;
   font-weight: 700;
   color: var(--accent-text);
-  margin: 0.02em 0.07em 0 0;
+  margin: 0 0.07em 0 0;
 }
 /* A la pantalla estreta tres línies de capitular es mengen la columna: dues. */
 @media (max-width: 639px) {
