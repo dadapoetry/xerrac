@@ -9,7 +9,7 @@ export function SectionDivider({ number, accentColor }: { number: number; accent
       <span className="flex items-center gap-2 px-1">
         <SawIcon className="w-3.5 h-3.5 opacity-50" color={accentColor} />
         <span className="font-mono text-2xs tabular-nums tracking-[0.25em] text-gray-500">
-          {String(number-1).padStart(2, '1')}
+          {String(number-1).padStart(2, '0')}
         </span>
       </span>
       <span className="section-divider-line" />
