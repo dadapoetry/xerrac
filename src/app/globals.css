@@ -368,7 +368,7 @@ body::before {
   color: var(--black);
 }
 
-/* Typographic refinement & drop caps */
+/* Refinament tipogràfic del cos editorial i capitular (vegeu `capitular`) */
 .editorial-body {
   font-size: clamp(0.9375rem, 1vw + 0.25rem, 1.125rem);
   line-height: 1.8;
@@ -412,6 +412,33 @@ body::before {
 }
 .editorial-body p {
   text-wrap: pretty;
+}
+
+/* Capitular (U11). El comentari «drop caps» hi era des del principi, però la
+   regla no: no hi havia cap capitular enlloc. La lletra obre el text de
+   l'editorial.
+   Els números són els del cos editorial (18 px, interlineat 1,8 = 32,4 px):
+   la caixa del flotant fa 4,5 em × 1,1 = 89,1 px, és a dir 2,75 línies. Amb
+   això passa dues coses: la caixa arriba dins de la tercera línia (el text
+   l'envolta tres vegades) i s'acaba 8 px abans de la quarta, de manera que el
+   paràgraf següent arrenca net a la marge.
+   L'1,1 no és arbitrari: és el valor que deixa la tinta del descendent (J, Q,
+   g) dins de la caixa. Amb 0,9 la caixa s'ajustava a tres línies exactes, però
+   el descendent queia damunt del text de sota. */
+.capitular > p:first-child::first-letter {
+  float: left;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 4.5em;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--accent-text);
+  margin: 0.02em 0.07em 0 0;
+}
+/* A la pantalla estreta tres línies de capitular es mengen la columna: dues. */
+@media (max-width: 639px) {
+  .capitular > p:first-child::first-letter {
+    font-size: 3em;
+  }
 }
 .editorial-body h2 {
   font-size: 1.25rem; /* 20 px — graó «entradeta » de l'escala */
@@ -614,6 +641,33 @@ body::before {
 }
 .xerrac-quote p + p {
   margin-top: 0.85rem !important;
+}
+
+/* A l'editorial la citació marca el tomb del text: deixa el filet lateral i
+   es posa tota ampla, centrada i amb regla a sobre i a sota. És una pausa,
+   no una nota al marge. */
+.capitular .xerrac-quote {
+  padding: 1.4rem 0 !important;
+  text-align: center;
+  text-wrap: balance;
+}
+.capitular .xerrac-quote::before,
+.capitular .xerrac-quote::after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: auto;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent) 18%, var(--accent) 82%, transparent);
+}
+.capitular .xerrac-quote::before {
+  top: 0;
+  bottom: auto;
+}
+.capitular .xerrac-quote::after {
+  content: '';
+  top: auto;
+  bottom: 0;
 }
 
 /* Xerrac! quoted citations (aclariment cultural) */
