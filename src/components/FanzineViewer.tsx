@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fra
 import { IssueData } from '@/types'
 import { buildSectionSlugMap, issuePath, articlePath } from '@/lib/slugs'
 import { SectionRenderer } from './SectionRenderer'
+import { SectionDivider } from './SectionDivider'
 import { PortadaSection } from './sections/PortadaSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
@@ -432,24 +433,31 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             color={accentColor}
           />
 
-          <nav ref={navRef} aria-label="Seccions del número" className="nav-scroll flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
-            {sortedSections.map((section, i) => (
-              <a
-                key={section.id}
-                href={`#${sectionSlug(i)}`}
-                onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
-                aria-current={i === activeSection ? 'location' : undefined}
-                className={`nav-btn text-2xs uppercase tracking-wider whitespace-nowrap px-2 h-11 md:h-9 flex items-center leading-none transition-colors shrink-0 ${
-                  i === activeSection
-                    ? 'active'
-                    : 'text-gray-600 hover:text-gray-400'
-                }`}
-                style={i === activeSection ? { color: 'var(--accent-text)' } : undefined}
-              >
-                {section.type === 'portada' ? issue.title : section.title}
-              </a>
-            ))}
-          </nav>
+          <div className="relative flex-1 min-w-0">
+            <nav ref={navRef} aria-label="Seccions del número" className="nav-scroll flex items-center gap-0 w-full overflow-x-auto min-w-0">
+              {sortedSections.map((section, i) => (
+                <a
+                  key={section.id}
+                  href={`#${sectionSlug(i)}`}
+                  onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
+                  aria-current={i === activeSection ? 'location' : undefined}
+                  className={`nav-btn text-2xs uppercase tracking-wider whitespace-nowrap px-2 h-11 md:h-9 flex items-center leading-none transition-colors shrink-0 ${
+                    i === activeSection
+                      ? 'active'
+                      : 'text-gray-600 hover:text-gray-400'
+                  }`}
+                  style={i === activeSection ? { color: 'var(--accent-text)' } : undefined}
+                >
+                  <span className="font-mono tabular-nums mr-1.5 opacity-50" aria-hidden="true">
+                    {String(i).padStart(2, '0')}
+                  </span>
+                  <span>{section.type === 'portada' ? issue.title : section.title}</span>
+                </a>
+              ))}
+            </nav>
+            <span className="nav-mask-left" aria-hidden="true" />
+            <span className="nav-mask-right" aria-hidden="true" />
+          </div>
 
           <div data-share-region className="flex items-center min-w-0">
             {showStrip ? (
@@ -546,6 +554,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       {/* Sections */}
       {sortedSections.map((section, i) => (
         <Fragment key={section.id}>
+          {i > 0 && <SectionDivider number={i} accentColor={accentColor} />}
 
       {i === 0 ? (
         <div data-section-index={i} id={sectionSlug(i)}>

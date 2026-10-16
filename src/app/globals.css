@@ -101,6 +101,62 @@
   clip-path: inset(0 0 0 0);
 }
 
+/* Màscares de degradat als extrems de la llista de seccions: diuen que encara
+   hi ha noms fora de la vista sense haver-hi de posar una fletxa. */
+.nav-mask-left,
+.nav-mask-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.25rem;
+  pointer-events: none;
+  z-index: 1;
+}
+.nav-mask-left {
+  left: 0;
+  background: linear-gradient(to right, #000, rgba(0, 0, 0, 0));
+}
+.nav-mask-right {
+  right: 0;
+  background: linear-gradient(to left, #000, rgba(0, 0, 0, 0));
+}
+
+/* Divisor entre seccions: la serra de la marca, el número de la secció que
+   comença i un filet. És el ritme del número, no una decoració de més. */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #2a2a2a 25%, #2a2a2a 75%, transparent);
+}
+
+/* Estat buit: no és un error, és una secció que encara no té contingut. Un
+   filet discontinu i una nota mono ho diuen millor que una cursiva grisa. */
+.note-buit {
+  border: 1px dashed #3f3f46;
+  padding: 1.5rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* Justificar en una columna estreta obre rius d'espai entre mots (a 40
+   caràcters, força). Per sota de 640 px el text va a l'esquerra. */
+@media (max-width: 639px) {
+  .text-justify {
+    text-align: left;
+  }
+}
+
 .section-container img:not([class~="absolute"]) {
   max-width: 100%;
   height: auto;

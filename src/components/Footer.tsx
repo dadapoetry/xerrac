@@ -27,6 +27,11 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
   const license = settings.footer_license || ''
   const contactEmail = settings.contact_email?.trim() || DEFAULT_CONTACT_EMAIL
 
+  // Colofó d'una línia: el peu no ha d'explicar-se en cinc files.
+  const colophon = [issn, copyright, address, periodicity && `Periodicitat: ${periodicity}`, license]
+    .filter(Boolean)
+    .join(' · ')
+
   let prevIssue: { number: number; title: string; id: string } | null = null
   let nextIssue: { number: number; title: string; id: string; coverImage?: string } | null = null
 
@@ -85,18 +90,13 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
         <div className="flex justify-center mb-3">
           <SawIcon className="w-5 h-5 opacity-60" />
         </div>
-        <div className="text-2xs text-gray-400 leading-relaxed space-y-1">
-          {issn && <p>{issn}</p>}
-          {copyright && <p>{copyright}</p>}
-          {address && <p>{address}</p>}
-          {periodicity && <p>Periodicitat: {periodicity}</p>}
-          {license && <p>{license}</p>}
-          <p>
-            <a href={`mailto:${contactEmail}`} className="inline-block py-1.5 hover:text-white transition-colors">
-              {contactEmail}
-            </a>
-          </p>
-        </div>
+        <p className="font-mono text-2xs leading-relaxed text-gray-400">
+          {colophon}
+          {colophon && ' · '}
+          <a href={`mailto:${contactEmail}`} className="inline-block py-1.5 hover:text-white transition-colors">
+            {contactEmail}
+          </a>
+        </p>
 
         {socialLinks.length > 0 && (
           <div className="flex justify-center gap-5 mt-5 text-xs text-gray-500">

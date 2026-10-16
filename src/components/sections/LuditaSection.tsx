@@ -13,7 +13,9 @@ export function LuditaSection({ section, index }: { section: SectionData; index:
       {content.crossword ? (
         <Crossword data={content.crossword} />
       ) : (
-        <p className="text-gray-500 italic text-sm">No hi ha crucigrama disponible per a aquest número.</p>
+        <p className="note-buit">
+          No hi ha crucigrama disponible per a aquest número.
+        </p>
       )}
     </div>
   )

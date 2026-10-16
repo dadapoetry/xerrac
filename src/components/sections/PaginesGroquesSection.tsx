@@ -13,7 +13,7 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
         <SectionHeader number={index} title={section.title} subtitle="Proverbis, refranys i onomatopeies accidentals" />
         <div className="max-w-4xl mx-auto">
           {proverbs.length === 0 ? (
-            <p className="editorial-body text-gray-400 italic">
+            <p className="note-buit">
               Encara no s&rsquo;ha publicat cap refrany accidental.
             </p>
           ) : (
