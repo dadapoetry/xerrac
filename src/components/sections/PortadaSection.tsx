@@ -58,6 +58,10 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
           </div>
         )}
       </div>
+      
+      {issueNumber !== undefined && (
+        <span className="absolute bottom-4 right-4 text-2xs text-gray-100 font-mono pointer-events-none z-10">Nº&nbsp;{String(issueNumber).padStart(2, '0')}</span>
+      )}
       <ScrollHint />
     </div>
   )
