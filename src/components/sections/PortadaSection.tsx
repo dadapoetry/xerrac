@@ -50,7 +50,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-1 gap-y-2 text-sm text-gray-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
             {sumariEntries.map((entry, i) => (
               <span key={i} className="inline-flex items-center gap-1">
-                {i > 0 && <span className="text-[var(--meta)] select-none mx-1" aria-hidden="true">·</span>}
+                {i > 0 && <span className="text-[var(--meta)] select-none mx-1" aria-hidden="true"></span>}
                 <span className="text-gray-400 font-mono tabular-nums">{entry.number}</span>
                 <span>{entry.title}</span>
               </span>
