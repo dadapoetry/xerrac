@@ -33,13 +33,21 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
 
   return (
 <div ref={ref} className={`mb-12 md:mb-16 relative ${entered ? 'entered' : ''}`}>
-  {/* Divisor simétrico corregido */}
-    <div className={`stagger-rule ${subtitle ? 'delay-4' : 'delay-3'} flex items-center gap-2 w-full my-6`}>
-      <span className="h-[2px] flex-1 bg-white" />
-      <SawIcon className="w-3.5 h-3.5 opacity-75" color="var(--accent)" /> 
-       <span className={`text-2xs tracking-[0.3em] uppercase font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-200' : 'text-gray-400'}`}>{String(number).padStart(2, '0')}</span>
-      <span className="h-[2px] flex-1 bg-white" />
-       <span className={`h-px flex-1 ${bright ? 'bg-white/20' : 'bg-white/10'}`} />
+      <span className="h-[2px] flex-1" style={{ backgroundColor: 'var(--accent)' }} />
+      <SawIcon className="w-3.5 h-3.5 opacity-75" color="var(--accent)" /> {String(number).padStart(2, '0')}
+      <span className="h-[2px] flex-1" style={{ backgroundColor: 'var(--accent)' }} />
+    </div>
+
+  
+  <div className="relative">
+    <div className="stagger-item delay-1 flex items-center gap-3 mb-4">
+      <span style={{ color: 'var(--accent-text)' }}>
+        <SawIcon className="w-4 h-4" />
+      </span>
+      <span className={`text-2xs tracking-[0.3em] uppercase font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-200' : 'text-gray-400'}`}>
+        {String(number).padStart(2, '0')}
+      </span>
+      <span className={`h-px flex-1 ${bright ? 'bg-white/20' : 'bg-white/10'}`} />
       {readingTime && (
         <span className={`text-2xs tracking-wider font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] ${bright ? 'text-gray-300' : 'text-gray-500'}`}>
           ~{readingTime} min
