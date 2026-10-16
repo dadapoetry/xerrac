@@ -551,8 +551,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       {/* Sections */}
       {sortedSections.map((section, i) => (
         <Fragment key={section.id}>
-          
-
       {i === 0 ? (
         <div data-section-index={i} id={sectionSlug(i)}>
           <div className="section-container min-h-[100dvh]">
