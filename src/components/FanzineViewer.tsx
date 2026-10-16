@@ -551,7 +551,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       {/* Sections */}
       {sortedSections.map((section, i) => (
         <Fragment key={section.id}>
-          {i > 0 && <SectionDivider number={i} accentColor={accentColor} />}
+          {i > 1 && <SectionDivider number={i} accentColor={accentColor} />}
 
       {i === 0 ? (
         <div data-section-index={i} id={sectionSlug(i)}>
