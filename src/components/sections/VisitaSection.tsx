@@ -11,22 +11,50 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
     <div className="max-w-2xl w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle="Turisme teòric" readingTime={readingTime(content.body)} />
 
+      {/* Etiqueta de traducció. Ocupa el lloc on abans hi havia la font, que
+          baixa al colofó perquè el lector sàpiga què llegeix abans de llegir-ho. */}
       {content.source && (
-        <p className="text-xs text-gray-400 mb-6 italic tracking-wider drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
-          {content.source}
+        <p className="text-2xs font-mono uppercase tracking-[0.3em] mb-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]" style={{ color: 'var(--accent-text)' }}>
+          Traducció
         </p>
       )}
 
-      <div className="-mx-4 md:-mx-12 px-4 md:px-12 border-l-2" style={{ borderColor: 'rgba(var(--accent-rgb), 0.1)' }}>
-        <span className="text-7xl font-serif leading-none block -mb-8 -ml-3 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]" style={{ color: 'rgba(var(--accent-rgb), 0.2)' }}>«</span>
-        <div className="pl-8 md:pl-12 pr-4 relative">
+      <blockquote className="relative -mx-4 md:-mx-12 px-4 md:px-12 border-l-2" style={{ borderColor: 'rgba(var(--accent-rgb), 0.1)' }}>
+        {/* Les cometes van al marge, no dins del text: així la citació arrenca a
+            la columna i el marc no desplaça la primera línia. Decoratives per als
+            lectors de pantalla —del fet de ser una citació ja en dona fe el
+            `<blockquote>`—, i una mica més visibles que abans (0,3 en comptes de
+            0,2), perquè un marc que no es veu no emmarca res. */}
+        <span
+          aria-hidden="true"
+          className="absolute left-1 -top-1 text-7xl font-serif leading-none select-none pointer-events-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+          style={{ color: 'rgba(var(--accent-rgb), 0.3)' }}
+        >
+          «
+        </span>
+
+        <div className="pl-8 md:pl-12 pr-4">
           <div
             className="text-gray-300 leading-relaxed text-sm md:text-md italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
             dangerouslySetInnerHTML={{ __html: content.body }}
           />
         </div>
-        <span className="text-7xl font-serif leading-none block text-right -mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]" style={{ color: 'rgba(var(--accent-rgb), 0.2)' }}>»</span>
-      </div>
+
+        <span
+          aria-hidden="true"
+          className="block text-right text-7xl font-serif leading-none select-none -mt-4 -mr-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+          style={{ color: 'rgba(var(--accent-rgb), 0.3)' }}
+        >
+          »
+        </span>
+
+        {/* Colofó: la font de la traducció, en mono i a baix, on es busca. */}
+        {content.source && (
+          <p className="pl-8 md:pl-12 pr-4 mt-6 font-mono text-xs text-gray-400 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+            {content.source}
+          </p>
+        )}
+      </blockquote>
     </div>
   )
 }
