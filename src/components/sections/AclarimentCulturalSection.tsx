@@ -10,10 +10,10 @@ export function AclarimentCulturalSection({ section, index }: { section: Section
   return (
     <div className="max-w-prose w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle="Aclarir allò que continua sense aclarir-se" readingTime={readingTime(content.body)} />
-      <div className="relative pl-6 border-l" style={{ borderColor: 'rgba(var(--accent-rgb), 0.3)' }}>
+      <div className="relative pl-6" style={{ borderColor: 'rgba(var(--accent-rgb), 0.3)' }}>
         <div
           className="editorial-body aparell text-justify hyphens-auto text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-          dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body) }}
+          dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body, 'quoted') }}
         />
       </div>
     </div>
