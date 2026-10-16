@@ -6,14 +6,21 @@ import { readingTime } from '@/lib/html'
 
 function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
   return (
-    <div className="mb-6 pb-6 last:border-0">
-      <div className="flex items-center gap-3 mb-3">
-        <span className="text-2xs uppercase tracking-widest drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" style={{ color: 'var(--accent-text)' }}>
-          {entry.type === 'biography' ? 'Biografia apòcrifa' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte' : 'Personatge inventat'}
+    <div className="mb-8 pb-6 relative pt-3">
+      {/* Regla superior d'accent */}
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'var(--accent)' }} aria-hidden="true" />
+      <div className="flex items-center gap-2 mb-2">
+        <span className="font-mono text-2xs uppercase tracking-[0.3em]" style={{ color: 'var(--accent-text)' }}>
+          {entry.type === 'biography' ? 'Biografia' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte' : 'Fadu'}
         </span>
-        <span className="text-xs text-gray-500 font-mono drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">#{String(index + 1).padStart(2, '0')}</span>
+        <span className="text-2xs text-gray-400 font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">#{String(index + 1).padStart(2, '0')}</span>
       </div>
-      <h3 className="text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
+      <div className="flex items-baseline justify-between gap-4">
+        <h3 className="text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
+        <span aria-hidden="true" className="text-2xl font-serif italic text-gray-400 select-none" style={{ color: 'rgba(var(--accent-text-rgb), 0.45)' }}>
+          APÒCRIF
+        </span>
+      </div>
       <div
         className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
         dangerouslySetInnerHTML={{ __html: entry.body }}
