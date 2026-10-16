@@ -21,6 +21,10 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
     // rehidrata.
     return (
       <div data-richtext data-scrolly-text className={right ? 'text-right' : ''}>
+        {/* Regla sobre les frases-codi: les agrupa com una citació i no com un
+            títol. Sobre fotografia, l'accent és l'única marca que ja hi és a
+            tota la secció (punts, fletxa), així que no s'hi afegeix color nou. */}
+        <div aria-hidden="true" className="mx-auto mb-6 h-[2px] w-12 bg-[var(--accent)]" />
         {paras.map((p, i) => (
           <div
             key={i}
