@@ -8,7 +8,12 @@ public/uploads/*
 !public/uploads/.gitkeep
 *.tsbuildinfo
 
-# Context local per a assistants. No puja a GitHub.
+# Context local per a assistents. No puja a GitHub.
 XERRAC-CONTEXT.md
 CLAUDE.md
 AGENTS.md
+
+# Contracte de disseny i paquet per a OpenDesign. Viuen fora del repo
+# (C:\Users\adria\xerrac-open-design). No formen part del producte.
+DESIGN.md
+open-design/
