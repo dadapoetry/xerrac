@@ -14,7 +14,7 @@ function mapIssue(row: any) {
     title: row.title,
     date: toDate(row.date),
     published: Boolean(row.published),
-    accentColor: row.accentColor || '#ef4444',
+    accentColor: row.accentColor || '#dc2626',
     createdAt: toDate(row.createdAt),
     updatedAt: toDate(row.updatedAt),
     sectionCount: Number(row.sectionCount) || 0,

@@ -45,7 +45,7 @@ export default async function PrivacyPage() {
     <div className="py-16 md:py-24 px-4">
       <article className="max-w-2xl mx-auto">
         <div className="flex items-center gap-2 mb-6">
-          <span style={{ color: 'var(--accent)' }}>
+          <span style={{ color: 'var(--accent-text)' }}>
             <SawIcon className="w-4 h-4" />
           </span>
           <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">

@@ -68,7 +68,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
               <span className="text-[10px] text-gray-500 uppercase tracking-[0.3em] block mb-2">
                 Número següent
               </span>
-              <span className="text-3xl font-black tracking-tight text-white group-hover:[color:var(--accent,#ef4444)] transition-colors block mb-1">
+              <span className="text-3xl font-black tracking-tight text-white group-hover:[color:var(--accent-text,#f87171)] transition-colors block mb-1">
                 {String(nextIssue.number).padStart(2, '0')}
               </span>
               <span className="text-sm text-gray-300 block mb-4">

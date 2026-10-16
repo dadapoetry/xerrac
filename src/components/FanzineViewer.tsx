@@ -9,15 +9,7 @@ import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
 import { NewsletterPopUp } from './NewsletterPopUp'
 import { cloudinaryMobileUrl } from '@/lib/cloudinary'
-
-function hexToRgb(hex: string): string {
-  const h = hex.replace('#', '')
-  const r = parseInt(h.substring(0,2), 16)
-  const g = parseInt(h.substring(2,4), 16)
-  const b = parseInt(h.substring(4,6), 16)
-  if (isNaN(r) || isNaN(g) || isNaN(b)) return '220, 38, 38'
-  return `${r}, ${g}, ${b}`
-}
+import { accentOnColor, accentTextColor, hexToRgb } from '@/lib/color'
 
 interface FanzineViewerProps {
   issue: IssueData
@@ -218,7 +210,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [sortedSections.length])
 
   const iconHoverOn = (e: React.MouseEvent<HTMLElement>) => {
-    e.currentTarget.style.color = 'var(--accent)'
+    e.currentTarget.style.color = 'var(--accent-text)'
     e.currentTarget.style.backgroundColor = 'rgba(var(--accent-rgb), 0.12)'
   }
   const iconHoverOff = (e: React.MouseEvent<HTMLElement>) => {
@@ -373,10 +365,19 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     )
   }
 
-  const accentColor = issue.accentColor || '#ef4444'
+  const accentColor = issue.accentColor || '#dc2626'
 
   return (
-    <div style={{ '--accent': accentColor, '--accent-rgb': hexToRgb(accentColor) } as React.CSSProperties}>
+    <div
+      style={
+        {
+          '--accent': accentColor,
+          '--accent-rgb': hexToRgb(accentColor),
+          '--accent-on': accentOnColor(accentColor),
+          '--accent-text': accentTextColor(accentColor),
+        } as React.CSSProperties
+      }
+    >
       {/* Header — sticky at top, accompanies reader */}
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print relative">
         <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.5rem]">
@@ -398,7 +399,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                     ? 'active'
                     : 'text-gray-600 hover:text-gray-400'
                 }`}
-                style={i === activeSection ? { color: 'var(--accent)' } : undefined}
+                style={i === activeSection ? { color: 'var(--accent-text)' } : undefined}
               >
                 {section.type === 'portada' ? issue.title : section.title}
               </a>
@@ -478,7 +479,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           </div>
         </div>
         {copied && (
-          <div className="absolute left-1/2 -translate-x-1/2 top-full z-50 bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in whitespace-nowrap">
+          <div role="status" className="absolute left-1/2 -translate-x-1/2 top-full z-50 bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in whitespace-nowrap">
             Enllaç copiat
           </div>
         )}

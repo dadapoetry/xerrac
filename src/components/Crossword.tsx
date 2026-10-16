@@ -281,7 +281,7 @@ return (
           <div className="space-y-1.5">
             {Object.entries(clues.across).map(([num, clue]) => (
               <p key={`a-${num}`} className="text-xs text-gray-100">
-                <span className="font-bold mr-2" style={{ color: 'var(--accent)' }}>{num}.</span>
+                <span className="font-bold mr-2" style={{ color: 'var(--accent-text)' }}>{num}.</span>
                 {clue.clue}
                 <span className="text-gray-300 ml-2">
                   ({clue.answer.length} lletres)
@@ -296,7 +296,7 @@ return (
           <div className="space-y-1.5">
             {Object.entries(clues.down).map(([num, clue]) => (
               <p key={`d-${num}`} className="text-xs text-gray-100">
-                <span className="font-bold mr-2" style={{ color: 'var(--accent)' }}>{num}.</span>
+                <span className="font-bold mr-2" style={{ color: 'var(--accent-text)' }}>{num}.</span>
                 {clue.clue}
                 <span className="text-gray-300 ml-2">
                   ({clue.answer.length} lletres)
@@ -310,7 +310,7 @@ return (
           <button
             onClick={checkAnswers}
             className="px-4 py-2 text-xs uppercase tracking-wider border border-[var(--accent)]
-              text-[var(--accent)] hover:bg-[var(--accent)]/30 transition-colors"
+              text-[var(--accent-text)] hover:bg-[var(--accent)]/30 transition-colors"
           >
             Solucionar
           </button>

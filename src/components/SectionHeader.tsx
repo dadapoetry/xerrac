@@ -38,7 +38,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
       </div>
         <div className="relative">
           <div className="stagger-item delay-1 flex items-center gap-3 mb-4">
-            <span style={{ color: 'var(--accent)' }}>
+            <span style={{ color: 'var(--accent-text)' }}>
               <SawIcon className="w-4 h-4" />
             </span>
             <span className={`text-[10px] tracking-[0.3em] uppercase font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-200' : 'text-gray-400'}`}>

@@ -19,7 +19,7 @@ export default function SubscribePage() {
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="flex items-center gap-2 mb-4">
-          <span style={{ color: 'var(--accent)' }}>
+          <span style={{ color: 'var(--accent-text)' }}>
             <SawIcon className="w-4 h-4" />
           </span>
           <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
@@ -31,7 +31,7 @@ export default function SubscribePage() {
         <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white uppercase leading-none mb-1">
           Encara no t&apos;hi has subscrit?
         </h1>
-        <p className="text-3xl md:text-4xl font-black tracking-tight leading-none mb-6" style={{ color: 'var(--accent)' }}>
+        <p className="text-3xl md:text-4xl font-black tracking-tight leading-none mb-6" style={{ color: 'var(--accent-text)' }}>
           Aclareix-te!
         </p>
 

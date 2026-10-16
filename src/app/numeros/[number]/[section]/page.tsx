@@ -13,7 +13,7 @@ import { Logo } from '@/components/Logo'
 export const revalidate = 300
 
 function hexToRgb(hex: string): string {
-  const h = (hex || '#ef4444').replace('#', '')
+  const h = (hex || '#dc2626').replace('#', '')
   const r = parseInt(h.substring(0, 2), 16)
   const g = parseInt(h.substring(2, 4), 16)
   const b = parseInt(h.substring(4, 6), 16)
@@ -86,7 +86,7 @@ export default async function ArticlePage({
   const siteUrl = getSiteUrl()
   const label = sectionLabel(section.type, section.title)
   const canonical = `${siteUrl}${articlePath(issue.number, params.section)}`
-  const accent = issue.accentColor || '#ef4444'
+  const accent = issue.accentColor || '#dc2626'
 
   const articleJsonLd = {
     '@context': 'https://schema.org',

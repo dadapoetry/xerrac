@@ -69,7 +69,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
           <p className="text-base font-black tracking-tight text-white leading-tight mb-1">
             Encara no t&apos;hi has subscrit?
           </p>
-          <p className="text-lg font-black tracking-tight leading-none mb-4" style={{ color: 'var(--accent)' }}>
+          <p className="text-lg font-black tracking-tight leading-none mb-4" style={{ color: 'var(--accent-text)' }}>
             Aclareix-te!
           </p>
 
@@ -92,7 +92,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
                 type="submit"
                 disabled={status === 'loading'}
                 className="w-full text-white text-xs py-2.5 uppercase tracking-widest transition-colors disabled:opacity-50"
-                style={{ backgroundColor: 'var(--accent, #dc2626)' }}
+                style={{ backgroundColor: 'var(--accent, #dc2626)', color: 'var(--accent-on, #ffffff)' }}
                 onMouseEnter={(e) => { e.currentTarget.style.filter = 'brightness(0.85)' }}
                 onMouseLeave={(e) => { e.currentTarget.style.filter = '' }}
               >

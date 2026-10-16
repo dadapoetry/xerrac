@@ -91,7 +91,7 @@ export async function GET(request: Request) {
   let subtitle = "Revista d'aclariment cultural"
   let number = ''
   let excerpt = ''
-  let accent = '#ef4444'
+  let accent = '#dc2626'
   let cover = ''
 
   if (issueId) {
@@ -100,7 +100,7 @@ export async function GET(request: Request) {
       const issue = await getIssue(issueId)
       if (issue && issue.published) {
         number = String(issue.number).padStart(2, '0')
-        accent = issue.accentColor || '#ef4444'
+        accent = issue.accentColor || '#dc2626'
 
         const sections = [...((issue.sections as any[]) || [])].sort((a, b) => a.order - b.order)
         cover = sections.find((s) => s.type === 'portada')?.backgroundImage || ''

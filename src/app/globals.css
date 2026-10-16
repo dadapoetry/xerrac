@@ -90,7 +90,7 @@
   left: 0;
   width: 100%;
   height: 1px;
-  background: var(--accent, #ef4444);
+  background: var(--accent, #dc2626);
   clip-path: inset(0 100% 0 0);
   transition: clip-path 0.2s ease;
 }
@@ -131,15 +131,33 @@
 :root {
   --black: #000000;
   --white: #fafafa;
-  --red: #ef4444;
-  --accent: #ef4444;
-  --accent-rgb: 239, 68, 68;
+
+  /* L'accent té dos papers, i no sempre els pot fer tots dos. Sobre el negre
+     del lloc, un vermell fosc com el nostre només arriba a 4,5:1 si és clar;
+     però un vermell clar no aguanta text blanc a sobre. Per això se separen:
+       --accent       farcit (fons de botó, regles, marques). Blanc a sobre ✓
+       --accent-on    text que va damunt del farcit
+       --accent-text  accent com a text sobre fons fosc ✓
+     El número els sobreescriu a partir del seu `accentColor`; l'admin deriva
+     `--accent-text` i `--accent-on` (vegeu `src/lib/color.ts`). */
+  --accent: #dc2626;
+  --accent-rgb: 220, 38, 38;
+  --accent-on: #ffffff;
+  --accent-text: #f87171;
+  --accent-text-rgb: 248, 113, 113;
+
   --grogues: #fde047;
   --grogues-rgb: 253, 224, 71;
   --gray-900: #171717;
   --gray-700: #404040;
   --gray-500: #737373;
   --gray-400: #a3a3a3;
+
+  /* Grisos de text: tres graons, tots llegibles sobre negre. */
+  --fg: #fafafa;
+  --fg-2: #d4d4d4;
+  --muted: #a3a3a3;
+  --meta: #8a8a8a;
 }
 
 * {
@@ -148,8 +166,9 @@
   box-sizing: border-box;
 }
 
+/* L'anella de focus és text sobre fons fosc: mateix paper que l'accent-text. */
 :focus-visible {
-  outline: 2px solid #ef4444;
+  outline: 2px solid var(--accent-text, #f87171);
   outline-offset: 2px;
 }
 
@@ -158,12 +177,12 @@ textarea:focus-visible,
 select:focus-visible,
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid #ef4444;
+  outline: 2px solid var(--accent-text, #f87171);
   outline-offset: 2px;
 }
 
 .section-container :focus-visible {
-  outline: 2px solid var(--accent, #ef4444);
+  outline: 2px solid var(--accent-text, #f87171);
   outline-offset: 2px;
 }
 
@@ -235,20 +254,24 @@ body::before {
    És segur perquè tot el producte és fosc; l'únic fons clar és l'editor de
    text, que no fa servir aquestes classes. */
 .text-gray-600 {
-  color: #a3a3a3 !important;
+  color: var(--muted) !important;
 }
 .text-gray-700 {
-  color: #8a8a8a !important;
+  color: var(--meta) !important;
+}
+/* L'últim graó que quedava per sota del mínim: gray-500 dona 4,14:1 sobre negre. */
+.text-gray-500 {
+  color: var(--muted) !important;
 }
 
 /* Prose overrides for consistent editorial body text */
 .prose-invert {
-  --tw-prose-body: #d4d4d4;
+  --tw-prose-body: var(--fg-2);
   --tw-prose-bold: #f5f5f5;
-  --tw-prose-headings: #fafafa;
-  --tw-prose-links: #ef4444;
-  --tw-prose-quotes: #d4d4d4;
-  --tw-prose-quote-borders: #ef4444;
+  --tw-prose-headings: var(--fg);
+  --tw-prose-links: var(--accent-text);
+  --tw-prose-quotes: var(--fg-2);
+  --tw-prose-quote-borders: var(--accent);
 }
 
 /* Assaig visual (scrolly): el text va sobre fotografies. Les negretes conserven
@@ -259,7 +282,7 @@ body::before {
    la negreta parteix entre dos línies, en comptes de quedar tallat. */
 [data-scrolly-text] .prose-invert strong,
 [data-scrolly-text] .prose-invert b {
-  color: var(--accent);
+  color: var(--accent-text);
   background-color: rgba(0, 0, 0, 0.6);
   padding: 0.08em 0.3em;
   border-radius: 3px;
@@ -281,7 +304,7 @@ body::before {
 }
 
 .crossword-cell input:focus {
-  background: rgba(239, 68, 68, 0.15);
+  background: rgba(var(--accent-rgb), 0.15);
 }
 
 .quill-editor .ql-editor {
@@ -304,20 +327,20 @@ body::before {
   margin-bottom: 0.5em;
 }
 .editorial-body a {
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: rgba(var(--accent-rgb), 0.3);
   transition: text-decoration-color 0.2s ease;
 }
 .editorial-body a:hover {
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--accent-text);
 }
 .editorial-body strong,
 .editorial-body b,
 .prose-invert strong,
 .prose-invert b {
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 700;
 }
 
@@ -362,7 +385,7 @@ body::before {
   height: 1em;
   margin: 0 0.08em;
   vertical-align: -0.14em;
-  background-color: var(--accent, #ef4444);
+  background-color: var(--accent, #dc2626);
   -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cpath%20d='M8,20%20L92,20%20L92,32%20L88,32%20L76,68%20L64,32%20L58,32%20L46,68%20L34,32%20L28,32%20L18,68%20L8,32%20Z'%20fill='%23fff'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cpath%20d='M8,20%20L92,20%20L92,32%20L88,32%20L76,68%20L64,32%20L58,32%20L46,68%20L34,32%20L28,32%20L18,68%20L8,32%20Z'%20fill='%23fff'/%3E%3C/svg%3E") center / contain no-repeat;
 }
@@ -401,7 +424,7 @@ body::before {
   top: 50%;
   height: 0.32em;
   transform: translateY(-50%);
-  background-color: var(--accent, #ef4444);
+  background-color: var(--accent, #dc2626);
   pointer-events: none;
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2010'%3E%3Cpath%20d='M0,9%20L6,1%20L12,9'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E");
   -webkit-mask-repeat: repeat-x;
@@ -481,14 +504,14 @@ body::before {
   text-wrap: pretty;
 }
 .xerrac-ref a {
-  color: var(--accent, #ef4444);
+  color: var(--accent-text, #f87171);
   text-decoration: underline;
   text-underline-offset: 2px;
-  text-decoration-color: rgba(var(--accent-rgb, 239, 68, 68), 0.4);
+  text-decoration-color: rgba(var(--accent-rgb, 220, 38, 38), 0.4);
   transition: text-decoration-color 0.2s ease;
 }
 .xerrac-ref a:hover {
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--accent-text);
 }
 .xerrac-ref em {
   font-style: italic;
@@ -531,7 +554,7 @@ body::before {
 .xerrac-quote strong,
 .xerrac-quote b {
   font-weight: 700 !important;
-  color: var(--accent) !important;
+  color: var(--accent-text) !important;
 }
 .xerrac-quote p + p {
   margin-top: 0.85rem !important;
@@ -551,7 +574,7 @@ body::before {
 .xerrac-quote-quoted strong,
 .xerrac-quote-quoted b {
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 @media (max-width: 768px) {

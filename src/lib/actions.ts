@@ -69,7 +69,7 @@ export async function createIssue(data: { number: number; title: string; date: s
   await checkAuth()
   const id = uuid()
   const published = data.published ? 1 : 0
-  const accentColor = data.accentColor || '#ef4444'
+  const accentColor = data.accentColor || '#dc2626'
   await db.execute({
     sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published) VALUES (?, ?, ?, ?, ?, ?)',
     args: [id, data.number, data.title, data.date, accentColor, published],

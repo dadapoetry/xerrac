@@ -47,7 +47,7 @@ export function NewsletterResult({ mode, ok }: { mode: Mode; ok: boolean }) {
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md text-center">
         <div className="flex items-center justify-center gap-2 mb-6">
-          <span style={{ color: 'var(--accent)' }}>
+          <span style={{ color: 'var(--accent-text)' }}>
             <SawIcon className="w-4 h-4" />
           </span>
           <span className="text-[10px] text-gray-500 font-mono tracking-[0.3em] uppercase">
@@ -72,7 +72,7 @@ export function NewsletterResult({ mode, ok }: { mode: Mode; ok: boolean }) {
         <a
           href="/"
           className="inline-block text-white text-sm py-3.5 px-8 uppercase tracking-[0.2em] transition-colors"
-          style={{ backgroundColor: 'var(--accent, #dc2626)' }}
+          style={{ backgroundColor: 'var(--accent, #dc2626)', color: 'var(--accent-on, #ffffff)' }}
         >
           {ok ? 'Vés a la portada' : 'Torna a la portada'}
         </a>

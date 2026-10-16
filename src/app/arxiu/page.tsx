@@ -48,7 +48,7 @@ function IssueNumber({ num, size = 'default' }: { num: number; size?: 'default' 
   return (
     <span
       className={`${cls} font-black leading-[0.8] tracking-tighter select-none pointer-events-none`}
-      style={{ color: 'var(--issue-accent, #ef4444)', opacity: 0.07 }}
+      style={{ color: 'var(--issue-accent, #dc2626)', opacity: 0.07 }}
       aria-hidden="true"
     >
       {String(num).padStart(2, '0')}
@@ -93,7 +93,7 @@ function shapeIssue(issue: any): IssueShape {
     date: new Date(issue.date),
     sections: issue.sections || [],
     coverBg: cover?.backgroundImage || '',
-    accentColor: issue.accentColor || '#ef4444',
+    accentColor: issue.accentColor || '#dc2626',
   }
 }
 
@@ -321,7 +321,7 @@ export default async function ArxiuPage() {
                 Biblioteca d&rsquo;aclariments
               </span>
               <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
-                Xerrac<span style={{ color: 'var(--accent, #ef4444)' }}>!</span>
+                Xerrac<span style={{ color: 'var(--accent-text, #f87171)' }}>!</span>
               </h1>
               <div className="h-px w-16 sm:w-20 bg-red-900/60 mt-6 sm:mt-8" />
             </header>

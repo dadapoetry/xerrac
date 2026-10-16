@@ -18,7 +18,7 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
             <a
               href="mailto:contacte@laxerrac.cat"
               className="hover:underline decoration-from-font"
-              style={{ color: 'var(--accent)' }}
+              style={{ color: 'var(--accent-text)' }}
             >
               contacte@laxerrac.cat
             </a>

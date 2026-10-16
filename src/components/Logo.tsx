@@ -10,7 +10,7 @@ export function Logo({ compact, className = '' }: LogoProps) {
     return (
       <a href="/" className={`no-underline flex items-center h-5 ${className}`}>
         <span className="text-sm font-bold tracking-tight text-white leading-none">
-          Xerrac<span style={{ color: 'var(--accent, #ef4444)' }}>!</span>
+          Xerrac<span style={{ color: 'var(--accent-text, #f87171)' }}>!</span>
         </span>
       </a>
     )
@@ -19,9 +19,9 @@ export function Logo({ compact, className = '' }: LogoProps) {
   return (
     <a href="/" className={`no-underline inline-block ${className}`}>
       <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white leading-none drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
-        XERRAC<span style={{ color: 'var(--accent, #ef4444)', filter: 'drop-shadow(0 0 8px rgba(239,68,68,0.4))' }}>!</span>
+        XERRAC<span style={{ color: 'var(--accent-text, #f87171)', filter: 'drop-shadow(0 0 8px rgba(var(--accent-rgb, 220, 38, 38), 0.45))' }}>!</span>
       </h1>
-      <div className="h-[2px] w-full mt-1.5 md:mt-2" style={{ backgroundColor: 'var(--accent, #ef4444)' }} />
+      <div className="h-[2px] w-full mt-1.5 md:mt-2" style={{ backgroundColor: 'var(--accent, #dc2626)' }} />
       <p className="text-[10px] text-gray-300 tracking-[0.25em] uppercase mt-2 md:mt-3 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
         Revista d&apos;aclariment cultural
       </p>

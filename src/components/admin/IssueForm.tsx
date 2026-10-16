@@ -26,7 +26,7 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
   const [title, setTitle] = useState(initial?.title || '')
   const [date, setDate] = useState(initial?.date || new Date().toISOString().split('T')[0])
   const [published, setPublished] = useState(initial?.published ?? false)
-  const [accentColor, setAccentColor] = useState(initial?.accentColor || '#ef4444')
+  const [accentColor, setAccentColor] = useState(initial?.accentColor || '#dc2626')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [dirty, setDirty] = useState(false)
