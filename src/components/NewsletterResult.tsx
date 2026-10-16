@@ -71,7 +71,7 @@ export function NewsletterResult({ mode, ok }: { mode: Mode; ok: boolean }) {
 
         <a
           href="/"
-          className="inline-block text-white text-sm py-3.5 px-8 uppercase tracking-[0.2em] transition-colors"
+          className="inline-block text-sm py-3.5 px-8 uppercase tracking-[0.2em] transition-colors"
           style={{ backgroundColor: 'var(--accent, #dc2626)', color: 'var(--accent-on, #ffffff)' }}
         >
           {ok ? 'Vés a la portada' : 'Torna a la portada'}

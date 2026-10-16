@@ -175,20 +175,27 @@ export function ScrollySection({ section, index }: { section: SectionData; index
           </p>
         )}
 
-        {/* Punts de progrés navegables */}
-        <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5 z-[5]">
+        {/* Punts de progrés navegables: el punt és petit, però la zona que
+            s'hi pot tocar és de 24×24 px. */}
+        <div className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 flex flex-col items-center gap-0.5 z-[5]">
           {Array.from({ length: totalScenes }).map((_, i) => (
             <button
               key={i}
               type="button"
               onClick={() => jumpTo(i)}
               aria-label={`Anar a l'escena ${i + 1}`}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
-                i === active
-                  ? 'bg-[var(--accent)] scale-150 shadow-[0_0_8px_rgba(var(--accent-rgb),0.8)]'
-                  : 'bg-white/25 hover:bg-white/60'
-              }`}
-            />
+              aria-current={i === active ? 'true' : undefined}
+              className="group w-6 h-6 flex items-center justify-center"
+            >
+              <span
+                aria-hidden="true"
+                className={`block w-1.5 h-1.5 rounded-full transition-all duration-500 motion-reduce:transition-none ${
+                  i === active
+                    ? 'bg-[var(--accent)] scale-150 shadow-[0_0_8px_rgba(var(--accent-rgb),0.8)]'
+                    : 'bg-white/30 group-hover:bg-white/70'
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>
@@ -257,7 +264,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                   }`}
                   style={{ transitionDelay: `${400 + (splitParagraphs(step.text || '').length) * 220}ms` }}
                 >
-                  <span className="animate-bounce text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,1)] drop-shadow-[0_0_14px_rgba(0,0,0,0.9)]">
+                  <span className="animate-bounce motion-reduce:animate-none text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,1)] drop-shadow-[0_0_14px_rgba(0,0,0,0.9)]">
                     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path
                         d="M19 9l-7 7-7-7"

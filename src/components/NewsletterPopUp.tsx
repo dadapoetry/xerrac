@@ -50,7 +50,7 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
         <div className="p-5">
           <button
             onClick={handleDismiss}
-            className="absolute top-4 right-4 w-5 h-5 flex items-center justify-center text-gray-600 hover:text-white transition-colors"
+            className="absolute top-2.5 right-2.5 w-9 h-9 flex items-center justify-center text-gray-500 hover:text-white transition-colors"
             aria-label="Tancar"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
@@ -84,14 +84,14 @@ export function NewsletterPopUp({ visible, onDismiss }: { visible: boolean; onDi
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="El teu correu"
-                className="w-full bg-gray-950 border border-gray-800 px-3 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none transition-colors"
+                className="w-full bg-gray-950 border border-gray-500 px-3 py-2.5 text-sm text-white placeholder:text-[var(--meta)] focus:outline-none focus:border-[var(--accent-text)] transition-colors"
                 required
                 disabled={status === 'loading'}
               />
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full text-white text-xs py-2.5 uppercase tracking-widest transition-colors disabled:opacity-50"
+                className="w-full text-xs py-3 uppercase tracking-widest transition-colors disabled:opacity-50"
                 style={{ backgroundColor: 'var(--accent, #dc2626)', color: 'var(--accent-on, #ffffff)' }}
                 onMouseEnter={(e) => { e.currentTarget.style.filter = 'brightness(0.85)' }}
                 onMouseLeave={(e) => { e.currentTarget.style.filter = '' }}

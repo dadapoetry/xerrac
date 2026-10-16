@@ -15,8 +15,8 @@ export default function NotFound() {
         </p>
         <Link
           href="/"
-          className="inline-block px-6 py-3 border border-gray-800 text-gray-400
-            text-sm uppercase tracking-wider hover:border-red-800 hover:text-red-400
+          className="inline-block px-6 py-3 border border-gray-500 text-gray-300
+            text-sm uppercase tracking-wider hover:border-[var(--accent)] hover:text-[var(--accent-text)]
             transition-colors"
         >
           ← Tornar a la revista

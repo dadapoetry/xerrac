@@ -8,7 +8,7 @@ interface LogoProps {
 export function Logo({ compact, className = '' }: LogoProps) {
   if (compact) {
     return (
-      <a href="/" className={`no-underline flex items-center h-5 ${className}`}>
+      <a href="/" className={`no-underline flex items-center h-9 ${className}`}>
         <span className="text-sm font-bold tracking-tight text-white leading-none">
           Xerrac<span style={{ color: 'var(--accent-text, #f87171)' }}>!</span>
         </span>

@@ -42,13 +42,13 @@ export function SubscribeForm() {
         placeholder="El teu correu"
         required
         disabled={status === 'loading'}
-        className="w-full bg-gray-950 border border-gray-800 px-4 py-3.5 text-base text-white
-          placeholder-gray-600 focus:outline-none focus:border-red-600 transition-colors"
+        className="w-full bg-gray-950 border border-gray-500 px-4 py-3.5 text-base text-white
+          placeholder:text-[var(--meta)] focus:outline-none focus:border-[var(--accent-text)] transition-colors"
       />
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="w-full text-white text-sm py-3.5 uppercase tracking-[0.2em] transition-colors
+        className="w-full text-sm py-3.5 uppercase tracking-[0.2em] transition-colors
           disabled:opacity-50"
         style={{ backgroundColor: 'var(--accent, #dc2626)', color: 'var(--accent-on, #ffffff)' }}
       >

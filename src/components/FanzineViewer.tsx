@@ -102,6 +102,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
   const [bgReady, setBgReady] = useState(false)
+  const progressRef = useRef<HTMLDivElement>(null)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const shareTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
@@ -177,6 +178,34 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     setBgReady(true)
     setOrigin(window.location.origin)
   }, [])
+
+  // La barra de progrés ha de dir la veritat del desplaçament. Abans es movia
+  // a bots (índex de secció / nombre de seccions) i, en una pàgina amb
+  // seccions molt llargues, quedava clavada mentre s'hi llegia a dins.
+  // L'amplada s'escriu directament al DOM, un cop per fotograma: així el
+  // desplaçament no provoca cap re-render de la revista sencera.
+  useEffect(() => {
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const bar = progressRef.current
+      if (!bar) return
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
+      bar.style.width = `${p * 100}%`
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [sortedSections.length])
 
   useEffect(() => {
     // Les fletxes canvien de secció, però només quan el lector les demana de debò.
@@ -322,6 +351,21 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     setSharePhase('open')
   }, [])
 
+  // Al mòbil el sistema ja ofereix un full de compartir amb les apps que la
+  // persona té instal·lades: és millor que una tira pròpia que ha de fer scroll
+  // dins la capçalera. Als navegadors sense `navigator.share`, la tira queda.
+  const tryNativeShare = useCallback(async (): Promise<boolean> => {
+    if (typeof navigator === 'undefined' || typeof navigator.share !== 'function') return false
+    if (typeof window === 'undefined' || !window.matchMedia('(max-width: 767px)').matches) return false
+    if (!shareUrl) return false
+    try {
+      await navigator.share({ title: shareMeta?.text, text: shareMeta?.text, url: shareUrl })
+    } catch {
+      // Si la persona cancel·la el full, no hi ha res a fer ni a desfer.
+    }
+    return true
+  }, [shareUrl, shareMeta])
+
   const closeShare = useCallback(() => {
     if (sharePhase !== 'open') return
     setSharePhase('closing')
@@ -357,7 +401,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   if (sortedSections.length === 0) {
     return (
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800">
-        <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
+        <div className="flex items-center gap-2 px-3 min-h-[2.75rem]">
           <Logo compact />
           <span className="text-sm text-gray-600">Cap secció disponible</span>
         </div>
@@ -380,7 +424,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     >
       {/* Header — sticky at top, accompanies reader */}
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print relative">
-        <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.5rem]">
+        <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.75rem]">
           <Logo compact />
 
           <SawIcon
@@ -388,13 +432,14 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             color={accentColor}
           />
 
-          <div ref={navRef} className="nav-scroll flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
+          <nav ref={navRef} aria-label="Seccions del número" className="nav-scroll flex items-center gap-0 flex-1 overflow-x-auto min-w-0">
             {sortedSections.map((section, i) => (
               <a
                 key={section.id}
                 href={`#${sectionSlug(i)}`}
                 onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
-                className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-5 flex items-center leading-none transition-colors shrink-0 ${
+                aria-current={i === activeSection ? 'location' : undefined}
+                className={`nav-btn text-[10px] uppercase tracking-wider whitespace-nowrap px-2 h-11 md:h-9 flex items-center leading-none transition-colors shrink-0 ${
                   i === activeSection
                     ? 'active'
                     : 'text-gray-600 hover:text-gray-400'
@@ -404,11 +449,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                 {section.type === 'portada' ? issue.title : section.title}
               </a>
             ))}
-          </div>
+          </nav>
 
           <div data-share-region className="flex items-center min-w-0">
             {showStrip ? (
-              <div className="flex h-8 items-stretch divide-x divide-gray-800 border border-gray-800 bg-white/[0.03] min-w-0 overflow-x-auto nav-scroll">
+              <div className="flex h-10 items-stretch divide-x divide-gray-800 border border-gray-800 bg-white/[0.03] min-w-0 overflow-x-auto nav-scroll">
                 {shareTargets.map((t, i) => (
                   <a
                     key={t.name}
@@ -418,7 +463,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                     onClick={closeShare}
                     title={t.name}
                     aria-label={t.label}
-                    className={`${stripAnim} w-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                    className={`${stripAnim} w-10 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
                     style={{ animationDelay: stripDelay(i) }}
                     onMouseEnter={iconHoverOn}
                     onMouseLeave={iconHoverOff}
@@ -431,7 +476,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   onClick={copyShareLink}
                   title="Copiar l'enllaç"
                   aria-label="Copiar l'enllaç"
-                  className={`${stripAnim} w-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                  className={`${stripAnim} w-10 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
                   style={{ animationDelay: stripDelay(shareTargets.length) }}
                   onMouseEnter={iconHoverOn}
                   onMouseLeave={iconHoverOff}
@@ -451,7 +496,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   onClick={closeShare}
                   title="Tancar"
                   aria-label="Tancar"
-                  className={`${stripAnim} w-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                  className={`${stripAnim} w-10 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
                   style={{ animationDelay: stripDelay(shareTargets.length + 1) }}
                   onMouseEnter={iconHoverOn}
                   onMouseLeave={iconHoverOff}
@@ -464,8 +509,8 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             ) : (
               <button
                 type="button"
-                onClick={openShare}
-                className={`w-8 h-8 shrink-0 border border-gray-800 text-gray-400 transition-all duration-150 active:scale-95 flex items-center justify-center ${togglePop ? 'animate-share-toggle-in' : ''}`}
+                onClick={() => { tryNativeShare().then((handled) => { if (!handled) openShare() }) }}
+                className={`w-10 h-10 shrink-0 border border-gray-800 text-gray-400 transition-all duration-150 active:scale-95 flex items-center justify-center ${togglePop ? 'animate-share-toggle-in' : ''}`}
                 title="Compartir"
                 aria-label="Compartir"
                 onMouseEnter={toggleHoverOn}
@@ -489,9 +534,10 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       {/* Progress bar */}
       {sortedSections.length > 1 && (
         <div
-          className="fixed top-0 left-0 h-[2px] z-[10000] pointer-events-none transition-all duration-300 ease-out"
+          ref={progressRef}
+          className="fixed top-0 left-0 h-[2px] z-[10000] pointer-events-none transition-[width] duration-150 ease-out motion-reduce:transition-none"
           style={{
-            width: `${(activeSection / (sortedSections.length - 1)) * 100}%`,
+            width: '0%',
             backgroundColor: 'var(--accent)',
           }}
         />

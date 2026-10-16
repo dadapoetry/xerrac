@@ -81,7 +81,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
           </Link>
         )}
 
-        <Link href="/" className="text-xs text-gray-500 uppercase tracking-widest mb-2 inline-block hover:text-gray-300 transition-colors">Xerrac! — Revista d'aclariment cultural</Link>
+        <Link href="/" className="text-xs text-gray-500 uppercase tracking-widest mb-1 inline-block py-2 hover:text-gray-300 transition-colors">Xerrac! — Revista d&apos;aclariment cultural</Link>
         <div className="flex justify-center mb-3">
           <SawIcon className="w-5 h-5 opacity-60" />
         </div>
@@ -92,7 +92,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
           {periodicity && <p>Periodicitat: {periodicity}</p>}
           {license && <p>{license}</p>}
           <p>
-            <a href={`mailto:${contactEmail}`} className="hover:text-gray-400 transition-colors">
+            <a href={`mailto:${contactEmail}`} className="inline-block py-1.5 hover:text-white transition-colors">
               {contactEmail}
             </a>
           </p>
@@ -106,7 +106,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors uppercase tracking-wider"
+                className="inline-block py-2 px-1 hover:text-white transition-colors uppercase tracking-wider"
               >
                 {link.name}
               </a>
@@ -117,14 +117,14 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
         {(prevIssue || nextIssue) && (
           <div className="flex justify-center gap-6 mt-8 pt-6 border-t border-gray-800 text-[11px]">
             {prevIssue ? (
-              <Link href={issuePath(prevIssue.number)} className="text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
+              <Link href={issuePath(prevIssue.number)} className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
                 ← {String(prevIssue.number).padStart(2, '0')}
               </Link>
             ) : (
               <span />
             )}
             {nextIssue ? (
-              <Link href={issuePath(nextIssue.number)} className="text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
+              <Link href={issuePath(nextIssue.number)} className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
                 {String(nextIssue.number).padStart(2, '0')} →
               </Link>
             ) : (
@@ -134,13 +134,13 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
         )}
 
         <div className="flex justify-center gap-4 mt-6 text-[11px] flex-wrap">
-          <Link href="/arxiu" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Arxiu d'aclariments</Link>
-          <span className="text-gray-700">·</span>
-          <Link href="/sobre" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">La revista</Link>
-          <span className="text-gray-700">·</span>
-          <Link href="/privacitat" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">Privacitat</Link>
-          <span className="text-gray-700">·</span>
-          <a href="/api/feed" className="text-gray-500 hover:text-white transition-colors uppercase tracking-wider">RSS</a>
+          <Link href="/arxiu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">Arxiu d&apos;aclariments</Link>
+          <span className="text-gray-700" aria-hidden="true">·</span>
+          <Link href="/sobre" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">La revista</Link>
+          <span className="text-gray-700" aria-hidden="true">·</span>
+          <Link href="/privacitat" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">Privacitat</Link>
+          <span className="text-gray-700" aria-hidden="true">·</span>
+          <a href="/api/feed" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors uppercase tracking-wider">RSS</a>
         </div>
       </div>
     </footer>

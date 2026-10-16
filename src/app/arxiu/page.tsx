@@ -310,7 +310,7 @@ export default async function ArxiuPage() {
             <div className="max-w-6xl mx-auto">
               <Link
                 href="/"
-                className="text-[9px] text-gray-300 hover:text-white transition-colors mb-10 sm:mb-14 inline-block uppercase tracking-[0.3em]"
+                className="text-[11px] text-gray-300 hover:text-white transition-colors mb-10 sm:mb-14 inline-block py-2 uppercase tracking-[0.3em]"
               >
                 ← Tornar a la revista
               </Link>

@@ -279,10 +279,10 @@ export default async function PrivacyPage() {
         </P>
 
         <div className="mt-14 pt-8 border-t border-gray-800 flex flex-wrap gap-6 text-xs uppercase tracking-wider">
-          <Link href="/subscriu" className="text-gray-400 hover:text-white transition-colors">
+          <Link href="/subscriu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
             Subscriure’t al butlletí
           </Link>
-          <Link href="/" className="text-gray-500 hover:text-white transition-colors">
+          <Link href="/" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
             ← Torna a la revista
           </Link>
         </div>

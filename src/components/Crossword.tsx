@@ -205,6 +205,10 @@ const activate = (row: number, col: number, toggle: boolean) => {
             ['--cw-col' as any]: numCols,
             gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`,
             width: '100%',
+            // Cap cel·la per sota de 26 px: la vora interior en menja 2 i
+            // l'objectiu de toc ha de fer 24 px com a mínim. Si la graella no
+            // hi cap, fa scroll horitzontal en lloc d'encongir-se.
+            minWidth: `calc(${numCols} * 1.75rem)`,
             maxWidth: `calc(${numCols} * var(--cw-cell, 2.5rem))`,
           }}
         >
@@ -309,15 +313,15 @@ return (
         <div className="flex gap-3 pt-4">
           <button
             onClick={checkAnswers}
-            className="px-4 py-2 text-xs uppercase tracking-wider border border-[var(--accent)]
+            className="px-4 py-2 min-h-[2.75rem] text-xs uppercase tracking-wider border border-[var(--accent)]
               text-[var(--accent-text)] hover:bg-[var(--accent)]/30 transition-colors"
           >
             Solucionar
           </button>
           <button
             onClick={resetGrid}
-            className="px-4 py-2 text-xs uppercase tracking-wider border border-gray-700
-              text-gray-400 hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 min-h-[2.75rem] text-xs uppercase tracking-wider border border-gray-500
+              text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
           >
             Netejar
           </button>

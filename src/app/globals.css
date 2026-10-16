@@ -640,6 +640,16 @@ body::before {
   .animate-blade-sway {
     animation: none;
   }
+  /* Amb moviment reduït, els avisos i el full de compartir apareixen i
+     desapareixen sense animar-se, però continuen apareixent. */
+  .animate-fade-in,
+  .animate-check-pop,
+  .animate-share-item-in,
+  .animate-share-item-out,
+  .animate-share-toggle-in {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms;
+  }
 }
 
 @media print {

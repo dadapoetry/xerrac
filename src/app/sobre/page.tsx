@@ -128,7 +128,7 @@ export default async function AboutPage() {
           </h2>
           <p className="text-gray-300 text-[15px] leading-relaxed mb-4">
             Podeu escriure&rsquo;ns a{' '}
-            <a href={`mailto:${email}`} className="text-white hover:text-gray-400 underline underline-offset-4">
+            <a href={`mailto:${email}`} className="inline-block py-1.5 text-white hover:text-gray-400 underline underline-offset-4">
               {email}
             </a>
             .
@@ -137,7 +137,7 @@ export default async function AboutPage() {
             <ul className="text-gray-300 text-[15px] leading-relaxed mb-4">
               {socialLinks.map((l) => (
                 <li key={l.name} className="mb-2 list-disc pl-5 marker:text-gray-600">
-                  <a href={l.url} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  <a href={l.url} target="_blank" rel="noopener noreferrer" className="inline-block py-1.5 hover:text-white transition-colors">
                     {l.name}
                   </a>
                 </li>
@@ -146,16 +146,16 @@ export default async function AboutPage() {
           )}
 
           <div className="flex flex-wrap gap-6 mt-12 pt-8 border-t border-gray-800 text-[11px] uppercase tracking-wider">
-            <Link href="/arxiu" className="text-gray-400 hover:text-white transition-colors">
+            <Link href="/arxiu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
               Arxiu d&rsquo;aclariments
             </Link>
-            <Link href="/subscriu" className="text-gray-400 hover:text-white transition-colors">
+            <Link href="/subscriu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
               Subscriu-te
             </Link>
-            <Link href="/privacitat" className="text-gray-400 hover:text-white transition-colors">
+            <Link href="/privacitat" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
               Privacitat
             </Link>
-            <Link href="/" className="text-gray-400 hover:text-white transition-colors">
+            <Link href="/" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
               ← Tornar a la revista
             </Link>
           </div>
