@@ -24,6 +24,7 @@ const config: Config = {
         '2xs': '0.6875rem',   // 11 px — etiquetes mono en majúscules (abans 8/9/10/11)
         md: '1.0625rem',      // 17 px — cos editorial (abans 16)
         'section-num': 'clamp(140px, 16vw, 220px)', // xifra de secció
+        masthead: 'clamp(3.5rem, 8.5vw, 5rem)',     // capçalera XERRAC: 56 → 80 px
       },
       colors: {
         xerrac: {

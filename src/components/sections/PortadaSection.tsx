@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { SectionData, PortadaContent } from '@/types'
 import { Logo } from '@/components/Logo'
 
@@ -47,12 +47,17 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
         )}
 
         {sumariEntries && sumariEntries.length > 0 && (
-          <div className="mt-8 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 text-2xs uppercase tracking-wider text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+          <div className="mt-8 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 text-[10px] uppercase tracking-wider text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
             {sumariEntries.map((entry, i) => (
-              <span key={i} className="inline-flex items-baseline gap-1.5">
-                <span className="text-gray-400 font-mono tabular-nums">{entry.number}</span>
-                <span className="text-gray-200">{entry.title}</span>
-              </span>
+              <Fragment key={i}>
+                {i > 0 && (
+                  <span className="text-gray-500" aria-hidden="true">/</span>
+                )}
+                <span className="inline-flex items-baseline gap-1.5">
+                  <span className="text-gray-400 font-mono tabular-nums">{entry.number}</span>
+                  <span className="text-gray-200">{entry.title}</span>
+                </span>
+              </Fragment>
             ))}
           </div>
         )}
