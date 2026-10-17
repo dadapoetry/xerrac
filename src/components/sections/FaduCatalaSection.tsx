@@ -11,7 +11,7 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'var(--accent)' }} aria-hidden="true" />
       <div className="flex items-baseline justify-between gap-4">
         <h3 className="text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
-        <span aria-hidden="true" className="text-3xl font-serif italic text-gray-400 select-none" style={{ color: 'rgba(var(--accent-text-rgb), 0.45)' }}>
+        <span aria-hidden="true" className="text-2xl font-serif italic select-none" style={{ color: 'var(--accent)' }}>
         {entry.type === 'biography' ? 'Biografia' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte' : 'Fadu'}
         </span>
       </div>

@@ -6,6 +6,9 @@ export function Afterthought() {
         <div className="section-divider-line" />
       </div>
       <p className="text-xl font-bold text-gray-200">Ha quedat clar?</p>
+      <p className="mt-2 text-sm text-gray-400">
+        Si no, torna-hi: el número s&rsquo;acaba, l&rsquo;aclariment no.
+      </p>
     </div>
   )
 }

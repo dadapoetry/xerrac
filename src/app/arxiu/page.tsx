@@ -250,19 +250,19 @@ function GalleryIssue({ issue }: { issue: IssueShape }) {
           <div className="flex items-end gap-4">
             <span
               className="text-5xl sm:text-7xl font-black leading-none tracking-tight shrink-0"
-              style={{ color: 'rgba(239, 68, 68, 0.12)' }}
+              style={{ color: 'rgba(var(--accent-rgb, 220, 38, 38), 0.12)' }}
             >
               {String(issue.number).padStart(2, '0')}
             </span>
             <div className="flex-1 min-w-0 pb-1">
-              <h2 className="text-xl md:text-3xl font-bold text-white leading-tight group-hover:text-red-400 transition-colors duration-300">
+              <h2 className="text-xl md:text-3xl font-bold text-white leading-tight group-hover:[color:var(--accent-text)] transition-colors duration-300">
                 {issue.title}
               </h2>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-400 mt-1">
                 {issue.date.toLocaleDateString('ca-ES', { year: 'numeric', month: 'short' })}
               </p>
             </div>
-            <span className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors duration-300 shrink-0 self-end pb-1">→</span>
+            <span className="text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300 shrink-0 self-end pb-1">→</span>
           </div>
         </div>
       </div>
@@ -320,7 +320,7 @@ export default async function ArxiuPage() {
               <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
                 Xerrac<span style={{ color: 'var(--accent-text, #f87171)' }}>!</span>
               </h1>
-              <div className="h-px w-16 sm:w-20 bg-red-900/60 mt-6 sm:mt-8" />
+              <div className="h-px w-16 sm:w-20 mt-6 sm:mt-8" style={{ background: 'rgba(var(--accent-rgb, 220, 38, 38), 0.6)' }} />
             </header>
           </div>
 
@@ -352,7 +352,7 @@ export default async function ArxiuPage() {
               })}
 
               <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 text-center">
-                <p className="text-2xs text-gray-500 tracking-[0.3em] uppercase">
+                <p className="text-2xs text-gray-400 tracking-[0.3em] uppercase">
                   {issues.length} {issues.length === 1 ? 'volum' : 'volums'} a la biblioteca
                 </p>
               </div>

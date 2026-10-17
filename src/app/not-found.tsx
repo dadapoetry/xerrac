@@ -5,12 +5,12 @@ export default function NotFound() {
     <div className="min-h-screen flex items-center justify-center p-8">
       <div className="text-center max-w-md">
         <h1 className="text-7xl font-black tracking-tighter text-white mb-4">
-          <span className="text-red-500">4</span>0<span className="text-red-500">4</span>
+          <span style={{ color: 'var(--accent-text)' }}>4</span>0<span style={{ color: 'var(--accent-text)' }}>4</span>
         </h1>
-        <p className="text-gray-500 text-sm mb-8 uppercase tracking-[0.25em]">
+        <p className="text-gray-400 text-sm mb-8 uppercase tracking-[0.25em]">
           No trobat
         </p>
-        <p className="text-gray-600 text-sm mb-8">
+        <p className="text-gray-400 text-sm mb-8">
           Aquesta pàgina no existeix o ha estat moguda.
         </p>
         <Link

@@ -70,7 +70,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
               </div>
             )}
             <div className="relative z-[1] p-8">
-              <span className="text-2xs text-gray-500 uppercase tracking-[0.3em] block mb-2">
+              <span className="text-2xs text-gray-400 uppercase tracking-[0.3em] block mb-2">
                 Número següent
               </span>
               <span className="text-3xl font-black tracking-tight text-white group-hover:[color:var(--accent-text,#f87171)] transition-colors block mb-1">
@@ -86,7 +86,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
           </Link>
         )}
 
-        <Link href="/" className="text-xs text-gray-500 uppercase tracking-widest mb-1 inline-block py-2 hover:text-gray-300 transition-colors">Xerrac! — Revista d&apos;aclariment cultural</Link>
+        <Link href="/" className="text-xs text-gray-400 uppercase tracking-widest mb-1 inline-block py-2 hover:text-white transition-colors">Xerrac! — Revista d&apos;aclariment cultural</Link>
         <div className="flex justify-center mb-3">
           <SawIcon className="w-5 h-5 opacity-60" />
         </div>

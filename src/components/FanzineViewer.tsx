@@ -582,9 +582,12 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           </div>
         </div>
       ) : (
-        <div data-section-index={i} id={sectionSlug(i)}>
-          <SectionRenderer section={section as any} index={i} />
-        </div>
+        <Fragment>
+          <SectionDivider number={i} accentColor={accentColor} />
+          <div data-section-index={i} id={sectionSlug(i)}>
+            <SectionRenderer section={section as any} index={i} />
+          </div>
+        </Fragment>
       )}
 
         </Fragment>
