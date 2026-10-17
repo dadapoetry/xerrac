@@ -8,9 +8,7 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
   const typeLabel =
     entry.type === 'biography' ? 'Biografia' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte' : 'Fadu'
   return (
-    <div className="mb-8 pb-6 relative pt-3">
-      {/* Regla superior d'accent */}
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'var(--accent)' }} aria-hidden="true" />
+    <div className="mb-8 pb-6 relative">
       <div className="flex items-start justify-between gap-4">
         <h3 className="text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
         {/* Etiqueta com un segell de goma: girada, mono i amb doble filet, que

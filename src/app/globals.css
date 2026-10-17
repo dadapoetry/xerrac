@@ -139,13 +139,9 @@
   color: var(--muted);
 }
 
-/* Justificar en una columna estreta obre rius d'espai entre mots (a 40
-   caràcters, força). Per sota de 640 px el text va a l'esquerra. */
-@media (max-width: 639px) {
-  .text-justify {
-    text-align: left;
-  }
-}
+/* El cos editorial i l'aclariment van justificats sempre, també al mòbil: la
+   partició de mots en català i `text-wrap: pretty` ja eviten els rius d'espai
+   que abans ens havien fet renunciar a la justificació en pantalla estreta. */
 
 .section-container img:not([class~="absolute"]) {
   max-width: 100%;
