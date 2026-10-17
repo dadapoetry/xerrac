@@ -200,7 +200,7 @@ const activate = (row: number, col: number, toggle: boolean) => {
     <div className="flex flex-col lg:flex-row gap-8">
       <div className="flex-shrink-0 overflow-x-auto pb-4">
         <div
-          className="crossword-grid inline-grid border-2 border-gray-600"
+          className="crossword-grid inline-grid border border-gray-400"
           style={{
             ['--cw-col' as any]: numCols,
             gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`,
@@ -227,7 +227,7 @@ return (
                   width: '100%',
                   aspectRatio: '1 / 1',
                   backgroundColor: black ? '#1a1a1a' : isActive ? '#1a1a1a' : '#0a0a0a',
-                  border: '1px solid #333',
+                  border: '1px solid #4b4b4b',
                 }}
                 onClick={() => handleCellClick(row, col)}
                 onPointerDown={() => {
@@ -239,7 +239,7 @@ return (
                 }}
               >
                 {cellNum && (
-                  <span className="absolute top-0 left-0.5 text-2xs text-gray-400 leading-none">
+                  <span className="absolute top-0 left-0.5 text-2xs leading-none font-mono tabular-nums" style={{ color: 'var(--accent)' }}>
                     {cellNum}
                   </span>
                 )}
@@ -313,14 +313,14 @@ return (
         <div className="flex gap-3 pt-4">
           <button
             onClick={checkAnswers}
-            className="px-4 py-2 min-h-[2.75rem] text-xs uppercase tracking-wider border border-[var(--accent)]
+            className="px-4 py-3 min-h-[2.75rem] text-xs uppercase tracking-wider border border-[var(--accent)] h-11
               text-[var(--accent-text)] hover:bg-[var(--accent)]/30 transition-colors"
           >
             Solucionar
           </button>
           <button
             onClick={resetGrid}
-            className="px-4 py-2 min-h-[2.75rem] text-xs uppercase tracking-wider border border-gray-500
+            className="px-4 py-3 min-h-[2.75rem] text-xs uppercase tracking-wider border border-gray-500 h-11
               text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
           >
             Netejar

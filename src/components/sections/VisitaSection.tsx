@@ -10,7 +10,7 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
   return (
     <div className="max-w-2xl w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle="Turisme teòric" readingTime={readingTime(content.body)} />
-      <blockquote className="relative -mx-4 md:-mx-12 px-4 md:px-12 border-l-2" style={{ borderColor: 'rgba(var(--accent-rgb), 0.1)' }}>
+      <blockquote className="relative -mx-4 md:-mx-12 px-4 md:px-12">
         {/* Les cometes van al marge, no dins del text: així la citació arrenca a
             la columna i el marc no desplaça la primera línia. Decoratives per als
             lectors de pantalla —del fet de ser una citació ja en dona fe el
