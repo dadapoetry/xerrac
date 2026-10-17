@@ -77,6 +77,30 @@ async function copyToClipboard(text: string): Promise<boolean> {
   return copied
 }
 
+function CheckIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+      <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+    </svg>
+  )
+}
+
+function CopyIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+      <path fillRule="evenodd" d="M12.586 4.586a2 2 0 1 1 2.828 2.828l-3 3a2 2 0 0 1-2.828 0 1 1 0 0 0-1.414 1.414 4 4 0 0 0 5.656 0l3-3a4 4 0 0 0-5.656-5.656l-1.5 1.5a1 1 0 1 0 1.414 1.414l1.5-1.5Zm-5 5a2 2 0 0 1 2.828 0 1 1 0 1 0 1.414-1.414 4 4 0 0 0-5.656 0l-3 3a4 4 0 1 0 5.656 5.656l1.5-1.5a1 1 0 1 0-1.414-1.414l-1.5 1.5a2 2 0 1 1-2.828-2.828l3-3Z" clipRule="evenodd" />
+    </svg>
+  )
+}
+
+function CloseIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+    </svg>
+  )
+}
+
 export function FanzineViewer({ issue }: FanzineViewerProps) {
   const sortedSections = useMemo(
     () => [...issue.sections].sort((a, b) => a.order - b.order),
@@ -102,6 +126,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
   const [bgReady, setBgReady] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const progressRef = useRef<HTMLDivElement>(null)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const shareTimer = useRef<ReturnType<typeof setTimeout>>()
@@ -381,6 +406,24 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   useEffect(() => () => clearTimeout(shareTimer.current), [])
 
   useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const update = () => setIsMobile(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
+  // Amb el full de compartir obert, el fons no s'ha de poder moure.
+  useEffect(() => {
+    if (!(showStrip && isMobile)) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [showStrip, isMobile])
+
+  useEffect(() => {
     if (sharePhase === 'closed') return
     const onOutside = (e: PointerEvent) => {
       const el = e.target as HTMLElement | null
@@ -456,7 +499,56 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           </div>
 
           <div data-share-region className="flex items-center min-w-0">
-            {showStrip ? (
+            {showStrip && isMobile ? (
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-label="Compartir"
+                onClick={closeShare}
+                className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
+              >
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+                  className={`w-full max-w-md bg-black border-t border-gray-800 ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
+                >
+                  <div className="flex justify-center pt-2 pb-1">
+                    <span className="h-1 w-10 rounded-full bg-gray-700" aria-hidden="true" />
+                  </div>
+                  {shareTargets.map((t) => (
+                    <a
+                      key={t.name}
+                      href={t.href}
+                      target={t.name === 'Correu' ? undefined : '_blank'}
+                      rel={t.name === 'Correu' ? undefined : 'noopener noreferrer'}
+                      onClick={closeShare}
+                      className="flex h-12 items-center gap-3 px-4 text-sm text-gray-300 border-t border-gray-900 active:bg-white/[0.05]"
+                    >
+                      <span className="w-5 flex items-center justify-center text-gray-400">{t.icon}</span>
+                      <span>{t.name}</span>
+                    </a>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={copyShareLink}
+                    className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-300 border-t border-gray-900 active:bg-white/[0.05]"
+                  >
+                    <span className="w-5 flex items-center justify-center text-gray-400">
+                      {copied ? <CheckIcon className="w-4 h-4 text-emerald-400" /> : <CopyIcon />}
+                    </span>
+                    <span>{copied ? 'Enllaç copiat' : "Copiar l'enllaç"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={closeShare}
+                    className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-400 border-t border-gray-800 active:bg-white/[0.05]"
+                  >
+                    <span className="w-5 flex items-center justify-center"><CloseIcon /></span>
+                    <span>Tancar</span>
+                  </button>
+                </div>
+              </div>
+            ) : showStrip ? (
               <div className="flex h-10 items-stretch divide-x divide-gray-800 border border-gray-800 bg-white/[0.03] min-w-0 overflow-x-auto nav-scroll">
                 {shareTargets.map((t, i) => (
                   <a
@@ -485,15 +577,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   onMouseEnter={iconHoverOn}
                   onMouseLeave={iconHoverOff}
                 >
-                  {copied ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 animate-check-pop">
-                      <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
-                  </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                      <path fillRule="evenodd" d="M12.586 4.586a2 2 0 1 1 2.828 2.828l-3 3a2 2 0 0 1-2.828 0 1 1 0 0 0-1.414 1.414 4 4 0 0 0 5.656 0l3-3a4 4 0 0 0-5.656-5.656l-1.5 1.5a1 1 0 1 0 1.414 1.414l1.5-1.5Zm-5 5a2 2 0 0 1 2.828 0 1 1 0 1 0 1.414-1.414 4 4 0 0 0-5.656 0l-3 3a4 4 0 1 0 5.656 5.656l1.5-1.5a1 1 0 1 0-1.414-1.414l-1.5 1.5a2 2 0 1 1-2.828-2.828l3-3Z" clipRule="evenodd" />
-                  </svg>
-                  )}
+                  {copied ? <CheckIcon className="w-4 h-4 animate-check-pop" /> : <CopyIcon className="w-4 h-4" />}
                 </button>
                 <button
                   type="button"
@@ -505,9 +589,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   onMouseEnter={iconHoverOn}
                   onMouseLeave={iconHoverOff}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                    <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                  </svg>
+                  <CloseIcon className="w-4 h-4" />
                 </button>
               </div>
             ) : (

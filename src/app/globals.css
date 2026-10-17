@@ -72,6 +72,37 @@
   animation: share-toggle-in 0.26s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
+/* Al mòbil, quan el navegador no ofereix el full del sistema, el reguitzell
+   de xarxes puja des de baix com un full de compartir, amb un vel al darrere. */
+@keyframes share-sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.share-sheet {
+  animation: share-sheet-in 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes share-sheet-out {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+.share-sheet-closing {
+  animation: share-sheet-out 0.2s ease-in forwards;
+}
+@keyframes share-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.share-backdrop {
+  animation: share-backdrop-in 0.2s ease-out;
+}
+@keyframes share-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.share-backdrop-closing {
+  animation: share-backdrop-out 0.2s ease-in forwards;
+}
+
 .nav-btn {
   position: relative;
   overflow: hidden;
@@ -789,7 +820,11 @@ body::before {
   .animate-check-pop,
   .animate-share-item-in,
   .animate-share-item-out,
-  .animate-share-toggle-in {
+  .animate-share-toggle-in,
+  .share-sheet,
+  .share-sheet-closing,
+  .share-backdrop,
+  .share-backdrop-closing {
     animation-duration: 0.01ms;
     animation-delay: 0ms;
   }
