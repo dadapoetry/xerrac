@@ -139,6 +139,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const progressRef = useRef<HTMLDivElement>(null)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const shareTimer = useRef<ReturnType<typeof setTimeout>>()
+  const copyTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const onActivity = () => {
@@ -410,7 +411,23 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     closeShare()
   }, [shareUrl, shareMeta, closeShare])
 
-  useEffect(() => () => clearTimeout(shareTimer.current), [])
+  // Al full del mòbil, un cop copiat l'enllaç, es deixa veure la confirmació
+  // uns instants i tot seguit el full es tanca.
+  const copyShareLinkAndClose = useCallback(async () => {
+    const ok = await copyToClipboard(shareUrl)
+    if (!ok) return
+    setCopied(true)
+    clearTimeout(copyTimer.current)
+    copyTimer.current = setTimeout(() => {
+      setCopied(false)
+      closeShare()
+    }, 1200)
+  }, [shareUrl, closeShare])
+
+  useEffect(() => () => {
+    clearTimeout(shareTimer.current)
+    clearTimeout(copyTimer.current)
+  }, [])
 
   useEffect(() => {
     setCanNativeShare(typeof navigator !== 'undefined' && typeof navigator.share === 'function')
@@ -548,7 +565,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   ))}
                   <button
                     type="button"
-                    onClick={copyShareLink}
+                    onClick={copyShareLinkAndClose}
                     className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-300 border-t border-gray-900 active:bg-white/[0.05]"
                   >
                     <span className="w-5 flex items-center justify-center text-gray-400">
