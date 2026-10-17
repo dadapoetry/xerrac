@@ -141,6 +141,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const shareTimer = useRef<ReturnType<typeof setTimeout>>()
   const copyTimer = useRef<ReturnType<typeof setTimeout>>()
   const navRef = useRef<HTMLDivElement>(null)
+  const sheetRef = useRef<HTMLDivElement>(null)
+  const dragStartY = useRef<number | null>(null)
+  const dragOffset = useRef(0)
   useEffect(() => {
     const onActivity = () => {
       setIdle(false)
@@ -424,6 +427,51 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     }, 1200)
   }, [shareUrl, closeShare])
 
+  // La barreta de dalt és per arrossegar: molta gent intenta tancar el full
+  // estirant-la cap avall. Faig servir events de punter, que cobreixen tant el
+  // dit al mòbil com el ratolí: mentre es mou, el full segueix el punter, i en
+  // deixar-lo anar, si ha baixat prou es tanca i, si no, torna a lloc.
+  const onHandlePointerDown = (e: React.PointerEvent) => {
+    try { e.currentTarget.setPointerCapture(e.pointerId) } catch {}
+    dragStartY.current = e.clientY
+    dragOffset.current = 0
+    const node = sheetRef.current
+    if (node) node.style.transition = 'none'
+  }
+
+  const onHandlePointerMove = (e: React.PointerEvent) => {
+    if (dragStartY.current === null) return
+    const dy = e.clientY - dragStartY.current
+    const offset = dy > 0 ? dy : 0
+    dragOffset.current = offset
+    const node = sheetRef.current
+    if (node) node.style.transform = `translateY(${offset}px)`
+  }
+
+  const onHandlePointerUp = (e: React.PointerEvent) => {
+    if (dragStartY.current === null) return
+    dragStartY.current = null
+    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
+    const node = sheetRef.current
+    const offset = dragOffset.current
+    dragOffset.current = 0
+    if (!node) return
+    if (offset > 80) {
+      // Marxem cap avall des d'on és: neutralitzem l'animació del full i
+      // deixem que la transició acabi la feina; closeShare() porta l'estat.
+      node.style.animation = 'none'
+      node.style.transition = 'transform 0.2s ease-in'
+      node.style.transform = 'translateY(100%)'
+      closeShare()
+    } else {
+      node.style.transition = 'transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)'
+      node.style.transform = ''
+      window.setTimeout(() => {
+        node.style.transition = ''
+      }, 220)
+    }
+  }
+
   useEffect(() => () => {
     clearTimeout(shareTimer.current)
     clearTimeout(copyTimer.current)
@@ -533,11 +581,18 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                 className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
               >
                 <div
+                  ref={sheetRef}
                   onClick={(e) => e.stopPropagation()}
                   style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
                   className={`w-full max-w-md bg-black border-t border-gray-800 ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
                 >
-                  <div className="flex justify-center pt-2 pb-1">
+                  <div
+                    onPointerDown={onHandlePointerDown}
+                    onPointerMove={onHandlePointerMove}
+                    onPointerUp={onHandlePointerUp}
+                    onPointerCancel={onHandlePointerUp}
+                    className="flex justify-center pt-3 pb-2 touch-none cursor-grab active:cursor-grabbing"
+                  >
                     <span className="h-1 w-10 rounded-full bg-gray-700" aria-hidden="true" />
                   </div>
                   {canNativeShare && (
