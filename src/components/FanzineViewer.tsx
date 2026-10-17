@@ -364,6 +364,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     } catch {
       // Si la persona cancel·la el full, no hi ha res a fer ni a desfer.
     }
+    setTogglePop(false)
     return true
   }, [shareUrl, shareMeta])
 
@@ -374,8 +375,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     // Deixa acabar la sortida esglaonada abans de tornar a mostrar el botó.
     shareTimer.current = setTimeout(() => {
       setSharePhase('closed')
-      setTogglePop(true)
-      shareTimer.current = setTimeout(() => setTogglePop(false), 320)
+      setTogglePop(false)
     }, 250)
   }, [sharePhase])
 
@@ -441,7 +441,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   href={`#${sectionSlug(i)}`}
                   onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
                   aria-current={i === activeSection ? 'location' : undefined}
-                  className={`nav-btn text-2xs uppercase tracking-wider whitespace-nowrap px-2 h-11 md:h-9 flex items-center leading-none transition-colors shrink-0 ${
+                  className={`nav-btn text-2xs uppercase tracking-wider whitespace-nowrap px-1.5 h-11 md:h-9 flex items-center leading-none transition-colors shrink-0 ${
                     i === activeSection
                       ? 'active'
                       : 'text-gray-600 hover:text-gray-400'
