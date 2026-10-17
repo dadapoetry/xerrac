@@ -28,7 +28,7 @@ function RevealText({ html, active, right, kick }: { html: string; active: boole
         {paras.map((p, i) => (
           <div
             key={i}
-            className={`text-center font-black uppercase leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] text-5xl lg:text-7xl transition-all duration-[1200ms] ease-out ${
+            className={`text-center font-black uppercase leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] text-[2.5rem] lg:text-7xl transition-all duration-[1200ms] ease-out ${
               active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
             style={{ transitionDelay: `${i * 120}ms` }}
@@ -301,7 +301,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                 active === steps.length ? 'opacity-100' : 'opacity-0'
               }`}
             />
-            <div className={`relative max-w-2xl text-center transition-all duration-[1200ms] ease-out ${
+            <div className={`relative max-w-3xl text-center transition-all duration-[1200ms] ease-out ${
               active === steps.length ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}>
               <div className="mx-auto mb-8 h-px w-16 bg-white/40" />
@@ -312,7 +312,7 @@ export function ScrollySection({ section, index }: { section: SectionData; index
                 · Fi ·
               </div>
               <h3
-                className="mt-5 font-black uppercase leading-tight tracking-tight text-white text-3xl md:text-5xl transition-all duration-[900ms] ease-out"
+                className="mt-5 text-balance font-black uppercase leading-tight tracking-tight text-white text-3xl md:text-5xl transition-all duration-[900ms] ease-out"
                 style={{ transitionDelay: '300ms', textShadow: '0 2px 10px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.85)' }}
               >
                 {content.outro}
