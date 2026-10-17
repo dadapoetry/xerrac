@@ -121,18 +121,8 @@
   background: linear-gradient(to left, #000, rgba(0, 0, 0, 0));
 }
 
-/* Divisor entre seccions: la serra de la marca, el número de la secció que
-   comença i un filet. És el ritme del número, no una decoració de més. */
-.section-divider {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  max-width: 80rem;
-  margin: 3rem auto 1.5rem;
-  padding: 0 1.5rem;
-}
+/* Filet de secció (cloenda): el gra fi que tanca un bloc. */
 .section-divider-line {
-  flex: 1;
   height: 1px;
   background: linear-gradient(to right, transparent, #2a2a2a 25%, #2a2a2a 75%, transparent);
 }
@@ -142,7 +132,7 @@
 .note-buit {
   border: 1px dashed #3f3f46;
   padding: 1.5rem;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-mono-stack);
   font-size: 0.75rem;
   line-height: 1.6;
   letter-spacing: 0.04em;
@@ -188,6 +178,12 @@
   --black: #000000;
   --white: #fafafa;
 
+  /* Famílies reals del lloc (vegeu `layout.tsx`): tot el que sigui mono o
+     serif ha de passar per aquí perquè la tipografia no depengui del sistema
+     operatiu del lector. */
+  --font-mono-stack: var(--font-mono, 'Courier New'), 'Courier New', Courier, monospace;
+  --font-serif-stack: var(--font-serif, Georgia), Georgia, 'Times New Roman', serif;
+
   /* L'accent té dos papers, i no sempre els pot fer tots dos. Sobre el negre
      del lloc, un vermell fosc com el nostre només arriba a 4,5:1 si és clar;
      però un vermell clar no aguanta text blanc a sobre. Per això se separen:
@@ -199,8 +195,12 @@
   --accent: #dc2626;
   --accent-rgb: 220, 38, 38;
   --accent-on: #ffffff;
-  --accent-text: #f87171;
-  --accent-text-rgb: 248, 113, 113;
+  /* Ha de ser exactament el que `accentTextColor('#dc2626')` deriva (vegeu
+     `src/lib/color.ts`): si no, el vermell del text canviava segons si la
+     pàgina portava accent de número o anava amb els valors per defecte del
+     full d'estil. */
+  --accent-text: #df3939;
+  --accent-text-rgb: 223, 57, 57;
 
   --grogues: #fde047;
   --grogues-rgb: 253, 224, 71;
@@ -224,7 +224,7 @@
 
 /* L'anella de focus és text sobre fons fosc: mateix paper que l'accent-text. */
 :focus-visible {
-  outline: 2px solid var(--accent-text, #f87171);
+  outline: 2px solid var(--accent-text, #df3939);
   outline-offset: 2px;
 }
 
@@ -233,22 +233,27 @@ textarea:focus-visible,
 select:focus-visible,
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--accent-text, #f87171);
+  outline: 2px solid var(--accent-text, #df3939);
   outline-offset: 2px;
 }
 
 .section-container :focus-visible {
-  outline: 2px solid var(--accent-text, #f87171);
+  outline: 2px solid var(--accent-text, #df3939);
   outline-offset: 2px;
 }
 
 html {
   scroll-behavior: smooth;
+  /* Sense això, iOS decidia per ell mateix engrandir el text d'alguns blocs i
+     la revista no es llegia igual al mòbil que a l'escriptori. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   background-color: #0a0a0a;
   color: var(--white);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 body::before {
@@ -353,7 +358,7 @@ body::before {
   background: transparent;
   border: none;
   color: var(--white);
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-mono-stack);
   font-size: 1.25rem;
   text-transform: uppercase;
   outline: none;
@@ -576,7 +581,7 @@ body::before {
    secundari i sagnat penjant (la segona línia s'alinea sota el text, no sota el
    número). El títol és un enllaç cap a la font: la referència és verificable. */
 .xerrac-ref {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-mono-stack);
   font-size: 0.75rem;
   line-height: 1.55;
   letter-spacing: 0.005em;
@@ -587,7 +592,7 @@ body::before {
   text-wrap: pretty;
 }
 .xerrac-ref a {
-  color: var(--accent-text, #f87171);
+  color: var(--accent-text, #df3939);
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-color: rgba(var(--accent-rgb, 220, 38, 38), 0.4);
@@ -683,7 +688,7 @@ body::before {
   position: absolute;
   left: -1.4rem;
   top: 0.7em;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-mono-stack);
   font-size: 0.875rem;
   line-height: 1;
   color: var(--accent-text);
@@ -808,9 +813,8 @@ body::before {
   body::before {
     display: none !important;
   }
-  .section-divider {
-    opacity: 1 !important;
-    background: #ccc !important;
+  .section-divider-line {
+    background: #999 !important;
   }
   .text-gray-300,
   .text-gray-400,

@@ -50,17 +50,23 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
 
             </span>
 
-            <span className={`text-2xs tracking-[0.3em] uppercase font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-200' : 'text-gray-400'}`}>
+            <span className="text-2xs tracking-[0.3em] uppercase font-mono tabular-nums font-semibold" style={{ color: 'var(--accent-text)' }}>
 
               {String(number).padStart(2, '0')}
 
             </span>
 
-            <span className={`h-px flex-1 ${bright ? 'bg-white/20' : 'bg-white/10'}`} />
+            <span
+              className="h-px flex-1"
+              style={{
+                background:
+                  'linear-gradient(to right, rgba(var(--accent-rgb, 220, 38, 38), 0.55), rgba(255, 255, 255, 0.16) 40%, transparent)',
+              }}
+            />
 
             {readingTime && (
 
-              <span className={`text-2xs tracking-wider font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] ${bright ? 'text-gray-300' : 'text-gray-500'}`}>
+              <span className={`text-2xs tracking-wider font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] ${bright ? 'text-gray-200' : 'text-gray-400'}`}>
 
                 ~{readingTime} min
 

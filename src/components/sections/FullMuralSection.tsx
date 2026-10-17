@@ -11,22 +11,25 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
       <SectionHeader number={index} title={section.title} subtitle="Collages i contribucions dels lectors" />
 
       <div className="mb-10 text-center">
-        <div className="inline-flex items-center gap-3 text-2xs">
-          <span className="h-px w-6" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.4)' }} />
-          <span className="font-mono uppercase tracking-[0.3em]" style={{ color: 'var(--accent-text)' }}>
-            Participa-hi
+        <div className="flex flex-col items-center gap-2 md:flex-row md:justify-center md:gap-3 text-2xs">
+          <span className="flex items-center gap-3">
+            <span className="h-px w-6" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.4)' }} />
+            <span className="font-mono uppercase tracking-[0.3em] whitespace-nowrap" style={{ color: 'var(--accent-text)' }}>
+              Participa-hi
+            </span>
+            <span className="h-px w-6" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.4)' }} />
           </span>
-          <span className="text-gray-400">
-            — envia els teus treballs visuals o textos a{' '}
+          <span className="max-w-xs text-gray-400 leading-relaxed md:max-w-none">
+            <span className="hidden md:inline">&mdash; </span>
+            envia els teus treballs visuals o textos a{' '}
             <a
               href="mailto:contacte@laxerrac.cat"
-              className="hover:underline decoration-from-font"
+              className="hover:underline decoration-from-font whitespace-nowrap"
               style={{ color: 'var(--accent-text)' }}
             >
               contacte@laxerrac.cat
             </a>
           </span>
-          <span className="h-px w-6" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.4)' }} />
         </div>
       </div>
 

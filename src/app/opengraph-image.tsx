@@ -79,7 +79,7 @@ export default async function Image() {
             }}
           >
             XERRAC
-            <span style={{ color: '#f87171' }}>!</span>
+            <span style={{ color: '#df3939' }}>!</span>
           </div>
           <div
             style={{

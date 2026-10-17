@@ -5,14 +5,27 @@ import { SectionHeader } from '@/components/SectionHeader'
 import { readingTime } from '@/lib/html'
 
 function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
+  const typeLabel =
+    entry.type === 'biography' ? 'Biografia' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte' : 'Fadu'
   return (
     <div className="mb-8 pb-6 relative pt-3">
       {/* Regla superior d'accent */}
       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'var(--accent)' }} aria-hidden="true" />
-      <div className="flex items-baseline justify-between gap-4">
+      <div className="flex items-start justify-between gap-4">
         <h3 className="text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
-        <span aria-hidden="true" className="text-2xl font-serif italic select-none" style={{ color: 'var(--accent)' }}>
-        {entry.type === 'biography' ? 'Biografia' : entry.type === 'ucronia' ? 'Ucronia' : entry.type === 'artefacte' ? 'Artefacte' : 'Fadu'}
+        {/* Etiqueta com un segell de goma: girada, mono i amb doble filet, que
+            digui el gènere de la fitxa sense posar-s'hi seriós. */}
+        <span
+          aria-hidden="true"
+          className="shrink-0 -rotate-[7deg] select-none font-mono text-2xs uppercase tracking-[0.18em] px-2 py-1 border-2"
+          style={{
+            color: 'var(--accent)',
+            borderColor: 'var(--accent)',
+            background: 'rgba(var(--accent-rgb), 0.1)',
+            boxShadow: '2px 2px 0 rgba(var(--accent-rgb), 0.35)',
+          }}
+        >
+          {typeLabel}
         </span>
       </div>
       <div

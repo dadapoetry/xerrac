@@ -226,7 +226,7 @@ return (
                 style={{
                   width: '100%',
                   aspectRatio: '1 / 1',
-                  backgroundColor: black ? '#1a1a1a' : isActive ? '#1a1a1a' : '#0a0a0a',
+                  backgroundColor: black ? '#1a1a1a' : isActive ? 'rgba(var(--accent-rgb), 0.14)' : '#0a0a0a',
                   border: '1px solid #4b4b4b',
                 }}
                 onClick={() => handleCellClick(row, col)}
@@ -258,7 +258,7 @@ return (
                     onFocus={() => activate(row, col, false)}
                     className={`w-full h-full bg-transparent text-center text-white
                       font-mono text-md md:text-xl uppercase outline-none
-                      ${isActive ? 'bg-red-900/30' : ''}
+                      ${isActive ? 'bg-[rgba(var(--accent-rgb),0.22)]' : ''}
                       ${revealed && grid[row][col] ? 'text-green-400' : ''}`}
                     autoComplete="off"
                     spellCheck={false}
@@ -272,8 +272,11 @@ return (
 
       <div className="flex-1 space-y-6">
         {activePos && clueInfo && (
-          <div className="p-4 border border-red-900 bg-red-950/20">
-            <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">
+          <div
+            className="p-4 border"
+            style={{ borderColor: 'rgba(var(--accent-rgb), 0.5)', backgroundColor: 'rgba(var(--accent-rgb), 0.08)' }}
+          >
+            <p className="text-xs text-gray-400 mb-1 uppercase tracking-wider">
               {clueInfo.dir === 'across' ? 'Horitzontal' : 'Vertical'}
             </p>
             <p className="text-white text-sm">{clueInfo.clue}</p>

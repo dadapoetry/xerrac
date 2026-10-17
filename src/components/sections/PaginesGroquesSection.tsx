@@ -17,11 +17,11 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
               Encara no s&rsquo;ha publicat cap refrany accidental.
             </p>
           ) : (
-            <div className="grid md:grid-cols-2">
+            <div className="grid md:grid-cols-2 md:gap-x-12">
               {proverbs.map((proverb: Proverb, i: number) => (
                 <div
                   key={i}
-                  className="group relative border-t border-white/[0.07] py-6 md:even:border-l md:even:pl-6"
+                  className="group relative border-t border-white/[0.07] py-6"
                 >
                   <div
                     aria-hidden="true"

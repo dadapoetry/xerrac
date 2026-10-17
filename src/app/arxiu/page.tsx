@@ -318,7 +318,7 @@ export default async function ArxiuPage() {
                 Biblioteca d&rsquo;aclariments
               </span>
               <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
-                Xerrac<span style={{ color: 'var(--accent-text, #f87171)' }}>!</span>
+                Xerrac<span style={{ color: 'var(--accent-text, #df3939)' }}>!</span>
               </h1>
               <div className="h-px w-16 sm:w-20 mt-6 sm:mt-8" style={{ background: 'rgba(var(--accent-rgb, 220, 38, 38), 0.6)' }} />
             </header>

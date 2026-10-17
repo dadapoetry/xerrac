@@ -1,11 +1,22 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, IBM_Plex_Mono, Source_Serif_4 } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/Providers'
 import { getSiteUrl } from '@/lib/site'
 import { JsonLd } from '@/components/JsonLd'
 
-const inter = Inter({ subsets: ['latin'] })
+// Les tres famílies del lloc es carreguen com a fonts web, no com a fonts del
+// sistema: 'Courier New' i 'Georgia' no existeixen a molts mòbils (o són unes
+// altres), i això feia que la revista semblés escrita amb una tipografia al
+// mòbil i amb una altra a l'escriptori.
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
+const mono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+})
+const serif = Source_Serif_4({ subsets: ['latin'], variable: '--font-serif', display: 'swap' })
 
 const siteUrl = getSiteUrl()
 
@@ -55,8 +66,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ca">
-      <body className={`${inter.className} antialiased`}>
+    <html lang="ca" className={`${inter.variable} ${mono.variable} ${serif.variable}`}>
+      <body className="antialiased">
         <Providers>
           <a
             href="#contingut"

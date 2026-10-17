@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fra
 import { IssueData } from '@/types'
 import { buildSectionSlugMap, issuePath, articlePath } from '@/lib/slugs'
 import { SectionRenderer } from './SectionRenderer'
-import { SectionDivider } from './SectionDivider'
 import { PortadaSection } from './sections/PortadaSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
@@ -582,12 +581,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           </div>
         </div>
       ) : (
-        <Fragment>
-          <SectionDivider number={i} accentColor={accentColor} />
-          <div data-section-index={i} id={sectionSlug(i)}>
-            <SectionRenderer section={section as any} index={i} />
-          </div>
-        </Fragment>
+        <div data-section-index={i} id={sectionSlug(i)}>
+          <SectionRenderer section={section as any} index={i} />
+        </div>
       )}
 
         </Fragment>

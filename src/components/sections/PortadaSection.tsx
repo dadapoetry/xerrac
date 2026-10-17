@@ -50,9 +50,6 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
           <div className="mt-5 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 text-2xs uppercase tracking-wider text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
             {sumariEntries.map((entry, i) => (
               <span key={i} className="inline-flex items-baseline gap-1.5">
-                {i > 0 && (
-                  <span className="text-gray-600" aria-hidden="true">·</span>
-                )}
                 <span className="text-gray-400 font-mono tabular-nums">{entry.number}</span>
                 <span className="text-gray-200">{entry.title}</span>
               </span>

@@ -9,8 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['Courier New', 'Courier', 'monospace'],
-        serif: ['Georgia', 'Times New Roman', 'serif'],
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'Courier New', 'monospace'],
+        serif: ['var(--font-serif)', 'Georgia', 'Times New Roman', 'serif'],
       },
       // Una sola escala tipogràfica de 8 passos: 11 · 12 · 14 · 17 · 20 · 30 · 48 · 72.
       // Els graons que Tailwind ja portava de sèrie es queden amb el seu nom

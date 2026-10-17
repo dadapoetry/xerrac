@@ -2,6 +2,7 @@ import { ImageResponse } from 'next/og'
 import { getOgFonts } from '@/lib/ogFonts'
 import { getOgBackground } from '@/lib/ogImage'
 import { SECTION_LABELS } from '@/types'
+import { accentTextColor } from '@/lib/color'
 
 export const runtime = 'nodejs'
 
@@ -198,7 +199,7 @@ export async function GET(request: Request) {
           }}
         >
           {title}
-          <span style={{ color: accent }}>!</span>
+          <span style={{ color: accentTextColor(accent) }}>!</span>
         </div>
         {excerpt && (
           <div
