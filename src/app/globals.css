@@ -427,7 +427,7 @@ body::before {
    el descendent queia damunt del text de sota. */
 .capitular > p:first-child::first-letter {
   float: left;
-  font-family: 'Inter', serif;
+  font-family: inherit;
   font-size: 4.5em;
   line-height: 1.1;
   font-weight: 700;
@@ -671,7 +671,7 @@ body::before {
 }
 
 /* Aparell de marge de l'aclariment cultural: cada bloc del cos va marcat amb
-   una «§» mono a l'esquerra, dins del marge que obra el filet d'accent. És
+   una «§» mono a l'esquerra, dins del marge que obra la sangria del contenidor. És
    l'aparell d'una edició crítica, no un adorn.
    Els paràgrafs buits que separen els blocs no en duen: no són blocs.
    `content: ... / ''` marca la § com a decorativa per als lectors de pantalla. */
@@ -692,7 +692,9 @@ body::before {
   content: none;
 }
 
-/* Xerrac! quoted citations (aclariment cultural) */
+/* Citacions de l'aclariment cultural: cursiva i sangrada, sense filet vertical
+   (el marge del text ja les separa del cos) i amb la mateixa justificació que
+   la resta de l'aparell. */
 .xerrac-quote-quoted {
   display: block;
   font-style: italic;
@@ -701,8 +703,9 @@ body::before {
   line-height: 1.6;
   color: #b9b9b9;
   margin: 2.5rem 0 !important;
-  padding: 0 0 0 1rem;
-  border-left: 2px solid var(--accent);
+  padding: 0 0 0 1.15rem;
+  text-align: justify;
+  text-wrap: pretty;
 }
 .xerrac-quote-quoted strong,
 .xerrac-quote-quoted b {

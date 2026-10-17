@@ -12,7 +12,6 @@ export function EditorialSection({ section, index }: { section: SectionData; ind
       <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} readingTime={readingTime(content.body)} />
       <div
         className="editorial-body capitular text-justify hyphens-auto text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-        style={{ fontSize: '0.9rem', lineHeight: 1.8 }}
         dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body) }}
       />
     </div>
