@@ -101,6 +101,14 @@ function CloseIcon({ className = 'w-4 h-4' }: { className?: string }) {
   )
 }
 
+function ShareIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+      <path d="M13 4.5a2.5 2.5 0 1 1 .702 1.737L6.97 9.604a2.518 2.518 0 0 1 0 .792l6.733 3.367a2.5 2.5 0 1 1-.671 1.341l-6.733-3.367a2.5 2.5 0 1 1 0-3.475l6.733-3.366A2.52 2.52 0 0 1 13 4.5Z" />
+    </svg>
+  )
+}
+
 export function FanzineViewer({ issue }: FanzineViewerProps) {
   const sortedSections = useMemo(
     () => [...issue.sections].sort((a, b) => a.order - b.order),
@@ -127,6 +135,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [idle, setIdle] = useState(false)
   const [bgReady, setBgReady] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [canNativeShare, setCanNativeShare] = useState(false)
   const progressRef = useRef<HTMLDivElement>(null)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>()
   const shareTimer = useRef<ReturnType<typeof setTimeout>>()
@@ -376,22 +385,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     setSharePhase('open')
   }, [])
 
-  // Al mòbil el sistema ja ofereix un full de compartir amb les apps que la
-  // persona té instal·lades: és millor que una tira pròpia que ha de fer scroll
-  // dins la capçalera. Als navegadors sense `navigator.share`, la tira queda.
-  const tryNativeShare = useCallback(async (): Promise<boolean> => {
-    if (typeof navigator === 'undefined' || typeof navigator.share !== 'function') return false
-    if (typeof window === 'undefined' || !window.matchMedia('(max-width: 767px)').matches) return false
-    if (!shareUrl) return false
-    try {
-      await navigator.share({ title: shareMeta?.text, text: shareMeta?.text, url: shareUrl })
-    } catch {
-      // Si la persona cancel·la el full, no hi ha res a fer ni a desfer.
-    }
-    setTogglePop(false)
-    return true
-  }, [shareUrl, shareMeta])
-
   const closeShare = useCallback(() => {
     if (sharePhase !== 'open') return
     setSharePhase('closing')
@@ -403,9 +396,24 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     }, 250)
   }, [sharePhase])
 
+  // El full del sistema és la primera fila del full del mòbil, no el que
+  // passa en tocar el botó: així es veu que hi ha més opcions sense haver de
+  // tancar el full natiu per obrir-lo un altre cop.
+  const shareWithSystem = useCallback(async () => {
+    if (!shareUrl) return
+    try {
+      await navigator.share({ title: shareMeta?.text, text: shareMeta?.text, url: shareUrl })
+    } catch {
+      // Si la persona cancel·la el full, no hi ha res a fer ni a desfer.
+    }
+    setTogglePop(false)
+    closeShare()
+  }, [shareUrl, shareMeta, closeShare])
+
   useEffect(() => () => clearTimeout(shareTimer.current), [])
 
   useEffect(() => {
+    setCanNativeShare(typeof navigator !== 'undefined' && typeof navigator.share === 'function')
     const mq = window.matchMedia('(max-width: 767px)')
     const update = () => setIsMobile(mq.matches)
     update()
@@ -515,6 +523,16 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
                   <div className="flex justify-center pt-2 pb-1">
                     <span className="h-1 w-10 rounded-full bg-gray-700" aria-hidden="true" />
                   </div>
+                  {canNativeShare && (
+                    <button
+                      type="button"
+                      onClick={shareWithSystem}
+                      className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-100 border-t border-gray-900 active:bg-white/[0.05]"
+                    >
+                      <span className="w-5 flex items-center justify-center text-gray-400"><ShareIcon /></span>
+                      <span>Compartir amb el sistema</span>
+                    </button>
+                  )}
                   {shareTargets.map((t) => (
                     <a
                       key={t.name}
@@ -595,16 +613,14 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
             ) : (
               <button
                 type="button"
-                onClick={() => { tryNativeShare().then((handled) => { if (!handled) openShare() }) }}
+                onClick={openShare}
                 className={`w-10 h-10 shrink-0 border border-gray-800 text-gray-400 transition-all duration-150 active:scale-95 flex items-center justify-center ${togglePop ? 'animate-share-toggle-in' : ''}`}
                 title="Compartir"
                 aria-label="Compartir"
                 onMouseEnter={toggleHoverOn}
                 onMouseLeave={toggleHoverOff}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                  <path d="M13 4.5a2.5 2.5 0 1 1 .702 1.737L6.97 9.604a2.518 2.518 0 0 1 0 .792l6.733 3.367a2.5 2.5 0 1 1-.671 1.341l-6.733-3.367a2.5 2.5 0 1 1 0-3.475l6.733-3.366A2.52 2.52 0 0 1 13 4.5Z" />
-                </svg>
+                <ShareIcon />
               </button>
             )}
           </div>
