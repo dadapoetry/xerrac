@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, IBM_Plex_Mono, Source_Serif_4 } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/Providers'
@@ -19,6 +19,17 @@ const mono = IBM_Plex_Mono({
 const serif = Source_Serif_4({ subsets: ['latin'], variable: '--font-serif', display: 'swap' })
 
 const siteUrl = getSiteUrl()
+
+// iOS Safari: amb `viewport-fit=cover` la pàgina s'estén fins a dalt de tot i la
+// capçalera, que hi va `sticky`, pot arribar a tapar la franja de la barra
+// d'estat. Sense això, Safari deixa aquella franja fora del viewport i el
+// contingut que hi passa pel darrere s'hi veu a través (damunt del rellotge i de
+// la bateria). L'àrea segura resultant es compensa amb la classe `.safe-top`.
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
 
 export const metadata: Metadata = {
   title: {

@@ -303,7 +303,7 @@ export default async function ArxiuPage() {
       />
       <div className="min-h-screen flex flex-col">
         <div className="flex-1">
-          <div className="px-4 sm:px-6 md:px-8 pt-12 sm:pt-16 md:pt-20 pb-0">
+          <div className="px-4 sm:px-6 md:px-8 pt-[calc(3rem_+_env(safe-area-inset-top))] sm:pt-16 md:pt-20 pb-0">
             <div className="max-w-6xl mx-auto">
               <Link
                 href="/"

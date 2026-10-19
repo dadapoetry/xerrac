@@ -129,7 +129,7 @@ export default async function ArticlePage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
-      <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print">
+      <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print safe-top">
         <div className="flex items-center gap-3 px-3 min-h-[2.5rem]">
           {/* El Logo ja és un enllaç a l'inici: embolcallar-lo amb <Link> hi
               posaria un <a> dins d'un altre. */}

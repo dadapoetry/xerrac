@@ -81,7 +81,7 @@ onClick={navigate(link.href)}
     <>
       <button
         onClick={() => setOpen(!open)}
-        className={`fixed top-3 left-3 z-50 md:hidden w-8 h-8 flex items-center justify-center text-sm transition-all ${
+        className={`fixed top-3 left-3 z-50 md:hidden w-8 h-8 safe-fixed-top flex items-center justify-center text-sm transition-all ${
           open ? 'bg-transparent text-white' : 'bg-black/80 border border-gray-800 text-gray-400'
         }`}
         aria-label={open ? 'Tancar menú' : 'Obrir menú'}
