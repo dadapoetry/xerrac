@@ -4,11 +4,11 @@ import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fra
 import { IssueData } from '@/types'
 import { buildSectionSlugMap, issuePath, articlePath } from '@/lib/slugs'
 import { SectionRenderer } from './SectionRenderer'
+import { SectionBackground } from './SectionBackground'
 import { PortadaSection } from './sections/PortadaSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
 import { NewsletterPopUp } from './NewsletterPopUp'
-import { cloudinaryMobileUrl } from '@/lib/cloudinary'
 import { accentOnColor, accentTextColor, hexToRgb } from '@/lib/color'
 
 interface FanzineViewerProps {
@@ -133,7 +133,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const [origin, setOrigin] = useState('')
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
-  const [bgReady, setBgReady] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [canNativeShare, setCanNativeShare] = useState(false)
   const progressRef = useRef<HTMLDivElement>(null)
@@ -213,7 +212,6 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   }, [sortedSections.length])
 
   useEffect(() => {
-    setBgReady(true)
     setOrigin(window.location.origin)
   }, [])
 
@@ -721,30 +719,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
       {sortedSections.map((section, i) => (
         <Fragment key={section.id}>
       {i === 0 ? (
-        <div data-section-index={i} id={sectionSlug(i)}>
+        <div data-section-index={i} id={sectionSlug(i)} className="section-shell">
+          <SectionBackground section={section as any} />
           <div className="section-container min-h-[100dvh]">
-            {section.backgroundImage && (() => {
-              const mobileBg =
-                section.backgroundImageMobile ||
-                cloudinaryMobileUrl(section.backgroundImage) ||
-                section.backgroundImage
-              return (
-                <>
-                  <img
-                    src={mobileBg}
-                    className={`absolute inset-0 z-0 w-full h-full object-cover object-center transition-opacity duration-700 md:hidden ${bgReady ? 'opacity-100' : 'opacity-0'}`}
-                    alt=""
-                    aria-hidden="true"
-                  />
-                  <div
-                    className={`absolute inset-0 z-0 hidden md:block bg-no-repeat bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
-                    style={{ backgroundImage: `url("${section.backgroundImage}")` }}
-                    aria-hidden="true"
-                  />
-                  <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
-                </>
-              )
-            })()}
             <div className="relative z-[3] w-full">
               <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} />
             </div>

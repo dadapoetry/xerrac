@@ -1,30 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { SectionData, NecrologiquesContent } from '@/types'
+import { SectionBackground } from '@/components/SectionBackground'
 
 export function NecrologiquesSection({ section }: { section: SectionData }) {
   const content = section.content as unknown as NecrologiquesContent
   const entries = content.entries || []
-  const [bgReady, setBgReady] = useState(false)
-
-  useEffect(() => {
-    setBgReady(true)
-  }, [])
 
   return (
-    <div className="relative w-full overflow-hidden">
-      {section.backgroundImage && (
-        <>
-          <div
-            className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700 ${bgReady ? 'opacity-100' : 'opacity-0'}`}
-            style={{ backgroundImage: `url("${section.backgroundImage}")` }}
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/85 via-black/72 to-black/90" />
-          <div className="absolute inset-x-0 top-0 h-24 z-[2] bg-gradient-to-b from-black/60 to-transparent" />
-        </>
-      )}
+    <div className="section-shell">
+      <SectionBackground section={section} gradient="from-black/85 via-black/72 to-black/90">
+        <div className="absolute inset-x-0 top-0 h-24 z-[2] bg-gradient-to-b from-black/60 to-transparent" />
+      </SectionBackground>
 
       <div className="relative z-[3] max-w-prose w-full mx-auto px-6 py-14 md:py-20">
         <div className="w-12 h-[2px] opacity-60 mb-4" style={{ backgroundColor: 'var(--accent)' }} />

@@ -323,6 +323,15 @@ body::before {
   }
 }
 
+/* Marc d'una secció: hi viu la capa de fons sticky (germana del contingut, no
+   filla: si fos filla del contenidor amb `overflow: hidden`, la capa no es
+   podria fixar a la finestra). El retall és `clip` i no `hidden` justament
+   perquè `hidden` crearia un contenidor d'scroll i trencaria el sticky. */
+.section-shell {
+  position: relative;
+  overflow: clip;
+}
+
 /* Fons de secció: imatge d'escriptori i imatge de mòbil, triades pel viewport.
    Les dues URL són variables inline, però la regla només en aplica la que
    correspon a la pantalla activa: així el navegador no baixa les dues. Les
@@ -335,6 +344,23 @@ body::before {
   .section-bg {
     background-image: var(--section-bg-mobile, var(--section-bg-desktop));
   }
+}
+
+/* La capa on es pinta el fons. És sticky i només fa una pantalla d'alçada: així
+   la imatge no s'ha d'escalar per cobrir seccions llargues. El marge inferior
+   negatiu compensa exactament aquesta alçada perquè la capa no ocupi espai al
+   flux (el contingut comença on començaria sense capa). S'usa `lvh` i no `svh`
+   perquè, quan el navegador del mòbil amaga la barra d'adreces, la capa continuï
+   cobrint tota la pantalla; i `lvh` és constant, així no balla en desplaçar-se. */
+.section-bg-pane {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100lvh;
+  margin-bottom: -100lvh;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 /* Previsualització de la secció dins el panell d'admin: la secció pot
@@ -842,6 +868,14 @@ body::before {
     min-height: auto !important;
     page-break-after: always;
     padding: 1.5cm 2cm !important;
+  }
+  /* En paper no hi ha desplaçament, i una capa sticky impresa es reparteix
+     entre pàgines. Es torna absolut perquè cobreixi la secció com abans. */
+  .section-bg-pane {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    margin-bottom: 0;
   }
 .section-container img:not([class~="absolute"]) {
     max-width: 60% !important;
