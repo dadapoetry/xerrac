@@ -1,25 +1,13 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPublishedIssueByNumber } from '@/lib/data'
 import { getSiteUrl } from '@/lib/site'
 import { safeParse } from '@/lib/utils'
 import { extractExcerpt } from '@/lib/excerpt'
 import { buildSectionSlugMap, sectionLabel, issuePath, articlePath } from '@/lib/slugs'
-import { SectionRenderer } from '@/components/SectionRenderer'
-import { Footer } from '@/components/Footer'
-import { Logo } from '@/components/Logo'
+import { IssueView } from '@/components/IssueView'
 
 export const revalidate = 300
-
-function hexToRgb(hex: string): string {
-  const h = (hex || '#dc2626').replace('#', '')
-  const r = parseInt(h.substring(0, 2), 16)
-  const g = parseInt(h.substring(2, 4), 16)
-  const b = parseInt(h.substring(4, 6), 16)
-  if (isNaN(r) || isNaN(g) || isNaN(b)) return '239, 68, 68'
-  return `${r}, ${g}, ${b}`
-}
 
 async function loadArticle(numberParam: string, slug: string) {
   const number = Number(numberParam)
@@ -84,11 +72,10 @@ export default async function ArticlePage({
   const data = await loadArticle(number, sectionParam)
   if (!data) notFound()
 
-  const { issue, section, index, sorted, slugMap } = data
+  const { issue, section, index } = data
   const siteUrl = getSiteUrl()
   const label = sectionLabel(section.type, section.title)
   const canonical = `${siteUrl}${articlePath(issue.number, sectionParam)}`
-  const accent = issue.accentColor || '#dc2626'
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -127,31 +114,15 @@ export default async function ArticlePage({
   }
 
   return (
-    <div style={{ '--accent': accent, '--accent-rgb': hexToRgb(accent) } as React.CSSProperties}>
+    <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
-      <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print safe-top">
-        <div className="flex items-center gap-3 px-3 min-h-[2.5rem]">
-          {/* El Logo ja és un enllaç a l'inici: embolcallar-lo amb <Link> hi
-              posaria un <a> dins d'un altre. */}
-          <Logo compact />
-          <span className="text-gray-700 hidden sm:inline">·</span>
-          <Link
-            href={issuePath(issue.number)}
-            className="text-2xs uppercase tracking-wider text-gray-500 hover:text-white transition-colors truncate"
-          >
-            Número {String(issue.number).padStart(2, '0')} — {issue.title}
-          </Link>
-        </div>
-      </div>
-
-      <main className="animate-fade-in">
-        <h1 className="sr-only">{label} — Xerrac!, número {issue.number}</h1>
-        <SectionRenderer section={section as any} index={index} />
-      </main>
-
-      <Footer currentIssueNumber={issue.number} />
-    </div>
+      {/* La ruta de secció és un enllaç profund al número sencer: el
+          FanzineViewer se situa a la secció i la URL de lectura passa a ser la
+          de la secció. Així, compartir (des de l'app o des del navegador)
+          porta sempre al mateix lloc. */}
+      <IssueView issue={issue} initialSectionIndex={index} jsonLd={false} />
+    </>
   )
 }

@@ -13,6 +13,7 @@ import { accentOnColor, accentTextColor, hexToRgb } from '@/lib/color'
 
 interface FanzineViewerProps {
   issue: IssueData
+  initialSectionIndex?: number
 }
 
 function getCurrentSectionIndex(): number {
@@ -109,9 +110,13 @@ function ShareIcon({ className = 'w-4 h-4' }: { className?: string }) {
   )
 }
 
-export function FanzineViewer({ issue }: FanzineViewerProps) {
+export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps) {
   const sortedSections = useMemo(
     () => [...issue.sections].sort((a, b) => a.order - b.order),
+    [issue.sections]
+  )
+  const slugMap = useMemo(
+    () => buildSectionSlugMap(issue.sections),
     [issue.sections]
   )
   const sumariEntries = useMemo(() => {
@@ -121,12 +126,9 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     }))
   }, [sortedSections])
 
-  const [activeSection, setActiveSection] = useState(() => {
-    if (typeof window === 'undefined') return 0
-    const v = new URLSearchParams(window.location.search).get('section')
-    const idx = v !== null ? parseInt(v, 10) : NaN
-    return !isNaN(idx) && idx >= 0 && idx < sortedSections.length ? idx : 0
-  })
+  // S'inicia a 0 i es fixa en efecte per evitar desenganxament d'hidratació:
+  // la secció inicial es llegeix de la URL (slug) després de muntar.
+  const [activeSection, setActiveSection] = useState(0)
   const [copied, setCopied] = useState(false)
   const [sharePhase, setSharePhase] = useState<'closed' | 'open' | 'closing'>('closed')
   const [togglePop, setTogglePop] = useState(false)
@@ -159,6 +161,23 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     }
   }, [])
 
+  // Enllaç profund: si la URL ja porta l'slug d'una secció, situem el número
+  // sencer just allà. També accepta l'antic ?section=N com a reserva. Es fa en
+  // efecte (no en el state inicial) per no provocar desenganxament d'hidratació.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    let target = initialSectionIndex && initialSectionIndex > 0 ? initialSectionIndex : 0
+    if (target === 0) {
+      const v = new URLSearchParams(window.location.search).get('section')
+      const idx = v !== null ? parseInt(v, 10) : NaN
+      if (!isNaN(idx) && idx > 0 && idx < sortedSections.length) target = idx
+    }
+    if (target <= 0) return
+    setActiveSection(target)
+    const el = document.querySelector(`[data-section-index="${target}"]`) as HTMLElement | null
+    if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' })
+  }, [initialSectionIndex, sortedSections])
+
   useEffect(() => {
     const els = Array.from(document.querySelectorAll('[data-section-index]'))
     if (els.length === 0) return
@@ -171,9 +190,11 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
           setActiveSection(idx)
           if (idx >= 2) setShowNewsletter(true)
           try {
-            const u = new URL(window.location.href)
-            u.searchParams.set('section', String(idx))
-            history.replaceState(null, '', u.pathname + u.search)
+            // La URL de lectura passa a ser la de la secció (/numeros/X/slug),
+            // de manera que el navegador i el botó de compartir coincideixen.
+            const section = sortedSections[idx]
+            const slug = section ? slugMap.get(section.id) : undefined
+            history.replaceState(null, '', slug ? articlePath(issue.number, slug) : issuePath(issue.number))
           } catch {}
         }
       },
@@ -181,7 +202,7 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
     )
     els.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
-  }, [sortedSections.length])
+  }, [sortedSections, slugMap, issue.number])
 
   useLayoutEffect(() => {
     const container = navRef.current
@@ -294,14 +315,13 @@ export function FanzineViewer({ issue }: FanzineViewerProps) {
   const shareMeta = useMemo(() => {
     const section = sortedSections[activeSection]
     if (!section) return null
-    const slugMap = buildSectionSlugMap(issue.sections)
     const slug = slugMap.get(section.id)
     const title = section.type === 'portada' ? issue.title : section.title
     return {
       path: slug ? articlePath(issue.number, slug) : issuePath(issue.number),
       text: `${title} — Xerrac!, núm. ${String(issue.number).padStart(2, '0')}`,
     }
-  }, [activeSection, sortedSections, issue])
+  }, [activeSection, sortedSections, slugMap, issue])
 
   const shareUrl = shareMeta && origin ? `${origin}${shareMeta.path}` : ''
 

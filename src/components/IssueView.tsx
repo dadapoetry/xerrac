@@ -17,7 +17,14 @@ function parseIssueContent(issue: any) {
   }
 }
 
-export async function IssueView({ issue }: { issue: any }) {
+interface IssueViewProps {
+  issue: any
+  initialSectionIndex?: number
+  /** Quan és false, qui el renderitza aporta el seu propi JSON-LD (p. ex. Article). */
+  jsonLd?: boolean
+}
+
+export async function IssueView({ issue, initialSectionIndex, jsonLd = true }: IssueViewProps) {
   const siteUrl = getSiteUrl()
   const issn = (await getSetting('footer_issn').catch(() => '')) || ''
   const parsedIssue = parseIssueContent(issue)
@@ -68,16 +75,20 @@ export async function IssueView({ issue }: { issue: any }) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(publicationIssue) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      {jsonLd && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(publicationIssue) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+          />
+        </>
+      )}
       <ErrorBoundary>
-        <FanzineViewer issue={parsedIssue as any} />
+        <FanzineViewer issue={parsedIssue as any} initialSectionIndex={initialSectionIndex} />
       </ErrorBoundary>
       <Afterthought />
       <Footer currentIssueNumber={issue.number} />
