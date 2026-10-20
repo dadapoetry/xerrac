@@ -6,7 +6,7 @@ import { permanentRedirect, notFound } from 'next/navigation'
 import { IssueView } from '@/components/IssueView'
 import { SubscribeForm } from '@/components/SubscribeForm'
 import { Logo } from '@/components/Logo'
-import { issuePath, resolveSectionIndex, resolveSectionSlug, sectionQueryPath } from '@/lib/slugs'
+import { issuePath, articlePath, buildSectionSlugMap } from '@/lib/slugs'
 
 function getPreviewStatus(preview?: string): boolean {
   const token = process.env.PREVIEW_TOKEN
@@ -100,13 +100,13 @@ export default async function HomePage({
   if (issue && !issue.published && !isPreview) notFound()
 
   if (issue && !isPreview) {
+    const slugMap = buildSectionSlugMap((issue.sections as any[]) || [])
     const allSections = [...((issue.sections as any[]) || [])].sort((a, b) => a.order - b.order)
-    // `/?issue=X&section=…` és la porta antiga: portava a la pàgina de
-    // l'article i deixava qui hi entrava tancat en una sola secció. Ara
-    // redirigeix a la secció dins de la revista, amb el nom de la secció i no
-    // amb la posició, que es trencaria si es reordenen les seccions.
-    const idx = resolveSectionIndex(searchParams.section, allSections)
-    if (idx >= 0) permanentRedirect(sectionQueryPath(issue.number, resolveSectionSlug(searchParams.section, allSections)!))
+    const secIdx = searchParams.section !== undefined ? parseInt(searchParams.section, 10) : NaN
+    if (!isNaN(secIdx) && secIdx > 0 && secIdx < allSections.length) {
+      const slug = slugMap.get(allSections[secIdx].id)
+      if (slug) permanentRedirect(articlePath(issue.number, slug))
+    }
     permanentRedirect(issuePath(issue.number))
   }
 

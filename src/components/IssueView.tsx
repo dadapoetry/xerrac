@@ -26,27 +26,6 @@ export async function IssueView({ issue }: { issue: any }) {
   const contentSections = parsedIssue.sections.filter((s: any) => s.type !== 'portada')
   const slugMap = buildSectionSlugMap(parsedIssue.sections)
 
-  // Les previsualitzacions del número (WhatsApp, X…) surten de generateMetadata,
-  // que les munta per secció i per això té accés a l'id de cadascuna.
-  let ogSectionIndex: number | null = null
-  if (typeof window === 'undefined') {
-    const { headers } = await import('next/headers')
-    const { resolveSectionIndex } = await import('@/lib/slugs')
-    try {
-      const h = headers()
-      const marker = h.get('x-search-params')
-      const raw = marker ? new URLSearchParams(marker).get('section') : null
-      if (raw) {
-        const i = resolveSectionIndex(raw, parsedIssue.sections)
-        if (i >= 0) ogSectionIndex = i
-      }
-    } catch {}
-  }
-
-  const ogUrl = ogSectionIndex !== null
-    ? `${siteUrl}/api/og?issue=${issue.id}&section=${ogSectionIndex}`
-    : `${siteUrl}/api/og?issue=${issue.id}`
-
   const periodical = {
     '@type': 'Periodical',
     name: 'Xerrac!',
@@ -69,7 +48,7 @@ export async function IssueView({ issue }: { issue: any }) {
     dateModified: new Date(issue.updatedAt || issue.date).toISOString(),
     url: issueUrl,
     inLanguage: 'ca',
-    image: ogUrl,
+    image: `${siteUrl}/api/og?issue=${issue.id}`,
     isPartOf: periodical,
     hasPart: contentSections.map((s: any) => ({
       '@type': 'Article',
