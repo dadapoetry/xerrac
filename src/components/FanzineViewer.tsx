@@ -600,7 +600,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                   ref={sheetRef}
                   onClick={(e) => e.stopPropagation()}
                   style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-                  className={`w-full max-w-md bg-black border-t border-gray-800 mt-auto ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
+                  className={`w-full max-w-md bg-black border-t border-gray-800 mx-auto ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
                 >
                   <div
                     onPointerDown={onHandlePointerDown}
