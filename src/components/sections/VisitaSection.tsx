@@ -2,7 +2,7 @@
 
 import { SectionData, VisitaContent } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
-import { readingTime } from '@/lib/html'
+import { readingTime, prepareBody } from '@/lib/html'
 
 export function VisitaSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as VisitaContent
@@ -27,7 +27,7 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
         <div className="pl-8 md:pl-12 pr-4">
           <div
             className="text-gray-300 leading-relaxed text-sm md:text-md italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-            dangerouslySetInnerHTML={{ __html: content.body }}
+            dangerouslySetInnerHTML={{ __html: prepareBody(content.body) }}
           />
         </div>
 
