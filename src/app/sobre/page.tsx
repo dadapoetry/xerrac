@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
-import { getSiteUrl, DEFAULT_CONTACT_EMAIL } from '@/lib/site'
+import { getSiteUrl, DEFAULT_CONTACT_EMAIL, ogImageUrl } from '@/lib/site'
 import { SECTION_LABELS } from '@/types'
 import { SawIcon } from '@/components/SawIcon'
 
@@ -10,12 +10,19 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'La revista',
   description: "Xerrac! és una revista cultural digital semestral en català. Cada número és un volum monogràfic amb tesi pròpia: una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.",
-  alternates: { canonical: '/sobre' },
+  alternates: { canonical: `${getSiteUrl()}/sobre` },
   robots: { index: true, follow: true },
   openGraph: {
     title: 'La revista — Xerrac!',
     description: "Revista cultural digital semestral en català. Una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.",
     url: `${getSiteUrl()}/sobre`,
+    images: [{ url: ogImageUrl({ title: 'La revista' }), width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'La revista — Xerrac!',
+    description: "Revista cultural digital semestral en català. Una eina de nova cultura que vol aclarir tot allò que continua sense aclarir-se.",
+    images: [ogImageUrl({ title: 'La revista' })],
   },
 }
 

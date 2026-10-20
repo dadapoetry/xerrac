@@ -83,16 +83,31 @@ function extractExcerpt(content: unknown, maxLen = 220): string {
   return cutExcerpt(text, maxLen)
 }
 
+/* Mida de lletra del títol: els títols llargs s'han de reduir perquè càpiguen
+   en l'ample de la imatge. Amb número (i extracte) ja porta un tamany fix. */
+function titleFontSize(title: string, number: string, excerpt: string): number {
+  if (number) return excerpt ? 52 : 72
+  if (excerpt) return 52
+  const len = title.length
+  if (len <= 8) return 160
+  if (len <= 10) return 110
+  if (len <= 16) return 80
+  if (len <= 24) return 62
+  return 48
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const issueId = searchParams.get('issue')
   const sectionParam = searchParams.get('section')
 
-  let title = 'XERRAC!'
-  let subtitle = "Revista d'aclariment cultural"
+  // Les pàgines sense número (arxiu, sobre, subscriu, privacitat) poden portar
+  // títol, subtítol i extracte propis per tenir una imatge a mida.
+  let title = (searchParams.get('title') || 'XERRAC!').toUpperCase()
+  let subtitle = searchParams.get('subtitle') || "Revista d'aclariment cultural"
   let number = ''
-  let excerpt = ''
-  let accent = '#dc2626'
+  let excerpt = searchParams.get('excerpt') || ''
+  let accent = searchParams.get('accent') || '#dc2626'
   let cover = ''
 
   if (issueId) {
@@ -133,7 +148,10 @@ export async function GET(request: Request) {
   }
   const background = await getOgBackground(cover)
 
-  const titleSize = excerpt ? 52 : number ? 72 : 160
+  const titleSize = titleFontSize(title, number, excerpt)
+  // El títol ja pot portar «!» al final (p. ex. «Contra la xerrameca!»); si no
+  // traiem els que ja hi hagi, la imatge acabaria amb «!!».
+  const displayTitle = title.replace(/!+$/, '')
 
   const response = new ImageResponse(
     (
@@ -198,7 +216,7 @@ export async function GET(request: Request) {
             padding: '0 60px',
           }}
         >
-          {title}
+          {displayTitle}
           <span style={{ color: accentTextColor(accent) }}>!</span>
         </div>
         {excerpt && (

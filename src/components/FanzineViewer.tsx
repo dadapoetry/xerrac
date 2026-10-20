@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fragment } from 'react'
 import { IssueData } from '@/types'
 import { buildSectionSlugMap, issuePath, articlePath } from '@/lib/slugs'
+import { getSiteUrl } from '@/lib/site'
 import { SectionRenderer } from './SectionRenderer'
 import { SectionBackground } from './SectionBackground'
 import { PortadaSection } from './sections/PortadaSection'
@@ -132,7 +133,6 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
   const [copied, setCopied] = useState(false)
   const [sharePhase, setSharePhase] = useState<'closed' | 'open' | 'closing'>('closed')
   const [togglePop, setTogglePop] = useState(false)
-  const [origin, setOrigin] = useState('')
   const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -232,10 +232,6 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
     }
   }, [sortedSections.length])
 
-  useEffect(() => {
-    setOrigin(window.location.origin)
-  }, [])
-
   // La barra de progrés ha de dir la veritat del desplaçament. Abans es movia
   // a bots (índex de secció / nombre de seccions) i, en una pàgina amb
   // seccions molt llargues, quedava clavada mentre s'hi llegia a dins.
@@ -323,11 +319,13 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
     }
   }, [activeSection, sortedSections, slugMap, issue])
 
-  const shareUrl = shareMeta && origin ? `${origin}${shareMeta.path}` : ''
+  // La URL compartida és sempre la canònica del lloc, no la de la desplegada
+  // (evita compartir adreces de preview de Vercel).
+  const shareUrl = shareMeta ? `${getSiteUrl()}${shareMeta.path}` : ''
 
   const shareTargets = useMemo(() => {
-    if (!shareMeta || !origin) return []
-    const url = `${origin}${shareMeta.path}`
+    if (!shareMeta) return []
+    const url = `${getSiteUrl()}${shareMeta.path}`
     const text = shareMeta.text
     const brand = 'w-4 h-4'
     return [
@@ -383,7 +381,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
         ),
       },
     ]
-  }, [shareMeta, origin])
+  }, [shareMeta])
 
   const showStrip = sharePhase !== 'closed'
   const stripAnim = sharePhase === 'closing' ? 'animate-share-item-out' : 'animate-share-item-in'

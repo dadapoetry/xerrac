@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { NewsletterResult } from '@/components/NewsletterResult'
+import { getSiteUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Subscripció confirmada',
   robots: { index: false, follow: false },
+  alternates: { canonical: `${getSiteUrl()}/subscriu/confirmat` },
 }
 
 // Pàgina d'arribada després de prémer el botó de confirmació del correu.

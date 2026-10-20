@@ -1,16 +1,25 @@
 import type { Metadata } from 'next'
 import { SawIcon } from '@/components/SawIcon'
 import { SubscribeForm } from '@/components/SubscribeForm'
+import { getSiteUrl, ogImageUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Subscri-te al butlletí',
   description:
     'Subscri-te al butlletí de Xerrac! per rebre cada número de la revista d\'aclariment cultural.',
-  alternates: { canonical: '/subscriu' },
+  alternates: { canonical: `${getSiteUrl()}/subscriu` },
   openGraph: {
     title: 'Xerrac! — Subscri-te al butlletí',
     description: 'Cada número de la revista, al teu correu. Sense spam.',
     type: 'website',
+    url: `${getSiteUrl()}/subscriu`,
+    images: [{ url: ogImageUrl({ title: 'Subscri-te al butlletí' }), width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Xerrac! — Subscri-te al butlletí',
+    description: 'Cada número de la revista, al teu correu. Sense spam.',
+    images: [ogImageUrl({ title: 'Subscri-te al butlletí' })],
   },
 }
 

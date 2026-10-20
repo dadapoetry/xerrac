@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getPublishedIssues } from '@/lib/data'
-import { getSiteUrl } from '@/lib/site'
+import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { issuePath } from '@/lib/slugs'
 import { SECTION_LABELS } from '@/types'
 import { Footer } from '@/components/Footer'
@@ -17,11 +17,13 @@ export const metadata: Metadata = {
     title: 'Arxiu — Xerrac!',
     description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
     url: `${getSiteUrl()}/arxiu`,
+    images: [{ url: ogImageUrl({ title: 'Arxiu' }), width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Arxiu — Xerrac!',
     description: 'Tots els números publicats de Xerrac! — Revista d\'aclariment cultural',
+    images: [ogImageUrl({ title: 'Arxiu' })],
   },
 }
 

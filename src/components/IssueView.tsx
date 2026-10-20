@@ -3,7 +3,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Footer } from '@/components/Footer'
 import { Afterthought } from '@/components/Afterthought'
 import { getSetting } from '@/lib/settings'
-import { getSiteUrl } from '@/lib/site'
+import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { safeParse } from '@/lib/utils'
 import { issuePath, articlePath, buildSectionSlugMap, sectionLabel } from '@/lib/slugs'
 
@@ -55,7 +55,7 @@ export async function IssueView({ issue, initialSectionIndex, jsonLd = true }: I
     dateModified: new Date(issue.updatedAt || issue.date).toISOString(),
     url: issueUrl,
     inLanguage: 'ca',
-    image: `${siteUrl}/api/og?issue=${issue.id}`,
+    image: ogImageUrl({ issue: issue.id }),
     isPartOf: periodical,
     hasPart: contentSections.map((s: any) => ({
       '@type': 'Article',

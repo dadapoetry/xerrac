@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getLatestIssue, getIssue } from '@/lib/data'
-import { getSiteUrl } from '@/lib/site'
+import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { permanentRedirect, notFound } from 'next/navigation'
 import { IssueView } from '@/components/IssueView'
 import { SubscribeForm } from '@/components/SubscribeForm'
@@ -50,13 +50,13 @@ export async function generateMetadata({
       publishedTime: new Date(issue.date).toISOString(),
       modifiedTime: new Date(issue.updatedAt || issue.date).toISOString(),
       url: `${siteUrl}${issuePath(issue.number)}`,
-      images: [{ url: `${siteUrl}/api/og?issue=${issue.id}`, width: 1200, height: 630 }],
+      images: [{ url: ogImageUrl({ issue: issue.id }), width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${issue.title} — Xerrac!`,
       description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural.`,
-      images: [`${siteUrl}/api/og?issue=${issue.id}`],
+      images: [ogImageUrl({ issue: issue.id })],
     },
   }
 }

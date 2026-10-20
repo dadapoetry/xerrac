@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPublishedIssueByNumber } from '@/lib/data'
-import { getSiteUrl } from '@/lib/site'
+import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { safeParse } from '@/lib/utils'
 import { extractExcerpt } from '@/lib/excerpt'
 import { buildSectionSlugMap, sectionLabel, issuePath, articlePath } from '@/lib/slugs'
@@ -52,13 +52,13 @@ export async function generateMetadata({
       publishedTime: new Date(issue.date).toISOString(),
       modifiedTime: new Date(section.updatedAt || issue.updatedAt || issue.date).toISOString(),
       url: canonical,
-      images: [{ url: `${siteUrl}/api/og?issue=${issue.id}&section=${index}`, width: 1200, height: 630 }],
+      images: [{ url: ogImageUrl({ issue: issue.id, section: index }), width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${label} — Xerrac!`,
       description: excerpt,
-      images: [`${siteUrl}/api/og?issue=${issue.id}&section=${index}`],
+      images: [ogImageUrl({ issue: issue.id, section: index })],
     },
   }
 }
@@ -88,7 +88,7 @@ export default async function ArticlePage({
     dateModified: new Date(section.updatedAt || issue.updatedAt || issue.date).toISOString(),
     url: canonical,
     mainEntityOfPage: canonical,
-    image: `${siteUrl}/api/og?issue=${issue.id}&section=${index}`,
+    image: ogImageUrl({ issue: issue.id, section: index }),
     author: { '@type': 'Organization', name: 'Xerrac!' },
     publisher: {
       '@type': 'Organization',

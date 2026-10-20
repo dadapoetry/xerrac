@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
-import { DEFAULT_CONTACT_EMAIL } from '@/lib/site'
+import { getSiteUrl, DEFAULT_CONTACT_EMAIL, ogImageUrl } from '@/lib/site'
 import { PENDING_TTL_DAYS } from '@/lib/pending'
 import { SawIcon } from '@/components/SawIcon'
 
@@ -12,8 +12,20 @@ const UPDATED = '2 d’octubre de 2026'
 export const metadata: Metadata = {
   title: 'Política de privacitat',
   description: 'Quina informació personal tracta Xerrac!, amb quina finalitat, qui hi té accés i quins drets podeu exercir.',
-  alternates: { canonical: '/privacitat' },
+  alternates: { canonical: `${getSiteUrl()}/privacitat` },
   robots: { index: true, follow: true },
+  openGraph: {
+    title: 'Privacitat — Xerrac!',
+    description: 'Quina informació personal tracta Xerrac!, amb quina finalitat, qui hi té accés i quins drets podeu exercir.',
+    url: `${getSiteUrl()}/privacitat`,
+    images: [{ url: ogImageUrl({ title: 'Privacitat' }), width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Privacitat — Xerrac!',
+    description: 'Quina informació personal tracta Xerrac!, amb quina finalitat, qui hi té accés i quins drets podeu exercir.',
+    images: [ogImageUrl({ title: 'Privacitat' })],
+  },
 }
 
 function H({ children }: { children: React.ReactNode }) {
