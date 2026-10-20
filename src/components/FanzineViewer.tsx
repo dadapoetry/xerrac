@@ -655,7 +655,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                 </div>
               </div>
             ) : showStrip ? (
-              <div className="flex h-10 items-stretch divide-x divide-gray-800 border border-gray-800 bg-white/[0.03] min-w-0 overflow-x-auto nav-scroll">
+              <div className="flex h-8 items-stretch divide-x divide-gray-800 border border-gray-800 bg-white/[0.03] min-w-0 overflow-x-auto nav-scroll">
                 {shareTargets.map((t, i) => (
                   <a
                     key={t.name}
@@ -665,7 +665,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                     onClick={closeShare}
                     title={t.name}
                     aria-label={t.label}
-                    className={`${stripAnim} w-10 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                    className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
                     style={{ animationDelay: stripDelay(i) }}
                     onMouseEnter={iconHoverOn}
                     onMouseLeave={iconHoverOff}
@@ -678,7 +678,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                   onClick={copyShareLink}
                   title="Copiar l'enllaç"
                   aria-label="Copiar l'enllaç"
-                  className={`${stripAnim} w-10 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                  className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
                   style={{ animationDelay: stripDelay(shareTargets.length) }}
                   onMouseEnter={iconHoverOn}
                   onMouseLeave={iconHoverOff}
@@ -690,7 +690,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                   onClick={closeShare}
                   title="Tancar"
                   aria-label="Tancar"
-                  className={`${stripAnim} w-10 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                  className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
                   style={{ animationDelay: stripDelay(shareTargets.length + 1) }}
                   onMouseEnter={iconHoverOn}
                   onMouseLeave={iconHoverOff}
