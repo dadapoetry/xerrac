@@ -178,7 +178,7 @@ body {
   z-index: 1;
 }
 .nav-mask-left {
-  left: -0.5rem;
+  left: -0.25rem;
   background: linear-gradient(to right, #000, rgba(0, 0, 0, 0));
 }
 .nav-mask-right {
