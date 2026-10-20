@@ -10,13 +10,14 @@ export const dynamic = 'force-dynamic'
 export default async function EditSeccioPage({
   params,
 }: {
-  params: { issueId: string; sectionId: string }
+  params: Promise<{ issueId: string; sectionId: string }>
 }) {
-  const issue = await getIssue(params.issueId)
+  const { issueId, sectionId } = await params
+  const issue = await getIssue(issueId)
 
   if (!issue) notFound()
 
-  const section = issue.sections.find((s: any) => s.id === params.sectionId)
+  const section = issue.sections.find((s: any) => s.id === sectionId)
   if (!section) notFound()
 
   const parsedSection: SectionData = {

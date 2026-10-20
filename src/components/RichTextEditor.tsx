@@ -14,7 +14,10 @@ let QuillClass: any = null
 
 const ReactQuill = dynamic(
   async () => {
-    const mod = await import('react-quill')
+    // `react-quill-new` és el manteniment de `react-quill`: la versió original
+    // (2.0.0) fa servir `ReactDOM.findDOMNode`, que React 19 ha eliminat, i
+    // l'editor peta en muntar-se. La forca manté la mateixa API i el mateix CSS.
+    const mod = await import('react-quill-new')
     QuillClass = (mod.default as any)?.Quill
     registerXerracIcon(QuillClass)
     registerXerracComodi(QuillClass)
@@ -24,7 +27,7 @@ const ReactQuill = dynamic(
   { ssr: false }
 ) as any
 
-import 'react-quill/dist/quill.snow.css'
+import 'react-quill-new/dist/quill.snow.css'
 
 import { MAX_UPLOAD_MB, uploadImageToCloudinary } from '@/lib/cloudinary'
 

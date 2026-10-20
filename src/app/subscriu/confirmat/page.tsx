@@ -9,10 +9,11 @@ export const metadata: Metadata = {
 // Pàgina d'arribada després de prémer el botó de confirmació del correu.
 // `estat=ok` només l'hi posa el POST de /api/newsletter/confirm; qualsevol
 // altra cosa (accés directe inclòs) es tracta com un error, per prudència.
-export default function SubscriptionConfirmedPage({
+export default async function SubscriptionConfirmedPage({
   searchParams,
 }: {
-  searchParams: { estat?: string }
+  searchParams: Promise<{ estat?: string }>
 }) {
-  return <NewsletterResult mode="subscripcio" ok={searchParams.estat === 'ok'} />
+  const { estat } = await searchParams
+  return <NewsletterResult mode="subscripcio" ok={estat === 'ok'} />
 }

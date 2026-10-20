@@ -7,10 +7,11 @@ export const metadata: Metadata = {
 }
 
 // Pàgina d'arribada després de confirmar la baixa del butlletí.
-export default function UnsubscribedPage({
+export default async function UnsubscribedPage({
   searchParams,
 }: {
-  searchParams: { estat?: string }
+  searchParams: Promise<{ estat?: string }>
 }) {
-  return <NewsletterResult mode="baixa" ok={searchParams.estat === 'ok'} />
+  const { estat } = await searchParams
+  return <NewsletterResult mode="baixa" ok={estat === 'ok'} />
 }

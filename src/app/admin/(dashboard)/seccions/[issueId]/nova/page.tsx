@@ -5,8 +5,8 @@ import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-export default async function NovaSeccioPage({ params }: { params: { issueId: string } }) {
-  const issue = await getIssue(params.issueId)
+export default async function NovaSeccioPage({ params }: { params: Promise<{ issueId: string }> }) {
+  const issue = await getIssue((await params).issueId)
 
   if (!issue) {
     return <div className="text-center py-16 text-gray-500">Número no trobat</div>

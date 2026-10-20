@@ -13,8 +13,12 @@ async function loadIssue(numberParam: string) {
   return getPublishedIssueByNumber(number)
 }
 
-export async function generateMetadata({ params }: { params: { number: string } }): Promise<Metadata> {
-  const issue = await loadIssue(params.number)
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ number: string }>
+}): Promise<Metadata> {
+  const issue = await loadIssue((await params).number)
   if (!issue) return { title: { absolute: 'Número no trobat — Xerrac!' } }
 
   const siteUrl = getSiteUrl()
@@ -44,8 +48,8 @@ export async function generateMetadata({ params }: { params: { number: string } 
   }
 }
 
-export default async function IssuePage({ params }: { params: { number: string } }) {
-  const issue = await loadIssue(params.number)
+export default async function IssuePage({ params }: { params: Promise<{ number: string }> }) {
+  const issue = await loadIssue((await params).number)
   if (!issue) notFound()
 
   return <IssueView issue={issue} />

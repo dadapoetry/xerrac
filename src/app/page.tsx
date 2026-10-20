@@ -13,9 +13,14 @@ function getPreviewStatus(preview?: string): boolean {
   return token ? preview === token : false
 }
 
-export async function generateMetadata({ searchParams }: { searchParams: { issue?: string; section?: string; preview?: string } }): Promise<Metadata> {
-  const isPreview = getPreviewStatus(searchParams.preview)
-  const issueId = searchParams.issue
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ issue?: string; section?: string; preview?: string }>
+}): Promise<Metadata> {
+  const sp = await searchParams
+  const isPreview = getPreviewStatus(sp.preview)
+  const issueId = sp.issue
   const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
   const siteUrl = getSiteUrl()
 
@@ -90,10 +95,11 @@ function EmptyHome() {
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: { issue?: string; section?: string; preview?: string }
+  searchParams: Promise<{ issue?: string; section?: string; preview?: string }>
 }) {
-  const isPreview = getPreviewStatus(searchParams.preview)
-  const issueId = searchParams.issue
+  const sp = await searchParams
+  const isPreview = getPreviewStatus(sp.preview)
+  const issueId = sp.issue
   const issue = issueId ? await getIssue(issueId) : (isPreview ? null : await getLatestIssue())
 
   // Un número esborrany només és visible amb el testimoni de previsualització.
@@ -102,7 +108,7 @@ export default async function HomePage({
   if (issue && !isPreview) {
     const slugMap = buildSectionSlugMap((issue.sections as any[]) || [])
     const allSections = [...((issue.sections as any[]) || [])].sort((a, b) => a.order - b.order)
-    const secIdx = searchParams.section !== undefined ? parseInt(searchParams.section, 10) : NaN
+    const secIdx = sp.section !== undefined ? parseInt(sp.section, 10) : NaN
     if (!isNaN(secIdx) && secIdx > 0 && secIdx < allSections.length) {
       const slug = slugMap.get(allSections[secIdx].id)
       if (slug) permanentRedirect(articlePath(issue.number, slug))

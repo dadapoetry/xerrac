@@ -6,8 +6,8 @@ import { SectionList } from '@/components/admin/SectionList'
 
 export const dynamic = 'force-dynamic'
 
-export default async function SeccionsPage({ params }: { params: { issueId: string } }) {
-  const issue = await getIssue(params.issueId)
+export default async function SeccionsPage({ params }: { params: Promise<{ issueId: string }> }) {
+  const issue = await getIssue((await params).issueId)
 
   if (!issue) notFound()
 

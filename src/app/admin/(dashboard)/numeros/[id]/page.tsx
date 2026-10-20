@@ -8,13 +8,14 @@ import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-export default async function EditNumeroPage({ params }: { params: { id: string } }) {
-  const issue = await getIssue(params.id)
+export default async function EditNumeroPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const issue = await getIssue(id)
   const { confirmed: confirmedSubscribers } = await getSubscriberStats()
   const previewToken = process.env.PREVIEW_TOKEN
   const previewUrl = previewToken
-    ? `${getSiteUrl()}/?issue=${params.id}&preview=${previewToken}`
-    : `${getSiteUrl()}/?issue=${params.id}`
+    ? `${getSiteUrl()}/?issue=${id}&preview=${previewToken}`
+    : `${getSiteUrl()}/?issue=${id}`
 
   if (!issue) {
     return (

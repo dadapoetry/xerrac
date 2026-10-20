@@ -6,11 +6,12 @@ export const dynamic = 'force-dynamic'
 export default async function SubscribersPage({
   searchParams,
 }: {
-  searchParams: { q?: string; f?: string }
+  searchParams: Promise<{ q?: string; f?: string }>
 }) {
-  const query = searchParams.q || ''
-  const filter = (['all', 'confirmed', 'pending'].includes(searchParams.f || '')
-    ? searchParams.f
+  const sp = await searchParams
+  const query = sp.q || ''
+  const filter = (['all', 'confirmed', 'pending'].includes(sp.f || '')
+    ? sp.f
     : 'all') as SubscriberFilter
 
   const [rows, stats] = await Promise.all([

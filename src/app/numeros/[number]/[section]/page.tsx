@@ -41,16 +41,17 @@ async function loadArticle(numberParam: string, slug: string) {
 export async function generateMetadata({
   params,
 }: {
-  params: { number: string; section: string }
+  params: Promise<{ number: string; section: string }>
 }): Promise<Metadata> {
-  const data = await loadArticle(params.number, params.section)
+  const { number, section: sectionParam } = await params
+  const data = await loadArticle(number, sectionParam)
   if (!data) return { title: { absolute: 'Article no trobat — Xerrac!' } }
 
   const { issue, section, index } = data
   const siteUrl = getSiteUrl()
   const label = sectionLabel(section.type, section.title)
   const excerpt = extractExcerpt(section.content) || `Article de Xerrac!, número ${issue.number}.`
-  const canonical = `${siteUrl}${articlePath(issue.number, params.section)}`
+  const canonical = `${siteUrl}${articlePath(issue.number, sectionParam)}`
 
   return {
     title: { absolute: `${label} — Número ${issue.number} — Xerrac!` },
@@ -77,15 +78,16 @@ export async function generateMetadata({
 export default async function ArticlePage({
   params,
 }: {
-  params: { number: string; section: string }
+  params: Promise<{ number: string; section: string }>
 }) {
-  const data = await loadArticle(params.number, params.section)
+  const { number, section: sectionParam } = await params
+  const data = await loadArticle(number, sectionParam)
   if (!data) notFound()
 
   const { issue, section, index, sorted, slugMap } = data
   const siteUrl = getSiteUrl()
   const label = sectionLabel(section.type, section.title)
-  const canonical = `${siteUrl}${articlePath(issue.number, params.section)}`
+  const canonical = `${siteUrl}${articlePath(issue.number, sectionParam)}`
   const accent = issue.accentColor || '#dc2626'
 
   const articleJsonLd = {
