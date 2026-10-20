@@ -2,7 +2,7 @@
 
 import { SectionData, FaduCatalaContent, FaduEntry } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
-import { readingTime } from '@/lib/html'
+import { readingTime, prepareBody } from '@/lib/html'
 
 function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
   const typeLabel =
@@ -28,7 +28,7 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
       </div>
       <div
         className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-        dangerouslySetInnerHTML={{ __html: entry.body }}
+        dangerouslySetInnerHTML={{ __html: prepareBody(entry.body) }}
       />
     </div>
   )

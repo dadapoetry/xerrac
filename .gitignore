@@ -17,3 +17,7 @@ AGENTS.md
 # (C:\Users\adria\xerrac-open-design). No formen part del producte.
 DESIGN.md
 open-design/
+
+# Enllaç amb Vercel (projecte `xerrac`) i els secrets que baixa la CLI.
+.vercel
+.env*

@@ -2,7 +2,7 @@
 
 import { SectionData, EditorialContent } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
-import { styleBlockquotes, readingTime } from '@/lib/html'
+import { styleBlockquotes, prepareBody, readingTime } from '@/lib/html'
 
 export function EditorialSection({ section, index }: { section: SectionData; index: number }) {
   const content = section.content as unknown as EditorialContent
@@ -12,7 +12,7 @@ export function EditorialSection({ section, index }: { section: SectionData; ind
       <SectionHeader number={index} title={section.title} subtitle={content.subtitle || undefined} readingTime={readingTime(content.body)} />
       <div
         className="editorial-body capitular text-justify hyphens-auto text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-        dangerouslySetInnerHTML={{ __html: styleBlockquotes(content.body) }}
+        dangerouslySetInnerHTML={{ __html: styleBlockquotes(prepareBody(content.body)) }}
       />
     </div>
   )

@@ -2,6 +2,7 @@
 
 import { SectionData, NecrologiquesContent } from '@/types'
 import { SectionBackground } from '@/components/SectionBackground'
+import { prepareBody } from '@/lib/html'
 
 export function NecrologiquesSection({ section }: { section: SectionData }) {
   const content = section.content as unknown as NecrologiquesContent
@@ -45,7 +46,7 @@ export function NecrologiquesSection({ section }: { section: SectionData }) {
                 )}
               </p>
               {entry.epitaph && (
-                <div className="necrologica-epitaph" dangerouslySetInnerHTML={{ __html: entry.epitaph }} />
+                <div className="necrologica-epitaph" dangerouslySetInnerHTML={{ __html: prepareBody(entry.epitaph) }} />
               )}
             </article>
           ))

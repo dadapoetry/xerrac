@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { SectionData, ScrollyContent } from '@/types'
+import { prepareBody } from '@/lib/html'
 
 function splitParagraphs(html: string): string[] {
-  const m = html.match(/<p[\s\S]*?<\/p>/gi)
-  if (!m || m.length === 0) return html.trim() ? [html] : []
-  const leftover = html.replace(/<p[\s\S]*?<\/p>/gi, '').trim()
+  const net = prepareBody(html)
+  const m = net.match(/<p[\s\S]*?<\/p>/gi)
+  if (!m || m.length === 0) return net.trim() ? [net] : []
+  const leftover = net.replace(/<p[\s\S]*?<\/p>/gi, '').trim()
   const parts = leftover ? [...m, `<p>${leftover}</p>`] : m
   return parts.filter((p) => p.trim())
 }
