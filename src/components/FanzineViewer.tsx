@@ -594,13 +594,13 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                 aria-modal="true"
                 aria-label="Compartir"
                 onClick={closeShare}
-                className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
+                className={`fixed bottom-0 inset-0 z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
               >
                 <div
                   ref={sheetRef}
                   onClick={(e) => e.stopPropagation()}
                   style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-                  className={`w-full max-w-md bg-black border-t border-gray-800 mx-auto ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
+                  className={`w-full max-w-md bg-black border-t border-gray-800 ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
                 >
                   <div
                     onPointerDown={onHandlePointerDown}
