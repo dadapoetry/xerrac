@@ -5,7 +5,7 @@ import { getPublishedIssueByNumber } from '@/lib/data'
 import { getSiteUrl } from '@/lib/site'
 import { safeParse } from '@/lib/utils'
 import { extractExcerpt } from '@/lib/excerpt'
-import { buildSectionSlugMap, sectionLabel, issuePath, articlePath } from '@/lib/slugs'
+import { buildSectionSlugMap, sectionLabel, issuePath, articlePath, sectionQueryPath } from '@/lib/slugs'
 import { SectionRenderer } from '@/components/SectionRenderer'
 import { Footer } from '@/components/Footer'
 import { Logo } from '@/components/Logo'
@@ -40,13 +40,16 @@ async function loadArticle(numberParam: string, slug: string) {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: { number: string; section: string }
+  searchParams?: { section?: string }
 }): Promise<Metadata> {
   const data = await loadArticle(params.number, params.section)
   if (!data) return { title: { absolute: 'Article no trobat — Xerrac!' } }
 
   const { issue, section, index } = data
+  const query = searchParams?.section
   const siteUrl = getSiteUrl()
   const label = sectionLabel(section.type, section.title)
   const excerpt = extractExcerpt(section.content) || `Article de Xerrac!, número ${issue.number}.`
@@ -71,6 +74,10 @@ export async function generateMetadata({
       description: excerpt,
       images: [`${siteUrl}/api/og?issue=${issue.id}&section=${index}`],
     },
+    // La pàgina és la fitxa d'una secció, però qui hi arriba ha de poder
+    // continuar llegint la revista. Es conserva el paràmetre ?section= que
+    // portava la persona, si n'hi havia.
+    other: query ? { 'section': query } : {},
   }
 }
 
@@ -135,8 +142,11 @@ export default async function ArticlePage({
               posaria un <a> dins d'un altre. */}
           <Logo compact />
           <span className="text-gray-700 hidden sm:inline">·</span>
+          {/* Aquesta pàgina és la fitxa de la secció: qui hi arriba ha de poder
+              continuar llegint la revista sencera, i per això el tornem al
+              número obert en aquesta mateixa secció. */}
           <Link
-            href={issuePath(issue.number)}
+            href={sectionQueryPath(issue.number, params.section)}
             className="text-2xs uppercase tracking-wider text-gray-500 hover:text-white transition-colors truncate"
           >
             Número {String(issue.number).padStart(2, '0')} — {issue.title}

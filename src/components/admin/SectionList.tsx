@@ -119,6 +119,9 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
               >
                 Editar
               </Link>
+              {/* El testimoni de previsualització ha de valer per a un esborrany
+                  (/?…&preview=…). Si no n'hi ha, es previsualitza l'esborrany
+                  igualment: una secció no publicada no existeix a /numeros/N. */}
               <a
                 href={`${previewUrl || `/?issue=${issueId}`}#s-${i}`}
                 target="_blank"
