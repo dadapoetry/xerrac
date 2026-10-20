@@ -555,7 +555,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
       }
     >
       {/* Header — sticky at top, accompanies reader */}
-      <div className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800/50 no-print relative safe-top shadow-sm">
+      <div className="sticky top-0 z-10 bg-black/85 backdrop-blur-md border-b border-gray-800/50 no-print relative safe-top shadow-sm">
         <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
