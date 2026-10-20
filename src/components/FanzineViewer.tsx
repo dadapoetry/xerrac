@@ -533,7 +533,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
   if (sortedSections.length === 0) {
     return (
       <div className="sticky top-0 z-10 bg-black/90 border-b border-gray-800 safe-top shadow-sm">
-        <div className="flex items-center gap-2 px-3 min-h-[2.25rem]">
+        <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
           <span className="text-sm text-gray-600">Cap secció disponible</span>
         </div>
@@ -556,7 +556,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
     >
       {/* Header — sticky at top, accompanies reader */}
       <div className="sticky top-0 z-10 bg-black/90 border-b border-gray-800 no-print relative safe-top shadow-sm">
-        <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.25rem]">
+        <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
           <SawIcon
