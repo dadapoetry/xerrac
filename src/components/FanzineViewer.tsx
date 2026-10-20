@@ -665,7 +665,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                     onClick={closeShare}
                     title={t.name}
                     aria-label={t.label}
-                    className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                    className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 hover:scale-110 active:scale-90 focus-visible:outline-offset-[-2px]`}
                     style={{ animationDelay: stripDelay(i) }}
                     onMouseEnter={iconHoverOn}
                     onMouseLeave={iconHoverOff}
@@ -678,7 +678,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                   onClick={copyShareLink}
                   title="Copiar l'enllaç"
                   aria-label="Copiar l'enllaç"
-                  className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                  className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 hover:scale-110 active:scale-90 focus-visible:outline-offset-[-2px]`}
                   style={{ animationDelay: stripDelay(shareTargets.length) }}
                   onMouseEnter={iconHoverOn}
                   onMouseLeave={iconHoverOff}
@@ -690,7 +690,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                   onClick={closeShare}
                   title="Tancar"
                   aria-label="Tancar"
-                  className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 active:scale-90 focus-visible:outline-offset-[-2px]`}
+                  className={`${stripAnim} w-8 h-8 shrink-0 flex items-center justify-center text-gray-400 transition-all duration-150 hover:scale-110 active:scale-90 focus-visible:outline-offset-[-2px]`}
                   style={{ animationDelay: stripDelay(shareTargets.length + 1) }}
                   onMouseEnter={iconHoverOn}
                   onMouseLeave={iconHoverOff}

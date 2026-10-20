@@ -30,7 +30,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                   </div>
                   <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.subject}</h3>
                   <div
-                    className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                     dangerouslySetInnerHTML={{ __html: prepareBody(item.body) }}
                   />
                 </div>
@@ -51,7 +51,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                   </div>
                   <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.title}</h3>
                   <div
-                    className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                     dangerouslySetInnerHTML={{ __html: prepareBody(item.body) }}
                   />
                 </div>
@@ -72,7 +72,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                   </div>
                   <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.title}</h3>
                   <div
-                    className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
                     dangerouslySetInnerHTML={{ __html: prepareBody(item.body) }}
                   />
                 </div>

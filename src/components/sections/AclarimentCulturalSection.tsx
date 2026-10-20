@@ -12,7 +12,7 @@ export function AclarimentCulturalSection({ section, index }: { section: Section
       <SectionHeader number={index} title={section.title} subtitle="Aclarir allò que continua sense aclarir-se" readingTime={readingTime(content.body)} />
       <div className="relative pl-6">
         <div
-          className="editorial-body aparell text-justify hyphens-auto text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+          className="editorial-body aparell text-justify hyphens-auto text-gray-200 leading-[1.75] drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
           dangerouslySetInnerHTML={{ __html: styleBlockquotes(prepareBody(content.body), 'quoted') }}
         />
       </div>

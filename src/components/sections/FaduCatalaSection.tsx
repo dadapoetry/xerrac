@@ -27,7 +27,7 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
         </span>
       </div>
       <div
-        className="text-gray-300 leading-relaxed text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+        className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
         dangerouslySetInnerHTML={{ __html: prepareBody(entry.body) }}
       />
     </div>

@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Millora de llegibilitat i accessibilitat global */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus visible consistent per a tots els elements interactius */
+:focus-visible {
+  outline: 2px solid var(--accent-text, #df3939);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Respectar preferència de moviment reduït */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
@@ -106,6 +129,11 @@
 .nav-btn {
   position: relative;
   overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
 }
 .nav-scroll {
   scrollbar-width: none;

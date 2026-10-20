@@ -111,7 +111,7 @@ function HeroIssue({ issue }: { issue: IssueShape }) {
   return (
     <Link
       href={issuePath(issue.number)}
-      className="group block relative overflow-hidden border-b border-gray-900"
+      className="group block relative overflow-hidden border-b border-gray-900 shadow-md hover:shadow-2xl transition-shadow duration-300"
       style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
       <div className="aspect-[4/3] sm:aspect-[21/9] md:aspect-[2.6/1] relative">
@@ -162,7 +162,7 @@ function SplitIssue({ issue, reverse }: { issue: IssueShape; reverse?: boolean }
   return (
     <Link
       href={issuePath(issue.number)}
-      className="group block relative overflow-hidden border-b border-gray-900"
+      className="group block relative overflow-hidden border-b border-gray-900 shadow-md hover:shadow-2xl transition-shadow duration-300"
       style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
       <div className="md:grid md:grid-cols-2 md:min-h-[50vh]">
@@ -204,7 +204,7 @@ function TypographyIssue({ issue }: { issue: IssueShape }) {
   return (
     <Link
       href={issuePath(issue.number)}
-      className="group block relative overflow-hidden border-b border-gray-900"
+      className="group block relative overflow-hidden border-b border-gray-900 shadow-md hover:shadow-2xl transition-shadow duration-300"
       style={{ '--issue-accent': issue.accentColor } as React.CSSProperties}
     >
       <div className="relative px-6 sm:px-8 md:px-12 lg:px-16 py-12 sm:py-16 md:py-20">
@@ -237,7 +237,7 @@ function GalleryIssue({ issue }: { issue: IssueShape }) {
   return (
     <Link
       href={issuePath(issue.number)}
-      className="group block relative overflow-hidden border-b border-gray-900"
+      className="group block relative overflow-hidden border-b border-gray-900 shadow-md hover:shadow-2xl transition-shadow duration-300"
     >
       <div className="aspect-[3/2] sm:aspect-[2/1] md:aspect-[3/1] relative">
         {issue.coverBg ? (
