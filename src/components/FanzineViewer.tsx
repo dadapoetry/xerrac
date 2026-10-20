@@ -594,7 +594,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                 aria-modal="true"
                 aria-label="Compartir"
                 onClick={closeShare}
-                className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
+                className={`fixed inset-0 z-[9999] flex flex-col items-end justify-end bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
               >
                 <div
                   ref={sheetRef}
