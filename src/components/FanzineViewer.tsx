@@ -532,8 +532,8 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
 
   if (sortedSections.length === 0) {
     return (
-      <div className="sticky top-0 z-10 bg-black border-b border-gray-800 safe-top">
-        <div className="flex items-center gap-2 px-3 min-h-[2.75rem]">
+      <div className="sticky top-0 z-10 bg-black/80 border-b border-gray-800 safe-top shadow-sm">
+        <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
           <span className="text-sm text-gray-600">Cap secció disponible</span>
         </div>
@@ -555,8 +555,8 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
       }
     >
       {/* Header — sticky at top, accompanies reader */}
-      <div className="sticky top-0 z-10 bg-black border-b border-gray-800 no-print relative safe-top">
-        <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.75rem]">
+      <div className="sticky top-0 z-10 bg-black/80 border-b border-gray-800 no-print relative safe-top shadow-sm">
+        <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
           <SawIcon
@@ -572,7 +572,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                   href={`#${sectionSlug(i)}`}
                   onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
                   aria-current={i === activeSection ? 'location' : undefined}
-                  className={`nav-btn text-2xs uppercase tracking-wider whitespace-nowrap px-1.5 h-11 md:h-9 flex items-center leading-none transition-colors shrink-0 ${
+                  className={`nav-btn text-2xs uppercase tracking-wider whitespace-nowrap px-1.5 h-11 md:h-9 flex items-center leading-none transition-colors duration-200 shrink-0 ${
                     i === activeSection
                       ? 'active'
                       : 'text-gray-600 hover:text-gray-400'
