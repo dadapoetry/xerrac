@@ -495,14 +495,6 @@ body::before {
   /* Drop-shadow centralitzat: abans cada secció l'aplicava a mà alçada
      (tractament inconsistent). Ara viu aquí, una sola vegada. */
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
-  /* Espaiat vertical unificat (gap 1rem) en lloc de marges ad hoc.
-     2rem era massa: els paràgrafs semblaven separats per una línia en blanc. */
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.editorial-body > * {
-  margin: 0;
 }
 .editorial-body .necrologica-name {
   margin-bottom: 0.4em;
