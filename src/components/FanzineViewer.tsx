@@ -751,7 +751,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
           <SectionBackground section={section as any} gradient="from-black/80 via-black/65 to-black/80" />
           <div className="section-container min-h-[100dvh]">
             <div className="relative z-[3] w-full">
-              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} />
+              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} issueDate={issue.date} />
             </div>
           </div>
         </div>

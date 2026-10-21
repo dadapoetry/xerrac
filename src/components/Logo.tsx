@@ -2,10 +2,11 @@
 
 interface LogoProps {
   compact?: boolean
+  large?: boolean
   className?: string
 }
 
-export function Logo({ compact, className = '' }: LogoProps) {
+export function Logo({ compact, large, className = '' }: LogoProps) {
   if (compact) {
     return (
       <a href="/" className={`no-underline flex items-center h-9 ${className}`}>
@@ -18,7 +19,7 @@ export function Logo({ compact, className = '' }: LogoProps) {
 
   return (
     <a href="/" className={`no-underline inline-block ${className}`}>
-      <h1 className="text-masthead font-black tracking-tighter text-white leading-none">
+      <h1 className={`${large ? 'text-6xl md:text-8xl' : 'text-masthead'} font-black tracking-tighter text-white leading-none`}>
         XERRAC<span style={{ color: 'var(--accent-text, #df3939)', filter: 'drop-shadow(0 0 8px rgba(var(--accent-rgb, 220, 38, 38), 0.45))' }}>!</span>
       </h1>
       <div className="h-px w-full mt-1.5 md:mt-2" style={{ backgroundColor: 'var(--accent, #dc2626)' }} />

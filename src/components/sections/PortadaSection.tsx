@@ -20,7 +20,6 @@ function ScrollHint() {
   return (
     <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 pointer-events-none">
       <div className="w-px h-8 bg-gray-500 origin-top animate-[breathe_2s_ease-in-out_infinite]" />
-      <span className="text-2xs text-gray-500 uppercase tracking-[0.25em]">Desplaça</span>
     </div>
   )
 }
@@ -31,7 +30,7 @@ interface SumariEntry {
   readingTime?: number
 }
 
-export function PortadaSection({ section, sumariEntries, issueNumber }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number }) {
+export function PortadaSection({ section, sumariEntries, issueNumber, issueDate }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number; issueDate?: Date }) {
   const content = section.content as unknown as PortadaContent
 
   return (
@@ -57,14 +56,20 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
           </div>
         )}
 
-        {/* Capçalera de publicació: Logo petit */}
-        <div className="flex flex-col items-center mb-6 relative z-10">
-          <Logo className="mb-3" />
+        {/* Capçalera de publicació: Logo gran */}
+        <div className="flex flex-col items-center mb-4 relative z-10">
+          <Logo large className="mb-2" />
+          {issueNumber !== undefined && (
+            <div className="font-mono text-2xs tracking-[0.3em] uppercase text-gray-500 mt-1">
+              Núm. {String(issueNumber).padStart(2, '0')}
+              {issueDate ? ` · ${new Date(issueDate).toLocaleDateString('ca-ES', { month: 'long', year: 'numeric' })}` : ''}
+            </div>
+          )}
         </div>
 
-        {/* Tema com a titular principal */}
+        {/* Tema com a titular (secundari al logo) */}
         {content.topic && (
-          <h1 className="relative z-10 text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-2">
+          <h1 className="relative z-10 text-2xl md:text-3xl font-bold text-gray-200 leading-tight mb-2">
             {content.topic}
           </h1>
         )}
