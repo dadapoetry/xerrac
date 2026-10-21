@@ -43,12 +43,12 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
           {issueNumber !== undefined && (
             <div
               aria-hidden="true"
-              className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0"
+              className="absolute -top-4 -right-2 md:-right-8 pointer-events-none select-none z-0"
             >
               <span
                 className="font-black leading-none"
                 style={{
-                  fontSize: 'clamp(16rem, 40vw, 32rem)',
+                  fontSize: 'clamp(12rem, 30vw, 20rem)',
                   color: 'var(--accent)',
                   opacity: 0.15,
                   letterSpacing: '-0.05em',
