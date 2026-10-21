@@ -588,73 +588,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
           </div>
 
           <div data-share-region className="flex items-center min-w-0">
-            {showStrip && isMobile ? (
-              <div
-                role="dialog"
-                aria-modal="true"
-                aria-label="Compartir"
-                onClick={closeShare}
-                className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
-              >
-                <div
-                  ref={sheetRef}
-                  onClick={(e) => e.stopPropagation()}
-                  style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-                  className={`w-full max-w-md bg-black border-t border-gray-800 ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
-                >
-                  <div
-                    onPointerDown={onHandlePointerDown}
-                    onPointerMove={onHandlePointerMove}
-                    onPointerUp={onHandlePointerUp}
-                    onPointerCancel={onHandlePointerUp}
-                    className="flex justify-center pt-3 pb-2 touch-none cursor-grab active:cursor-grabbing"
-                  >
-                    <span className="h-1 w-10 rounded-full bg-gray-700" aria-hidden="true" />
-                  </div>
-                  {canNativeShare && (
-                    <button
-                      type="button"
-                      onClick={shareWithSystem}
-                      className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-100 border-t border-gray-900 active:bg-white/[0.05]"
-                    >
-                      <span className="w-5 flex items-center justify-center text-gray-400"><ShareIcon /></span>
-                      <span>Compartir amb el sistema</span>
-                    </button>
-                  )}
-                  {shareTargets.map((t) => (
-                    <a
-                      key={t.name}
-                      href={t.href}
-                      target={t.name === 'Correu' ? undefined : '_blank'}
-                      rel={t.name === 'Correu' ? undefined : 'noopener noreferrer'}
-                      onClick={closeShare}
-                      className="flex h-12 items-center gap-3 px-4 text-sm text-gray-300 border-t border-gray-900 active:bg-white/[0.05]"
-                    >
-                      <span className="w-5 flex items-center justify-center text-gray-400">{t.icon}</span>
-                      <span>{t.name}</span>
-                    </a>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={copyShareLinkAndClose}
-                    className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-300 border-t border-gray-900 active:bg-white/[0.05]"
-                  >
-                    <span className="w-5 flex items-center justify-center text-gray-400">
-                      {copied ? <CheckIcon className="w-4 h-4 text-emerald-400" /> : <CopyIcon />}
-                    </span>
-                    <span>{copied ? 'Enllaç copiat' : "Copiar l'enllaç"}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={closeShare}
-                    className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-400 border-t border-gray-800 active:bg-white/[0.05]"
-                  >
-                    <span className="w-5 flex items-center justify-center"><CloseIcon /></span>
-                    <span>Tancar</span>
-                  </button>
-                </div>
-              </div>
-            ) : showStrip ? (
+            {showStrip ? (
               <div className="flex h-8 items-stretch divide-x divide-gray-800 border border-gray-800 bg-white/[0.03] min-w-0 overflow-x-auto nav-scroll">
                 {shareTargets.map((t, i) => (
                   <a
@@ -713,6 +647,77 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
             )}
           </div>
         </div>
+        {/* Full de compartir mòbil: renderitzat fora de la barra perquè el
+            backdrop-filter de la navbar no creï un containing block que trenqui
+            el position:fixed. */}
+        {showStrip && isMobile && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Compartir"
+            onClick={closeShare}
+            className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
+          >
+            <div
+              ref={sheetRef}
+              onClick={(e) => e.stopPropagation()}
+              style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+              className={`w-full max-w-md bg-black border-t border-gray-800 ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
+            >
+              <div
+                onPointerDown={onHandlePointerDown}
+                onPointerMove={onHandlePointerMove}
+                onPointerUp={onHandlePointerUp}
+                onPointerCancel={onHandlePointerUp}
+                className="flex justify-center pt-3 pb-2 touch-none cursor-grab active:cursor-grabbing"
+              >
+                <span className="h-1 w-10 rounded-full bg-gray-700" aria-hidden="true" />
+              </div>
+              {canNativeShare && (
+                <button
+                  type="button"
+                  onClick={shareWithSystem}
+                  className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-100 border-t border-gray-900 active:bg-white/[0.05]"
+                >
+                  <span className="w-5 flex items-center justify-center text-gray-400"><ShareIcon /></span>
+                  <span>Compartir amb el sistema</span>
+                </button>
+              )}
+              {shareTargets.map((t) => (
+                <a
+                  key={t.name}
+                  href={t.href}
+                  target={t.name === 'Correu' ? undefined : '_blank'}
+                  rel={t.name === 'Correu' ? undefined : 'noopener noreferrer'}
+                  onClick={closeShare}
+                  className="flex h-12 items-center gap-3 px-4 text-sm text-gray-300 border-t border-gray-900 active:bg-white/[0.05]"
+                >
+                  <span className="w-5 flex items-center justify-center text-gray-400">{t.icon}</span>
+                  <span>{t.name}</span>
+                </a>
+              ))}
+              <button
+                type="button"
+                onClick={copyShareLinkAndClose}
+                className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-300 border-t border-gray-900 active:bg-white/[0.05]"
+              >
+                <span className="w-5 flex items-center justify-center text-gray-400">
+                  {copied ? <CheckIcon className="w-4 h-4 text-emerald-400" /> : <CopyIcon />}
+                </span>
+                <span>{copied ? 'Enllaç copiat' : "Copiar l'enllaç"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={closeShare}
+                className="flex h-12 w-full items-center gap-3 px-4 text-sm text-gray-400 border-t border-gray-800 active:bg-white/[0.05]"
+              >
+                <span className="w-5 flex items-center justify-center"><CloseIcon /></span>
+                <span>Tancar</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {copied && (
           <div role="status" className="absolute left-1/2 -translate-x-1/2 top-full z-50 bg-black/90 border border-gray-800 px-4 py-2 text-xs text-gray-400 animate-fade-in whitespace-nowrap">
             Enllaç copiat
