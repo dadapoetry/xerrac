@@ -38,31 +38,61 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright, ac
 
   // Rail vertical: com l'etiqueta de departament d'una revista japonesa, on
   // el títol es llegeix de dalt a baixo i la columna deixa lloc al cos.
+  //
+  // La integració al text passa per un fil vertical d'accent que neix de la
+  // serra i baixa per tota la secció: uneix el capçal amb el cos en lloc de
+  // deixar-lo flotant al marge. La serra hi serveix d'ancoratge, com a la
+  // resta de seccions.
   if (vertical) {
     return (
       <div
         ref={ref}
-        className={`relative flex items-start gap-3 md:gap-4 ${entered ? 'entered' : ''}`}
+        className={`relative mb-8 md:mb-0 ${entered ? 'entered' : ''}`}
       >
-        <span className="[writing-mode:vertical-rl] text-orientation-mixed font-mono text-2xs tracking-[0.3em] uppercase font-semibold pt-1 shrink-0" style={{ color: 'var(--accent-text)' }}>
-          {String(number).padStart(2, '0')}
-        </span>
-        <h2
-          className="[writing-mode:vertical-rl] text-orientation-mixed text-3xl md:text-5xl font-black tracking-tight uppercase leading-[0.95] max-h-[24rem] shrink-0"
-          style={{ color: titleColor || (accentTitle ? 'var(--accent-text)' : 'var(--paper)') }}
-        >
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="[writing-mode:vertical-rl] text-orientation-mixed font-serif italic text-sm md:text-base leading-[1.7] text-gray-400 max-h-[24rem] shrink-0">
-            {subtitle}
-          </p>
-        )}
-        {readingTime && (
-          <span className={`[writing-mode:vertical-rl] text-orientation-mixed font-mono text-2xs tracking-wider tabular-nums pt-1 shrink-0 ${bright ? 'text-gray-200' : 'text-gray-500'}`}>
-            ~{readingTime} min
+        {/* Filet d'accent: el llom de la secció, de dalt a baix. */}
+        <span
+          aria-hidden="true"
+          className="absolute left-0 top-0 bottom-0 w-px"
+          style={{
+            background:
+              'linear-gradient(to bottom, rgba(var(--accent-rgb), 0.6) 0%, rgba(var(--accent-rgb), 0.22) 45%, transparent 100%)',
+          }}
+        />
+
+        <div className="pl-4 md:pl-5">
+          {/* Ancoratge: la serra, com a la resta de seccions. */}
+          <span
+            className="stagger-item delay-1 inline-block"
+            style={{ color: titleColor || 'var(--accent-text)', filter: 'drop-shadow(0 0 2px currentColor)' }}
+          >
+            <SawIcon className="w-4 h-4" />
           </span>
-        )}
+
+          <div className="mt-4 flex items-start gap-3 md:gap-4">
+            <span className="stagger-item delay-1 [writing-mode:vertical-rl] text-orientation-mixed font-mono text-2xs tracking-[0.3em] uppercase font-semibold shrink-0" style={{ color: 'var(--accent-text)' }}>
+              {String(number).padStart(2, '0')}
+            </span>
+
+            <h2
+              className="stagger-item delay-2 [writing-mode:vertical-rl] text-orientation-mixed text-xl sm:text-2xl md:text-4xl font-black tracking-tight uppercase leading-[0.95] whitespace-nowrap shrink-0"
+              style={{ color: titleColor || (accentTitle ? 'var(--accent-text)' : 'var(--paper)') }}
+            >
+              {title}
+            </h2>
+
+            {subtitle && (
+              <p className="stagger-item delay-3 [writing-mode:vertical-rl] text-orientation-mixed font-serif italic text-sm md:text-base leading-[1.8] text-gray-400 whitespace-nowrap shrink-0">
+                {subtitle}
+              </p>
+            )}
+
+            {readingTime && (
+              <span className={`stagger-item delay-4 [writing-mode:vertical-rl] text-orientation-mixed font-mono text-2xs tracking-wider tabular-nums shrink-0 ${bright ? 'text-gray-200' : 'text-gray-600'}`}>
+                ~{readingTime} min
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     )
   }
