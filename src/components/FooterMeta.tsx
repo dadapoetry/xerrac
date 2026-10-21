@@ -49,7 +49,11 @@ export async function FooterMeta() {
     <div style={accentStyle(accent)}>
       <MetaTitle>Publicació</MetaTitle>
       <ul className="font-mono text-2xs leading-[1.9] text-gray-500">
-        <li>Xerrac! Revista d&rsquo;aclariment cultural</li>
+        <li>
+          <Link href="/" className="text-gray-400 hover:text-white transition-colors">
+            Xerrac! Revista d&rsquo;aclariment cultural
+          </Link>
+        </li>
         {issn && <li>ISSN: {issn}</li>}
         {periodicity && <li>Periodicitat: {periodicity}</li>}
         {address && <li>{address}</li>}
@@ -85,6 +89,11 @@ export async function FooterMeta() {
       <div className="mt-6">
         <MetaTitle>Navegació</MetaTitle>
         <ul className="font-mono text-2xs leading-[1.9]">
+          <li>
+            <Link href="/" className="text-gray-400 hover:text-white transition-colors">
+              ← Torna a la revista
+            </Link>
+          </li>
           <li>
             <Link href="/arxiu" className="text-gray-400 hover:text-white transition-colors">
               Arxiu d&rsquo;aclariments
