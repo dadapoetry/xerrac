@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
 import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { SECTION_LABELS } from '@/types'
@@ -112,11 +111,6 @@ export default async function AboutPage() {
             ))}
           </ul>
 
-          <div className="flex flex-wrap gap-6 mt-12 pt-8 border-t border-gray-800 text-2xs uppercase tracking-wider">
-            <Link href="/" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
-              ← Tornar a la revista
-            </Link>
-          </div>
         </article>
         <aside className="md:border-l border-gray-800 md:pl-8 pt-10 md:pt-0">
           <FooterMeta />

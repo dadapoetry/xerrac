@@ -5,7 +5,6 @@ import { getPublishedIssues } from '@/lib/data'
 import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { issuePath } from '@/lib/slugs'
 import { SECTION_LABELS } from '@/types'
-import { Footer } from '@/components/Footer'
 import { AccentScope } from '@/components/AccentScope'
 import { FooterMeta } from '@/components/FooterMeta'
 
@@ -309,15 +308,6 @@ export default async function ArxiuPage() {
       <div className="min-h-screen flex flex-col">
         <div className="flex-1">
           <div className="px-4 sm:px-6 md:px-8 pt-[calc(3rem_+_env(safe-area-inset-top))] sm:pt-16 md:pt-20 pb-0">
-            <div className="max-w-6xl mx-auto">
-              <Link
-                href="/"
-                className="text-2xs text-gray-300 hover:text-white transition-colors mb-10 sm:mb-14 inline-block py-2 uppercase tracking-[0.3em]"
-              >
-                ← Tornar a la revista
-              </Link>
-            </div>
-
             <div className="max-w-6xl mx-auto grid md:grid-cols-[2fr_1fr] gap-10 md:gap-16">
               <div className="min-w-0">
                 <header className="mb-14 sm:mb-16 md:mb-20">
@@ -369,7 +359,6 @@ export default async function ArxiuPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
       </AccentScope>
     </>

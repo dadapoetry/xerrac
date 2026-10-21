@@ -293,15 +293,6 @@ export default async function PrivacyPage() {
           pàgina i hi indicarem la nova data d’actualització. La versió vigent és sempre la que
           trobareu en aquesta adreça.
         </P>
-
-        <div className="mt-14 pt-8 border-t border-gray-800 flex flex-wrap gap-6 text-xs uppercase tracking-wider">
-          <Link href="/subscriu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
-            Subscriure’t al butlletí
-          </Link>
-          <Link href="/" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
-            ← Torna a la revista
-          </Link>
-        </div>
       </article>
       <aside className="md:border-l border-gray-800 md:pl-8 pt-10 md:pt-0">
         <FooterMeta />
