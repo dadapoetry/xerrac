@@ -10,7 +10,7 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto">
-        <SectionHeader number={index} title={section.title} subtitle="Proverbis, refranys i onomatopeies accidentals" />
+        <SectionHeader number={index} title={section.title} subtitle="Proverbis, refranys i onomatopeies accidentals" titleColor="var(--grogues)" />
         <div className="max-w-4xl mx-auto">
           {proverbs.length === 0 ? (
             <p className="note-buit">
