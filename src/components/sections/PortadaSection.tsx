@@ -36,42 +36,42 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[100dvh] w-full text-center px-4 relative overflow-hidden">
-      {/* Número de volum com a element gràfic de fons (watermark), darrere del logo i el títol */}
-      {issueNumber !== undefined && (
-        <div
-          aria-hidden="true"
-          className="absolute top-0 left-0 right-0 h-48 md:h-60 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden"
-        >
-          <span
-            className="font-black leading-none"
-            style={{
-              fontSize: 'clamp(16rem, 40vw, 32rem)',
-              color: 'var(--accent)',
-              opacity: 0.12,
-              letterSpacing: '-0.05em',
-            }}
-          >
-            {String(issueNumber).padStart(2, '0')}
-          </span>
-        </div>
-      )}
-
       <div className="max-w-2xl w-full relative z-10">
-        {/* Capçalera de publicació: Logo petit + metadades */}
-        <div className="flex flex-col items-center mb-6">
+        {/* Número de volum com a element gràfic de fons (watermark), darrere del logo i el títol únicament */}
+        {issueNumber !== undefined && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-40 md:h-52 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden"
+          >
+            <span
+              className="font-black leading-none"
+              style={{
+                fontSize: 'clamp(16rem, 40vw, 32rem)',
+                color: 'var(--accent)',
+                opacity: 0.12,
+                letterSpacing: '-0.05em',
+              }}
+            >
+              {String(issueNumber).padStart(2, '0')}
+            </span>
+          </div>
+        )}
+
+        {/* Capçalera de publicació: Logo petit */}
+        <div className="flex flex-col items-center mb-6 relative z-10">
           <Logo className="mb-3" />
         </div>
 
         {/* Tema com a titular principal */}
         {content.topic && (
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-2">
+          <h1 className="relative z-10 text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-2">
             {content.topic}
           </h1>
         )}
 
         {/* Sumari com a taula de continguts editorial, compacta */}
         {sumariEntries && sumariEntries.length > 0 && (
-          <nav aria-label="Sumari del número" className="mt-8 mx-auto max-w-xl">
+          <nav aria-label="Sumari del número" className="mt-8 mx-auto max-w-xl relative z-10">
             <div className="flex items-center gap-3 mb-3">
               <span className="font-mono text-2xs tracking-[0.3em] uppercase" style={{ color: 'var(--accent-text)' }}>
                 Sumari
@@ -91,7 +91,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
                   <span className="font-mono tabular-nums text-xs tracking-[0.15em] text-gray-600 group-hover:text-[var(--accent-text)] transition-colors shrink-0 w-6 text-right pl-2">
                     {entry.number}
                   </span>
-                  <span className="flex-1 text-sm text-gray-300 group-hover:text-white transition-colors truncate">
+                  <span className="flex-1 text-left text-sm text-gray-300 group-hover:text-white transition-colors truncate">
                     {entry.title}
                   </span>
                   {entry.readingTime && entry.readingTime > 0 && (
