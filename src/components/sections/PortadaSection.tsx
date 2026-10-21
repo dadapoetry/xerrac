@@ -74,17 +74,24 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueDate 
           </h1>
         )}
 
-        {/* Sumari horitzontal dens (estil revista japonesa) */}
+        {/* Sumari horitzontal dens (estil revista japonesa). Cada secció rep una
+            tonalitat derivada de l'accent del número: continuen sent un sol
+            color de marca, però cada secció és reconeixible d'un cop d'ull. */}
         {sumariEntries && sumariEntries.length > 0 && (
           <div className="mt-5 relative z-10 border-t border-b py-3" style={{ borderColor: 'rgba(var(--accent-rgb), 0.12)' }}>
             <div className="flex flex-wrap">
-              {sumariEntries.map((entry, i) => (
+              {sumariEntries.map((entry, i) => {
+                const tint = 1 - (i / Math.max(1, sumariEntries.length - 1)) * 0.88
+                return (
                 <div
                   key={i}
                   className="group flex items-baseline gap-2 py-1.5 pr-4 mr-4 border-r last:border-r-0 transition-colors"
-                  style={{ borderColor: 'rgba(255,255,255,0.06)' }}
+                  style={{ borderColor: `rgba(var(--accent-rgb), ${tint * 0.55})` }}
                 >
-                  <span className="font-mono tabular-nums text-lg md:text-xl font-bold leading-none shrink-0 transition-all duration-200 group-hover:opacity-100" style={{ color: 'var(--accent-text)', opacity: 0.5 }}>
+                  <span
+                    className="font-mono tabular-nums text-lg md:text-xl font-bold leading-none shrink-0 transition-all duration-200 group-hover:opacity-100"
+                    style={{ color: `rgba(var(--accent-rgb), ${tint})` }}
+                  >
                     {entry.number}
                   </span>
                   <span className="text-xs md:text-sm text-gray-400 group-hover:text-white transition-colors leading-tight">
@@ -96,7 +103,8 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueDate 
                     </span>
                   )}
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}

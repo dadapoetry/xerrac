@@ -15,9 +15,18 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
 
   return (
     <div className="w-full py-12">
-      <div className="max-w-5xl mx-auto">
-        <SectionHeader number={index} title={section.title} subtitle="Parlem amb i d'algú quan toca" readingTime={readingTime(body)} />
+      {/* Rail vertical (tategaki) a l'esquerra, cos a la dreta: com l'etiqueta
+          de departament d'una revista japonesa. */}
+      <div className="max-w-5xl mx-auto md:grid md:grid-cols-[auto_1fr] md:gap-8">
+        <SectionHeader
+          number={index}
+          title={section.title}
+          subtitle="Parlem amb i d'algú quan toca"
+          readingTime={readingTime(body)}
+          vertical
+        />
 
+        <div className="min-w-0">
         {content.interviews?.length > 0 && (
           <div className="mb-12">
             <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6">Entrevistes</span>
@@ -80,6 +89,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   )

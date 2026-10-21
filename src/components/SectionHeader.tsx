@@ -12,9 +12,11 @@ interface SectionHeaderProps {
   bright?: boolean
   accentTitle?: boolean
   titleColor?: string
+  /** Rail vertical (tategaki): títol i subtítol en escriptura vertical. */
+  vertical?: boolean
 }
 
-export function SectionHeader({ number, title, subtitle, readingTime, bright, accentTitle, titleColor }: SectionHeaderProps) {
+export function SectionHeader({ number, title, subtitle, readingTime, bright, accentTitle, titleColor, vertical }: SectionHeaderProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [entered, setEntered] = useState(false)
 
@@ -33,6 +35,37 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright, ac
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
+
+  // Rail vertical: com l'etiqueta de departament d'una revista japonesa, on
+  // el títol es llegeix de dalt a baixo i la columna deixa lloc al cos.
+  if (vertical) {
+    return (
+      <div
+        ref={ref}
+        className={`relative flex items-start gap-3 md:gap-4 ${entered ? 'entered' : ''}`}
+      >
+        <span className="[writing-mode:vertical-rl] text-orientation-mixed font-mono text-2xs tracking-[0.3em] uppercase font-semibold pt-1 shrink-0" style={{ color: 'var(--accent-text)' }}>
+          {String(number).padStart(2, '0')}
+        </span>
+        <h2
+          className="[writing-mode:vertical-rl] text-orientation-mixed text-3xl md:text-5xl font-black tracking-tight uppercase leading-[0.95] max-h-[24rem] shrink-0"
+          style={{ color: titleColor || (accentTitle ? 'var(--accent-text)' : 'var(--paper)') }}
+        >
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="[writing-mode:vertical-rl] text-orientation-mixed font-serif italic text-sm md:text-base leading-[1.7] text-gray-400 max-h-[24rem] shrink-0">
+            {subtitle}
+          </p>
+        )}
+        {readingTime && (
+          <span className={`[writing-mode:vertical-rl] text-orientation-mixed font-mono text-2xs tracking-wider tabular-nums pt-1 shrink-0 ${bright ? 'text-gray-200' : 'text-gray-500'}`}>
+            ~{readingTime} min
+          </span>
+        )}
+      </div>
+    )
+  }
 
   return (
 <div ref={ref} className={`mb-12 md:mb-16 relative ${entered ? 'entered' : ''}`}>
