@@ -40,7 +40,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
       {issueNumber !== undefined && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0"
+          className="absolute top-0 left-0 right-0 h-48 md:h-60 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden"
         >
           <span
             className="font-black leading-none"
