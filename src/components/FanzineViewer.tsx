@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fragment } from 'react'
-import { createPortal } from 'react-dom'
 import { IssueData } from '@/types'
 import { buildSectionSlugMap, issuePath, articlePath } from '@/lib/slugs'
 import { getSiteUrl } from '@/lib/site'
@@ -138,7 +137,6 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
   const [idle, setIdle] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [canNativeShare, setCanNativeShare] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const progressRef = useRef<HTMLDivElement>(null)
   const idleTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const shareTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -496,7 +494,6 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
   }, [])
 
   useEffect(() => {
-    setMounted(true)
     setCanNativeShare(typeof navigator !== 'undefined' && typeof navigator.share === 'function')
     const mq = window.matchMedia('(max-width: 767px)')
     const update = () => setIsMobile(mq.matches)
@@ -535,7 +532,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
 
   if (sortedSections.length === 0) {
     return (
-      <div className="sticky top-0 z-10 bg-black/85 backdrop-blur-md border-b border-gray-800/50 safe-top shadow-sm">
+      <div className="sticky top-0 z-10 bg-black border-b border-gray-800/50 safe-top shadow-sm">
         <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
           <span className="text-sm text-gray-600">Cap secció disponible</span>
@@ -558,7 +555,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
       }
     >
       {/* Header — sticky at top, accompanies reader */}
-      <div className="sticky top-0 z-10 bg-black/85 backdrop-blur-md border-b border-gray-800/50 no-print relative safe-top shadow-sm">
+      <div className="sticky top-0 z-10 bg-black border-b border-gray-800/50 no-print relative safe-top shadow-sm">
         <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.5rem]">
           <Logo compact />
 
@@ -591,7 +588,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
           </div>
 
           <div data-share-region className="flex items-center min-w-0">
-            {showStrip ? (
+            {showStrip && !isMobile ? (
               <div className="flex h-8 items-stretch divide-x divide-gray-800 border border-gray-800 bg-white/[0.03] min-w-0 overflow-x-auto nav-scroll">
                 {shareTargets.map((t, i) => (
                   <a
@@ -650,23 +647,19 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
             )}
           </div>
         </div>
-        {/* Full de compartir mòbil: es renderitza amb un portal directament a
-            <body>, fora de la navbar (sticky + backdrop-blur) i de #contingut.
-            Així cap ancestre amb transform/filter/backdrop-filter pot esdevenir
-            el containing block del position:fixed i llençar el full a dalt. */}
-        {mounted && showStrip && isMobile && createPortal(
+        {/* Full de compartir mòbil. */}
+        {showStrip && isMobile && (
           <div
             role="dialog"
             aria-modal="true"
             aria-label="Compartir"
             onClick={closeShare}
-            style={{ position: 'fixed', inset: 0, width: '100vw', height: '100dvh' }}
-            className={`z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
+            className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/60 ${sharePhase === 'closing' ? 'share-backdrop-closing' : 'share-backdrop'}`}
           >
             <div
               ref={sheetRef}
               onClick={(e) => e.stopPropagation()}
-              style={{ paddingBottom: 'env(safe-area-inset-bottom)', maxHeight: '85dvh', overflowY: 'auto' }}
+              style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
               className={`w-full max-w-md bg-black border-t border-gray-800 ${sharePhase === 'closing' ? 'share-sheet-closing' : 'share-sheet'}`}
             >
               <div
@@ -720,8 +713,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                 <span>Tancar</span>
               </button>
             </div>
-          </div>,
-          document.body
+          </div>
         )}
 
         {copied && (
