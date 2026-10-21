@@ -69,31 +69,34 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
           </h1>
         )}
 
-        {/* Sumari com a taula de continguts */}
+        {/* Sumari com a taula de continguts editorial */}
         {sumariEntries && sumariEntries.length > 0 && (
-          <nav aria-label="Sumari del número" className="mt-10 mx-auto max-w-md">
-            <div className="font-mono text-2xs tracking-[0.3em] uppercase text-gray-500 mb-4">
-              Sumari
+          <nav aria-label="Sumari del número" className="mt-12 mx-auto max-w-lg">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px flex-1" style={{ background: 'linear-gradient(to right, transparent, rgba(var(--accent-rgb),0.4))' }} />
+              <span className="font-mono text-2xs tracking-[0.3em] uppercase" style={{ color: 'var(--accent-text)' }}>
+                Sumari
+              </span>
+              <div className="h-px flex-1" style={{ background: 'linear-gradient(to left, transparent, rgba(var(--accent-rgb),0.4))' }} />
             </div>
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col">
               {sumariEntries.map((entry, i) => (
-                <li key={i}>
-                  <a
-                    href={`#s-${i + 1}`}
-                    className="group flex items-baseline gap-3 py-1.5 px-2 -mx-2 transition-all duration-200 hover:translate-x-1"
-                  >
-                    <span className="font-mono tabular-nums text-2xs tracking-[0.2em] text-gray-400 group-hover:text-[var(--accent-text)] transition-colors shrink-0">
-                      {entry.number}
+                <li
+                  key={i}
+                  className="group relative flex items-baseline gap-4 py-3 border-b border-gray-800/60 last:border-b-0 transition-colors"
+                >
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-px bg-[var(--accent)] transition-all duration-300 group-hover:w-3" />
+                  <span className="font-mono tabular-nums text-sm tracking-[0.15em] text-gray-500 group-hover:text-[var(--accent-text)] transition-colors shrink-0 pl-0 group-hover:pl-5 duration-300">
+                    {entry.number}
+                  </span>
+                  <span className="flex-1 text-left text-base md:text-lg text-gray-200 group-hover:text-white transition-colors font-medium">
+                    {entry.title}
+                  </span>
+                  {entry.readingTime && entry.readingTime > 0 && (
+                    <span className="font-mono text-2xs text-gray-600 shrink-0">
+                      {entry.readingTime} min
                     </span>
-                    <span className="flex-1 text-left text-sm md:text-base text-gray-200 group-hover:text-white transition-colors">
-                      {entry.title}
-                    </span>
-                    {entry.readingTime && entry.readingTime > 0 && (
-                      <span className="font-mono text-2xs text-gray-500 shrink-0">
-                        ~{entry.readingTime} min
-                      </span>
-                    )}
-                  </a>
+                  )}
                 </li>
               ))}
             </ul>
