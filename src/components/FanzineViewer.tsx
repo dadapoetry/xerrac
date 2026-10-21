@@ -516,7 +516,10 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
     if (sharePhase === 'closed') return
     const onOutside = (e: PointerEvent) => {
       const el = e.target as HTMLElement | null
+      // No tanquem si el toc cau dins de la barra de compartir o dins del
+      // mateix full (sigui quina sigui la seva posició a l'arbre).
       if (el && el.closest('[data-share-region]')) return
+      if (sheetRef.current && el && sheetRef.current.contains(el)) return
       closeShare()
     }
     const onEscape = (e: KeyboardEvent) => {
@@ -650,6 +653,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
         {/* Full de compartir mòbil. */}
         {showStrip && isMobile && (
           <div
+            data-share-region
             role="dialog"
             aria-modal="true"
             aria-label="Compartir"
