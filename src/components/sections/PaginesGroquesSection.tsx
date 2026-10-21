@@ -37,13 +37,13 @@ export function PaginesGroquesSection({ section, index }: { section: SectionData
                     </span>
                     <div className="flex-1 min-w-0">
                       <blockquote
-                        className="font-serif text-xl italic leading-[1.6] md:leading-[1.55] max-w-[40ch] text-pretty hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                        className="font-serif text-xl italic leading-[1.6] md:leading-[1.55] max-w-[40ch] text-pretty hyphens-auto"
                         style={{ color: 'var(--grogues)' }}
                       >
                         <span className="-ml-[0.42em]">«</span>
                         {proverb.text}»
                       </blockquote>
-                      <p className="text-xs mt-2.5 font-mono tracking-wide text-gray-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+                      <p className="text-xs mt-2.5 font-mono tracking-wide text-gray-200">
                         — {proverb.author}
                       </p>
                     </div>

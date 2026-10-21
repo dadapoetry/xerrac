@@ -213,7 +213,8 @@ body {
 .section-container img:not([class~="absolute"]) {
   max-width: 100%;
   height: auto;
-  border-radius: 4px;
+  object-fit: cover;
+  border-radius: 3px;
   margin: 1.5rem auto;
   display: block;
 }
@@ -491,6 +492,16 @@ body::before {
   letter-spacing: 0.01em;
   font-variant-ligatures: common-ligatures discretionary-ligatures;
   font-kerning: normal;
+  /* Drop-shadow centralitzat: abans cada secció l'aplicava a mà alçada
+     (tractament inconsistent). Ara viu aquí, una sola vegada. */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  /* Espaiat vertical unificat (gap 2rem) en lloc de marges ad hoc. */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.editorial-body > * {
+  margin: 0;
 }
 .editorial-body .necrologica-name {
   margin-bottom: 0.4em;

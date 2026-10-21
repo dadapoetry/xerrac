@@ -20,7 +20,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
 
         {content.interviews?.length > 0 && (
           <div className="mb-12">
-            <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">Entrevistes</span>
+            <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6">Entrevistes</span>
             <div className="space-y-6">
               {content.interviews.map((item, i) => (
                 <div key={i} className="relative pt-4">
@@ -28,9 +28,9 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                   <div className="absolute -left-6 top-4 hidden md:block font-mono text-2xs tabular-nums text-gray-500 select-none" aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.subject}</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">{item.subject}</h3>
                   <div
-                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto"
                     dangerouslySetInnerHTML={{ __html: prepareBody(item.body) }}
                   />
                 </div>
@@ -41,7 +41,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
 
         {content.reviews?.length > 0 && (
           <div className="mb-12">
-            <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">Crítiques</span>
+            <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6">Crítiques</span>
             <div className="grid md:grid-cols-2 gap-6">
               {content.reviews.map((item, i) => (
                 <div key={i} className="relative pt-4">
@@ -49,9 +49,9 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                   <div className="absolute -left-6 top-4 hidden md:block font-mono text-2xs tabular-nums text-gray-500 select-none" aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
                   <div
-                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto"
                     dangerouslySetInnerHTML={{ __html: prepareBody(item.body) }}
                   />
                 </div>
@@ -62,7 +62,7 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
 
         {content.investigacio?.length > 0 && (
           <div>
-            <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">Investigació</span>
+            <span className="text-2xs text-gray-400 tracking-[0.3em] uppercase block mb-6">Investigació</span>
             <div className="space-y-6">
               {content.investigacio.map((item, i) => (
                 <div key={i} className="relative pt-4">
@@ -70,9 +70,9 @@ export function CalaixSastreSection({ section, index }: { section: SectionData; 
                   <div className="absolute -left-6 top-4 hidden md:block font-mono text-2xs tabular-nums text-gray-500 select-none" aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
                   <div
-                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto"
                     dangerouslySetInnerHTML={{ __html: prepareBody(item.body) }}
                   />
                 </div>

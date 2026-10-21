@@ -52,7 +52,7 @@ export function FullMuralSection({ section, index }: { section: SectionData; ind
                   <p className="text-gray-500 text-xs">Imatge no disponible</p>
                 )}
               </div>
-              <p className="text-2xs font-mono tracking-wider text-gray-400 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+              <p className="text-2xs font-mono tracking-wider text-gray-400 leading-relaxed">
                 {collage.description}
               </p>
             </div>

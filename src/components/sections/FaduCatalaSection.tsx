@@ -10,7 +10,7 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
   return (
     <div className="mb-8 pb-6 relative">
       <div className="flex items-start justify-between gap-4">
-        <h3 className="text-xl font-bold text-white mb-3 leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">{entry.title}</h3>
+        <h3 className="text-xl font-bold text-white mb-3 leading-snug">{entry.title}</h3>
         {/* Etiqueta com un segell de goma: girada, mono i amb doble filet, que
             digui el gènere de la fitxa sense posar-s'hi seriós. */}
         <span
@@ -27,7 +27,7 @@ function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
         </span>
       </div>
       <div
-        className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+        className="text-gray-200 leading-[1.75] text-sm md:text-md text-justify hyphens-auto"
         dangerouslySetInnerHTML={{ __html: prepareBody(entry.body) }}
       />
     </div>

@@ -18,7 +18,7 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
             0,2), perquè un marc que no es veu no emmarca res. */}
         <span
           aria-hidden="true"
-          className="absolute left-1 -top-1 text-7xl font-serif leading-none select-none pointer-events-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+          className="absolute left-1 -top-1 text-7xl font-serif leading-none select-none pointer-events-none"
           style={{ color: 'rgba(var(--accent-rgb), 0.3)' }}
         >
           «
@@ -26,14 +26,14 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
 
         <div className="pl-8 md:pl-12 pr-4">
           <div
-            className="text-gray-200 leading-[1.75] text-sm md:text-md italic drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+            className="text-gray-200 leading-[1.75] text-sm md:text-md italic"
             dangerouslySetInnerHTML={{ __html: prepareBody(content.body) }}
           />
         </div>
 
         <span
           aria-hidden="true"
-          className="block text-right text-7xl font-serif leading-none select-none -mt-4 -mr-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+          className="block text-right text-7xl font-serif leading-none select-none -mt-4 -mr-2"
           style={{ color: 'rgba(var(--accent-rgb), 0.3)' }}
         >
           »
@@ -41,7 +41,7 @@ export function VisitaSection({ section, index }: { section: SectionData; index:
 
         {/* Colofó: la font de la traducció, en mono i a baix, on es busca. */}
         {content.source && (
-          <p className="pl-8 md:pl-12 pr-4 mt-6 font-mono text-xs text-gray-400 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+          <p className="pl-8 md:pl-12 pr-4 mt-6 font-mono text-xs text-gray-400">
             {content.source}
           </p>
         )}

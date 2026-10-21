@@ -47,7 +47,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
         )}
 
         {sumariEntries && sumariEntries.length > 0 && (
-          <div className="mt-8 flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-gray-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+          <div className="mt-8 flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-gray-300">
             {sumariEntries.map((entry, i) => (
               <Fragment key={i}>
                 {i > 0 && (

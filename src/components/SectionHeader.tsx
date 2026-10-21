@@ -66,7 +66,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
 
             {readingTime && (
 
-              <span className={`text-2xs tracking-wider font-mono tabular-nums drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] ${bright ? 'text-gray-200' : 'text-gray-400'}`}>
+              <span className={`text-2xs tracking-wider font-mono tabular-nums ${bright ? 'text-gray-200' : 'text-gray-400'}`}>
 
                 ~{readingTime} min
 
@@ -76,7 +76,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
 
           </div>
 
-          <h2 className="stagger-item delay-2 text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-[0.95] mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+          <h2 className="stagger-item delay-2 text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-[0.95] mb-4">
 
           {title}
 
@@ -84,7 +84,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
 
         {subtitle && (
 
-          <p className={`stagger-item delay-3 text-sm tracking-wider uppercase mb-4 max-w-2xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] ${bright ? 'text-gray-100' : 'text-gray-300'}`}>
+          <p className={`stagger-item delay-3 text-sm tracking-wider uppercase mb-4 max-w-2xl ${bright ? 'text-gray-100' : 'text-gray-300'}`}>
 
             {subtitle}
 
