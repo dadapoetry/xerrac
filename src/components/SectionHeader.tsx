@@ -43,7 +43,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright, ac
 
           <div className="stagger-item delay-1 flex items-center gap-3 mb-4">
 
-            <span style={{ color: titleColor || 'var(--accent-text)', filter: 'drop-shadow(0 0 6px currentColor)' }}>
+            <span style={{ color: titleColor || 'var(--accent-text)', filter: 'drop-shadow(0 0 2px currentColor)' }}>
 
               <SawIcon className="w-4 h-4" />
 
