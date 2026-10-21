@@ -62,12 +62,18 @@ export function readingTime(html: string, wordsPerMinute = 200): number {
 /**
  * Calcula el temps de lectura d'una secció segons el seu tipus, replicant
  * la lògica que cada component de secció ja fa servir (perquè el sumari
- * mostri el mateix valor que la secció).
+ * mostri el mateix valor que la secció). Retorna `undefined` per a les
+ * seccions que no mostren temps de lectura (portada, assaig, necrològiques,
+ * full mural, ludita, pàgines grogues).
  */
-export function sectionReadingTime(section: any): number {
-  if (!section) return 1
-  const content = (typeof section.content === 'string' ? safeParse(section.content) : section.content) || {}
+export function sectionReadingTime(section: any): number | undefined {
+  if (!section) return undefined
   const type = section.type
+  // Seccions que mostren temps de lectura al seu SectionHeader:
+  const showsReadingTime = ['editorial', 'aclariment_cultural', 'fadu_catala', 'calaix_sastre', 'visita'].includes(type)
+  if (!showsReadingTime) return undefined
+
+  const content = (typeof section.content === 'string' ? safeParse(section.content) : section.content) || {}
   let body = ''
   try {
     switch (type) {
@@ -86,25 +92,10 @@ export function sectionReadingTime(section: any): number {
           ...(content.investigacio || []).map((i: any) => i.body || ''),
         ].join(' ')
         break
-      case 'pagines_grogues':
-        body = (content.proverbs || []).map((p: any) => p.text || '').join(' ')
-        break
-      case 'full_mural':
-        body = (content.collages || []).map((c: any) => c.description || '').join(' ')
-        break
-      case 'assaig':
-        body = (content.steps || []).map((s: any) => (s.text || '') + ' ' + (s.title || '')).join(' ')
-        break
-      case 'necrologiques':
-        body = (content.entries || []).map((e: any) => (e.name || '') + ' ' + (e.epitaph || '')).join(' ')
-        break
-      default:
-        body = content.body || content.text || ''
-        break
     }
   } catch {
     body = ''
   }
-  if (!body || !body.trim()) return 1
+  if (!body || !body.trim()) return undefined
   return readingTime(body)
 }
