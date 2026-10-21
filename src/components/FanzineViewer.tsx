@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fragment } from 'react'
 import { IssueData } from '@/types'
 import { buildSectionSlugMap, issuePath, articlePath } from '@/lib/slugs'
-import { readingTime } from '@/lib/html'
+import { readingTime, sectionReadingTime } from '@/lib/html'
 import { getSiteUrl } from '@/lib/site'
 import { SectionRenderer } from './SectionRenderer'
 import { SectionBackground } from './SectionBackground'
@@ -122,16 +122,11 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
     [issue.sections]
   )
   const sumariEntries = useMemo(() => {
-    return sortedSections.slice(1).map((s: any, i) => {
-      const body = (s.content && typeof s.content === 'object' ? (s.content.body || s.content.text || '') : '') as string
-      let rt = 1
-      try { rt = readingTime(typeof body === 'string' ? body : JSON.stringify(body)) } catch { rt = 1 }
-      return {
-        number: String(i + 1).padStart(2, '0'),
-        title: s.title,
-        readingTime: rt,
-      }
-    })
+    return sortedSections.slice(1).map((s: any, i) => ({
+      number: String(i + 1).padStart(2, '0'),
+      title: s.title,
+      readingTime: sectionReadingTime(s),
+    }))
   }, [sortedSections])
 
   // S'inicia a 0 i es fixa en efecte per evitar desenganxament d'hidratació:

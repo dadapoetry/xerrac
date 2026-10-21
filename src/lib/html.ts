@@ -5,6 +5,8 @@
    composició, així que els tornem a espais normals. Es fa en pintar perquè el
    contingut ja desat amb aquest soroll es vegi bé sense tocar la base de dades,
    i també en desar (vegeu `sanitize.ts`) perquè no hi torni a entrar. */
+import { safeParse } from './utils'
+
 export function normalizeNonBreakingSpaces(html: string): string {
   if (!html) return html
   return html.replace(/\u00a0/g, ' ')
@@ -55,4 +57,54 @@ export function readingTime(html: string, wordsPerMinute = 200): number {
     .trim()
   const words = text.split(/\s+/).filter(Boolean).length
   return Math.max(1, Math.round(words / wordsPerMinute))
+}
+
+/**
+ * Calcula el temps de lectura d'una secció segons el seu tipus, replicant
+ * la lògica que cada component de secció ja fa servir (perquè el sumari
+ * mostri el mateix valor que la secció).
+ */
+export function sectionReadingTime(section: any): number {
+  if (!section) return 1
+  const content = (typeof section.content === 'string' ? safeParse(section.content) : section.content) || {}
+  const type = section.type
+  let body = ''
+  try {
+    switch (type) {
+      case 'editorial':
+      case 'aclariment_cultural':
+      case 'visita':
+        body = content.body || ''
+        break
+      case 'fadu_catala':
+        body = (content.entries || []).map((e: any) => e.body || '').join(' ')
+        break
+      case 'calaix_sastre':
+        body = [
+          ...(content.interviews || []).map((i: any) => i.body || ''),
+          ...(content.reviews || []).map((r: any) => r.body || ''),
+          ...(content.investigacio || []).map((i: any) => i.body || ''),
+        ].join(' ')
+        break
+      case 'pagines_grogues':
+        body = (content.proverbs || []).map((p: any) => p.text || '').join(' ')
+        break
+      case 'full_mural':
+        body = (content.collages || []).map((c: any) => c.description || '').join(' ')
+        break
+      case 'assaig':
+        body = (content.steps || []).map((s: any) => (s.text || '') + ' ' + (s.title || '')).join(' ')
+        break
+      case 'necrologiques':
+        body = (content.entries || []).map((e: any) => (e.name || '') + ' ' + (e.epitaph || '')).join(' ')
+        break
+      default:
+        body = content.body || content.text || ''
+        break
+    }
+  } catch {
+    body = ''
+  }
+  if (!body || !body.trim()) return 1
+  return readingTime(body)
 }
