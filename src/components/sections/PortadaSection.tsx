@@ -41,7 +41,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
         {issueNumber !== undefined && (
           <div
             aria-hidden="true"
-            className="absolute -top-8 -right-2 md:-right-12 pointer-events-none select-none z-0"
+            className="absolute -top-8 -right-4 md:-right-12 pointer-events-none select-none z-0"
           >
             <span
               className="font-black leading-none"
@@ -58,47 +58,53 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
         )}
 
         {/* Capçalera de publicació */}
-        <div className="flex flex-col items-center mb-4 relative z-10">
-          <Logo className="mb-2" />
+        <div className="flex flex-col items-center mb-2 relative z-10">
+          <Logo className="mb-1" />
         </div>
 
         {/* Tema com a titular principal */}
         {content.topic && (
-          <h1 className="relative z-10 text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-8">
+          <h1 className="relative z-10 text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-6">
             {content.topic}
           </h1>
         )}
 
-        {/* Sumari horitzontal (estil revista japonesa: dens, compacte, números grans) */}
+        {/* Sumari horitzontal dens (estil revista japonesa: números grans, compacte, sense decoració) */}
         {sumariEntries && sumariEntries.length > 0 && (
           <nav aria-label="Sumari del número" className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-px w-6" style={{ background: 'var(--accent)' }} />
-              <span className="font-mono text-2xs tracking-[0.4em] uppercase" style={{ color: 'var(--accent-text)' }}>
-                Índex
+            <div className="flex items-center gap-0 mb-3">
+              <span className="font-mono text-[10px] tracking-[0.4em] uppercase mr-3" style={{ color: 'var(--accent-text)' }}>
+                Index
               </span>
-              <div className="h-px flex-1" style={{ background: 'rgba(var(--accent-rgb), 0.15)' }} />
+              <div className="h-px flex-1" style={{ background: 'rgba(var(--accent-rgb), 0.2)' }} />
             </div>
-            <div className="flex flex-wrap gap-x-0 gap-y-0">
-              {sumariEntries.map((entry, i) => (
-                <div
-                  key={i}
-                  className="group flex items-baseline gap-2 px-3 py-2 border-r border-gray-800/40 last:border-r-0 transition-colors"
-                  style={{ minWidth: '0' }}
-                >
-                  <span className="font-mono tabular-nums text-xl md:text-2xl font-bold tracking-tight leading-none shrink-0" style={{ color: 'var(--accent-text)', opacity: 0.5 }}>
-                    {entry.number}
-                  </span>
-                  <span className="text-xs md:text-sm text-gray-400 group-hover:text-white transition-colors leading-tight">
-                    {entry.title}
-                  </span>
-                  {entry.readingTime && entry.readingTime > 0 && (
-                    <span className="font-mono text-[9px] text-gray-700 shrink-0 tabular-nums self-end">
-                      {entry.readingTime}′
+            <div className="border-t border-b py-3" style={{ borderColor: 'rgba(var(--accent-rgb), 0.15)' }}>
+              <div className="flex flex-wrap">
+                {sumariEntries.map((entry, i) => (
+                  <div
+                    key={i}
+                    className="group flex items-baseline gap-2 py-1.5 pr-4 mr-4 border-r last:border-r-0 transition-colors"
+                    style={{ borderColor: 'rgba(255,255,255,0.06)' }}
+                  >
+                    <span className="font-mono tabular-nums text-lg md:text-xl font-bold leading-none shrink-0" style={{ color: 'var(--accent-text)', opacity: 0.6 }}>
+                      {entry.number}
                     </span>
-                  )}
-                </div>
-              ))}
+                    <span className="text-xs md:text-sm text-gray-400 group-hover:text-white transition-colors leading-tight">
+                      {entry.title}
+                    </span>
+                    {entry.readingTime && entry.readingTime > 0 && (
+                      <span className="font-mono text-[9px] text-gray-700 shrink-0 tabular-nums">
+                        {entry.readingTime}′
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-end mt-2">
+              <span className="font-mono text-[9px] text-gray-700 tracking-[0.2em] uppercase">
+                {sumariEntries.length} seccions
+              </span>
             </div>
           </nav>
         )}
