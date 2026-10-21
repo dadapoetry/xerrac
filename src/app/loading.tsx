@@ -1,75 +1,77 @@
-import { Logo } from '@/components/Logo'
 import { SawIcon } from '@/components/SawIcon'
 
+/**
+ * Pàgina de càrrega.
+ *
+ * Els quadrats (koma) d'una pàgina de manga que es componen: cada requadre
+ * entra escalonat, com si la pàgina del número s'estigués maquetant sola.
+ * La gramàtica és la mateixa que el visor: una portada gran i requadres
+ * més petits per a les seccions.
+ *
+ * Cap número de volum: la pàgina de càrrega no sap quin número s'està
+ * obrint, i posar-ne un de fix seria mentir.
+ */
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-black">
-      {/* Barra superior */}
-      <div className="sticky top-0 z-10 bg-black/75 backdrop-blur-md border-b border-gray-800/50 safe-top min-h-[2.5rem]">
-        <div className="flex items-center gap-2 px-3 min-h-[2.5rem]">
-          <Logo compact />
-          <SawIcon className="w-4 h-4 opacity-20" color="#dc2626" />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 overflow-hidden">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-3 bg-gray-800 rounded-sm shrink-0 animate-pulse"
-                  style={{ width: `${60 + (i % 3) * 20}px`, animationDelay: `${i * 0.1}s` }}
-                />
-              ))}
-            </div>
+    <div className="min-h-screen bg-black flex flex-col">
+      <div className="flex-1 grid grid-cols-2 md:grid-cols-4 md:grid-rows-4 gap-1.5 p-1.5 min-h-[75vh]">
+        {/* Portada: requadre gran */}
+        <div className="koma-panel md:col-span-2 md:row-span-2 flex flex-col justify-between p-4 sm:p-6" style={{ animationDelay: '0s' }}>
+          <div className="h-1 w-16 bg-gray-800" />
+          <div>
+            <div className="h-3 sm:h-4 w-3/4 bg-gray-800 mb-2.5" />
+            <div className="h-3 sm:h-4 w-1/2 bg-gray-800/60 mb-4" />
+            <div className="h-px w-10" style={{ background: 'var(--accent)' }} />
           </div>
-          <div className="w-8 h-8 border border-gray-800 animate-pulse" />
+        </div>
+
+        {/* Secció */}
+        <div className="koma-panel p-3 flex flex-col justify-end gap-2" style={{ animationDelay: '0.08s' }}>
+          <div className="text-2xs tracking-[0.3em] uppercase font-mono text-gray-700 tabular-nums">02</div>
+          <div className="h-2 w-2/3 bg-gray-800" />
+        </div>
+
+        {/* Secció */}
+        <div className="koma-panel p-3 flex flex-col justify-end gap-2" style={{ animationDelay: '0.16s' }}>
+          <div className="text-2xs tracking-[0.3em] uppercase font-mono text-gray-700 tabular-nums">03</div>
+          <div className="h-2 w-1/2 bg-gray-800" />
+        </div>
+
+        {/* Secció */}
+        <div className="koma-panel p-3 flex flex-col justify-end gap-2" style={{ animationDelay: '0.24s' }}>
+          <div className="text-2xs tracking-[0.3em] uppercase font-mono text-gray-700 tabular-nums">04</div>
+          <div className="h-2 w-3/4 bg-gray-800" />
+          <div className="h-2 w-1/3 bg-gray-800/50" />
+        </div>
+
+        {/* Secció ample */}
+        <div className="koma-panel md:col-span-2 p-3 sm:p-4 flex flex-col justify-end gap-2" style={{ animationDelay: '0.32s' }}>
+          <div className="text-2xs tracking-[0.3em] uppercase font-mono text-gray-700 tabular-nums">05</div>
+          <div className="h-2.5 w-1/3 bg-gray-800" />
+          <div className="h-1.5 w-4/5 bg-gray-800/50" />
+        </div>
+
+        {/* Secció ample */}
+        <div className="koma-panel md:col-span-2 p-3 sm:p-4 flex flex-col justify-end gap-2" style={{ animationDelay: '0.4s' }}>
+          <div className="text-2xs tracking-[0.3em] uppercase font-mono text-gray-700 tabular-nums">06</div>
+          <div className="h-2.5 w-1/4 bg-gray-800" />
+          <div className="h-1.5 w-2/3 bg-gray-800/50" />
+        </div>
+
+        {/* Rengler final: el nom de la revista */}
+        <div className="koma-panel md:col-span-4 flex items-center justify-center gap-3" style={{ animationDelay: '0.48s' }}>
+          <SawIcon className="w-4 h-4" color="var(--accent)" />
+          <span className="text-lg font-black tracking-tighter text-white leading-none">
+            XERRAC<span style={{ color: 'var(--accent-text)' }}>!</span>
+          </span>
         </div>
       </div>
 
-      {/* Contingut */}
-      <div className="px-4 sm:px-8 md:px-12 lg:px-16 py-12 sm:py-16 md:py-20 max-w-4xl mx-auto">
-        {/* Masthead */}
-        <div className="mb-12 md:mb-16 opacity-40 animate-pulse">
-          <Logo className="mb-4" />
-        </div>
-
-        {/* Secció 1 */}
-        <div className="mb-16 md:mb-20">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="w-4 h-4 bg-gray-800 animate-pulse" />
-            <span className="text-2xs tracking-[0.3em] uppercase font-mono text-gray-700">01</span>
-            <div className="h-px flex-1 bg-gray-800" />
-          </div>
-          <div className="h-10 sm:h-14 md:h-16 bg-gray-800 rounded w-3/4 mb-4 animate-pulse" />
-          <div className="h-4 bg-gray-800 rounded w-1/2 mb-6 animate-pulse" />
-          <div className="space-y-3">
-            <div className="h-3 bg-gray-800/60 rounded w-full animate-pulse" />
-            <div className="h-3 bg-gray-800/60 rounded w-full animate-pulse" style={{ animationDelay: '0.1s' }} />
-            <div className="h-3 bg-gray-800/60 rounded w-5/6 animate-pulse" style={{ animationDelay: '0.2s' }} />
-            <div className="h-3 bg-gray-800/60 rounded w-full animate-pulse" style={{ animationDelay: '0.3s' }} />
-            <div className="h-3 bg-gray-800/60 rounded w-2/3 animate-pulse" style={{ animationDelay: '0.4s' }} />
-          </div>
-        </div>
-
-        {/* Secció 2 */}
-        <div className="mb-16 md:mb-20">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="w-4 h-4 bg-gray-800 animate-pulse" />
-            <span className="text-2xs tracking-[0.3em] uppercase font-mono text-gray-700">02</span>
-            <div className="h-px flex-1 bg-gray-800" />
-          </div>
-          <div className="h-8 sm:h-10 md:h-12 bg-gray-800 rounded w-2/3 mb-4 animate-pulse" />
-          <div className="space-y-3">
-            <div className="h-3 bg-gray-800/60 rounded w-full animate-pulse" style={{ animationDelay: '0.15s' }} />
-            <div className="h-3 bg-gray-800/60 rounded w-full animate-pulse" style={{ animationDelay: '0.25s' }} />
-            <div className="h-3 bg-gray-800/60 rounded w-4/5 animate-pulse" style={{ animationDelay: '0.35s' }} />
-          </div>
-        </div>
-
-        {/* Missatge */}
-        <div className="text-center mt-12">
-          <p className="text-xs text-gray-600 uppercase tracking-[0.25em] animate-pulse">
-            Tallant la xerrameca
-          </p>
-        </div>
+      {/* Missatge */}
+      <div className="text-center py-5 shrink-0">
+        <p className="text-2xs text-gray-600 uppercase tracking-[0.25em]">
+          Tallant la xerrameca
+        </p>
       </div>
     </div>
   )

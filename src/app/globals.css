@@ -64,8 +64,28 @@ body {
   0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
   50% { transform: scaleY(1); opacity: 1; }
 }
+@keyframes check-pop {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
 .animate-check-pop {
   animation: check-pop 0.3s ease-out both;
+}
+
+/* Pàgina de càrrega: els quadrats (koma) d'una pàgina de manga que es
+   componen. Cada requadre entra amb una escala lleu, escalonat, com si la
+   pàgina del número s'estigués maquetant sola. */
+@keyframes koma-in {
+  0%   { opacity: 0; transform: scale(0.94); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.koma-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #262626;
+  background: #0d0d0d;
+  animation: koma-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* El botó de compartir es desplega en un reguitzell de xarxes: cada icona
