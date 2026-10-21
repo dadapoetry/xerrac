@@ -28,7 +28,7 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
   const contactEmail = settings.contact_email?.trim() || DEFAULT_CONTACT_EMAIL
 
   // Colofó d'una línia: el peu no ha d'explicar-se en cinc files.
-  const colophon = [issn, copyright, address, periodicity && `Periodicitat: ${periodicity}`, license]
+  const colophon = [`ISSN: ${issn}`, copyright, address, periodicity && `Periodicitat: ${periodicity}`, license]
     .filter(Boolean)
     .join(' · ')
 
