@@ -25,14 +25,16 @@ body {
   }
 }
 
+/* Només opacitat, sense transform: si aquest contenidor (#contingut) tingués
+   un transform —encara que fos temporal, durant l'animació— esdevindria el
+   containing block de tots els position:fixed del site (full de compartir,
+   newsletter, barra de progrés) i aquests s'ancorarien al document sencer
+   en lloc de la finestra. Amb opacitat sola, l'entrada es veu igual i els
+   overlays queden ben fixats a la pantalla. */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-/* 'both' deixa un transform permanent en aquest contenidor i, amb això,
-   qualsevol position:fixed del site (modals, popups) passa a relativa al
-   document sencer en lloc de la finestra. Sense 'both' el final de l'animació
-   és idèntic visualment (translateY(0)) i els overlays tornen a la finestra. */
 .animate-fade-in {
   animation: fade-in 0.5s ease-out backwards;
 }
