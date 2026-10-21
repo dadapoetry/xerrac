@@ -25,10 +25,10 @@ export function NecrologiquesSection({ section }: { section: SectionData }) {
         </p>
 
         {entries.length === 0 ? (
-          <p className="editorial-body text-gray-400 italic">Cap defunció que declarar, aquest semestre.</p>
+          <p className="editorial-body text-gray-400 italic text-sm md:text-md">Cap defunció que declarar, aquest semestre.</p>
         ) : (
           entries.map((entry, i) => (
-            <article key={i} className={`editorial-body text-gray-200 leading-[1.75] ${i < entries.length - 1 ? 'mb-9' : ''}`}>
+            <article key={i} className={`editorial-body text-gray-200 text-sm md:text-md leading-[1.75] ${i < entries.length - 1 ? 'mb-9' : ''}`}>
               <p className="necrologica-name">
                 <span className="font-semibold uppercase tracking-[0.06em] text-gray-100">
                   {entry.name}

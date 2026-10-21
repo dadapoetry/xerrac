@@ -505,10 +505,12 @@ body::before {
   color: var(--black);
 }
 
-/* Refinament tipogràfic del cos editorial i capitular (vegeu `capitular`) */
+/* Refinament tipogràfic del cos editorial i capitular (vegeu `capitular`).
+   La mida NO es defineix aquí: la posen les utilitats `text-sm md:text-md`
+   al component, igual que a la resta de seccions de text llarg. Si es
+   declarés aquí, el CSS sense @layer guanyaria a la utilitat de Tailwind i
+   el cos editorial tornaria a tenir mida pròpia (i fluida). */
 .editorial-body {
-  font-size: clamp(0.9375rem, 1vw + 0.25rem, 1.125rem);
-  line-height: 1.8;
   letter-spacing: 0.01em;
   font-variant-ligatures: common-ligatures discretionary-ligatures;
   font-kerning: normal;
@@ -851,13 +853,6 @@ body::before {
 .xerrac-quote-quoted b {
   font-weight: 700;
   color: var(--accent-text);
-}
-
-@media (max-width: 768px) {
-  .editorial-body {
-    font-size: 1.0625rem;
-    line-height: 1.7;
-  }
 }
 
 .stagger-item {
