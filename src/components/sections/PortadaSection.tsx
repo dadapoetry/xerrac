@@ -37,74 +37,72 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
   return (
     <div className="flex flex-col items-center justify-center min-h-[100dvh] w-full text-center px-4 relative overflow-hidden">
       <div className="max-w-2xl w-full relative z-10">
-        {/* Bloc logo + títol, amb el número de volum com a watermark darrere (només aquí) */}
-        <div className="relative mb-2">
-          {/* Número de volum com a element gràfic de fons (watermark), darrere del logo i el títol */}
-          {issueNumber !== undefined && (
-            <div
-              aria-hidden="true"
-              className="absolute -top-4 -right-2 md:-right-8 pointer-events-none select-none z-0"
+        {/* Número de volum com a element gràfic de fons (watermark), darrere del logo i el títol */}
+        {issueNumber !== undefined && (
+          <div
+            aria-hidden="true"
+            className="absolute -top-4 -right-2 md:-right-8 pointer-events-none select-none z-0"
+          >
+            <span
+              className="font-black leading-none"
+              style={{
+                fontSize: 'clamp(12rem, 30vw, 20rem)',
+                color: 'var(--accent)',
+                opacity: 0.15,
+                letterSpacing: '-0.05em',
+              }}
             >
-              <span
-                className="font-black leading-none"
-                style={{
-                  fontSize: 'clamp(12rem, 30vw, 20rem)',
-                  color: 'var(--accent)',
-                  opacity: 0.15,
-                  letterSpacing: '-0.05em',
-                }}
-              >
-                {String(issueNumber).padStart(2, '0')}
-              </span>
-            </div>
-          )}
-
-          {/* Capçalera de publicació: Logo petit */}
-          <div className="flex flex-col items-center mb-6 relative z-10">
-            <Logo className="mb-3" />
+              {String(issueNumber).padStart(2, '0')}
+            </span>
           </div>
+        )}
 
-          {/* Tema com a titular principal */}
-          {content.topic && (
-            <h1 className="relative z-10 text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-2">
-              {content.topic}
-            </h1>
-          )}
+        {/* Capçalera de publicació: Logo petit */}
+        <div className="flex flex-col items-center mb-6 relative z-10">
+          <Logo className="mb-3" />
         </div>
 
-        {/* Sumari com a taula de continguts editorial, compacta */}
+        {/* Tema com a titular principal */}
+        {content.topic && (
+          <h1 className="relative z-10 text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-2">
+            {content.topic}
+          </h1>
+        )}
+
+        {/* Sumari com a índex editorial (números grans com a àncora visual, estil revista) */}
         {sumariEntries && sumariEntries.length > 0 && (
-          <nav aria-label="Sumari del número" className="mt-8 mx-auto max-w-xl relative z-10 bg-[var(--tinta)]">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="font-mono text-2xs tracking-[0.3em] uppercase" style={{ color: 'var(--accent-text)' }}>
-                Sumari
+          <nav aria-label="Sumari del número" className="mt-10 mx-auto max-w-2xl relative z-10">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="h-px w-8" style={{ background: 'var(--accent)' }} />
+              <span className="font-mono text-2xs tracking-[0.4em] uppercase" style={{ color: 'var(--accent-text)' }}>
+                Índex
               </span>
-              <div className="h-px flex-1" style={{ background: 'rgba(var(--accent-rgb), 0.2)' }} />
-              <span className="font-mono text-2xs text-gray-600 tabular-nums">
-                {sumariEntries.length} seccions
-              </span>
+              <div className="h-px flex-1" style={{ background: 'rgba(var(--accent-rgb), 0.15)' }} />
             </div>
-            <ul className="flex flex-col">
-              {sumariEntries.map((entry, i) => (
-                <li
-                  key={i}
-                  className="group relative flex items-center gap-3 py-1.5 border-b border-gray-800/40 last:border-b-0 transition-colors"
-                >
-                  <span className="absolute left-0 top-0 bottom-0 w-0 bg-[var(--accent)] transition-all duration-200 group-hover:w-[2px]" />
-                  <span className="font-mono tabular-nums text-xs tracking-[0.15em] text-gray-600 group-hover:text-[var(--accent-text)] transition-colors shrink-0 w-6 text-right pl-2">
-                    {entry.number}
-                  </span>
-                  <span className="flex-1 text-left text-sm text-gray-300 group-hover:text-white transition-colors truncate">
-                    {entry.title}
-                  </span>
-                  {entry.readingTime && entry.readingTime > 0 && (
-                    <span className="font-mono text-2xs text-gray-700 shrink-0 tabular-nums">
-                      {entry.readingTime}′
+            <div className="relative pl-6">
+              <div className="absolute left-0 top-2 bottom-2 w-px" style={{ background: 'rgba(var(--accent-rgb), 0.25)' }} />
+              <ul className="flex flex-col gap-0">
+                {sumariEntries.map((entry, i) => (
+                  <li
+                    key={i}
+                    className="group relative flex items-baseline gap-4 py-2"
+                  >
+                    <span className="absolute -left-[25px] top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: 'var(--accent)' }} />
+                    <span className="font-mono tabular-nums text-2xl md:text-3xl font-bold tracking-tight shrink-0 w-10 text-right leading-none" style={{ color: 'var(--accent-text)', opacity: 0.5 }}>
+                      {entry.number}
                     </span>
-                  )}
-                </li>
-              ))}
-            </ul>
+                    <span className="flex-1 text-sm md:text-base text-gray-300 group-hover:text-white transition-colors leading-snug">
+                      {entry.title}
+                    </span>
+                    {entry.readingTime && entry.readingTime > 0 && (
+                      <span className="font-mono text-2xs text-gray-600 shrink-0 tabular-nums self-center">
+                        {entry.readingTime}′
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </nav>
         )}
       </div>
