@@ -136,11 +136,15 @@ export async function Footer({ currentIssueNumber }: { currentIssueNumber?: numb
           <div>
             <MetaTitle>Navegació</MetaTitle>
             <ul className="font-mono text-2xs leading-[1.9]">
-              <li>
-                <Link href="/" className="text-gray-400 hover:text-white transition-colors">
-                  ← Torna a la revista
-                </Link>
-              </li>
+              {/* «Torna a la revista» només té sentit fora de la revista: dins
+                  d'un número ja hi ets, i el link seria redundant. */}
+              {currentIssueNumber === undefined && (
+                <li>
+                  <Link href="/" className="text-gray-400 hover:text-white transition-colors">
+                    ← Torna a la revista
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="/arxiu" className="text-gray-400 hover:text-white transition-colors">
                   Arxiu d&rsquo;aclariments
