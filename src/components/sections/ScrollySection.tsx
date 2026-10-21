@@ -146,35 +146,22 @@ export function ScrollySection({ section, index }: { section: SectionData; index
     <section ref={rootRef} className="relative w-full bg-black" style={{ height: `${totalScenes * 100}svh`, overflowAnchor: 'none' }}>
       {/* Capa visual clavada a pantalla sencera */}
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
-        {steps.map((step, i) => {
-          if (!step.media) return null
-          const isActive = i === mediaIdx
-          // Imatge anterior (la que marxa): així les dues estan muntades durant
-          // el creuament i es pot dissoldre l'una dins de l'altra.
-          const prevMediaIdx = steps
-            .slice(0, mediaIdx)
-            .map((s) => !!s.media)
-            .lastIndexOf(true)
-          const isLeaving = !isActive && i === prevMediaIdx
-          const drift = i % 2 === 0 ? 'scene-drift-a' : 'scene-drift-b'
-          return (
-            <div
+        {steps.map((step, i) =>
+          step.media ? (
+            <img
               key={i}
-              aria-hidden={!isActive}
-              className={`scene-layer absolute inset-0 ${
-                isActive ? 'scene-enter' : isLeaving ? 'scene-exit' : 'opacity-0'
+              src={step.media}
+              alt=""
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              className={`absolute inset-0 w-full h-full object-cover transition-all ease-out ${
+                i === mediaIdx
+                  ? 'opacity-100 duration-[1600ms] motion-safe:scale-100'
+                  : 'opacity-0 duration-[900ms] motion-safe:scale-[1.08]'
               }`}
-            >
-              <img
-                src={step.media}
-                alt=""
-                loading={i === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-                className={`absolute inset-0 h-full w-full object-cover ${isActive ? drift : ''}`}
-              />
-            </div>
-          )
-        })}
+            />
+          ) : null
+        )}
         {!steps.some((s) => s.media) && (
           <div className="absolute inset-0 flex items-center justify-center text-gray-800 text-xs uppercase tracking-widest">
             Sense imatges
