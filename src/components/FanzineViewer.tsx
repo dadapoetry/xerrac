@@ -564,7 +564,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
 
           <SawIcon
             className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''}`}
-            color={sortedSections[activeSection]?.type === 'pagines_grogues' ? 'var(--grogues)' : accentColor}
+            color={accentColor}
           />
 
           <div className="relative flex-1 min-w-0">

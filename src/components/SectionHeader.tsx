@@ -46,13 +46,13 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright, ac
 
           <div className="stagger-item delay-1 flex items-center gap-3 mb-4">
 
-            <span style={{ color: 'var(--accent-text)' }}>
+            <span style={{ color: titleColor || 'var(--accent-text)' }}>
 
               <SawIcon className="w-4 h-4" />
 
             </span>
 
-            <span className="text-2xs tracking-[0.3em] uppercase font-mono tabular-nums font-semibold" style={{ color: 'var(--accent-text)' }}>
+            <span className="text-2xs tracking-[0.3em] uppercase font-mono tabular-nums font-semibold" style={{ color: titleColor || 'var(--accent-text)' }}>
 
               {String(number).padStart(2, '0')}
 
