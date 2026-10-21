@@ -12,7 +12,7 @@ export function AclarimentCulturalSection({ section, index }: { section: Section
     <div className="max-w-prose w-full mx-auto py-12">
       <SectionHeader number={index} title={section.title} subtitle="Aclarir allò que continua sense aclarir-se" readingTime={readingTime(content.body)} />
       <div className="relative pl-6">
-        <EditorialArticle body={content.body} style="quoted" className="aparell" />
+        <EditorialArticle body={content.body} style="quoted" capitular={false} className="aparell" />
       </div>
     </div>
   )

@@ -46,6 +46,7 @@ export function FaduCatalaSection({ section, index }: { section: SectionData; in
           title={section.title}
           subtitle="Caricatures i humor negre"
           readingTime={body ? readingTime(body) : undefined}
+          accentTitle
         />
         <div className="md:columns-2 md:gap-8">
           {content.entries?.map((entry: FaduEntry, i: number) => (

@@ -9,9 +9,10 @@ interface SectionHeaderProps {
   subtitle?: string | null
   readingTime?: number
   bright?: boolean
+  accentTitle?: boolean
 }
 
-export function SectionHeader({ number, title, subtitle, readingTime, bright }: SectionHeaderProps) {
+export function SectionHeader({ number, title, subtitle, readingTime, bright, accentTitle }: SectionHeaderProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [entered, setEntered] = useState(false)
 
@@ -76,7 +77,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright }: 
 
           </div>
 
-          <h2 className="stagger-item delay-2 text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-[0.95] mb-4">
+          <h2 className={`stagger-item delay-2 text-3xl md:text-5xl font-black tracking-tight uppercase leading-[0.95] mb-4 ${accentTitle ? 'text-[var(--accent-text)]' : 'text-white'}`}>
 
           {title}
 

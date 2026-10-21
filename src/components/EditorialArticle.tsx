@@ -4,6 +4,8 @@ interface EditorialArticleProps {
   body: string
   /** 'quoted' wraps blockquotes as pull-quotes (Aclariment Cultural). */
   style?: 'default' | 'quoted'
+  /** Whether to apply the shared drop cap (capitular). Default true. */
+  capitular?: boolean
   /** Extra classes merged onto the article container. */
   className?: string
 }
@@ -19,11 +21,11 @@ interface EditorialArticleProps {
  * Així el tractament és idèntic a totes les seccions i canviar-lo no implica
  * tocar N fitxers.
  */
-export function EditorialArticle({ body, style = 'default', className = '' }: EditorialArticleProps) {
+export function EditorialArticle({ body, style = 'default', capitular = true, className = '' }: EditorialArticleProps) {
   const html = style === 'quoted' ? styleBlockquotes(prepareBody(body), 'quoted') : styleBlockquotes(prepareBody(body))
   return (
     <div
-      className={`editorial-body capitular text-justify hyphens-auto text-gray-200 leading-[1.75] ${className}`}
+      className={`editorial-body ${capitular ? 'capitular' : ''} text-justify hyphens-auto text-gray-200 leading-[1.75] ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
