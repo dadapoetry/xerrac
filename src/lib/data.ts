@@ -81,6 +81,16 @@ export const getPublishedIssues = cache(async () => {
   return issues as any[]
 })
 
+/**
+ * El darrer número publicat (el número "actual" de la revista). Serveix per
+ * a les pàgines soltes —/sobre, /subscriu, /privacitat, /arxiu— que no
+ * tenen cap número propi: adopten l'accent del número vigent.
+ */
+export const getLatestPublishedIssue = cache(async () => {
+  const issues = await getIssues()
+  return issues.find((i: any) => i.published) || null
+})
+
 export const getIssue = cache(async (id: string) => {
   const result = await db.execute({
     sql: 'SELECT * FROM Issue WHERE id = ?',

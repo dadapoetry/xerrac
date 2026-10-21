@@ -6,6 +6,8 @@ import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { issuePath } from '@/lib/slugs'
 import { SECTION_LABELS } from '@/types'
 import { Footer } from '@/components/Footer'
+import { AccentScope } from '@/components/AccentScope'
+import { FooterMeta } from '@/components/FooterMeta'
 
 export const revalidate = 300
 
@@ -303,6 +305,7 @@ export default async function ArxiuPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
       />
+      <AccentScope>
       <div className="min-h-screen flex flex-col">
         <div className="flex-1">
           <div className="px-4 sm:px-6 md:px-8 pt-[calc(3rem_+_env(safe-area-inset-top))] sm:pt-16 md:pt-20 pb-0">
@@ -315,54 +318,60 @@ export default async function ArxiuPage() {
               </Link>
             </div>
 
-            <header className="max-w-6xl mx-auto mb-14 sm:mb-16 md:mb-20">
-              <span className="text-2xs text-gray-400 tracking-[0.35em] uppercase block mb-3">
-                Biblioteca d&rsquo;aclariments
-              </span>
-              <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
-                Xerrac<span style={{ color: 'var(--accent-text, #df3939)' }}>!</span>
-              </h1>
-              <div className="h-px w-16 sm:w-20 mt-6 sm:mt-8" style={{ background: 'rgba(var(--accent-rgb, 220, 38, 38), 0.6)' }} />
-            </header>
+            <div className="max-w-6xl mx-auto grid md:grid-cols-[2fr_1fr] gap-10 md:gap-16">
+              <div className="min-w-0">
+                <header className="mb-14 sm:mb-16 md:mb-20">
+                  <span className="text-2xs text-gray-400 tracking-[0.35em] uppercase block mb-3">
+                    Biblioteca d&rsquo;aclariments
+                  </span>
+                  <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-white uppercase leading-[0.82] mb-3 sm:mb-4">
+                    Xerrac<span style={{ color: 'var(--accent-text, #df3939)' }}>!</span>
+                  </h1>
+                  <div className="h-px w-16 sm:w-20 mt-6 sm:mt-8" style={{ background: 'rgba(var(--accent-rgb, 220, 38, 38), 0.6)' }} />
+                </header>
+
+                {issues.length === 0 ? (
+                  <div className="py-24 text-center">
+                    <span className="text-7xl font-black text-gray-800 select-none">:</span>
+                    <p className="text-gray-400 text-sm mt-4">No hi ha números publicats encara.</p>
+                  </div>
+                ) : (
+                  <div>
+                    {issues.map((issue, index) => {
+                      const s = shapeIssue(issue)
+                      const treatment = getTreatment(index, issues.length)
+
+                      switch (treatment) {
+                        case 'hero':
+                          return <HeroIssue key={s.id} issue={s} />
+                        case 'split-left':
+                          return <SplitIssue key={s.id} issue={s} />
+                        case 'split-right':
+                          return <SplitIssue key={s.id} issue={s} reverse />
+                        case 'typography':
+                          return <TypographyIssue key={s.id} issue={s} />
+                        case 'gallery':
+                          return <GalleryIssue key={s.id} issue={s} />
+                      }
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <aside className="md:border-l border-gray-800 md:pl-8 pt-10 md:pt-0">
+                <div className="md:sticky md:top-10">
+                  <FooterMeta />
+                  <p className="font-mono text-2xs tracking-[0.2em] uppercase text-gray-600 mt-8">
+                    {issues.length} {issues.length === 1 ? 'volum' : 'volums'} a la biblioteca
+                  </p>
+                </div>
+              </aside>
+            </div>
           </div>
-
-          {issues.length === 0 ? (
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-32">
-              <div className="text-center">
-                <span className="text-7xl font-black text-gray-800 select-none">:</span>
-                <p className="text-gray-400 text-sm mt-4">No hi ha números publicats encara.</p>
-              </div>
-            </div>
-          ) : (
-            <div>
-              {issues.map((issue, index) => {
-                const s = shapeIssue(issue)
-                const treatment = getTreatment(index, issues.length)
-
-                switch (treatment) {
-                  case 'hero':
-                    return <HeroIssue key={s.id} issue={s} />
-                  case 'split-left':
-                    return <SplitIssue key={s.id} issue={s} />
-                  case 'split-right':
-                    return <SplitIssue key={s.id} issue={s} reverse />
-                  case 'typography':
-                    return <TypographyIssue key={s.id} issue={s} />
-                  case 'gallery':
-                    return <GalleryIssue key={s.id} issue={s} />
-                }
-              })}
-
-              <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 text-center">
-                <p className="text-2xs text-gray-400 tracking-[0.3em] uppercase">
-                  {issues.length} {issues.length === 1 ? 'volum' : 'volums'} a la biblioteca
-                </p>
-              </div>
-            </div>
-          )}
         </div>
         <Footer />
       </div>
+      </AccentScope>
     </>
   )
 }

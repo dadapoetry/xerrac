@@ -76,3 +76,19 @@ export function accentOnColor(hex: string): string {
 export function hexToRgb(hex: string): string {
   return parseHex(hex).join(', ')
 }
+
+/**
+ * Les variables CSS que defineixen l'accent d'un número, per aplicar-les a
+ * un subconjunt del lloc (el peu, les pàgines soltes). Permet que el peu
+ * adopti el color del número que s'està llegint, encara que el peu visqui
+ * fora del visor, on aquestes variables només existeixen com a valors per
+ * defecte.
+ */
+export function accentStyle(hex: string): React.CSSProperties {
+  return {
+    '--accent': hex,
+    '--accent-rgb': hexToRgb(hex),
+    '--accent-text': accentTextColor(hex),
+    '--accent-on': accentOnColor(hex),
+  } as React.CSSProperties
+}

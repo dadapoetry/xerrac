@@ -4,6 +4,8 @@ import { getAllSettings } from '@/lib/settings'
 import { getSiteUrl, DEFAULT_CONTACT_EMAIL, ogImageUrl } from '@/lib/site'
 import { PENDING_TTL_DAYS } from '@/lib/pending'
 import { SawIcon } from '@/components/SawIcon'
+import { AccentScope } from '@/components/AccentScope'
+import { FooterMeta } from '@/components/FooterMeta'
 
 export const dynamic = 'force-dynamic'
 
@@ -54,8 +56,10 @@ export default async function PrivacyPage() {
   const issn = settings.footer_issn?.trim() || ''
 
   return (
+    <AccentScope>
     <div className="py-16 md:py-24 px-4">
-      <article className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-[2fr_1fr] gap-10 md:gap-16">
+      <article className="min-w-0">
         <div className="flex items-center gap-2 mb-6">
           <span style={{ color: 'var(--accent-text)' }}>
             <SawIcon className="w-4 h-4" />
@@ -299,6 +303,11 @@ export default async function PrivacyPage() {
           </Link>
         </div>
       </article>
+      <aside className="md:border-l border-gray-800 md:pl-8 pt-10 md:pt-0">
+        <FooterMeta />
+      </aside>
+      </div>
     </div>
+    </AccentScope>
   )
 }

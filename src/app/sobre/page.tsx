@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllSettings } from '@/lib/settings'
-import { getSiteUrl, DEFAULT_CONTACT_EMAIL, ogImageUrl } from '@/lib/site'
+import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { SECTION_LABELS } from '@/types'
 import { SawIcon } from '@/components/SawIcon'
+import { AccentScope } from '@/components/AccentScope'
+import { FooterMeta } from '@/components/FooterMeta'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,19 +46,7 @@ const SECTIONS: { type: string; desc: string }[] = [
 export default async function AboutPage() {
   const settings = await getAllSettings()
   const siteUrl = getSiteUrl()
-  const email = settings.contact_email?.trim() || DEFAULT_CONTACT_EMAIL
   const issn = settings.footer_issn?.trim() || ''
-  const periodicity = settings.footer_periodicity?.trim() || ''
-  const address = settings.footer_address?.trim() || ''
-  const license = settings.footer_license?.trim() || ''
-
-  let socialLinks: { name: string; url: string }[] = []
-  try {
-    const parsed = JSON.parse(settings.footer_social_links || '[]')
-    if (Array.isArray(parsed)) socialLinks = parsed.filter((l: any) => l?.url)
-  } catch {
-    socialLinks = []
-  }
 
   const aboutJsonLd = {
     '@context': 'https://schema.org',
@@ -75,10 +65,12 @@ export default async function AboutPage() {
   }
 
   return (
+    <AccentScope>
     <div className="min-h-screen flex flex-col">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }} />
       <div className="flex-1 py-16 md:py-24 px-4">
-        <article className="max-w-2xl mx-auto">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[2fr_1fr] gap-10 md:gap-16">
+        <article className="min-w-0">
           <div className="flex items-center gap-2 mb-6">
             <span style={{ color: 'var(--accent-text)' }}>
               <SawIcon className="w-4 h-4" />
@@ -120,54 +112,18 @@ export default async function AboutPage() {
             ))}
           </ul>
 
-          <h2 className="text-white text-md md:text-xl font-bold tracking-tight uppercase mt-10 mb-3">
-            Dades de la publicació
-          </h2>
-          <ul className="text-gray-300 text-sm leading-relaxed mb-4 space-y-1">
-            {issn && <li>ISSN: {issn}</li>}
-            {periodicity && <li>Periodicitat: {periodicity}</li>}
-            {address && <li>{address}</li>}
-            {license && <li>{license}</li>}
-          </ul>
-
-          <h2 className="text-white text-md md:text-xl font-bold tracking-tight uppercase mt-10 mb-3">
-            Contacte
-          </h2>
-          <p className="text-gray-300 text-sm leading-relaxed mb-4">
-            Podeu escriure&rsquo;ns a{' '}
-            <a href={`mailto:${email}`} className="inline-block py-1.5 text-white hover:text-gray-400 underline underline-offset-4">
-              {email}
-            </a>
-            .
-          </p>
-          {socialLinks.length > 0 && (
-            <ul className="text-gray-300 text-sm leading-relaxed mb-4">
-              {socialLinks.map((l) => (
-                <li key={l.name} className="mb-2 list-disc pl-5 marker:text-gray-600">
-                  <a href={l.url} target="_blank" rel="noopener noreferrer" className="inline-block py-1.5 hover:text-white transition-colors">
-                    {l.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-
           <div className="flex flex-wrap gap-6 mt-12 pt-8 border-t border-gray-800 text-2xs uppercase tracking-wider">
-            <Link href="/arxiu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
-              Arxiu d&rsquo;aclariments
-            </Link>
-            <Link href="/subscriu" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
-              Subscriu-te
-            </Link>
-            <Link href="/privacitat" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
-              Privacitat
-            </Link>
             <Link href="/" className="inline-block py-2 px-1 text-gray-400 hover:text-white transition-colors">
               ← Tornar a la revista
             </Link>
           </div>
         </article>
+        <aside className="md:border-l border-gray-800 md:pl-8 pt-10 md:pt-0">
+          <FooterMeta />
+        </aside>
+        </div>
       </div>
     </div>
+    </AccentScope>
   )
 }
