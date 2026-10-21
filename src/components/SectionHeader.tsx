@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react'
 import { SawIcon } from '@/components/SawIcon'
+import { SectionNumber } from '@/components/SectionNumber'
 
 interface SectionHeaderProps {
   number: number
@@ -36,17 +37,13 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright, ac
   return (
 <div ref={ref} className={`mb-12 md:mb-16 relative ${entered ? 'entered' : ''}`}>
 
-      <div className="stagger-number absolute -top-10 -left-4 text-section-num font-black select-none pointer-events-none leading-none" style={{ color: 'var(--accent)' }}>
-
-        {String(number).padStart(2, '0')}
-
-      </div>
+      <SectionNumber number={number} />
 
         <div className="relative">
 
           <div className="stagger-item delay-1 flex items-center gap-3 mb-4">
 
-            <span style={{ color: titleColor || 'var(--accent-text)' }}>
+            <span style={{ color: titleColor || 'var(--accent-text)', filter: 'drop-shadow(0 0 6px currentColor)' }}>
 
               <SawIcon className="w-4 h-4" />
 
