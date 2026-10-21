@@ -48,7 +48,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
               style={{
                 fontSize: 'clamp(12rem, 30vw, 20rem)',
                 color: 'var(--accent)',
-                opacity: 0.15,
+                opacity: 0.09,
                 letterSpacing: '-0.05em',
               }}
             >
@@ -69,9 +69,9 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
           </h1>
         )}
 
-        {/* Sumari horitzontal dens (estil revista japonesa) — sense línies vermelles, sense "Index", sense comptador */}
+        {/* Sumari horitzontal dens (estil revista japonesa) */}
         {sumariEntries && sumariEntries.length > 0 && (
-          <div className="mt-8 relative z-10 border-t border-b py-3" style={{ borderColor: 'rgba(var(--accent-rgb), 0.15)' }}>
+          <div className="mt-5 relative z-10 border-t border-b py-3" style={{ borderColor: 'rgba(var(--accent-rgb), 0.12)' }}>
             <div className="flex flex-wrap">
               {sumariEntries.map((entry, i) => (
                 <div
@@ -79,14 +79,14 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
                   className="group flex items-baseline gap-2 py-1.5 pr-4 mr-4 border-r last:border-r-0 transition-colors"
                   style={{ borderColor: 'rgba(255,255,255,0.06)' }}
                 >
-                  <span className="font-mono tabular-nums text-lg md:text-xl font-bold leading-none shrink-0" style={{ color: 'var(--accent-text)', opacity: 0.5 }}>
+                  <span className="font-mono tabular-nums text-lg md:text-xl font-bold leading-none shrink-0 transition-all duration-200 group-hover:opacity-100" style={{ color: 'var(--accent-text)', opacity: 0.5 }}>
                     {entry.number}
                   </span>
                   <span className="text-xs md:text-sm text-gray-400 group-hover:text-white transition-colors leading-tight">
                     {entry.title}
                   </span>
                   {entry.readingTime && entry.readingTime > 0 && (
-                    <span className="font-mono text-[9px] text-gray-700 shrink-0 tabular-nums">
+                    <span className="font-mono text-[9px] text-gray-600 group-hover:text-gray-400 shrink-0 tabular-nums transition-colors">
                       {entry.readingTime}′
                     </span>
                   )}
