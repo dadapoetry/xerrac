@@ -36,18 +36,18 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[100dvh] w-full text-center px-4 relative overflow-hidden">
-      {/* Número de volum com a element gràfic de fons (watermark) */}
+      {/* Número de volum com a element gràfic de fons (watermark), darrere del logo i el títol */}
       {issueNumber !== undefined && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0"
         >
           <span
             className="font-black leading-none"
             style={{
               fontSize: 'clamp(16rem, 40vw, 32rem)',
               color: 'var(--accent)',
-              opacity: 0.07,
+              opacity: 0.12,
               letterSpacing: '-0.05em',
             }}
           >
@@ -56,7 +56,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
         </div>
       )}
 
-      <div className="max-w-2xl w-full relative z-[2]">
+      <div className="max-w-2xl w-full relative z-10">
         {/* Capçalera de publicació: Logo petit + metadades */}
         <div className="flex flex-col items-center mb-6">
           <Logo className="mb-3" />
