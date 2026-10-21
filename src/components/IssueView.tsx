@@ -2,6 +2,7 @@ import { FanzineViewer } from '@/components/FanzineViewer'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Footer } from '@/components/Footer'
 import { Afterthought } from '@/components/Afterthought'
+import { MiniArchive } from '@/components/MiniArchive'
 import { getSetting } from '@/lib/settings'
 import { getSiteUrl, ogImageUrl } from '@/lib/site'
 import { safeParse } from '@/lib/utils'
@@ -91,6 +92,7 @@ export async function IssueView({ issue, initialSectionIndex, jsonLd = true }: I
         <FanzineViewer issue={parsedIssue as any} initialSectionIndex={initialSectionIndex} />
       </ErrorBoundary>
       <Afterthought />
+      <MiniArchive currentIssueNumber={issue.number} />
       <Footer currentIssueNumber={issue.number} />
     </>
   )
