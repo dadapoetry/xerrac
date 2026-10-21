@@ -71,7 +71,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
 
         {/* Sumari horitzontal dens (estil revista japonesa) — sense línies vermelles, sense "Index", sense comptador */}
         {sumariEntries && sumariEntries.length > 0 && (
-          <div className="mt-8 relative z-10">
+          <div className="mt-8 relative z-10 border-t border-b py-3" style={{ borderColor: 'rgba(var(--accent-rgb), 0.15)' }}>
             <div className="flex flex-wrap">
               {sumariEntries.map((entry, i) => (
                 <div
