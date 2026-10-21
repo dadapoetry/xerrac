@@ -52,7 +52,7 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright, ac
 
             </span>
 
-            <span className="text-2xs tracking-[0.3em] uppercase font-mono tabular-nums font-semibold" style={{ color: titleColor || 'var(--accent-text)' }}>
+            <span className="text-2xs tracking-[0.3em] uppercase font-mono tabular-nums font-semibold" style={{ color: 'var(--accent-text)' }}>
 
               {String(number).padStart(2, '0')}
 
