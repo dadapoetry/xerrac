@@ -45,10 +45,10 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
           <span
             className="font-black leading-none"
             style={{
-              fontSize: 'clamp(12rem, 30vw, 24rem)',
+              fontSize: 'clamp(16rem, 40vw, 32rem)',
               color: 'var(--accent)',
-              opacity: 0.04,
-              letterSpacing: '-0.04em',
+              opacity: 0.07,
+              letterSpacing: '-0.05em',
             }}
           >
             {String(issueNumber).padStart(2, '0')}
@@ -60,12 +60,6 @@ export function PortadaSection({ section, sumariEntries, issueNumber }: { sectio
         {/* Capçalera de publicació: Logo petit + metadades */}
         <div className="flex flex-col items-center mb-6">
           <Logo className="mb-3" />
-          {issueNumber !== undefined && (
-            <div className="font-mono text-2xs tracking-[0.3em] uppercase text-gray-400">
-              Núm. {String(issueNumber).padStart(2, '0')}
-              {content.topic ? ` · ${content.topic}` : ''}
-            </div>
-          )}
         </div>
 
         {/* Tema com a titular principal */}
