@@ -19,10 +19,8 @@ function ScrollHint() {
 
   return (
     <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 pointer-events-none">
+      <div className="w-px h-8 bg-gray-500 origin-top animate-[breathe_2s_ease-in-out_infinite]" />
       <span className="text-2xs text-gray-500 uppercase tracking-[0.25em]">Desplaça</span>
-      <svg className="w-4 h-4 text-gray-400 animate-bounce motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-      </svg>
     </div>
   )
 }
@@ -30,42 +28,85 @@ function ScrollHint() {
 interface SumariEntry {
   number: string
   title: string
+  readingTime?: number
 }
 
 export function PortadaSection({ section, sumariEntries, issueNumber }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number }) {
   const content = section.content as unknown as PortadaContent
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] w-full text-center px-4 relative overflow-hidden">
-      <div className="max-w-lg w-full relative">
-        <Logo className="mb-5" />
+    <div className="flex flex-col items-center justify-center min-h-[100dvh] w-full text-center px-4 relative overflow-hidden">
+      {/* Número de volum com a element gràfic de fons (watermark) */}
+      {issueNumber !== undefined && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+        >
+          <span
+            className="font-black leading-none"
+            style={{
+              fontSize: 'clamp(12rem, 30vw, 24rem)',
+              color: 'var(--accent)',
+              opacity: 0.04,
+              letterSpacing: '-0.04em',
+            }}
+          >
+            {String(issueNumber).padStart(2, '0')}
+          </span>
+        </div>
+      )}
 
+      <div className="max-w-2xl w-full relative z-[2]">
+        {/* Capçalera de publicació: Logo petit + metadades */}
+        <div className="flex flex-col items-center mb-6">
+          <Logo className="mb-3" />
+          {issueNumber !== undefined && (
+            <div className="font-mono text-2xs tracking-[0.3em] uppercase text-gray-400">
+              Núm. {String(issueNumber).padStart(2, '0')}
+              {content.topic ? ` · ${content.topic}` : ''}
+            </div>
+          )}
+        </div>
+
+        {/* Tema com a titular principal */}
         {content.topic && (
-          <p className="text-3xl md:text-5xl text-gray-100 font-bold">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-2">
             {content.topic}
-          </p>
+          </h1>
         )}
 
+        {/* Sumari com a taula de continguts */}
         {sumariEntries && sumariEntries.length > 0 && (
-          <div className="mt-8 flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-gray-300">
-            {sumariEntries.map((entry, i) => (
-              <Fragment key={i}>
-                {i > 0 && (
-                  <span className="text-gray-500" aria-hidden="true">/</span>
-                )}
-                <span className="inline-flex items-baseline gap-1.5">
-                  <span className="text-gray-400 font-mono tabular-nums">{entry.number}</span>
-                  <span className="text-gray-200">{entry.title}</span>
-                </span>
-              </Fragment>
-            ))}
-          </div>
+          <nav aria-label="Sumari del número" className="mt-10 mx-auto max-w-md">
+            <div className="font-mono text-2xs tracking-[0.3em] uppercase text-gray-500 mb-4">
+              Sumari
+            </div>
+            <ul className="flex flex-col gap-1">
+              {sumariEntries.map((entry, i) => (
+                <li key={i}>
+                  <a
+                    href={`#s-${i + 1}`}
+                    className="group flex items-baseline gap-3 py-1.5 px-2 -mx-2 transition-all duration-200 hover:translate-x-1"
+                  >
+                    <span className="font-mono tabular-nums text-2xs tracking-[0.2em] text-gray-400 group-hover:text-[var(--accent-text)] transition-colors shrink-0">
+                      {entry.number}
+                    </span>
+                    <span className="flex-1 text-left text-sm md:text-base text-gray-200 group-hover:text-white transition-colors">
+                      {entry.title}
+                    </span>
+                    {entry.readingTime && entry.readingTime > 0 && (
+                      <span className="font-mono text-2xs text-gray-500 shrink-0">
+                        ~{entry.readingTime} min
+                      </span>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         )}
       </div>
-      
-      {issueNumber !== undefined && (
-        <span className="absolute bottom-4 right-4 text-2xs text-gray-100 font-mono pointer-events-none z-10">Nº&nbsp;{String(issueNumber).padStart(2, '0')}</span>
-      )}
+
       <ScrollHint />
     </div>
   )
