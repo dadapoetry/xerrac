@@ -893,6 +893,187 @@ body::before {
 .delay-4 { transition-delay: 429ms; }
 .delay-5 { transition-delay: 595ms; }
 
+/* ═══════════════════════════════════════════════════════════
+   CAPÇAL VERTICAL — «llom de llibre»
+   Tipografia vertical de veritat, per a la secció Fadu català.
+
+   `writing-mode: vertical-rl` AL SOL fa girar les majúscules 90°
+   (el valor per defecte de `text-orientation` és `mixed`): el títol
+   es llegeix de costat i sembla un error. Amb `text-orientation:
+   upright` les lletres s'apilen DRETES, una sota l'altra, com al
+   tategaki japonès.
+   ═══════════════════════════════════════════════════════════ */
+
+.xerrac-tategaki {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+/* Xifres dins un sol quadrat (tate-chu-yoko), com a la tipografia
+   japonesa: el número de secció ocupa una casella i no una columna. */
+.xerrac-tate-chu-yoko {
+  text-combine-upright: all;
+  -webkit-text-combine: horizontal;
+}
+
+/* La banda del llom. */
+.xerrac-spine {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 1.25rem 1.75rem;
+  border-right: 2px solid var(--accent);
+  background: linear-gradient(180deg,
+    rgba(var(--accent-rgb), 0.08) 0%,
+    rgba(var(--accent-rgb), 0.02) 50%,
+    rgba(var(--accent-rgb), 0.08) 100%);
+}
+
+/* El filament que neix de la serra i baixa per tota l'alçada del llom. */
+.xerrac-spine::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent);
+  box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.25);
+}
+
+.xerrac-spine__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.xerrac-spine__volume {
+  font-family: var(--font-mono-stack);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--accent-text);
+}
+
+.xerrac-spine__title {
+  font-weight: 900;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  /* En vertical, l'espai entre paraules ocupa una casella sencera i deixa un
+     buit enorme al mig del títol. Amb el text apil·lat, el buit ha de ser
+     estret com a la tipografia japonesa. */
+  word-spacing: -0.32em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  margin: 0;
+}
+
+.xerrac-spine__subtitle {
+  font-family: var(--font-mono-stack);
+  font-size: 10px;
+  line-height: 1.9;
+  letter-spacing: 0.18em;
+  word-spacing: -0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+  max-height: 26rem;
+}
+
+.xerrac-spine__time {
+  font-family: var(--font-mono-stack);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--meta);
+  white-space: nowrap;
+  margin-top: auto;
+}
+
+/* La secció que usa el llom: la banda és la primera columna i el cos
+   la segona. En mòbil el llom es tomba i es converteix en una banda
+   horitzontal damunt del text. */
+.xerrac-fadu {
+  max-width: 56rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.xerrac-fadu__body {
+  position: relative;
+  padding-top: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .xerrac-fadu {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .xerrac-spine {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-right: none;
+    border-bottom: 2px solid var(--accent);
+    background: linear-gradient(90deg,
+      rgba(var(--accent-rgb), 0.08) 0%,
+      rgba(var(--accent-rgb), 0.02) 50%,
+      rgba(var(--accent-rgb), 0.08) 100%);
+  }
+
+  .xerrac-spine::before {
+    left: 0;
+    right: 0;
+    top: -2px;
+    bottom: auto;
+    width: auto;
+    height: 4px;
+  }
+
+  .xerrac-spine__head {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .xerrac-spine__title {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    font-size: 1.75rem;
+    letter-spacing: -0.03em;
+    /* En horitzontal l'espai entre paraules és normal: l'ajust negatiu
+       només té sentit amb el text apil·lat. */
+    word-spacing: normal;
+    line-height: 0.95;
+  }
+
+  .xerrac-spine__subtitle {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    letter-spacing: 0.08em;
+    word-spacing: normal;
+    max-height: none;
+    flex-basis: 100%;
+  }
+
+  .xerrac-spine__time {
+    margin-top: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .stagger-item {
     opacity: 1;

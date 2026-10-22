@@ -12,9 +12,15 @@ interface SectionHeaderProps {
   bright?: boolean
   accentTitle?: boolean
   titleColor?: string
+  /**
+   * Capçal en vertical, com el llom d'un llibre. Opt-in: només l'ha de fer
+   * servir la secció que el vol (ara mateix, el Fadu català). La resta de
+   * seccions continuen amb el capçal horitzontal de sempre.
+   */
+  vertical?: boolean
 }
 
-export function SectionHeader({ number, title, subtitle, readingTime, bright, accentTitle, titleColor }: SectionHeaderProps) {
+export function SectionHeader({ number, title, subtitle, readingTime, bright, accentTitle, titleColor, vertical }: SectionHeaderProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [entered, setEntered] = useState(false)
 
@@ -33,6 +39,48 @@ export function SectionHeader({ number, title, subtitle, readingTime, bright, ac
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
+
+  // Capçal en vertical: el títol s'apila de dalt a baix amb les lletres
+  // dretes (tategaki) i la banda fa de llom d'un llibre. El filament
+  // d'accent neix de la serra i baixa per tota l'alçada, de manera que el
+  // capçal queda unit al cos de la secció i no flotant al marge.
+  if (vertical) {
+    return (
+      <aside
+        ref={ref}
+        className={`xerrac-spine ${entered ? 'entered' : ''}`}
+        aria-label={`Capçalera de la secció: ${title}`}
+      >
+        <div className="xerrac-spine__head stagger-item delay-1">
+          <span style={{ color: titleColor || 'var(--accent-text)', filter: 'drop-shadow(0 0 2px currentColor)' }}>
+            <SawIcon className="w-4 h-4" />
+          </span>
+          <span className="xerrac-spine__volume xerrac-tate-chu-yoko">
+            {String(number).padStart(2, '0')}
+          </span>
+        </div>
+
+        <h2
+          className="xerrac-spine__title xerrac-tategaki stagger-item delay-2"
+          style={titleColor ? { color: titleColor } : accentTitle ? { color: 'var(--accent-text)' } : undefined}
+        >
+          {title}
+        </h2>
+
+        {subtitle && (
+          <p className="xerrac-spine__subtitle xerrac-tategaki stagger-item delay-3">
+            {subtitle}
+          </p>
+        )}
+
+        {readingTime && (
+          <span className={`xerrac-spine__time stagger-item delay-4 ${bright ? 'text-gray-200' : ''}`}>
+            ~{readingTime} min
+          </span>
+        )}
+      </aside>
+    )
+  }
 
   return (
 <div ref={ref} className={`mb-12 md:mb-16 relative ${entered ? 'entered' : ''}`}>

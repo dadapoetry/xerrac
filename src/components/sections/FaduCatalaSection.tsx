@@ -2,6 +2,7 @@
 
 import { SectionData, FaduCatalaContent, FaduEntry } from '@/types'
 import { SectionHeader } from '@/components/SectionHeader'
+import { SectionNumber } from '@/components/SectionNumber'
 import { readingTime, prepareBody } from '@/lib/html'
 
 function EntryCard({ entry, index }: { entry: FaduEntry; index: number }) {
@@ -38,20 +39,26 @@ export function FaduCatalaSection({ section, index }: { section: SectionData; in
   const content = section.content as unknown as FaduCatalaContent
   const body = (content.entries || []).map((entry) => entry.body || '').join(' ')
 
+  // El capçal d'aquesta secció és el llom d'un llibre: en vertical, a la
+  // primera columna, amb el filament d'accent que baixa fins al cos. La resta
+  // de seccions del número mantenen el capçal horitzontal de sempre.
   return (
     <div className="w-full py-12 relative overflow-hidden">
-      <div className="max-w-4xl mx-auto">
+      <div className="xerrac-fadu">
         <SectionHeader
+          vertical
           number={index}
           title={section.title}
           subtitle="Caricatures i humor negre"
           readingTime={body ? readingTime(body) : undefined}
-          accentTitle
         />
-        <div className="md:columns-2 md:gap-8">
-          {content.entries?.map((entry: FaduEntry, i: number) => (
-            <EntryCard key={i} entry={entry} index={i} />
-          ))}
+        <div className="xerrac-fadu__body">
+          <SectionNumber number={index} />
+          <div className="md:columns-2 md:gap-8">
+            {content.entries?.map((entry: FaduEntry, i: number) => (
+              <EntryCard key={i} entry={entry} index={i} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
