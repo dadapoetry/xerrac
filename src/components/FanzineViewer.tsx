@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fragment } from 'react'
+import { track } from '@vercel/analytics'
 import { IssueData } from '@/types'
 import { buildSectionSlugMap, issuePath, articlePath, sectionAnchorId } from '@/lib/slugs'
 import { readingTime, sectionReadingTime } from '@/lib/html'
@@ -144,6 +145,13 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const navRef = useRef<HTMLDivElement>(null)
   const sheetRef = useRef<HTMLDivElement>(null)
+  // Seccions ja comptades en aquesta visita. El visor canvia d'URL amb
+  // `replaceState`, que el script de Vercel Analytics no segueix (només
+  // enganxa `pushState` i `popstate`), així que sense això el panell
+  // només diria quantes vegades s'ha entrat a la revista, no quina secció
+  // s'ha llegit. Un cop per secció i visita: tornar enrere no compta dues
+  // vegades.
+  const trackedSections = useRef<Set<number>>(new Set())
   const dragStartY = useRef<number | null>(null)
   const dragOffset = useRef(0)
   useEffect(() => {
@@ -197,6 +205,22 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
             const slug = section ? slugMap.get(section.id) : undefined
             history.replaceState(null, '', slug ? articlePath(issue.number, slug) : issuePath(issue.number))
           } catch {}
+          // Esdeveniment per secció llegida. L'script de Vercel Analytics
+          // només segueix `pushState` i `popstate`, i el visor canvia d'URL
+          // amb `replaceState`: sense això el panell diria quantes vegades
+          // s'ha entrat a la revista, però no quina secció s'ha llegit.
+          // Un cop per secció i visita.
+          if (!trackedSections.current.has(idx)) {
+            trackedSections.current.add(idx)
+            const section = sortedSections[idx]
+            try {
+              track('seccio', {
+                numero: String(idx).padStart(2, '0'),
+                titol: section?.title || '',
+                tipus: section?.type || '',
+              })
+            } catch {}
+          }
         }
       },
       { threshold: 0, rootMargin: '-50% 0px -50% 0px' }
