@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { track } from '@vercel/analytics'
 import { subscribe } from '@/lib/actions'
 import { PrivacyNote } from '@/components/PrivacyNote'
 
@@ -17,6 +18,9 @@ export function SubscribeForm() {
       const result = await subscribe(email.trim())
       setStatus('success')
       setMessage(result.message)
+      // La subscripció és l'única conversió que importa en una revista:
+      // es traça com a esdeveniment per saber-ne l'origen (Instagram, etc.).
+      track('subscripcio')
     } catch (err) {
       setStatus('error')
       setMessage(err instanceof Error ? err.message : 'Error en subscriure\'t')

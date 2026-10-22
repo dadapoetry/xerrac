@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, IBM_Plex_Mono, Source_Serif_4 } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import { Providers } from '@/components/Providers'
 import { getSiteUrl, ogImageUrl } from '@/lib/site'
@@ -94,6 +96,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </Providers>
         <JsonLd />
+        {/* Analítica de Vercel: sense cookies, sense banner de consentiment i
+            amb ~1 KB de script. Els Core Web Vitals venen de la mateixa
+            infraestructura (Speed Insights). L'esdeveniment de subscripció
+            el traça el formulari del peu. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
