@@ -3,6 +3,7 @@
 import { useState, useEffect, Fragment } from 'react'
 import { SectionData, PortadaContent } from '@/types'
 import { Logo } from '@/components/Logo'
+import { sectionAnchorId } from '@/lib/slugs'
 
 function ScrollHint() {
   const [visible, setVisible] = useState(true)
@@ -28,10 +29,25 @@ interface SumariEntry {
   number: string
   title: string
   readingTime?: number
+  /** Índex de la secció dins del visor. És el que permet anar-hi amb l'ancora. */
+  index?: number
 }
 
-export function PortadaSection({ section, sumariEntries, issueNumber, issueDate }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number; issueDate?: Date }) {
+export function PortadaSection({ section, sumariEntries, issueNumber, issueDate, onSelectSection }: { section: SectionData; sumariEntries?: SumariEntry[]; issueNumber?: number; issueDate?: Date; onSelectSection?: (index: number) => void }) {
   const content = section.content as unknown as PortadaContent
+
+  // El sumari és un enllaç real (perquè es pugui obrir en una pestanya nova o
+  // copiar), però el desplaçament el fem nosaltres perquè coincideixi amb el
+  // de la navegació de l'encapçalera i l'URL de lectura s'actualitzi igual.
+  const goToSection = (e: React.MouseEvent<HTMLAnchorElement>, index: number) => {
+    e.preventDefault()
+    if (onSelectSection) {
+      onSelectSection(index)
+      return
+    }
+    const el = document.querySelector(`[data-section-index="${index}"]`) as HTMLElement | null
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[100dvh] w-full text-center px-4 relative overflow-hidden">
@@ -82,10 +98,14 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueDate 
             <div className="flex flex-wrap">
               {sumariEntries.map((entry, i) => {
                 const tint = 1 - (i / Math.max(1, sumariEntries.length - 1)) * 0.88
+                const targetIndex = entry.index ?? i + 1
                 return (
-                <div
+                <a
                   key={i}
-                  className="group flex items-baseline gap-2 py-1.5 pr-4 mr-4 border-r last:border-r-0 transition-colors"
+                  href={`#${sectionAnchorId(targetIndex)}`}
+                  onClick={(e) => goToSection(e, targetIndex)}
+                  aria-label={`Anar a la secció ${entry.number}, ${entry.title}`}
+                  className="group flex items-baseline gap-2 py-1.5 pr-4 mr-4 border-r last:border-r-0 transition-colors no-underline"
                   style={{ borderColor: `rgba(var(--accent-rgb), ${tint * 0.55})` }}
                 >
                   <span
@@ -102,7 +122,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueDate 
                       {entry.readingTime}′
                     </span>
                   )}
-                </div>
+                </a>
                 )
               })}
             </div>

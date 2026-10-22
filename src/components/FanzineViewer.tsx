@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect, Fragment } from 'react'
 import { IssueData } from '@/types'
-import { buildSectionSlugMap, issuePath, articlePath } from '@/lib/slugs'
+import { buildSectionSlugMap, issuePath, articlePath, sectionAnchorId } from '@/lib/slugs'
 import { readingTime, sectionReadingTime } from '@/lib/html'
 import { getSiteUrl } from '@/lib/site'
 import { SectionRenderer } from './SectionRenderer'
@@ -42,10 +42,6 @@ function scrollToSectionEl(index: number) {
   try {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } catch {}
-}
-
-function sectionSlug(index: number) {
-  return `s-${index}`
 }
 
 async function copyToClipboard(text: string): Promise<boolean> {
@@ -122,10 +118,13 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
     [issue.sections]
   )
   const sumariEntries = useMemo(() => {
+    // `slice(1)` deixa fora la portada; l'índex real de la secció és i+1, que
+    // és també el número que es veu al sumari i a la capçalera de la secció.
     return sortedSections.slice(1).map((s: any, i) => ({
       number: String(i + 1).padStart(2, '0'),
       title: s.title,
       readingTime: sectionReadingTime(s),
+      index: i + 1,
     }))
   }, [sortedSections])
 
@@ -575,7 +574,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
               {sortedSections.map((section, i) => (
                 <a
                   key={section.id}
-                  href={`#${sectionSlug(i)}`}
+                  href={`#${sectionAnchorId(i)}`}
                   onClick={(e) => { e.preventDefault(); scrollToSectionEl(i) }}
                   aria-current={i === activeSection ? 'location' : undefined}
                   className={`nav-btn text-2xs uppercase tracking-wider whitespace-nowrap px-1.5 h-9 md:h-7 flex items-center leading-none transition-colors duration-200 shrink-0 ${
@@ -747,16 +746,16 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
       {sortedSections.map((section, i) => (
         <Fragment key={section.id}>
       {i === 0 ? (
-        <div data-section-index={i} id={sectionSlug(i)} className="section-shell">
+        <div data-section-index={i} id={sectionAnchorId(i)} className="section-shell">
           <SectionBackground section={section as any} gradient="from-black/80 via-black/65 to-black/80" />
           <div className="section-container min-h-[100dvh]">
             <div className="relative z-[3] w-full">
-              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} issueDate={issue.date} />
+              <PortadaSection section={section as any} sumariEntries={sumariEntries} issueNumber={issue.number} issueDate={issue.date} onSelectSection={scrollToSectionEl} />
             </div>
           </div>
         </div>
       ) : (
-        <div data-section-index={i} id={sectionSlug(i)}>
+        <div data-section-index={i} id={sectionAnchorId(i)}>
           <SectionRenderer section={section as any} index={i} />
         </div>
       )}

@@ -33,6 +33,17 @@ export function issuePath(number: number): string {
   return `/numeros/${number}`
 }
 
+/**
+ * Identificador d'ancora d'una secció dins del visor (s-0, s-1, …). És
+ * l'`id` que es posa a cada secció renderitzada i el que permet enllaçar-hi
+ * directament (el sumari de la portada, la navegació de l'encapçalera).
+ * Viu aquí perquè el visor i el sumari han de construir exactament el mateix
+ * identificador.
+ */
+export function sectionAnchorId(index: number): string {
+  return `s-${index}`
+}
+
 export function articlePath(number: number, slug: string): string {
   return `/numeros/${number}/${slug}`
 }
