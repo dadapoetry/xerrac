@@ -6,22 +6,22 @@ import { AccentScope } from '@/components/AccentScope'
 import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'Subscri-te al butlletí',
+  title: 'Subscriu-te al butlletí',
   description:
-    'Subscri-te al butlletí de Xerrac! per rebre cada número de la revista d\'aclariment cultural.',
+    'Subscriu-te al butlletí de Xerrac! per rebre cada número de la revista d\'aclariment cultural.',
   alternates: { canonical: `${getSiteUrl()}/subscriu` },
   openGraph: {
-    title: 'Xerrac! — Subscri-te al butlletí',
+    title: 'Xerrac! — Subscriu-te al butlletí',
     description: 'Cada número de la revista, al teu correu. Sense spam.',
     type: 'website',
     url: `${getSiteUrl()}/subscriu`,
-    images: [{ url: ogImageUrl({ title: 'Subscri-te al butlletí' }), width: 1200, height: 630 }],
+    images: [{ url: ogImageUrl({ title: 'Subscriu-te al butlletí' }), width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Xerrac! — Subscri-te al butlletí',
+    title: 'Xerrac! — Subscriu-te al butlletí',
     description: 'Cada número de la revista, al teu correu. Sense spam.',
-    images: [ogImageUrl({ title: 'Subscri-te al butlletí' })],
+    images: [ogImageUrl({ title: 'Subscriu-te al butlletí' })],
   },
 }
 
