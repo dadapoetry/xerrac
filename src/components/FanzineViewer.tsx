@@ -628,22 +628,9 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
             style={{ color: accentColor, filter: 'drop-shadow(0 0 2px currentColor)' }}
           />
 
-          <button
-            type="button"
-            onClick={() => scrollToSectionEl(0)}
-            aria-current={activeSection === 0 ? 'location' : undefined}
-            className={`shrink-0 text-[11px] font-mono uppercase tracking-[0.25em] px-2 h-9 md:h-7 flex items-center leading-none transition-colors duration-200 ${
-              activeSection === 0 ? 'text-[var(--accent-text)]' : 'text-gray-500 hover:text-gray-300'
-            }`}
-          >
-            Sumari
-          </button>
-
           <div className="relative flex-1 min-w-0">
             <nav ref={navRef} aria-label="Seccions del número" className="nav-scroll flex items-center gap-0 w-full overflow-x-auto min-w-0">
-              {sortedSections.slice(1).map((section, idx) => {
-                const i = idx + 1
-                return (
+              {sortedSections.map((section, i) => (
                 <a
                   key={section.id}
                   href={`#${sectionAnchorId(i)}`}
@@ -656,10 +643,9 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                   }`}
                   style={i === activeSection ? { color: 'var(--accent-text)' } : undefined}
                 >
-                  <span>{section.title}</span>
+                  <span>{section.type === 'portada' ? issue.title : section.title}</span>
                 </a>
-                )
-              })}
+              ))}
             </nav>
             <span className="nav-mask-left" aria-hidden="true" />
             <span className="nav-mask-right" aria-hidden="true" />
