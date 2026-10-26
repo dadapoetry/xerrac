@@ -15,6 +15,7 @@ export function PublishToggle({ id, published }: { id: string; published: boolea
     setPending(true)
     try {
       await updateIssue(id, { published: !published })
+      toast(published ? 'Despublicat' : 'Publicat', 'success')
       router.refresh()
     } catch (e: any) {
       toast(e?.message || 'Error en canviar l\'estat de publicació', 'error')

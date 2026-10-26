@@ -83,6 +83,46 @@ export function SectionListSkeleton() {
   )
 }
 
+export function ConfigSkeleton() {
+  return (
+    <div>
+      <SkeletonHeader title="h-8 w-40" subtitle="h-4 w-56" />
+      <div className="max-w-xl space-y-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i}>
+            <Skeleton className="h-3 w-24 mb-2" />
+            <Skeleton className="h-11 w-full" />
+          </div>
+        ))}
+        <Skeleton className="h-11 w-32" />
+      </div>
+    </div>
+  )
+}
+
+export function SubscribersSkeleton() {
+  return (
+    <div>
+      <SkeletonHeader title="h-8 w-40" subtitle="h-4 w-56" />
+      <div className="flex gap-2 mb-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Skeleton key={i} className="h-8 w-24" />
+        ))}
+      </div>
+      <div className="border border-gray-800">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="grid grid-cols-[auto_1fr_auto_auto] gap-4 p-4 border-b border-gray-800 items-center">
+            <Skeleton className="h-4 w-4" />
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function SectionFormSkeleton() {
   return (
     <div>

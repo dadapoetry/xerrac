@@ -6,18 +6,21 @@ export const dynamic = 'force-dynamic'
 export default async function SubscribersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; f?: string }>
+  searchParams: Promise<{ q?: string; f?: string; p?: string }>
 }) {
   const sp = await searchParams
   const query = sp.q || ''
   const filter = (['all', 'confirmed', 'pending'].includes(sp.f || '')
     ? sp.f
     : 'all') as SubscriberFilter
+  const page = Math.max(1, parseInt(sp.p || '1', 10) || 1)
 
-  const [rows, stats] = await Promise.all([
-    getSubscribers(query, filter),
+  const [result, stats] = await Promise.all([
+    getSubscribers(query, filter, page, 50),
     getSubscriberStats(),
   ])
+
+  const totalPages = Math.ceil(result.total / 50)
 
   return (
     <div>
@@ -46,7 +49,7 @@ export default async function SubscribersPage({
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
+            {result.rows.map((r) => (
               <tr key={r.id} className="border-b border-gray-900/60 hover:bg-gray-900/30">
                 <td className="px-4 py-3 text-white break-all">{r.email}</td>
                 <td className="px-4 py-3">
@@ -62,7 +65,7 @@ export default async function SubscribersPage({
                 </td>
               </tr>
             ))}
-            {rows.length === 0 && (
+            {result.rows.length === 0 && (
               <tr>
                 <td colSpan={2} className="px-4 py-12 text-center text-gray-600 text-sm italic">
                   {query ? 'Cap resultat per a aquesta cerca.' : 'Encara no hi ha subscriptors.'}
@@ -72,6 +75,32 @@ export default async function SubscribersPage({
           </tbody>
         </table>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-4">
+          <span className="text-xs text-gray-600">
+            Pàgina {page} de {totalPages} ({result.total} subscriptors)
+          </span>
+          <div className="flex gap-2">
+            {page > 1 && (
+              <a
+                href={`/admin/subscriptors?q=${encodeURIComponent(query)}&f=${filter}&p=${page - 1}`}
+                className="px-3 py-1.5 text-xs border border-gray-700 text-gray-400 hover:text-white transition-colors"
+              >
+                ← Anterior
+              </a>
+            )}
+            {page < totalPages && (
+              <a
+                href={`/admin/subscriptors?q=${encodeURIComponent(query)}&f=${filter}&p=${page + 1}`}
+                className="px-3 py-1.5 text-xs border border-gray-700 text-gray-400 hover:text-white transition-colors"
+              >
+                Següent →
+              </a>
+            )}
+          </div>
+        </div>
+      )}
 
       <p className="text-xs text-gray-700 mt-4 leading-relaxed">
         Només els subscriptors <span className="text-gray-500">confirmats</span> reben el

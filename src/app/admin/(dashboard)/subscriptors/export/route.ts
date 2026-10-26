@@ -16,7 +16,7 @@ export async function GET(req: Request) {
     ? searchParams.get('f')
     : 'all') as SubscriberFilter
 
-  const rows = await getSubscribers(query, filter)
+  const { rows } = await getSubscribers(query, filter, 1, 10000)
   const csv = subscribersToCsv(rows)
 
   const stamp = new Date().toISOString().slice(0, 10)

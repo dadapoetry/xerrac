@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 
 interface WordEntry {
   clue: string
@@ -165,13 +165,18 @@ export function CrosswordEditor({ data, onChange }: Props) {
     return extracted
   })
 
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
   const updateAndGenerate = (newWords: WordEntry[]) => {
     setWords(newWords)
-    const { gridSize, clues } = buildCrosswordLayout(newWords)
-    onChange(JSON.stringify({
-      ...data,
-      crossword: { words: newWords, gridSize, clues }
-    }))
+    clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      const { gridSize, clues } = buildCrosswordLayout(newWords)
+      onChange(JSON.stringify({
+        ...data,
+        crossword: { words: newWords, gridSize, clues }
+      }))
+    }, 300)
   }
 
   const addWord = () => updateAndGenerate([...words, { clue: '', answer: '' }])

@@ -1,24 +1,25 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { getAllSettings, updateSettings } from '@/lib/settings'
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site'
 import { useToast } from '@/components/admin/Toast'
+import { useUnsavedGuard } from '@/components/admin/UnsavedGuard'
 
 interface SocialLink {
   name: string
   url: string
 }
 
-export const dynamic = 'force-dynamic'
-
 export default function ConfigPage() {
   const router = useRouter()
   const { toast } = useToast()
+  const { setDirty: setGuardDirty, guardLeave } = useUnsavedGuard()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [dirty, setDirty] = useState(false)
   const [issn, setIssn] = useState('')
   const [contactEmail, setContactEmail] = useState('')
   const [copyright, setCopyright] = useState('')
@@ -26,6 +27,21 @@ export default function ConfigPage() {
   const [periodicity, setPeriodicity] = useState('')
   const [license, setLicense] = useState('')
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([])
+
+  const markDirty = useCallback(() => setDirty(true), [])
+
+  useEffect(() => { setGuardDirty(dirty) }, [dirty, setGuardDirty])
+
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (dirty) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [dirty])
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -42,22 +58,26 @@ export default function ConfigPage() {
       setSocialLinks([])
     }
     setLoading(false)
+    setDirty(false)
   }, [])
 
   useEffect(() => { load() }, [load])
 
   const addLink = () => {
     setSocialLinks([...socialLinks, { name: '', url: '' }])
+    markDirty()
   }
 
   const removeLink = (i: number) => {
     setSocialLinks(socialLinks.filter((_, idx) => idx !== i))
+    markDirty()
   }
 
   const updateLink = (i: number, field: 'name' | 'url', value: string) => {
     const copy = [...socialLinks]
     copy[i] = { ...copy[i], [field]: value }
     setSocialLinks(copy)
+    markDirty()
   }
 
   const handleSave = async (e: React.FormEvent) => {
@@ -75,6 +95,7 @@ export default function ConfigPage() {
         footer_social_links: JSON.stringify(socialLinks.filter(l => l.name || l.url)),
       })
       toast('Configuració guardada', 'success')
+      setDirty(false)
       router.refresh()
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Error en guardar la configuració'
@@ -101,7 +122,7 @@ export default function ConfigPage() {
           <input
             id="config-issn"
             value={issn}
-            onChange={e => setIssn(e.target.value)}
+            onChange={e => { setIssn(e.target.value); markDirty() }}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="ISSN 2938-2026 (en tràmit)"
@@ -116,7 +137,7 @@ export default function ConfigPage() {
             id="config-contact"
             type="email"
             value={contactEmail}
-            onChange={e => setContactEmail(e.target.value)}
+            onChange={e => { setContactEmail(e.target.value); markDirty() }}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="contacte@laxerrac.cat"
@@ -134,7 +155,7 @@ export default function ConfigPage() {
           <input
             id="config-copyright"
             value={copyright}
-            onChange={e => setCopyright(e.target.value)}
+            onChange={e => { setCopyright(e.target.value); markDirty() }}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="© 2026 Xerrac!"
@@ -148,7 +169,7 @@ export default function ConfigPage() {
           <input
             id="config-address"
             value={address}
-            onChange={e => setAddress(e.target.value)}
+            onChange={e => { setAddress(e.target.value); markDirty() }}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="Nom de l'editor, carrer i número, 08001 Barcelona"
@@ -166,7 +187,7 @@ export default function ConfigPage() {
           <input
             id="config-periodicity"
             value={periodicity}
-            onChange={e => setPeriodicity(e.target.value)}
+            onChange={e => { setPeriodicity(e.target.value); markDirty() }}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="Irregular"
@@ -180,7 +201,7 @@ export default function ConfigPage() {
           <input
             id="config-license"
             value={license}
-            onChange={e => setLicense(e.target.value)}
+            onChange={e => { setLicense(e.target.value); markDirty() }}
             className="w-full px-4 py-2.5 bg-black border border-gray-800 text-white text-sm
               focus:outline-none focus:border-red-500/50 transition-colors"
             placeholder="CC BY-NC-SA 4.0"
@@ -242,6 +263,12 @@ export default function ConfigPage() {
           <p className="text-xs text-red-400 bg-red-900/20 border border-red-900 px-4 py-2 max-w-xl">
             {error}
           </p>
+        )}
+
+        {dirty && (
+          <span className="text-xs text-amber-500/90">
+            Canvis no desats · Ctrl/Cmd + S per desar
+          </span>
         )}
 
         <button

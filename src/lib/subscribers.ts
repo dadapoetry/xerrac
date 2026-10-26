@@ -16,8 +16,10 @@ export type SubscriberFilter = 'all' | 'confirmed' | 'pending'
 
 export async function getSubscribers(
   search: string = '',
-  filter: SubscriberFilter = 'all'
-): Promise<SubscriberRow[]> {
+  filter: SubscriberFilter = 'all',
+  page: number = 1,
+  perPage: number = 50
+): Promise<{ rows: SubscriberRow[]; total: number }> {
   const conditions: string[] = []
   const args: (string | number)[] = []
 
@@ -31,16 +33,26 @@ export async function getSubscribers(
 
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : ''
 
-  const result = await db.execute({
-    sql: `SELECT id, email, confirmed FROM Subscriber ${where} ORDER BY email ASC`,
+  const countResult = await db.execute({
+    sql: `SELECT COUNT(*) as total FROM Subscriber ${where}`,
     args,
   })
+  const total = Number(countResult.rows[0]?.total ?? 0)
 
-  return result.rows.map((row: any) => ({
-    id: String(row.id),
-    email: String(row.email),
-    confirmed: Boolean(row.confirmed),
-  }))
+  const offset = (page - 1) * perPage
+  const result = await db.execute({
+    sql: `SELECT id, email, confirmed FROM Subscriber ${where} ORDER BY email ASC LIMIT ? OFFSET ?`,
+    args: [...args, perPage, offset],
+  })
+
+  return {
+    rows: result.rows.map((r) => ({
+      id: String(r.id),
+      email: String(r.email),
+      confirmed: Boolean(r.confirmed),
+    })),
+    total,
+  }
 }
 
 export async function getSubscriberStats(): Promise<SubscriberStats> {
