@@ -1,5 +1,8 @@
+const path = require('path')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: path.join(__dirname),
   // Només les imatges que servim nosaltres des de Cloudinary: un comodí «**»
   // deixaria que qualsevol fes servir el nostre optimitzador d'imatges.
   images: {
