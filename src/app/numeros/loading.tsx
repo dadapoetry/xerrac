@@ -1,12 +1,18 @@
 import { SawIcon } from '@/components/SawIcon'
 
 /**
- * Pàgina de càrrega.
+ * Pàgina de càrrega dels números.
  *
  * Els quadrats (koma) d'una pàgina de manga que es componen: cada requadre
  * entra escalonat, com si la pàgina del número s'estigués maquetant sola.
  * La gramàtica és la mateixa que el visor: una portada gran i requadres
  * més petits per a les seccions.
+ *
+ * Viu aquí i no a `src/app/`, perquè un `loading.tsx` a l'arrel crea una
+ * frontera de Suspense per damunt de la portada: el shell surt abans que
+ * `permanentRedirect` es resolgui i Next no pot enviar el 308, sinó un 200
+ * amb `<meta http-equiv="refresh">`. Aquest fitxer només ha de cobrir les
+ * rutes que sí que renderitzen contingut.
  *
  * Cap número de volum: la pàgina de càrrega no sap quin número s'està
  * obrint, i posar-ne un de fix seria mentir.

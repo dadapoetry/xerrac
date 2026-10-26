@@ -28,12 +28,6 @@ export default async function sitemap() {
 
   return [
     {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 1,
-    },
-    {
       url: `${baseUrl}/arxiu`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
