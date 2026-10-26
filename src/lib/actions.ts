@@ -65,20 +65,22 @@ function maskEmail(email: string): string {
   return `${name.slice(0, 1)}***@${domain}`
 }
 
-export async function createIssue(data: { number: number; title: string; date: string; published?: boolean; accentColor?: string }) {
+export async function createIssue(data: { number: number; title: string; date: string; published?: boolean; accentColor?: string; targetDate?: string | null; status?: string }) {
   await checkAuth()
   const id = uuid()
   const published = data.published ? 1 : 0
   const accentColor = data.accentColor || '#dc2626'
+  const status = data.status || 'draft'
+  const targetDate = data.targetDate || null
   await db.execute({
-    sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published) VALUES (?, ?, ?, ?, ?, ?)',
-    args: [id, data.number, data.title, data.date, accentColor, published],
+    sql: 'INSERT INTO Issue (id, number, title, date, accentColor, published, status, targetDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    args: [id, data.number, data.title, data.date, accentColor, published, status, targetDate],
   })
   revalidatePublic()
   return { id, ...data }
 }
 
-export async function updateIssue(id: string, data: { title?: string; number?: number; date?: string; published?: boolean; accentColor?: string }) {
+export async function updateIssue(id: string, data: { title?: string; number?: number; date?: string; published?: boolean; accentColor?: string; status?: string; targetDate?: string | null }) {
   await checkAuth()
   const sets: string[] = []
   const args: any[] = []
@@ -88,6 +90,8 @@ export async function updateIssue(id: string, data: { title?: string; number?: n
   if (data.date !== undefined) { sets.push('date = ?'); args.push(data.date) }
   if (data.published !== undefined) { sets.push('published = ?'); args.push(data.published ? 1 : 0) }
   if (data.accentColor !== undefined) { sets.push('accentColor = ?'); args.push(data.accentColor) }
+  if (data.status !== undefined) { sets.push('status = ?'); args.push(data.status) }
+  if (data.targetDate !== undefined) { sets.push('targetDate = ?'); args.push(data.targetDate) }
 
   if (sets.length > 0) {
     args.push(id)

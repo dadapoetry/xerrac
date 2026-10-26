@@ -63,6 +63,8 @@ export default async function EditNumeroPage({ params }: { params: Promise<{ id:
                 date: issue.date.toISOString().split('T')[0],
                 published: issue.published,
                 accentColor: issue.accentColor || '#dc2626',
+                targetDate: issue.targetDate ? issue.targetDate.toISOString().split('T')[0] : null,
+                status: issue.status,
               }}
             />
           </div>

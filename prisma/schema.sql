@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS Issue (
   published INTEGER NOT NULL DEFAULT 0,
   accentColor TEXT NOT NULL DEFAULT '#ef4444',
   showPdfButton INTEGER NOT NULL DEFAULT 1,
+  status TEXT NOT NULL DEFAULT 'draft',
+  targetDate TEXT,
   createdAt TEXT NOT NULL DEFAULT (datetime('now')),
   updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
 );
@@ -27,6 +29,7 @@ CREATE TABLE IF NOT EXISTS Section (
   content TEXT NOT NULL DEFAULT '{}',
   backgroundImage TEXT NOT NULL DEFAULT '',
   backgroundImageMobile TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'empty',
   createdAt TEXT NOT NULL DEFAULT (datetime('now')),
   updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
   FOREIGN KEY (issueId) REFERENCES Issue(id) ON DELETE CASCADE

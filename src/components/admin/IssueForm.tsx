@@ -14,6 +14,8 @@ interface IssueFormProps {
     date: string
     published: boolean
     accentColor?: string
+    targetDate?: string | null
+    status?: string
   }
   nextNumber?: number
 }
@@ -27,6 +29,8 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
   const [date, setDate] = useState(initial?.date || new Date().toISOString().split('T')[0])
   const [published, setPublished] = useState(initial?.published ?? false)
   const [accentColor, setAccentColor] = useState(initial?.accentColor || '#dc2626')
+  const [targetDate, setTargetDate] = useState(initial?.targetDate || '')
+  const [status, setStatus] = useState(initial?.status || 'draft')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [dirty, setDirty] = useState(false)
@@ -64,7 +68,7 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
 
     try {
       if (initial) {
-        await updateIssue(initial.id, { number, title, date, published, accentColor })
+        await updateIssue(initial.id, { number, title, date, published, accentColor, targetDate: targetDate || null, status })
         toast('Número actualitzat', 'success')
       } else {
         const created = await createIssue({ number, title, date, published, accentColor })
@@ -120,18 +124,38 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
       </div>
 
       <div>
-        <label htmlFor="issue-date" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
-          Data de publicació
+        <label htmlFor="issue-target-date" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+          Data objectiu de publicació
         </label>
         <input
-          id="issue-date"
+          id="issue-target-date"
           type="date"
-          value={date}
-          onChange={(e) => { setDate(e.target.value); markDirty() }}
+          value={targetDate || ''}
+          onChange={(e) => { setTargetDate(e.target.value); markDirty() }}
           className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
             text-sm focus:outline-none focus:border-red-500 transition-colors"
-          required
         />
+        <p className="text-2xs text-gray-600 mt-1">
+          Quan vols publicar. Deixa-ho buit si no hi ha data fixa.
+        </p>
+      </div>
+
+      <div>
+        <label htmlFor="issue-status" className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+          Estat
+        </label>
+        <select
+          id="issue-status"
+          value={status}
+          onChange={(e) => { setStatus(e.target.value); markDirty() }}
+          className="w-full bg-gray-900 border border-gray-700 px-4 py-2 text-white
+            text-sm focus:outline-none focus:border-red-500 transition-colors"
+        >
+          <option value="draft">Esborrany</option>
+          <option value="in_progress">En curs</option>
+          <option value="review">Revisió</option>
+          <option value="published">Publicat</option>
+        </select>
       </div>
 
       {!initial && (

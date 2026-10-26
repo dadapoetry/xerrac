@@ -29,6 +29,9 @@ async function migrate() {
     `ALTER TABLE Issue ADD COLUMN accentColor TEXT NOT NULL DEFAULT '#ef4444'`,
     `ALTER TABLE Issue ADD COLUMN showPdfButton INTEGER NOT NULL DEFAULT 1`,
     `ALTER TABLE Section ADD COLUMN backgroundImageMobile TEXT NOT NULL DEFAULT ''`,
+    `ALTER TABLE Issue ADD COLUMN status TEXT NOT NULL DEFAULT 'draft'`,
+    `ALTER TABLE Issue ADD COLUMN targetDate TEXT`,
+    `ALTER TABLE Section ADD COLUMN status TEXT NOT NULL DEFAULT 'empty'`,
   ]
 
   for (const stmt of alterStatements) {

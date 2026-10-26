@@ -1,10 +1,13 @@
 import Link from 'next/link'
 import { getIssues } from '@/lib/data'
+import { getIssueProgress } from '@/lib/data'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
   const issues = await getIssues()
+  const latestIssue = issues.find((i: any) => !i.published) || issues[0]
+  const progress = latestIssue ? await getIssueProgress(latestIssue.id) : null
 
   return (
     <div>
@@ -21,6 +24,39 @@ export default async function AdminDashboard() {
           + Nou número
         </Link>
       </div>
+
+      {progress && (
+        <Link
+          href="/admin/calendari"
+          className="block mb-8 p-6 border border-gray-800 hover:border-red-900/40 transition-colors group"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-xs text-gray-600 uppercase tracking-wider mb-1 group-hover:text-red-400 transition-colors">
+                Número en curs
+              </p>
+              <p className="text-lg font-bold text-white">
+                Núm. {String(progress.issue.number).padStart(2, '0')} · {progress.issue.title}
+              </p>
+            </div>
+            <span className="text-2xl font-black text-white tabular-nums">
+              {progress.ready}/{progress.total}
+            </span>
+          </div>
+          <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+            <div
+              className={`h-full transition-all ${progress.progress === 100 ? 'bg-green-500' : 'bg-red-500'}`}
+              style={{ width: `${progress.progress}%` }}
+            />
+          </div>
+          <p className="text-xs text-gray-600 mt-2">
+            {progress.progress}% completat · {progress.withImage}/{progress.total} amb imatge
+            {progress.issue.targetDate && (
+              <> · Objectiu: {new Date(progress.issue.targetDate).toLocaleDateString('ca-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</>
+            )}
+          </p>
+        </Link>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="p-6 border border-gray-800 radical-border">
