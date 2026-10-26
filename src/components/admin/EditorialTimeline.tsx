@@ -173,7 +173,6 @@ export function EditorialTimeline({ issues }: { issues: Issue[] }) {
                     <CheckItem label="Totes les seccions tenen contingut" ok={ready === total && total > 0} />
                     <CheckItem label="Número té títol" ok={!!issue.title && issue.title.trim() !== ''} />
                     <CheckItem label="Número té data objectiu" ok={!!targetDate} />
-                    <CheckItem label="Full de Mur amb peça trobada" ok={sections.some(s => s.type === 'full_mural' && sectionReady(s))} />
                   </div>
                 </div>
 
