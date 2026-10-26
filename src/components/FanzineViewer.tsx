@@ -160,6 +160,23 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
   // Mentre es fa el salt inicial a un enllaç profund, l'observer no ha de
   // reescriure la URL ni comptar les seccions intermèdies.
   const ignoreObserverUntil = useRef(0)
+  const hasPushedHistory = useRef(false)
+  const isDeepLink = (initialSectionIndex ?? 0) > 0
+  // Història: un sol pushState en sortir de la portada, perquè Enrere torni
+  // al sumari en lloc de sortir del lloc. No s'activa en enllaç profund.
+  useEffect(() => {
+    if (isDeepLink) return
+    const onPop = () => {
+      if (!hasPushedHistory.current) return
+      if (window.location.pathname !== issuePath(issue.number)) return
+      const el = document.querySelector('[data-section-index="0"]') as HTMLElement | null
+      if (el) try { el.scrollIntoView({ behavior: 'instant', block: 'start' }) } catch {}
+      setActiveSection(0)
+      try { history.replaceState(null, '', issuePath(issue.number)) } catch {}
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [isDeepLink, issue.number])
   const dragStartY = useRef<number | null>(null)
   const dragOffset = useRef(0)
   useEffect(() => {
@@ -212,6 +229,10 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
           const idx = parseInt(entry.target.getAttribute('data-section-index') || '0', 10)
           if (isNaN(idx)) continue
           setActiveSection(idx)
+          if (!isDeepLink && !hasPushedHistory.current && idx > 0) {
+            hasPushedHistory.current = true
+            try { window.history.pushState({ __xerrac: true }, '', issuePath(issue.number)) } catch {}
+          }
           try {
             // La URL de lectura passa a ser la de la secció (/numeros/X/slug),
             // de manera que el navegador i el botó de compartir coincideixen.
@@ -599,7 +620,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
       {/* Header — sticky at top, accompanies reader */}
       <div className="sticky top-0 z-10 bg-black border-b border-gray-800/50 no-print relative safe-top shadow-sm">
         <div className="flex items-center gap-1 md:gap-2 px-3 min-h-[2.5rem]">
-          <Logo compact />
+          <Logo compact onClick={() => scrollToSectionEl(0)} />
 
           <SawIcon
             className={`w-4 h-4 transition-opacity duration-300 shrink-0 ${activeSection > 0 ? 'opacity-60' : 'opacity-20'} ${idle && activeSection > 0 ? 'animate-blade-sway' : ''}`}
@@ -607,9 +628,22 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
             style={{ color: accentColor, filter: 'drop-shadow(0 0 2px currentColor)' }}
           />
 
+          <button
+            type="button"
+            onClick={() => scrollToSectionEl(0)}
+            aria-current={activeSection === 0 ? 'location' : undefined}
+            className={`shrink-0 text-[11px] font-mono uppercase tracking-[0.25em] px-2 h-9 md:h-7 flex items-center leading-none transition-colors duration-200 ${
+              activeSection === 0 ? 'text-[var(--accent-text)]' : 'text-gray-500 hover:text-gray-300'
+            }`}
+          >
+            Sumari
+          </button>
+
           <div className="relative flex-1 min-w-0">
             <nav ref={navRef} aria-label="Seccions del número" className="nav-scroll flex items-center gap-0 w-full overflow-x-auto min-w-0">
-              {sortedSections.map((section, i) => (
+              {sortedSections.slice(1).map((section, idx) => {
+                const i = idx + 1
+                return (
                 <a
                   key={section.id}
                   href={`#${sectionAnchorId(i)}`}
@@ -622,9 +656,10 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
                   }`}
                   style={i === activeSection ? { color: 'var(--accent-text)' } : undefined}
                 >
-                  <span>{section.type === 'portada' ? issue.title : section.title}</span>
+                  <span>{section.title}</span>
                 </a>
-              ))}
+                )
+              })}
             </nav>
             <span className="nav-mask-left" aria-hidden="true" />
             <span className="nav-mask-right" aria-hidden="true" />
