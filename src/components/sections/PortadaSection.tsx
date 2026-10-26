@@ -5,7 +5,7 @@ import { SectionData, PortadaContent } from '@/types'
 import { Logo } from '@/components/Logo'
 import { sectionAnchorId } from '@/lib/slugs'
 
-function ScrollHint() {
+function ScrollHint({ onSelectSection }: { onSelectSection?: (index: number) => void }) {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
@@ -16,12 +16,23 @@ function ScrollHint() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  if (!visible) return null
-
   return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 pointer-events-none">
-      <div className="w-px h-8 bg-gray-500 origin-top animate-[breathe_2s_ease-in-out_infinite]" />
-    </div>
+    <a
+      href={`#${sectionAnchorId(1)}`}
+      onClick={(e) => {
+        e.preventDefault()
+        if (onSelectSection) {
+          onSelectSection(1)
+          return
+        }
+        const el = document.querySelector(`[data-section-index="1"]`) as HTMLElement | null
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }}
+      className={`inline-flex items-center gap-3 min-h-[44px] py-2 text-2xs uppercase tracking-[0.3em] text-gray-500 hover:text-gray-300 transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+    >
+      <span className="w-px h-6 bg-gray-500" aria-hidden="true" />
+      <span>Comença a llegir · 01</span>
+    </a>
   )
 }
 
@@ -50,7 +61,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueDate,
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[100dvh] w-full text-center px-4 relative overflow-hidden">
+    <div className="flex flex-col items-center w-full text-center px-4 relative overflow-hidden">
       <div className="max-w-2xl w-full relative z-10">
         {/* Número de volum com a element gràfic de fons (watermark), darrere del logo i el títol */}
         {issueNumber !== undefined && (
@@ -88,6 +99,12 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueDate,
           <h1 className="relative z-10 text-2xl md:text-3xl font-bold text-gray-200 leading-tight mb-2">
             {content.topic}
           </h1>
+        )}
+
+        {sumariEntries && sumariEntries.length > 0 && (
+          <p className="relative z-10 mt-6 text-2xs uppercase tracking-[0.3em] text-gray-600">
+            o tria una secció
+          </p>
         )}
 
         {/* Sumari horitzontal dens (estil revista japonesa). Cada secció rep una
@@ -130,7 +147,7 @@ export function PortadaSection({ section, sumariEntries, issueNumber, issueDate,
         )}
       </div>
 
-      <ScrollHint />
+      <ScrollHint onSelectSection={onSelectSection} />
     </div>
   )
 }

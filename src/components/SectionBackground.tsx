@@ -16,16 +16,18 @@ export function SectionBackground({
   section,
   gradient = DEFAULT_GRADIENT,
   children,
+  priority = false,
 }: {
   section: SectionData
   gradient?: string
   children?: ReactNode
+  priority?: boolean
 }) {
-  const [ready, setReady] = useState(false)
+  const [ready, setReady] = useState(priority)
 
   useEffect(() => {
-    setReady(true)
-  }, [])
+    if (!priority) setReady(true)
+  }, [priority])
 
   if (!section.backgroundImage) return null
 
@@ -38,18 +40,26 @@ export function SectionBackground({
     section.backgroundImage
 
   return (
-    <div className="section-bg-pane" aria-hidden="true">
-      <div
-        className={`section-bg absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}
-        style={
-          {
-            '--section-bg-desktop': `url("${section.backgroundImage}")`,
-            '--section-bg-mobile': `url("${mobileImage}")`,
-          } as CSSProperties
-        }
-      />
-      <div className={`absolute inset-0 z-[1] bg-gradient-to-b ${gradient}`} />
-      {children}
-    </div>
+    <>
+      {priority && (
+        <>
+          <link rel="preload" as="image" href={section.backgroundImage} media="(min-width: 768px)" />
+          <link rel="preload" as="image" href={mobileImage} media="(max-width: 767px)" />
+        </>
+      )}
+      <div className="section-bg-pane" aria-hidden="true">
+        <div
+          className={`section-bg absolute inset-0 bg-cover bg-center bg-no-repeat ${priority ? '' : 'transition-opacity duration-700'} ${ready ? 'opacity-100' : 'opacity-0'}`}
+          style={
+            {
+              '--section-bg-desktop': `url("${section.backgroundImage}")`,
+              '--section-bg-mobile': `url("${mobileImage}")`,
+            } as CSSProperties
+          }
+        />
+        <div className={`absolute inset-0 z-[1] bg-gradient-to-b ${gradient}`} />
+        {children}
+      </div>
+    </>
   )
 }
