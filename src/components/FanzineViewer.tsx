@@ -152,12 +152,14 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
   const navRef = useRef<HTMLDivElement>(null)
   const sheetRef = useRef<HTMLDivElement>(null)
   // Seccions ja comptades en aquesta visita. El visor canvia d'URL amb
-  // `replaceState`, que el script de Vercel Analytics no segueix (només
-  // enganxa `pushState` i `popstate`), així que sense això el panell
-  // només diria quantes vegades s'ha entrat a la revista, no quina secció
-  // s'ha llegit. Un cop per secció i visita: tornar enrere no compta dues
-  // vegades.
+  // `replaceState`; aquesta versió de Next intercepta replaceState i sincronitza
+  // el router, de manera que @vercel/analytics compta cada canvi de secció com
+  // a pageview (vegeu node_modules/next/.../app-router.js). Un cop per secció
+  // i visita: tornar enrere no compta dues vegades.
   const trackedSections = useRef<Set<number>>(new Set())
+  // Mentre es fa el salt inicial a un enllaç profund, l'observer no ha de
+  // reescriure la URL ni comptar les seccions intermèdies.
+  const ignoreObserverUntil = useRef(0)
   const dragStartY = useRef<number | null>(null)
   const dragOffset = useRef(0)
   useEffect(() => {
@@ -177,10 +179,13 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
   }, [])
 
   // Enllaç profund: si la URL ja porta l'slug d'una secció, situem el número
-  // sencer just allà. També accepta l'antic ?section=N com a reserva. Es fa en
-  // efecte (no en el state inicial) per no provocar desenganxament d'hidratació.
-  useEffect(() => {
+  // sencer just allà. Es fa en useLayoutEffect (abans de pintar) i amb salt
+  // instantani, perquè no es vegi primer la portada i després una animació
+  // que travessa mig número. L'observer s'ignora durant el salt per no
+  // reescriure la URL ni comptar les seccions intermèdies.
+  useLayoutEffect(() => {
     if (typeof window === 'undefined') return
+    window.history.scrollRestoration = 'manual'
     let target = initialSectionIndex && initialSectionIndex > 0 ? initialSectionIndex : 0
     if (target === 0) {
       const v = new URLSearchParams(window.location.search).get('section')
@@ -188,9 +193,12 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
       if (!isNaN(idx) && idx > 0 && idx < sortedSections.length) target = idx
     }
     if (target <= 0) return
+    ignoreObserverUntil.current = Date.now() + 500
     setActiveSection(target)
     const el = document.querySelector(`[data-section-index="${target}"]`) as HTMLElement | null
-    if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' })
+    if (el) {
+      try { el.scrollIntoView({ behavior: 'instant', block: 'start' }) } catch {}
+    }
   }, [initialSectionIndex, sortedSections])
 
   useEffect(() => {
@@ -198,6 +206,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
     if (els.length === 0) return
     const observer = new IntersectionObserver(
       (entries) => {
+        if (Date.now() < ignoreObserverUntil.current) return
         for (const entry of entries) {
           if (!entry.isIntersecting) continue
           const idx = parseInt(entry.target.getAttribute('data-section-index') || '0', 10)
