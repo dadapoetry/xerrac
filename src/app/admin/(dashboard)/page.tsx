@@ -50,7 +50,7 @@ export default async function AdminDashboard() {
             />
           </div>
           <p className="text-xs text-gray-600 mt-2">
-            {progress.progress}% completat · {progress.withImage}/{progress.total} amb imatge
+            {progress.progress}% completat
             {progress.issue.targetDate && (
               <> · Objectiu: {new Date(progress.issue.targetDate).toLocaleDateString('ca-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</>
             )}
