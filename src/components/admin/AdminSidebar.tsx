@@ -42,20 +42,25 @@ export function AdminSidebar({ user }: { user: { name?: string | null; email?: s
       </div>
 
       <nav className="flex-1 p-4">
-        {links.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-onClick={navigate(link.href)}
-            className={`block px-4 py-2.5 text-sm transition-colors mb-1 border-l-2
-              ${pathname === link.href
-                ? 'border-red-500 text-red-400 bg-red-900/10'
-                : 'border-transparent text-gray-500 hover:text-white hover:border-gray-700'
-              }`}
-          >
-            {link.label}
-          </Link>
-        ))}
+        {links.map((link) => {
+            const isActive = link.href === '/admin'
+              ? pathname === '/admin'
+              : pathname === link.href || pathname.startsWith(link.href + '/')
+            return (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={navigate(link.href)}
+              className={`block px-4 py-2.5 text-sm transition-colors mb-1 border-l-2
+                ${isActive
+                  ? 'border-red-500 text-red-400 bg-red-900/10'
+                  : 'border-transparent text-gray-500 hover:text-white hover:border-gray-700'
+                }`}
+            >
+              {link.label}
+            </Link>
+            )
+          })}
       </nav>
 
       <div className="p-4 border-t border-gray-900 space-y-2">

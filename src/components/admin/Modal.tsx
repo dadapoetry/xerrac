@@ -1,16 +1,17 @@
 'use client'
 
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 interface ModalProps {
   open: boolean
   onClose: () => void
-  onConfirm: () => void
+  onConfirm: () => void | Promise<void>
   title: string
   message: string
   confirmLabel?: string
   cancelLabel?: string
   variant?: 'danger' | 'default'
+  loadingLabel?: string
   children?: React.ReactNode
 }
 
@@ -26,6 +27,7 @@ export function Modal({
   confirmLabel = 'Confirmar',
   cancelLabel = 'Cancel·lar',
   variant = 'default',
+  loadingLabel = 'Processant...',
   children,
 }: ModalProps) {
   const confirmRef = useRef<HTMLButtonElement>(null)
@@ -35,9 +37,15 @@ export function Modal({
   onCloseRef.current = onClose
   const titleId = useId()
   const messageId = useId()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!open) return
+    if (!open) {
+      setLoading(false)
+      setError(null)
+      return
+    }
 
     restoreFocusRef.current = document.activeElement as HTMLElement | null
     confirmRef.current?.focus()
@@ -47,7 +55,7 @@ export function Modal({
 
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onCloseRef.current()
+        if (!loading) onCloseRef.current()
         return
       }
       if (e.key !== 'Tab') return
@@ -76,13 +84,30 @@ export function Modal({
       document.body.style.overflow = prevOverflow
       restoreFocusRef.current?.focus?.()
     }
-  }, [open])
+  }, [open, loading])
 
   if (!open) return null
 
+  const handleConfirm = async () => {
+    if (loading) return
+    setLoading(true)
+    setError(null)
+    try {
+      await onConfirm()
+      onCloseRef.current()
+    } catch (e: any) {
+      setError(e?.message || 'Error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/70" onClick={() => onCloseRef.current()} />
+      <div
+        className="absolute inset-0 bg-black/70"
+        onClick={() => { if (!loading) onCloseRef.current() }}
+      />
       <div
         ref={panelRef}
         role="dialog"
@@ -94,23 +119,30 @@ export function Modal({
         <h3 id={titleId} className="text-white font-bold text-xl mb-2">{title}</h3>
         <p id={messageId} className="text-gray-400 text-sm mb-6">{message}</p>
         {children}
+        {error && (
+          <p className="text-xs text-red-400 bg-red-900/20 border border-red-900 px-3 py-2 mb-4">
+            {error}
+          </p>
+        )}
         <div className="flex gap-3 justify-end">
           <button
             onClick={() => onCloseRef.current()}
-            className="px-4 py-2 border border-gray-700 text-gray-400 text-sm hover:border-gray-500 transition-colors"
+            disabled={loading}
+            className="px-4 py-2 border border-gray-700 text-gray-400 text-sm hover:border-gray-500 transition-colors disabled:opacity-50"
           >
             {cancelLabel}
           </button>
           <button
             ref={confirmRef}
-            onClick={() => { onConfirm(); onClose() }}
-            className={`px-4 py-2 text-sm text-white transition-colors
+            onClick={handleConfirm}
+            disabled={loading}
+            className={`px-4 py-2 text-sm text-white transition-colors disabled:opacity-50
               ${variant === 'danger'
                 ? 'bg-red-600 hover:bg-red-700'
                 : 'bg-red-600 hover:bg-red-700'
               }`}
           >
-            {confirmLabel}
+            {loading ? loadingLabel : confirmLabel}
           </button>
         </div>
       </div>
