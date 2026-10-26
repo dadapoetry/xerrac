@@ -11,7 +11,7 @@ import { SectionBackground } from './SectionBackground'
 import { PortadaSection } from './sections/PortadaSection'
 import { Logo } from './Logo'
 import { SawIcon } from './SawIcon'
-import { NewsletterPopUp } from './NewsletterPopUp'
+import { NewsletterBlock } from './NewsletterBlock'
 import { accentOnColor, accentTextColor, hexToRgb } from '@/lib/color'
 
 interface FanzineViewerProps {
@@ -129,13 +129,19 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
     }))
   }, [sortedSections])
 
+  // El butlletí no pot sortir abans de llegir: es renderitza en flux, un sol
+  // cop per número, al final de la primera secció editorial. Si no n'hi ha,
+  // després de la tercera secció.
+  const newsletterAfterIndex = useMemo(() => {
+    const idx = sortedSections.findIndex((s: any) => s.type === 'editorial')
+    return idx >= 0 ? idx : Math.min(2, sortedSections.length - 1)
+  }, [sortedSections])
   // S'inicia a 0 i es fixa en efecte per evitar desenganxament d'hidratació:
   // la secció inicial es llegeix de la URL (slug) després de muntar.
   const [activeSection, setActiveSection] = useState(0)
   const [copied, setCopied] = useState(false)
   const [sharePhase, setSharePhase] = useState<'closed' | 'open' | 'closing'>('closed')
   const [togglePop, setTogglePop] = useState(false)
-  const [showNewsletter, setShowNewsletter] = useState(false)
   const [idle, setIdle] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [canNativeShare, setCanNativeShare] = useState(false)
@@ -197,7 +203,6 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
           const idx = parseInt(entry.target.getAttribute('data-section-index') || '0', 10)
           if (isNaN(idx)) continue
           setActiveSection(idx)
-          if (idx >= 2) setShowNewsletter(true)
           try {
             // La URL de lectura passa a ser la de la secció (/numeros/X/slug),
             // de manera que el navegador i el botó de compartir coincideixen.
@@ -751,7 +756,6 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
             Enllaç copiat
           </div>
         )}
-        <NewsletterPopUp visible={showNewsletter} onDismiss={() => setShowNewsletter(false)} />
       </div>
 
       {/* Progress bar */}
@@ -784,6 +788,7 @@ export function FanzineViewer({ issue, initialSectionIndex }: FanzineViewerProps
         </div>
       )}
 
+        {i === newsletterAfterIndex && <NewsletterBlock />}
         </Fragment>
       ))}
     </div>
