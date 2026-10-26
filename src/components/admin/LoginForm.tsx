@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 export function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -33,6 +34,7 @@ export function LoginForm() {
       setLoading(false)
     } else {
       router.push('/admin')
+      router.refresh()
     }
   }
 
@@ -71,15 +73,25 @@ export function LoginForm() {
             <label htmlFor="login-password" className="block text-xs uppercase tracking-wider text-gray-600 mb-2">
               Contrasenya
             </label>
-            <input
-              id="login-password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-black border border-gray-800 px-4 py-2.5 text-white
-                text-sm focus:outline-none focus:border-red-500/50 transition-colors"
-              required
-            />
+            <div className="relative">
+              <input
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-black border border-gray-800 px-4 py-2.5 text-white
+                  text-sm focus:outline-none focus:border-red-500/50 transition-colors pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 text-xs"
+                aria-label={showPassword ? 'Ocultar contrasenya' : 'Mostrar contrasenya'}
+              >
+                {showPassword ? 'Ocultar' : 'Mostrar'}
+              </button>
+            </div>
           </div>
 
           {error && (

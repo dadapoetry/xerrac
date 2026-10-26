@@ -27,14 +27,22 @@ export function PaginesGroguesEditor({ proverbs, onUpdateArrayItem, onAddArrayIt
               Eliminar
             </button>
           </div>
+          <label htmlFor={`pagines-text-${i}`} className="block text-xs text-gray-500 mb-1">
+            Text del proverbi
+          </label>
           <textarea
+            id={`pagines-text-${i}`}
             value={proverb.text || ''}
             onChange={(e) => onUpdateArrayItem('proverbs', i, 'text', e.target.value)}
             placeholder="Text del proverbi"
             className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
             rows={2}
           />
+          <label htmlFor={`pagines-author-${i}`} className="block text-xs text-gray-500 mb-1">
+            Autor (inspirat en / adaptat de)
+          </label>
           <input
+            id={`pagines-author-${i}`}
             type="text"
             value={proverb.author || ''}
             onChange={(e) => onUpdateArrayItem('proverbs', i, 'author', e.target.value)}

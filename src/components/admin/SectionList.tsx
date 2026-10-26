@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { deleteSection, reorderSections } from '@/lib/actions'
@@ -19,6 +19,12 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
   const { toast } = useToast()
   const [sorted, setSorted] = useState(() => [...sections].sort((a, b) => a.order - b.order))
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
+  const [reordering, setReordering] = useState(false)
+
+  // Resincronitza quan el pare passa noves seccions (després de router.refresh()).
+  useEffect(() => {
+    setSorted([...sections].sort((a, b) => a.order - b.order))
+  }, [sections])
 
   const handleDelete = async () => {
     if (!deleteTarget) return
@@ -34,7 +40,8 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
   }
 
   const moveUp = async (index: number) => {
-    if (index <= 0) return
+    if (index <= 0 || reordering) return
+    setReordering(true)
     const newSorted = [...sorted];
     [newSorted[index - 1], newSorted[index]] = [newSorted[index], newSorted[index - 1]]
     setSorted(newSorted)
@@ -43,15 +50,19 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
       await reorderSections(
         newSorted.map((s, i) => ({ id: s.id, order: i })),
       )
+      toast('Ordre actualitzat', 'success')
       router.refresh()
     } catch (e: any) {
       setSorted([...sections].sort((a, b) => a.order - b.order))
       toast(e?.message || 'Error en reordenar', 'error')
+    } finally {
+      setReordering(false)
     }
   }
 
   const moveDown = async (index: number) => {
-    if (index >= sorted.length - 1) return
+    if (index >= sorted.length - 1 || reordering) return
+    setReordering(true)
     const newSorted = [...sorted];
     [newSorted[index], newSorted[index + 1]] = [newSorted[index + 1], newSorted[index]]
     setSorted(newSorted)
@@ -60,10 +71,13 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
       await reorderSections(
         newSorted.map((s, i) => ({ id: s.id, order: i })),
       )
+      toast('Ordre actualitzat', 'success')
       router.refresh()
     } catch (e: any) {
       setSorted([...sections].sort((a, b) => a.order - b.order))
       toast(e?.message || 'Error en reordenar', 'error')
+    } finally {
+      setReordering(false)
     }
   }
 
@@ -94,7 +108,7 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
               <div className="flex mr-1">
                 <button
                   onClick={() => moveUp(i)}
-                  disabled={i === 0}
+                  disabled={i === 0 || reordering}
                   className="text-gray-600 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed px-1"
                   title="Moure amunt"
                 >
@@ -104,7 +118,7 @@ export function SectionList({ issueId, sections, previewUrl }: SectionListProps)
                 </button>
                 <button
                   onClick={() => moveDown(i)}
-                  disabled={i === sorted.length - 1}
+                  disabled={i === sorted.length - 1 || reordering}
                   className="text-gray-600 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed px-1"
                   title="Moure avall"
                 >

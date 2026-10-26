@@ -67,8 +67,12 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
         await updateIssue(initial.id, { number, title, date, published, accentColor })
         toast('Número actualitzat', 'success')
       } else {
-        await createIssue({ number, title, date, published, accentColor })
-        toast('Número creat', 'success')
+        const created = await createIssue({ number, title, date, published, accentColor })
+        toast('Número creat. Ara afegeix les seccions.', 'success')
+        setDirty(false)
+        router.push(`/admin/numeros/${created.id}`)
+        router.refresh()
+        return
       }
       setDirty(false)
       router.push('/admin/numeros')
@@ -132,7 +136,7 @@ export function IssueForm({ initial, nextNumber }: IssueFormProps) {
 
       {!initial && (
         <p className="text-xs text-gray-600 -mt-3">
-          Es crearà com a esborrany. Pots publicar-lo ara mateix si ja està a punt.
+          Per defecte es crea com a esborrany. Activa «Publicat» per publicar-lo ara.
         </p>
       )}
 

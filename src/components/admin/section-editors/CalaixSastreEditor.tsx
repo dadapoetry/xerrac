@@ -92,7 +92,7 @@ export function CalaixSastreEditor({ data, onUpdateArrayItem, onAddArrayItem, on
               Títol de la investigació
             </label>
             <input
-              id={`kalaix-investigation-${i}`}
+              id={`calaix-investigation-${i}`}
               type="text" value={item.title || ''}
               onChange={(e) => onUpdateArrayItem('investigacio', i, 'title', e.target.value)}
               className="w-full bg-black border border-gray-700 px-3 py-2 text-white text-sm"
