@@ -171,7 +171,6 @@ export function EditorialTimeline({ issues }: { issues: Issue[] }) {
                   <p className="text-xs uppercase tracking-wider text-gray-500 mb-3">Checklist de publicació</p>
                   <div className="space-y-1.5 text-sm">
                     <CheckItem label="Totes les seccions tenen contingut" ok={ready === total && total > 0} />
-                    <CheckItem label="Totes les seccions tenen imatge de fons" ok={withImage === total && total > 0} />
                     <CheckItem label="Número té títol" ok={!!issue.title && issue.title.trim() !== ''} />
                     <CheckItem label="Número té data objectiu" ok={!!targetDate} />
                     <CheckItem label="Full de Mur amb peça trobada" ok={sections.some(s => s.type === 'full_mural' && sectionReady(s))} />
