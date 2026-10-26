@@ -122,6 +122,61 @@ export async function batchUpdateIssues(updates: { id: string; published: boolea
   revalidatePublic()
 }
 
+async function syncIssueStatus(issueId: string) {
+  const issueResult = await db.execute({
+    sql: 'SELECT status, published FROM Issue WHERE id = ?',
+    args: [issueId],
+  })
+  if (issueResult.rows.length === 0) return
+  const currentStatus = issueResult.rows[0].status as string
+  const published = issueResult.rows[0].published as number
+  if (published) return
+  if (currentStatus === 'review') return
+
+  const secResult = await db.execute({
+    sql: 'SELECT type, title, content FROM Section WHERE issueId = ?',
+    args: [issueId],
+  })
+  const sections = secResult.rows
+  if (sections.length === 0) return
+
+  const hasContent = sections.some((s: any) => {
+    const content = s.content || '{}'
+    return content !== '{}' && content.length > 10
+  })
+
+  const allReady = sections.every((s: any) => {
+    if (!s.title || !String(s.title).trim()) return false
+    try {
+      const c = typeof s.content === 'string' ? JSON.parse(s.content) : s.content
+      if (s.type === 'portada') return !!c?.topic
+      if (s.type === 'editorial' || s.type === 'aclariment_cultural' || s.type === 'visita') return !!c?.body
+      if (s.type === 'full_mural') return (c?.collages || []).length > 0
+      if (s.type === 'assaig') return (c?.steps || []).length > 0
+      if (s.type === 'calaix_sastre') return (c?.interviews || []).length > 0 || (c?.reviews || []).length > 0 || (c?.investigacio || []).length > 0
+      if (s.type === 'fadu_catala') return (c?.entries || []).length > 0
+      if (s.type === 'pagines_grogues') return (c?.proverbs || []).length > 0
+      if (s.type === 'necrologiques') return (c?.entries || []).length > 0
+      if (s.type === 'ludita') return !!c?.crossword
+      return true
+    } catch { return false }
+  })
+
+  let newStatus = currentStatus
+  if (allReady) {
+    newStatus = 'review'
+  } else if (hasContent && currentStatus === 'draft') {
+    newStatus = 'in_progress'
+  }
+
+  if (newStatus !== currentStatus) {
+    await db.execute({
+      sql: 'UPDATE Issue SET status = ? WHERE id = ?',
+      args: [newStatus, issueId],
+    })
+  }
+}
+
 export async function createSection(data: {
   issueId: string
   type: string
@@ -147,6 +202,7 @@ export async function createSection(data: {
     ],
   )
   revalidatePublic()
+  await syncIssueStatus(data.issueId)
   return { id, ...data }
 }
 
@@ -177,7 +233,15 @@ export async function updateSection(id: string, data: {
     )
   }
 
+  // Look up issueId for status sync
+  const secResult = await db.execute({
+    sql: 'SELECT issueId FROM Section WHERE id = ?',
+    args: [id],
+  })
+  const issueId = secResult.rows[0]?.issueId
+
   revalidatePublic()
+  if (issueId) await syncIssueStatus(issueId as string)
 }
 
 export async function reorderSections(swaps: { id: string; order: number }[]) {
