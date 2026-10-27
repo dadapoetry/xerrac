@@ -84,8 +84,8 @@ export default async function AboutPage() {
           </h1>
 
           <p className="text-gray-300 text-sm leading-relaxed mb-4">
-            <strong className="text-white">Xerrac!</strong> és una revista cultural digital en català,
-            de periodicitat semestral i amb vocació de revista en paper. Cada número és un{' '}
+            <strong className="text-white">Xerrac!</strong> és una revista cultural online en català,
+            de periodicitat semestral i amb vocació de revista en paper digitalitzat. Cada número és un{' '}
             <strong className="text-white">volum monogràfic amb una tesi pròpia</strong> —un tema, un
             angle i un to— que travessa totes les seccions i es llegeix en ordre, com un número de
             revista.
