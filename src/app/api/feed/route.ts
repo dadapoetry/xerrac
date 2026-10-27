@@ -58,7 +58,8 @@ export async function GET() {
   const items: string[] = []
 
   for (const issue of issues) {
-    const sections = (issue.sections as any[]).map((s: any) => {
+    const sortedSections = [...(issue.sections as any[])].sort((a: any, b: any) => a.order - b.order)
+    const sections = sortedSections.map((s: any) => {
       let content = s.content
       if (typeof content === 'string') {
         try { content = JSON.parse(content) } catch { content = {} }
@@ -83,7 +84,8 @@ export async function GET() {
       }
     }
 
-    for (const section of sections) {
+    for (let i = 0; i < sections.length; i++) {
+      const section = sections[i]
       if (section.type === 'portada') continue
 
       const slug = slugMap.get(section.id)
@@ -91,22 +93,11 @@ export async function GET() {
 
       const url = `${getSiteUrl()}${articlePath(issue.number, slug)}`
 
-      // Imatge: la de la secció si en té, si no la de la portada
-      let imageUrl: string | null = null
-      if (section.backgroundImage && section.backgroundImage.trim()) {
-        imageUrl = section.backgroundImage
-      } else if (section.backgroundImageMobile && section.backgroundImageMobile.trim()) {
-        imageUrl = section.backgroundImageMobile
-      } else {
-        imageUrl = issueImage
-      }
+      // Imatge: OG image generada per la secció
+      const ogImageUrl = `${getSiteUrl()}/api/og?issue=${issue.id}&section=${i}`
 
-      const enclosure = imageUrl
-        ? `\n      <enclosure url="${escapeXml(imageUrl)}" type="image/jpeg" length="0" />`
-        : ''
-      const mediaContent = imageUrl
-        ? `\n      <media:content url="${escapeXml(imageUrl)}" medium="image" />`
-        : ''
+      const enclosure = `\n      <enclosure url="${escapeXml(ogImageUrl)}" type="image/jpeg" length="0" />`
+      const mediaContent = `\n      <media:content url="${escapeXml(ogImageUrl)}" medium="image" />`
 
       const sectionTitle = section.title && section.title.trim()
         ? section.title
