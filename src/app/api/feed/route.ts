@@ -34,6 +34,32 @@ function extractText(content: any, maxLen: number): string {
   return ''
 }
 
+function getIssueImage(issue: any): string | null {
+  const sections = (issue.sections as any[]) || []
+  const portada = sections.find((s: any) => s.type === 'portada')
+  if (!portada) return null
+
+  if (portada.backgroundImage && portada.backgroundImage.trim()) {
+    return portada.backgroundImage
+  }
+  if (portada.backgroundImageMobile && portada.backgroundImageMobile.trim()) {
+    return portada.backgroundImageMobile
+  }
+
+  let content = portada.content
+  if (typeof content === 'string') {
+    try { content = JSON.parse(content) } catch { content = {} }
+  }
+  if (content?.image && typeof content.image === 'string' && content.image.trim()) {
+    return content.image
+  }
+  if (content?.cover && typeof content.cover === 'string' && content.cover.trim()) {
+    return content.cover
+  }
+
+  return null
+}
+
 const typeLabels: Record<string, string> = {
   portada: 'Portada',
   editorial: 'Editorial',
@@ -72,24 +98,32 @@ export async function GET() {
       `      <category>${escapeXml(typeLabels[s.type] || s.type)}</category>`
     ).join('\n')
 
+    const imageUrl = getIssueImage(issue)
+    const enclosure = imageUrl
+      ? `\n      <enclosure url="${escapeXml(imageUrl)}" type="image/jpeg" length="0" />`
+      : ''
+    const mediaContent = imageUrl
+      ? `\n      <media:content url="${escapeXml(imageUrl)}" medium="image" />`
+      : ''
+
     return `    <item>
       <title>${escapeXml(issue.title)}</title>
       <link>${getSiteUrl()}${issuePath(issue.number)}</link>
-      <guid isPermaLink="false">${issue.id}</guid>
+      <guid isPermaLink="true">${getSiteUrl()}${issuePath(issue.number)}</guid>
       <pubDate>${new Date(issue.date).toUTCString()}</pubDate>
-      <description><![CDATA[${escapeXml(firstText)}…]]></description>
+      <description><![CDATA[${escapeXml(firstText)}…]]></description>${enclosure}${mediaContent}
 ${categories}
     </item>`
   })
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Xerrac! — Revista d'aclariment cultural</title>
     <link>${getSiteUrl()}</link>
     <description>Revista d'aclariment cultural</description>
     <language>ca</language>
-    <copyright>${copyright}</copyright>
+    <copyright>${escapeXml(copyright)}</copyright>
     <atom:link href="${getSiteUrl()}/api/feed" rel="self" type="application/rss+xml"/>
 ${items.join('\n')}
   </channel>
