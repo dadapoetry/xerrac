@@ -56,6 +56,10 @@ export async function GET() {
   const copyright = settings.footer_copyright || 'Xerrac!'
 
   const items: string[] = []
+  // Retrat del número vigent: és el que Flipboard fa servir com a imatge de la
+  // publicació quan algú afegeix el feed.
+  let channelImage: string | null = null
+  let channelImageTitle = ''
 
   for (const issue of issues) {
     const sortedSections = [...(issue.sections as any[])].sort((a: any, b: any) => a.order - b.order)
@@ -84,6 +88,11 @@ export async function GET() {
       }
     }
 
+    if (!channelImage && issueImage) {
+      channelImage = issueImage
+      channelImageTitle = `Xerrac! Núm. ${issue.number} — ${issue.title}`
+    }
+
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i]
       if (section.type === 'portada') continue
@@ -93,11 +102,16 @@ export async function GET() {
 
       const url = `${getSiteUrl()}${articlePath(issue.number, slug)}`
 
-      // Imatge: OG image generada per la secció
-      const ogImageUrl = `${getSiteUrl()}/api/og?issue=${issue.id}&section=${i}`
+      // Imatge: la de la secció si en té, i si no la targeta OG que se'n genera.
+      const sectionImage = (section.backgroundImage || section.backgroundImageMobile || '').trim()
+      const image = sectionImage || `${getSiteUrl()}/api/og?issue=${issue.id}&section=${i}`
 
-      const enclosure = `\n      <enclosure url="${escapeXml(ogImageUrl)}" type="image/jpeg" length="0" />`
-      const mediaContent = `\n      <media:content url="${escapeXml(ogImageUrl)}" medium="image" />`
+      // Els agregadors no llegeixen la imatge del mateix lloc: uns miren
+      // `media:thumbnail`, altres `media:content`, altres el primer <img> de la
+      // descripció. Els posem tots tres. Fora l'<enclosure>: obliga a declarar
+      // una mida que no coneixem i un MIME que no sempre és cert (la ruta OG
+      // respon PNG i Cloudinary respon el format que demani l'Accept).
+      const mediaImage = `\n      <media:content url="${escapeXml(image)}" medium="image" />\n      <media:thumbnail url="${escapeXml(image)}" />`
 
       const sectionTitle = section.title && section.title.trim()
         ? section.title
@@ -110,7 +124,7 @@ export async function GET() {
       <link>${url}</link>
       <guid isPermaLink="true">${url}</guid>
       <pubDate>${new Date(issue.date).toUTCString()}</pubDate>
-      <description><![CDATA[${escapeXml(text)}…]]></description>${enclosure}${mediaContent}
+      <description><![CDATA[<img src="${escapeXml(image)}" alt="" />${escapeXml(text)}…]]></description>${mediaImage}
       <category>${escapeXml(typeLabels[section.type] || section.type)}</category>
     </item>`)
     }
@@ -123,8 +137,13 @@ export async function GET() {
     <link>${getSiteUrl()}</link>
     <description>Revista d'aclariment cultural</description>
     <language>ca</language>
-    <copyright>${escapeXml(copyright)}</copyright>
-    <atom:link href="${getSiteUrl()}/api/feed" rel="self" type="application/rss+xml"/>
+    <copyright>${escapeXml(copyright)}</copyright>${channelImage ? `
+    <image>
+      <url>${escapeXml(channelImage)}</url>
+      <title>${escapeXml(channelImageTitle)}</title>
+      <link>${getSiteUrl()}</link>
+    </image>` : ''}
+    <atom:link href="${getSiteUrl()}/feed.xml" rel="self" type="application/rss+xml"/>
 ${items.join('\n')}
   </channel>
 </rss>`
