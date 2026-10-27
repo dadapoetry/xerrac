@@ -112,7 +112,7 @@ export async function GET() {
         ? section.title
         : (typeLabels[section.type] || section.type)
 
-      const text = extractText(section.content, 500)
+      const text = extractText(section.content, 500) || typeLabels[section.type] || section.type
 
       items.push(`    <item>
       <title>${escapeXml(sectionTitle)} — Núm. ${issue.number}</title>
