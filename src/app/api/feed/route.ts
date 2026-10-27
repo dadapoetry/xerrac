@@ -73,7 +73,7 @@ const typeLabels: Record<string, string> = {
   assaig: 'Assaig visual',
 }
 
-export const revalidate = 3600
+export const revalidate = 0
 
 export async function GET() {
   const issues = await getPublishedIssues()
