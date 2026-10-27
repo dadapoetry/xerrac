@@ -40,7 +40,7 @@ const typeLabels: Record<string, string> = {
   aclariment_cultural: 'Aclariment Cultural',
   fadu_catala: 'Fadu Català',
   pagines_grogues: 'Pàgines Grogues',
-  calaix_sastre: 'Calaix de Sastre',
+  calaix_sastre: 'Calaix Desastre',
   visita: 'Visita',
   full_mural: 'Full Mural',
   ludita: 'Ludita',
