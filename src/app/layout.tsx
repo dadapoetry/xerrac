@@ -48,7 +48,7 @@ export const metadata: Metadata = {
       'x-default': siteUrl,
     },
     types: {
-      'application/rss+xml': `${siteUrl}/api/feed`,
+      'application/rss+xml': `${siteUrl}/feed.xml`,
     },
   },
   robots: {

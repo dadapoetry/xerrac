@@ -28,7 +28,10 @@ export async function generateMetadata({
     return {
       title: { absolute: "Xerrac! — Revista d'aclariment cultural" },
       description: "Revista d'aclariment cultural",
-      alternates: { canonical: `${siteUrl}/` },
+      alternates: {
+        canonical: `${siteUrl}/`,
+        types: { 'application/rss+xml': `${siteUrl}/feed.xml` },
+      },
     }
   }
 
@@ -41,7 +44,13 @@ export async function generateMetadata({
   return {
     title: { absolute: `Número ${issue.number}: ${issue.title} — Xerrac!` },
     description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}. ${sectionNames.join(', ')}.`,
-    alternates: { canonical },
+    // Next substitueix `alternates` sencer quan la pàgina en declara: si aquí no
+    // hi tornem a posar el tipus, la portada perd l'enllaç de descobriment del
+    // feed i els lectors RSS i Flipboard no el troben.
+    alternates: {
+      canonical,
+      types: { 'application/rss+xml': `${siteUrl}/feed.xml` },
+    },
     robots: isPreview ? { index: false, follow: false } : undefined,
     openGraph: {
       title: `${issue.title} — Xerrac!`,

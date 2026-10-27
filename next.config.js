@@ -17,6 +17,16 @@ const nextConfig = {
     },
   },
   poweredByHeader: false,
+  // El feed viu a /api/feed, però /api/ és un directori que robots.txt declara
+  // prohibit: els crawlers de feeds (Flipboard, lectors RSS, autodescobriment)
+  // no sempre apliquen la regla més específica i es queden amb el Disallow.
+  // Aquests camins són els que la gent escriu a mà; tots serveixen el mateix XML.
+  async rewrites() {
+    return ['/feed.xml', '/feed', '/rss.xml', '/rss'].map((source) => ({
+      source,
+      destination: '/api/feed',
+    }))
+  },
   async headers() {
     return [
       {
@@ -42,6 +52,14 @@ const nextConfig = {
             ].join('; '),
           },
         ],
+      },
+      {
+        // Les imatges OG són decoratives: es fan servir com a `og:image` i no
+        // han de competir a l'índex de Google. Es descarten amb capçalera, no
+        // amb robots.txt: si les bloquegem, Google no pot llegir el `noindex`
+        // i l'avís de Search Console només canvia de nom.
+        source: '/api/og',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, noimageindex' }],
       },
     ]
   },
