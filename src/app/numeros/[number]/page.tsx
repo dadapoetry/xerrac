@@ -29,7 +29,10 @@ export async function generateMetadata({
   return {
     title: { absolute: `Número ${issue.number}: ${issue.title} — Xerrac!` },
     description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural. ${issue.title}. ${sectionNames.join(', ')}.`,
-    alternates: { canonical: `${siteUrl}${issuePath(issue.number)}` },
+    alternates: {
+      canonical: `${siteUrl}${issuePath(issue.number)}`,
+      types: { 'application/rss+xml': `${siteUrl}/feed.xml` },
+    },
     openGraph: {
       title: `${issue.title} — Xerrac!`,
       description: `Número ${issue.number} de Xerrac!, revista d'aclariment cultural.`,

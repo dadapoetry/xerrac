@@ -44,7 +44,10 @@ export async function generateMetadata({
   return {
     title: { absolute: `${label} — Número ${issue.number} — Xerrac!` },
     description: excerpt,
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      types: { 'application/rss+xml': `${siteUrl}/feed.xml` },
+    },
     openGraph: {
       title: `${label} — Xerrac!`,
       description: excerpt,
