@@ -51,7 +51,7 @@ export function NewsletterBlock() {
         ) : (
           <>
             <p className="text-md text-gray-300 leading-relaxed mb-5">
-              Cada número, al teu correu. Semestral, en català, sense soroll.
+              Cada número, al teu correu.
             </p>
 
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
